@@ -1,0 +1,58 @@
+def options(context):
+    context.load("compiler_cxx gnu_dirs qt5")
+
+
+def configure(context):
+    context.load("compiler_cxx gnu_dirs qt5")
+
+    context.check_cfg(package="audioresource-qt", args="--libs --cflags")
+    context.check_cfg(package="gstreamer-0.10", args="--libs --cflags")
+    context.check_cfg(package="mpris-qt5", args="--libs --cflags")
+    context.check_cfg(package="Qt5Sparql", args="--libs --cflags")
+    context.check_cfg(package="sailfishapp", args="--libs --cflags")
+
+
+def build(context):
+    context.program(
+        target="harbour-unplayer",
+        features="qt5",
+        includes="src",
+        uselib=[
+            "AUDIORESOURCE-QT",
+            "GSTREAMER-0.10",
+            "MPRIS-QT5",
+            "QT5DBUS",
+            "QT5QUICK",
+            "QT5SPARQL",
+            "SAILFISHAPP"
+        ],
+        cxxflags="-std=c++11",
+        linkflags="-pie -rdynamic",
+        source=[
+            "src/filterproxymodel.cpp",
+            "src/main.cpp",
+            "src/player.cpp",
+            "src/playlistmodel.cpp",
+            "src/queue.cpp",
+            "src/queuemodel.cpp",
+            "src/utils.cpp",
+        ],
+        lang=[
+            "translations/harbour-unplayer-en",
+            "translations/harbour-unplayer-ru"
+        ]
+    )
+
+    context.install_files("${DATADIR}/harbour-unplayer",
+                          context.path.ant_glob("qml/**/*.qml"),
+                          relative_trick=True)
+
+    context.install_files("${DATADIR}/harbour-unplayer/translations",
+                          context.path.get_bld().ant_glob("translations/*.qm"))
+
+    context.install_files("${DATADIR}",
+                          context.path.ant_glob("icons/**/*.png"),
+                          relative_trick=True)
+
+    context.install_files("${DATADIR}/applications",
+                          "harbour-unplayer.desktop")
