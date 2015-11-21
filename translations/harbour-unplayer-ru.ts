@@ -23,12 +23,12 @@
         <translation>Новый список...</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddToPlaylistPage.qml" line="44"/>
+        <location filename="../qml/pages/AddToPlaylistPage.qml" line="45"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddToPlaylistPage.qml" line="51"/>
+        <location filename="../qml/pages/AddToPlaylistPage.qml" line="52"/>
         <source>No playlists</source>
         <translation>Нет списков</translation>
     </message>
@@ -74,12 +74,12 @@
         <translation>Альбомы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AllAlbumsPage.qml" line="55"/>
+        <location filename="../qml/pages/AllAlbumsPage.qml" line="56"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AllAlbumsPage.qml" line="62"/>
+        <location filename="../qml/pages/AllAlbumsPage.qml" line="63"/>
         <source>No albums</source>
         <translation>Нет альбомов</translation>
     </message>
@@ -101,12 +101,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/pages/AllArtistsPage.qml" line="42"/>
+        <location filename="../qml/pages/AllArtistsPage.qml" line="43"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AllArtistsPage.qml" line="49"/>
+        <location filename="../qml/pages/AllArtistsPage.qml" line="50"/>
         <source>No artists</source>
         <translation>Нет исполнителей</translation>
     </message>
@@ -201,7 +201,7 @@
         <translation>Добавить в очередь</translation>
     </message>
     <message>
-        <location filename="../qml/components/LibraryTracksPullDownMenu.qml" line="37"/>
+        <location filename="../qml/components/LibraryTracksPullDownMenu.qml" line="38"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
@@ -274,7 +274,7 @@
         <translation>Новый список</translation>
     </message>
     <message>
-        <location filename="../qml/pages/NewPlaylistDialog.qml" line="28"/>
+        <location filename="../qml/pages/NewPlaylistDialog.qml" line="27"/>
         <source>Playlist name</source>
         <translation>Название списка</translation>
     </message>
@@ -290,53 +290,53 @@
 <context>
     <name>PlaylistPage</name>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="25"/>
-        <location filename="../qml/pages/PlaylistPage.qml" line="92"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="26"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="93"/>
         <source>Add to queue</source>
         <translation>Добавить в очередь</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="36"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="37"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="37"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="38"/>
         <source>Removing</source>
         <translation>Удаление</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="75"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="76"/>
         <source>Remove playlist</source>
         <translation>Удалить списка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="76"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="77"/>
         <source>Removing playlist</source>
         <translation>Удаление списка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="84"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="85"/>
         <source>Clear playlist</source>
         <translation>Очистить список</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="85"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="86"/>
         <source>Clearing playlist</source>
         <translation>Очищение списка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="108"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="109"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="115"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="116"/>
         <source>Loading</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistPage.qml" line="120"/>
+        <location filename="../qml/pages/PlaylistPage.qml" line="121"/>
         <source>No tracks</source>
         <translation>Нет треков</translation>
     </message>
@@ -373,12 +373,12 @@
         <translation>Новый список...</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistsPage.qml" line="61"/>
+        <location filename="../qml/pages/PlaylistsPage.qml" line="62"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlaylistsPage.qml" line="68"/>
+        <location filename="../qml/pages/PlaylistsPage.qml" line="69"/>
         <source>No playlists</source>
         <translation>Нет списков</translation>
     </message>
