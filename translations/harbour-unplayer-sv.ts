@@ -12,26 +12,26 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
     <message>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ny spellista...</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spellistor</translation>
     </message>
 </context>
 <context>
     <name>AlbumPage</name>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spår</translation>
     </message>
 </context>
 <context>
@@ -48,26 +48,26 @@
     <name>AlbumsModel</name>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänt album</translation>
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänd artist</translation>
     </message>
 </context>
 <context>
     <name>AllAlbumsPage</name>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga album</translation>
     </message>
 </context>
 <context>
@@ -81,22 +81,22 @@
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Artister</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga artister</translation>
     </message>
 </context>
 <context>
     <name>AllTracksPage</name>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spår</translation>
     </message>
 </context>
 <context>
@@ -110,15 +110,15 @@
     </message>
     <message>
         <source>All tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Alla spår</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga album</translation>
     </message>
 </context>
 <context>
@@ -142,33 +142,33 @@
     <name>ArtistsModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänd artist</translation>
     </message>
 </context>
 <context>
     <name>LibraryTrackDelegate</name>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kö</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till spellista</translation>
     </message>
 </context>
 <context>
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
 </context>
 <context>
@@ -203,80 +203,80 @@
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Artister</translation>
     </message>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Spår</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Spellistor</translation>
     </message>
 </context>
 <context>
     <name>NewPlaylistDialog</name>
     <message>
         <source>Add playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till spellista</translation>
     </message>
     <message>
         <source>Playlist name</source>
-        <translation type="unfinished"></translation>
+        <translation>Spellistans namn</translation>
     </message>
 </context>
 <context>
     <name>NowPlayingPage</name>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
 </context>
 <context>
     <name>PlaylistPage</name>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort från spellistan</translation>
     </message>
     <message>
         <source>Removing</source>
-        <translation type="unfinished"></translation>
+        <translation>Tar bort</translation>
     </message>
     <message>
         <source>Remove playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort spellistan</translation>
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Tar bort spellistan</translation>
     </message>
     <message>
         <source>Clear playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Rensa spellistan</translation>
     </message>
     <message>
         <source>Clearing playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Rensar spellistan</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Läser in</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spår</translation>
     </message>
 </context>
 <context>
@@ -290,87 +290,87 @@
     </message>
     <message>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Spellistor</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort</translation>
     </message>
     <message>
         <source>Removing</source>
-        <translation type="unfinished"></translation>
+        <translation>Tar bort</translation>
     </message>
     <message>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ny spellista...</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spellistor</translation>
     </message>
 </context>
 <context>
     <name>QueuePage</name>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Kö</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Rensa</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spår</translation>
     </message>
 </context>
 <context>
     <name>TracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänd artist</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänt album</translation>
     </message>
 </context>
 <context>
     <name>Unplayer::PlaylistModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänd artist</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished"></translation>
+        <translation>Okänt album</translation>
     </message>
 </context>
 <context>
     <name>Unplayer::Utils</name>
     <message>
         <source>%1 h </source>
-        <translation type="unfinished"></translation>
+        <translation>%1 t </translation>
     </message>
     <message>
         <source>%1 m </source>
-        <translation type="unfinished"></translation>
+        <translation>%1 m </translation>
     </message>
     <message>
         <source>%1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 s</translation>
     </message>
 </context>
 </TS>
