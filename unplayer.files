@@ -23,6 +23,7 @@ src/utils.h
 
 qml/main.qml
 
+qml/components/AlbumDelegate.qml
 qml/components/AlbumPageHeader.qml
 qml/components/ArtistPageHeader.qml
 qml/components/BaseTrackDelegate.qml

@@ -51,7 +51,7 @@ Item {
             x: Theme.horizontalPageMargin
 
             source: unknownArtist ? String() :
-                                    Unplayer.Utils.mediaArtForArtist(artist)
+                                    Unplayer.Utils.mediaArtForArtist(model.artist)
             size: Theme.itemSizeExtraLarge
         }
 
@@ -66,21 +66,21 @@ Item {
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: qsTr("%n album(s)", String(), albumsCount)
+                text: qsTr("%n album(s)", String(), model.albumsCount)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: qsTr("%n track(s)", String(), tracksCount)
+                text: qsTr("%n track(s)", String(), model.tracksCount)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: Unplayer.Utils.formatDuration(duration)
+                text: Unplayer.Utils.formatDuration(model.duration)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }

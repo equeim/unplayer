@@ -1,17 +1,11 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import QtSparql 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
 import "../components"
 
 Page {
-    SparqlConnection {
-        id: sparqlConnection
-        driver: "QTRACKER_DIRECT"
-    }
-
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
@@ -26,7 +20,7 @@ Page {
 
             MainPageListItem {
                 property int artistsCount: {
-                    if (sparqlConnection.status === SparqlConnection.Ready)
+                    if (sparqlConnection.ready)
                         return sparqlConnection.select("SELECT nmm:artistName(nmm:performer(?track)) AS ?artist\n" +
                                                        "WHERE {\n" +
                                                        "    ?track a nmm:MusicPiece.\n" +
@@ -44,7 +38,7 @@ Page {
 
             MainPageListItem {
                 property int albumsCount: {
-                    if (sparqlConnection.status === SparqlConnection.Ready)
+                    if (sparqlConnection.ready)
                         return sparqlConnection.select("SELECT nie:title(nmm:musicAlbum(?track)) AS ?album\n" +
                                                        "       nmm:artistName(nmm:performer(?track)) AS ?artist\n" +
                                                        "WHERE {\n" +
@@ -63,7 +57,7 @@ Page {
 
             MainPageListItem {
                 property int duration: {
-                    if (sparqlConnection.status === SparqlConnection.Ready)
+                    if (sparqlConnection.ready)
                         return sparqlConnection.select("SELECT SUM(nfo:duration(?track)) AS ?duration\n" +
                                                        "WHERE {\n" +
                                                        "    ?track a nmm:MusicPiece.\n" +
@@ -72,7 +66,7 @@ Page {
                 }
 
                 property int tracksCount: {
-                    if (sparqlConnection.status === SparqlConnection.Ready)
+                    if (sparqlConnection.ready)
                         return sparqlConnection.select("SELECT ?track\n" +
                                                        "WHERE {\n" +
                                                        "    ?track a nmm:MusicPiece.\n" +
@@ -94,7 +88,7 @@ Page {
                 id: playlistsListItem
 
                 property int playlistsCount: {
-                    if (sparqlConnection.status === SparqlConnection.Ready)
+                    if (sparqlConnection.ready)
                         return getPlaylistsCount()
                     return 0
                 }

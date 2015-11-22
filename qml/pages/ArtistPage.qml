@@ -6,59 +6,42 @@ import "../components"
 import "../models"
 
 Page {
-    id: artistPage
-
-    property bool unknownArtist
-    property string artist
-
-    property int albumsCount
-    property int tracksCount
-    property int duration
+    id: page
 
     SearchListView {
         id: listView
 
         anchors.fill: parent
         header: ArtistPageHeader { }
-        delegate: MediaContainerListItem {
-            id: albumDelegate
-
-            property bool unknownAlbum: model.rawAlbum === undefined
-
-            title: Theme.highlightText(model.album, listView.searchFieldText.trim(), Theme.highlightColor)
+        delegate: AlbumDelegate {
             description: qsTr("%n track(s)", String(), model.tracksCount)
-            mediaArt: {
-                if (unknownArtist || unknownAlbum)
-                    return String()
-                return Unplayer.Utils.mediaArt(artist, model.album)
-            }
-
-            onClicked: pageStack.push("AlbumPage.qml", {
-                                          allArtists: false,
-                                          unknownAlbum: albumDelegate.unknownAlbum,
-                                          album: model.album,
-                                          unknownArtist: artistPage.unknownArtist,
-                                          artist: artistPage.artist,
-                                          tracksCount: model.tracksCount,
-                                          duration: model.duration
-                                      })
         }
         model: Unplayer.FilterProxyModel {
             filterRoleName: "album"
             sourceModel: AlbumsModel {
                 allArtists: false
-                unknownArtist: artistPage.unknownArtist
-                artist: artistPage.artist
+                unknownArtist: artistDelegate.unknownArtist
+                artist: model.artist
             }
         }
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Add to playlist")
+                onClicked: addTracksToPlaylist()
+            }
+
+            MenuItem {
+                text: qsTr("Add to queue")
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+            }
+
+            MenuItem {
                 text: qsTr("All tracks")
                 onClicked: pageStack.push("AllTracksPage.qml", {
-                                              title: artistPage.artist,
-                                              unknownArtist: artistPage.unknownArtist,
-                                              artist: artistPage.artist
+                                              title: model.artist,
+                                              unknownArtist: artistDelegate.unknownArtist,
+                                              artist: model.artist
                                           })
             }
 

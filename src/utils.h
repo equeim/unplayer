@@ -20,6 +20,13 @@ public:
 
     Q_INVOKABLE static QString escapeRegExp(const QString &string);
     Q_INVOKABLE static QString escapeSparql(QString string);
+
+    Q_INVOKABLE static QString tracksSparqlQuery(bool allArtists,
+                                                 bool allAlbums,
+                                                 const QString &artist,
+                                                 bool unknownArtist,
+                                                 const QString &album,
+                                                 bool unknownAlbum);
 private:
     static QString mediaArtMd5(QString string);
 private:

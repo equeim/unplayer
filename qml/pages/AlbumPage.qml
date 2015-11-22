@@ -8,13 +8,11 @@ import "../models"
 Page {
     id: page
 
-    property alias allArtists: tracksModel.allArtists
-
-    property alias unknownAlbum: tracksModel.unknownAlbum
     property alias album: tracksModel.album
+    property alias unknownAlbum: tracksModel.unknownAlbum
 
-    property alias unknownArtist: tracksModel.unknownArtist
     property alias artist: tracksModel.artist
+    property alias unknownArtist: tracksModel.unknownArtist
 
     property int tracksCount
     property int duration
@@ -32,6 +30,8 @@ Page {
             filterRoleName: "title"
             sourceModel: TracksModel {
                 id: tracksModel
+
+                allArtists: false
                 allAlbums: false
             }
         }

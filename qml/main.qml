@@ -1,4 +1,5 @@
 import Sailfish.Silica 1.0
+import QtSparql 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
@@ -17,6 +18,12 @@ ApplicationWindow
 
     Unplayer.Player {
         id: player
+    }
+
+    SparqlConnection {
+        id: sparqlConnection
+        property bool ready: status === SparqlConnection.Ready
+        driver: "QTRACKER_DIRECT"
     }
 
     NowPlayingPanel {

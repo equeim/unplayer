@@ -106,6 +106,51 @@ QString Utils::escapeSparql(QString string)
             replace("\\", "\\\\");
 }
 
+QString Utils::tracksSparqlQuery(bool allArtists,
+                                 bool allAlbums,
+                                 const QString &artist,
+                                 bool unknownArtist,
+                                 const QString &album,
+                                 bool unknownAlbum)
+{
+    QString query =
+            "SELECT ?title ?url ?duration ?artist ?rawArtist ?album ?rawAlbum\n"
+            "WHERE {\n"
+            "    {\n"
+            "        SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
+            "               nie:url(?track) AS ?url\n"
+            "               nfo:duration(?track) AS ?duration\n"
+            "               nmm:trackNumber(?track) AS ?trackNumber\n"
+            "               tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + tr("Unknown artist") + "\") AS ?artist\n"
+            "               nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
+            "               tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" + tr("Unknown album") + "\") AS ?album\n"
+            "               nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
+            "               nie:informationElementDate(?track) AS ?year\n"
+            "        WHERE {\n"
+            "            ?track a nmm:MusicPiece.\n"
+            "        }\n"
+            "        ORDER BY !bound(?rawArtist) ?rawArtist !bound(?rawAlbum) ?year ?rawAlbum ?trackNumber ?title\n"
+            "    }.\n";
+
+    if (!allArtists) {
+        if (unknownArtist)
+            query += "    FILTER(!bound(?rawArtist)).\n";
+        else
+            query += "    FILTER(?rawArtist = \"" + artist + "\").\n";
+    }
+
+    if (!allAlbums) {
+        if (unknownAlbum)
+            query += "    FILTER(!bound(?rawAlbum)).\n";
+        else
+            query += "    FILTER(?rawAlbum = \"" + album + "\").\n";
+    }
+
+    query += "}";
+
+    return query;
+}
+
 QString Utils::mediaArtMd5(QString string)
 {
     string = string.

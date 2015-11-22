@@ -13,28 +13,8 @@ Page {
 
         anchors.fill: parent
         headerTitle: qsTr("Albums")
-        delegate: MediaContainerListItem {
-            id: albumDelegate
-
-            property bool unknownArtist: model.rawArtist === undefined
-            property bool unknownAlbum: model.rawAlbum === undefined
-
-            title: Theme.highlightText(model.album, listView.searchFieldText.trim(), Theme.highlightColor)
+        delegate: AlbumDelegate {
             description: model.artist
-            mediaArt: {
-                if (unknownArtist || unknownAlbum)
-                    return String()
-                return Unplayer.Utils.mediaArt(model.artist, model.album)
-            }
-
-            onClicked: pageStack.push("AlbumPage.qml", {
-                                          allArtists: true,
-                                          unknownAlbum: albumDelegate.unknownAlbum,
-                                          album: model.album,
-                                          artist: model.artist,
-                                          tracksCount: model.tracksCount,
-                                          duration: model.duration
-                                      })
         }
         model: Unplayer.FilterProxyModel {
             filterRoleName: "album"
