@@ -25,8 +25,8 @@ Unplayer.FilterProxyModel {
 
     function getTracks() {
         var tracks = []
-        var count = count()
-        for (var i = 0; i < count; i++)
+        var tracksCount = count()
+        for (var i = 0; i < tracksCount; i++)
             tracks.push(sourceModel.get(sourceIndex(i)))
         return tracks
     }

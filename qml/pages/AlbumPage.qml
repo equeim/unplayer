@@ -43,9 +43,9 @@ Page {
         delegate: LibraryTrackDelegate {
             allAlbums: false
         }
-        model: Unplayer.FilterProxyModel {
+        model: TracksProxyModel {
             id: tracksProxyModel
-            filterRoleName: "title"
+
             sourceModel: TracksModel {
                 id: tracksModel
 
