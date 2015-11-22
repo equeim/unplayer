@@ -2,30 +2,17 @@ import Sailfish.Silica 1.0
 
 PullDownMenu {
     MenuItem {
-        function getTrackUrls() {
-            var trackUrls = []
-            var count = tracksProxyModel.count()
-            for (var i = 0; i < count; i++)
-                trackUrls[i] = tracksModel.get(tracksProxyModel.sourceIndex(i)).url
-            return trackUrls
-        }
-
         text: qsTr("Add to playlist")
         onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", {
                                       parentPage: page,
-                                      tracks: getTrackUrls()
+                                      tracks: tracksProxyModel.getTracks()
                                   })
     }
 
     MenuItem {
         text: qsTr("Add to queue")
         onClicked: {
-            var tracks = []
-            var count = tracksProxyModel.count()
-            for (var i = 0; i < count; i++)
-                tracks[i] = tracksModel.get(tracksProxyModel.sourceIndex(i))
-
-            player.queue.add(tracks)
+            player.queue.add(tracksProxyModel.getTracks())
             if (player.queue.currentIndex === -1) {
                 player.queue.currentIndex = 0
                 player.queue.currentTrackChanged()

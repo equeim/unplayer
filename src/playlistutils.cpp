@@ -26,18 +26,32 @@ PlaylistUtils::PlaylistUtils()
                                           SLOT(onTrackerGraphUpdated(QString)));
 }
 
-void PlaylistUtils::newPlaylist(const QString &name, const QStringList &tracks)
+void PlaylistUtils::newPlaylist(const QString &name, const QVariantList &tracks)
 {
     m_newPlaylist = true;
     m_newPlaylistUrl = QUrl("file://" + QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + "/playlists/" + name + ".pls").toEncoded();
     m_newPlaylistTracksCount = tracks.size();
-    savePlaylist(m_newPlaylistUrl, tracks);
+
+    QStringList trackUrls;
+    QVariantList::const_iterator iterator = tracks.cbegin();
+    while (iterator != tracks.cend()) {
+        trackUrls.append((*iterator).toMap().value("url").toString());
+        iterator++;
+    }
+
+    savePlaylist(m_newPlaylistUrl, trackUrls);
 }
 
-void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QStringList &newTracks)
+void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVariantList &newTracks)
 {
     QStringList tracks = parsePlaylist(playlistUrl);
-    tracks.append(newTracks);
+
+    QVariantList::const_iterator iterator = newTracks.cbegin();
+    while (iterator != newTracks.cend()) {
+        tracks.append((*iterator).toMap().value("url").toString());
+        iterator++;
+    }
+
     savePlaylist(playlistUrl, tracks);
     setPlaylistTracksCount(playlistUrl, tracks.size());
 }

@@ -18,7 +18,7 @@ BaseTrackDelegate {
             text: qsTr("Add to playlist")
             onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", {
                                           parentPage: page,
-                                          tracks: [model.url]
+                                          tracks: [tracksModel.get(tracksProxyModel.sourceIndex(model.index))]
                                       })
         }
     }
@@ -30,14 +30,8 @@ BaseTrackDelegate {
             return
         }
 
-        var trackList = []
-        var count = tracksProxyModel.count()
-        for (var i = 0; i < count; i++) {
-            trackList[i] = tracksModel.get(tracksProxyModel.sourceIndex(i))
-        }
-
         player.queue.clear()
-        player.queue.add(trackList)
+        player.queue.add(tracksProxyModel.getTracks())
 
         player.queue.currentIndex = model.index
         player.queue.currentTrackChanged()

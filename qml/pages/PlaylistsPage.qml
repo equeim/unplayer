@@ -47,14 +47,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("New playlist...")
-                onClicked: pageStack.push(newPlaylistDialog)
-
-                Component {
-                    id: newPlaylistDialog
-                    NewPlaylistDialog {
-                        onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistName, [])
-                    }
-                }
+                onClicked: pageStack.push("NewPlaylistDialog.qml")
             }
 
             MenuItem {

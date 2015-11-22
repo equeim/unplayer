@@ -14,8 +14,8 @@ class PlaylistUtils : public QObject
 public:
     PlaylistUtils();
 
-    Q_INVOKABLE void newPlaylist(const QString &name, const QStringList &tracks);
-    Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QStringList &newTracks);
+    Q_INVOKABLE void newPlaylist(const QString &name, const QVariantList &tracks);
+    Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariantList &newTracks);
     Q_INVOKABLE void removeTrackFromPlaylist(const QString &playlistUrl, int trackIndex);
     Q_INVOKABLE void clearPlaylist(const QString &url);
     Q_INVOKABLE static void removePlaylist(const QString &url);

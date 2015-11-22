@@ -8,7 +8,6 @@ import "../models"
 Page {
     id: page
 
-    property var parentPage
     property var tracks
 
     SearchListView {
@@ -18,8 +17,8 @@ Page {
         headerTitle: qsTr("Add to playlist")
         delegate: MediaContainerListItem {
             title: Theme.highlightText(model.title, listView.searchFieldText.trim(), Theme.highlightColor)
-            description: model.count === undefined ? String() :
-                                                     qsTr("%n track(s)", String(), model.count)
+            description: model.tracksCount === undefined ? String() :
+                                                           qsTr("%n track(s)", String(), model.tracksCount)
             onClicked: {
                 Unplayer.PlaylistUtils.addTracksToPlaylist(model.url, tracks)
                 pageStack.pop()
@@ -34,10 +33,10 @@ Page {
             MenuItem {
                 text: qsTr("New playlist...")
                 onClicked: pageStack.push("NewPlaylistDialog.qml", {
-                                       acceptDestination: parentPage,
-                                       acceptDestinationAction: PageStackAction.Pop,
-                                       tracks: page.tracks
-                                   })
+                                              acceptDestination: pageStack.previousPage(),
+                                              acceptDestinationAction: PageStackAction.Pop,
+                                              tracks: page.tracks
+                                          })
             }
 
             MenuItem {
