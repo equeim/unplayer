@@ -11,6 +11,8 @@ src/player.cpp
 src/player.h
 src/playlistmodel.cpp
 src/playlistmodel.h
+src/playlistutils.cpp
+src/playlistutils.h
 src/queue.cpp
 src/queue.h
 src/queuemodel.cpp

@@ -11,6 +11,7 @@
 #include "filterproxymodel.h"
 #include "player.h"
 #include "playlistmodel.h"
+#include "playlistutils.h"
 #include "queue.h"
 #include "queuemodel.h"
 #include "utils.h"
@@ -20,6 +21,13 @@ static QObject *utils_singletontype_provider(QQmlEngine *engine, QJSEngine *scri
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
     return new Unplayer::Utils;
+}
+
+static QObject *playlistutils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new Unplayer::PlaylistUtils;
 }
 
 int main(int argc, char *argv[])
@@ -40,6 +48,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<QAbstractItemModel>();
 
     qmlRegisterSingletonType<Unplayer::Utils>("harbour.unplayer", 0, 1, "Utils", utils_singletontype_provider);
+    qmlRegisterSingletonType<Unplayer::PlaylistUtils>("harbour.unplayer", 0, 1, "PlaylistUtils", playlistutils_singletontype_provider);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->show();

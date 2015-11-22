@@ -8,7 +8,7 @@ import "../models"
 
 Page {
     Connections {
-        target: Unplayer.Utils
+        target: Unplayer.PlaylistUtils
         onPlaylistsChanged: playlistsModel.reload()
     }
 
@@ -25,7 +25,7 @@ Page {
                 MenuItem {
                     text: qsTr("Remove")
                     onClicked: remorseAction(qsTr("Removing"), function() {
-                        Unplayer.Utils.removePlaylist(model.url)
+                        Unplayer.PlaylistUtils.removePlaylist(model.url)
                     })
                 }
             }
@@ -52,7 +52,7 @@ Page {
                 Component {
                     id: newPlaylistDialog
                     NewPlaylistDialog {
-                        onAccepted: Unplayer.Utils.newPlaylist(playlistName, [])
+                        onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistName, [])
                     }
                 }
             }

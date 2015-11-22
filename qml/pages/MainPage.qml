@@ -113,7 +113,7 @@ Page {
                 onClicked: pageStack.push("PlaylistsPage.qml")
 
                 Connections {
-                    target: Unplayer.Utils
+                    target: Unplayer.PlaylistUtils
                     onPlaylistsChanged: playlistsListItem.playlistsCount = playlistsListItem.getPlaylistsCount()
                 }
             }

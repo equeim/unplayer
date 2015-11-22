@@ -38,7 +38,7 @@ Page {
                     onClicked: remorseAction(qsTr("Removing"), function() {
                         var trackIndex = listView.model.sourceIndex(model.index)
                         playlistModel.removeAt(trackIndex)
-                        Unplayer.Utils.removeTrackFromPlaylist(playlistModel.url, trackIndex)
+                        Unplayer.PlaylistUtils.removeTrackFromPlaylist(playlistModel.url, trackIndex)
                     })
                 }
             }
@@ -75,7 +75,7 @@ Page {
             MenuItem {
                 text: qsTr("Remove playlist")
                 onClicked: remorsePopup.execute(qsTr("Removing playlist"), function() {
-                    Unplayer.Utils.removePlaylist(playlistModel.url)
+                    Unplayer.PlaylistUtils.removePlaylist(playlistModel.url)
                     pageStack.pop()
                 })
             }
@@ -85,7 +85,7 @@ Page {
                 text: qsTr("Clear playlist")
                 onClicked: remorsePopup.execute(qsTr("Clearing playlist"), function() {
                     playlistModel.clear()
-                    Unplayer.Utils.clearPlaylist(playlistModel.url)
+                    Unplayer.PlaylistUtils.clearPlaylist(playlistModel.url)
                 })
             }
 

@@ -8,7 +8,7 @@ Dialog {
 
     canAccept: playlistNameField.text
 
-    onAccepted: Unplayer.Utils.newPlaylist(playlistNameField.text, tracks)
+    onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text, tracks)
 
     SilicaFlickable {
         anchors.fill: parent

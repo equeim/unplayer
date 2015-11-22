@@ -33,6 +33,7 @@ def build(context):
             "src/main.cpp",
             "src/player.cpp",
             "src/playlistmodel.cpp",
+            "src/playlistutils.cpp",
             "src/queue.cpp",
             "src/queuemodel.cpp",
             "src/utils.cpp",

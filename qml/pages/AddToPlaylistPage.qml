@@ -21,7 +21,7 @@ Page {
             description: model.count === undefined ? String() :
                                                      qsTr("%n track(s)", String(), model.count)
             onClicked: {
-                Unplayer.Utils.addTracksToPlaylist(model.url, tracks)
+                Unplayer.PlaylistUtils.addTracksToPlaylist(model.url, tracks)
                 pageStack.pop()
             }
         }

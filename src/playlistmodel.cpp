@@ -8,7 +8,7 @@
 #include <QSparqlQueryOptions>
 #include <QSparqlResult>
 
-#include "utils.h"
+#include "playlistutils.h"
 
 namespace Unplayer
 {
@@ -62,7 +62,7 @@ void PlaylistModel::classBegin()
 
 void PlaylistModel::componentComplete()
 {
-    QStringList tracksList = Utils::parsePlaylist(m_url);
+    QStringList tracksList = PlaylistUtils::parsePlaylist(m_url);
 
     if (tracksList.isEmpty()) {
         m_loaded = true;
