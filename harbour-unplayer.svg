@@ -6,11 +6,38 @@
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    id="svg2"
    viewBox="0 0 95.555356 95.555356"
    height="86"
-   width="86">
+   width="86"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="harbour-unplayer.svg"
+   inkscape:export-filename="/home/alexey/Mer/unplayer/icons/hicolor/86x86/apps/harbour-unplayer.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1033"
+     id="namedview17"
+     showgrid="false"
+     inkscape:zoom="0.68604651"
+     inkscape:cx="-279.59948"
+     inkscape:cy="41.197407"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
   <metadata
      id="metadata9">
     <rdf:RDF>
@@ -19,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -30,11 +57,11 @@
       <stop
          id="stop4291"
          offset="0"
-         style="stop-color:#800090;stop-opacity:1;" />
+         style="stop-color:#c00080;stop-opacity:1" />
       <stop
          id="stop4293"
          offset="1"
-         style="stop-color:#900090;stop-opacity:1" />
+         style="stop-color:#8030c0;stop-opacity:1" />
     </linearGradient>
     <linearGradient
        gradientTransform="translate(-47.777682,19.790162)"
