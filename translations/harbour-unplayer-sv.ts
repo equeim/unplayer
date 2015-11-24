@@ -28,6 +28,17 @@
     </message>
 </context>
 <context>
+    <name>AlbumDelegate</name>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AlbumPage</name>
     <message>
         <source>No tracks</source>
@@ -91,6 +102,14 @@
         <source>No artists</source>
         <translation>Inga artister</translation>
     </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AllTracksPage</name>
@@ -119,6 +138,14 @@
     <message>
         <source>No albums</source>
         <translation>Inga album</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -340,11 +367,11 @@
     <name>TracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation>Okänd artist</translation>
+        <translation type="vanished">Okänd artist</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation>Okänt album</translation>
+        <translation type="vanished">Okänt album</translation>
     </message>
 </context>
 <context>
@@ -371,6 +398,14 @@
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Unknown artist</source>
+        <translation type="unfinished">Okänd artist</translation>
+    </message>
+    <message>
+        <source>Unknown album</source>
+        <translation type="unfinished">Okänt album</translation>
     </message>
 </context>
 </TS>
