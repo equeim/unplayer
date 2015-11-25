@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="sv">
 <context>
@@ -31,11 +31,11 @@
     <name>AlbumDelegate</name>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
 </context>
 <context>
@@ -104,11 +104,11 @@
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
 </context>
 <context>
@@ -141,11 +141,11 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
 </context>
 <context>
@@ -401,11 +401,11 @@
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished">Okänd artist</translation>
+        <translation>Okänd artist</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished">Okänt album</translation>
+        <translation>Okänt album</translation>
     </message>
 </context>
 </TS>
