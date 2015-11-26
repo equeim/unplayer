@@ -341,7 +341,7 @@
     <message>
         <location filename="../qml/pages/PlaylistPage.qml" line="94"></location>
         <source>Remove playlist</source>
-        <translation>Удалить списка</translation>
+        <translation>Удалить список</translation>
     </message>
     <message>
         <location filename="../qml/pages/PlaylistPage.qml" line="95"></location>
