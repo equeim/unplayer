@@ -5,8 +5,8 @@
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer(s)</numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
     <message>
         <source>Add to playlist</source>
@@ -47,8 +47,8 @@
     <name>AlbumPageHeader</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer(s)</numerusform>
-        <numerusform>%n nummer(s)</numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
 </context>
 <context>
@@ -81,8 +81,8 @@
     <name>AllArtistsPage</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album(s)</numerusform>
-        <numerusform>%n album(s)</numerusform>
+        <translation><numerusform>%n album</numerusform>
+        <numerusform>%n albums</numerusform>
         </translation></message>
     <message>
         <source>Artists</source>
@@ -116,8 +116,8 @@
     <name>ArtistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer(s)</numerusform>
-        <numerusform>%n nummer(s)</numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
     <message>
         <source>All tracks</source>
@@ -144,13 +144,13 @@
     <name>ArtistPageHeader</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album(s)</numerusform>
-        <numerusform>%n album(s)</numerusform>
+        <translation><numerusform>%n album</numerusform>
+        <numerusform>%n albums</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer(s)</numerusform>
-        <numerusform>%n nummer(s)</numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
 </context>
 <context>
