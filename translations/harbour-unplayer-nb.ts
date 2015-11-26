@@ -267,11 +267,11 @@
     </message>
     <message>
         <source>Clear playlist</source>
-        <translation>Klart spillelisten</translation>
+        <translation>Tøm spillelisten</translation>
     </message>
     <message>
         <source>Clearing playlist</source>
-        <translation>Klarer spillelisten</translation>
+        <translation>Tømmer spillelisten</translation>
     </message>
     <message>
         <source>Search</source>
