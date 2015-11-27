@@ -49,7 +49,10 @@ Page {
     SearchListView {
         id: listView
 
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            bottomMargin: nowPlayingPanel.height - nowPlayingPanel.visibleSize
+        }
         currentIndex: player.queue.currentIndex
         headerTitle: qsTr("Queue")
         highlightFollowsCurrentItem: !player.queue.shuffle
@@ -89,8 +92,6 @@ Page {
                 queue: player.queue
             }
         }
-
-        Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
 
         PullDownMenu {
             id: pullDownMenu

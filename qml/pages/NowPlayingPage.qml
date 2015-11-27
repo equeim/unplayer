@@ -26,8 +26,6 @@ Page {
 
     property bool landscapeLayout: isLandscape && !largeScreen
 
-    objectName: "nowPlayingPage"
-
     states: [
         State {
             name: "PORTRAIT"
@@ -123,7 +121,7 @@ Page {
                 top: parent.top
             }
 
-            onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page })
+            onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page }).goToCurrent()
 
             Image {
                 id: mediaArtImage

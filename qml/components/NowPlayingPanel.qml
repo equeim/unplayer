@@ -27,6 +27,8 @@ DockedPanel {
     width: parent.width
     height: largeScreen ? Theme.itemSizeExtraLarge : Theme.itemSizeMedium
 
+    visible: !Qt.inputMethod.visible
+
     Binding {
         target: panel
         property: "open"
@@ -43,10 +45,16 @@ DockedPanel {
 
         anchors.fill: parent
         onClicked: {
-            if (pageStack.currentPage.objectName === "queuePage")
+            if (pageStack.currentPage.objectName === "queuePage") {
                 pageStack.currentPage.goToCurrent()
-            else
-                pageStack.push(nowPlayingPage)
+            } else {
+                if (!pageStack.find(function(page) {
+                    if (page === nowPlayingPage)
+                        return true
+                    return false
+                }))
+                    pageStack.push(nowPlayingPage)
+            }
         }
 
         Item {
