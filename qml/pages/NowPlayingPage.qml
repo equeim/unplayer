@@ -26,8 +26,6 @@ Page {
 
     property bool landscapeLayout: isLandscape && !largeScreen
 
-    objectName: "nowPlayingPage"
-
     states: [
         State {
             name: "PORTRAIT"
