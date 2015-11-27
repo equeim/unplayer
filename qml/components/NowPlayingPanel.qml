@@ -27,6 +27,8 @@ DockedPanel {
     width: parent.width
     height: largeScreen ? Theme.itemSizeExtraLarge : Theme.itemSizeMedium
 
+    visible: !Qt.inputMethod.visible
+
     Binding {
         target: panel
         property: "open"
