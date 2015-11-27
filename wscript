@@ -40,6 +40,10 @@ def build(context):
         ],
         lang=[
             "translations/harbour-unplayer-en",
+            "translations/harbour-unplayer-es",
+            "translations/harbour-unplayer-fr",
+            "translations/harbour-unplayer-nb",
+            "translations/harbour-unplayer-nl",
             "translations/harbour-unplayer-ru",
             "translations/harbour-unplayer-sv"
         ]
