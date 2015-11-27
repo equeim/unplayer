@@ -121,7 +121,7 @@ Page {
                 top: parent.top
             }
 
-            onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page }).goToCurrent()
+            onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page }).positionViewAtCurrentIndex()
 
             Image {
                 id: mediaArtImage

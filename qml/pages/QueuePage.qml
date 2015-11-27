@@ -26,6 +26,10 @@ import "../components"
 Page {
     property NowPlayingPage nowPlayingPage
 
+    function positionViewAtCurrentIndex() {
+        listView.positionViewAtIndex(listView.currentIndex, ListView.Center)
+    }
+
     function goToCurrent() {
         var visibleY = listView.visibleArea.yPosition * listView.contentHeight - listView.headerItem.height
         var visibleHeight = listView.visibleArea.heightRatio * listView.contentHeight
@@ -33,7 +37,7 @@ Page {
 
         if ((currentItemY + listView.currentItem.height) < visibleY ||
                 currentItemY > (visibleY + visibleHeight))
-            listView.positionViewAtIndex(listView.currentIndex, ListView.Center)
+            positionViewAtCurrentIndex()
     }
 
     objectName: "queuePage"
@@ -51,7 +55,8 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: nowPlayingPanel.height - nowPlayingPanel.visibleSize
+            bottomMargin: nowPlayingPanel.open ? nowPlayingPanel.height - nowPlayingPanel.visibleSize :
+                                                 0
         }
         currentIndex: player.queue.currentIndex
         headerTitle: qsTr("Queue")
