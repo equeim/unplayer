@@ -39,11 +39,7 @@ MediaContainerListItem {
     }
 
     title: Theme.highlightText(model.album, listView.searchFieldText.trim(), Theme.highlightColor)
-    mediaArt: {
-        if (unknownArtist || unknownAlbum)
-            return String()
-        return Unplayer.Utils.mediaArt(model.artist, model.album)
-    }
+    mediaArt: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
     menu: ContextMenu {
         MenuItem {
             text: qsTr("Add to queue")

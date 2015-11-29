@@ -29,10 +29,10 @@ QueueTrack::QueueTrack(const QVariantMap &trackMap)
       url(trackMap.value("url").toString()),
       duration(trackMap.value("duration").toLongLong()),
       artist(trackMap.value("artist").toString()),
-      album(trackMap.value("album").toString())
+      album(trackMap.value("album").toString()),
+      mediaArt(Utils::mediaArt(trackMap.value("rawArtist").toString(), trackMap.value("rawAlbum").toString(), url))
 {
-    if (trackMap.value("rawArtist").isValid() && trackMap.value("rawAlbum").isValid())
-        mediaArt = Utils::mediaArt(artist, album);
+
 }
 
 Queue::Queue(QObject *parent)

@@ -23,8 +23,10 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <QUrl>
 
 namespace Unplayer
 {
@@ -36,51 +38,62 @@ Utils::Utils()
     qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
-QString Utils::mediaArt(const QString &artistName, const QString &albumTitle)
+QString Utils::mediaArt(const QString &artist, const QString &album, const QString &trackUrl)
 {
-    if (artistName.isEmpty() || albumTitle.isEmpty())
+    if (!artist.isEmpty() && !album.isEmpty()) {
+        QString filePath = m_mediaArtDirectoryPath +
+                QDir::separator() +
+                "album-" +
+                mediaArtMd5(artist) +
+                "-" +
+                mediaArtMd5(album) +
+                ".jpeg";
+
+        if (QFileInfo(filePath).exists())
+            return filePath;
+    }
+
+    if (trackUrl.isEmpty())
         return QString();
 
-    QString filePath = m_mediaArtDirectoryPath +
-            QDir::separator() +
-            "album-" +
-            mediaArtMd5(artistName) +
-            "-" +
-            mediaArtMd5(albumTitle) +
-            ".jpeg";
+    QString trackDirectory = QFileInfo(QUrl(trackUrl).path()).path();
 
-    if (QFile(filePath).exists())
-        return filePath;
+    QStringList foundMediaArt = QDir(trackDirectory).
+            entryList(QDir::Files).
+            filter(QRegularExpression("^(albumart.*|cover|folder|front)\\.(jpeg|jpg|png)$",
+                                      QRegularExpression::CaseInsensitiveOption));
 
-    return QString();
+    if (foundMediaArt.isEmpty())
+        return QString();
+
+    return trackDirectory + QDir::separator() + foundMediaArt.first();
 }
 
-QString Utils::mediaArtForArtist(const QString &artistName)
+QString Utils::mediaArtForArtist(const QString &artist)
 {
-    QDir mediaArtDirectory(m_mediaArtDirectoryPath);
-    QStringList nameFilters;
-    nameFilters.append("album-" +
-                       mediaArtMd5(artistName) +
-                       "-*.jpeg");
+    if (artist.isEmpty())
+        return QString();
 
-    QStringList mediaArtList = mediaArtDirectory.entryList(nameFilters);
+    QFileInfoList mediaArtList = QDir(m_mediaArtDirectoryPath)
+            .entryInfoList(QStringList() << "album-" + mediaArtMd5(artist) + "-?*.jpeg",
+                           QDir::Files);
 
-    if (mediaArtList.length() == 0)
+    if (mediaArtList.isEmpty())
         return QString();
 
     static int random = qrand();
-    return mediaArtDirectory.filePath(mediaArtList.at(random % mediaArtList.length()));
+    return mediaArtList.at(random % mediaArtList.size()).filePath();
 }
 
 QString Utils::randomMediaArt()
 {
-    QDir mediaArtDirectory(m_mediaArtDirectoryPath);
-    QStringList mediaArtList = mediaArtDirectory.entryList(QDir::Files);
+    QFileInfoList mediaArtList = QDir(m_mediaArtDirectoryPath).entryInfoList(QStringList() << "album-?*-?*.jpeg",
+                                                                             QDir::Files);
 
-    if (mediaArtList.length() == 0)
+    if (mediaArtList.isEmpty())
         return QString();
 
-    return mediaArtDirectory.filePath(mediaArtList.at(qrand() % mediaArtList.length()));
+    return mediaArtList.at(qrand() % mediaArtList.size()).filePath();
 }
 
 QString Utils::formatDuration(uint seconds)

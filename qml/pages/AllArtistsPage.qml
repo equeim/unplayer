@@ -54,11 +54,7 @@ Page {
 
             title: Theme.highlightText(model.artist, listView.searchFieldText.trim(), Theme.highlightColor)
             description: qsTr("%n album(s)", String(), model.albumsCount)
-            mediaArt: {
-                if (unknownArtist)
-                    return String()
-                return Unplayer.Utils.mediaArtForArtist(model.artist);
-            }
+            mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist);
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Add to queue")

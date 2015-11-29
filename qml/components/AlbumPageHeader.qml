@@ -68,12 +68,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             x: Theme.horizontalPageMargin
 
-            source: {
-                if (unknownAlbum || unknownArtist)
-                    return String()
-                return Unplayer.Utils.mediaArt(artist, album)
-            }
-
+            source: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
             size: Theme.itemSizeExtraLarge
         }
 

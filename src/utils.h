@@ -30,8 +30,8 @@ class Utils : public QObject
 public:
     Utils();
 
-    Q_INVOKABLE static QString mediaArt(const QString &artistName, const QString &albumTitle);
-    Q_INVOKABLE static QString mediaArtForArtist(const QString &artistName);
+    Q_INVOKABLE static QString mediaArt(const QString &artist, const QString &album, const QString &trackUrl = QString());
+    Q_INVOKABLE static QString mediaArtForArtist(const QString &artist);
     Q_INVOKABLE static QString randomMediaArt();
 
     Q_INVOKABLE static QString formatDuration(uint seconds);
