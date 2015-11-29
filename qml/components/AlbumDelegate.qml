@@ -16,9 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
+
+import "../pages"
 
 MediaContainerListItem {
     id: albumDelegate
@@ -59,12 +62,10 @@ MediaContainerListItem {
         }
     }
 
-    onClicked: pageStack.push("../pages/AlbumPage.qml", {
-                                  album: model.album,
-                                  unknownAlbum: albumDelegate.unknownAlbum,
-                                  artist: model.artist,
-                                  unknownArtist: albumDelegate.unknownArtist,
-                                  tracksCount: model.tracksCount,
-                                  duration: model.duration
-                              })
+    onClicked: pageStack.push(albumPage)
+
+    Component {
+        id: albumPage
+        AlbumPage { }
+    }
 }

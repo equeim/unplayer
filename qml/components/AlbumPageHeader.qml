@@ -34,7 +34,7 @@ Item {
 
     PageHeader {
         id: pageHeader
-        title: album
+        title: model.album
     }
 
     Rectangle {
@@ -88,7 +88,7 @@ Item {
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: artist
+                text: model.artist
                 textFormat: Text.StyledText
                 width: parent.width
                 truncationMode: TruncationMode.Fade
@@ -96,14 +96,14 @@ Item {
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: qsTr("%n track(s)", String(), tracksCount)
+                text: qsTr("%n track(s)", String(), model.tracksCount)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: Unplayer.Utils.formatDuration(duration)
+                text: Unplayer.Utils.formatDuration(model.duration)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }

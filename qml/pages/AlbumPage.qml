@@ -24,17 +24,6 @@ import "../components"
 import "../models"
 
 Page {
-    id: page
-
-    property alias album: tracksModel.album
-    property alias unknownAlbum: tracksModel.unknownAlbum
-
-    property alias artist: tracksModel.artist
-    property alias unknownArtist: tracksModel.unknownArtist
-
-    property int tracksCount
-    property int duration
-
     SearchListView {
         id: listView
 
@@ -51,6 +40,12 @@ Page {
 
                 allArtists: false
                 allAlbums: false
+
+                artist: model.rawArtist
+                unknownArtist: albumDelegate.unknownArtist
+
+                album: model.rawAlbum
+                unknownAlbum: albumDelegate.unknownAlbum
             }
         }
 
