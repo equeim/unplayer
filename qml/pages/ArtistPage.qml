@@ -39,7 +39,7 @@ Page {
             sourceModel: AlbumsModel {
                 allArtists: false
                 unknownArtist: artistDelegate.unknownArtist
-                artist: model.artist
+                artist: model.rawArtist
             }
         }
 
@@ -59,7 +59,7 @@ Page {
                 onClicked: pageStack.push("AllTracksPage.qml", {
                                               title: model.artist,
                                               unknownArtist: artistDelegate.unknownArtist,
-                                              artist: model.artist
+                                              artist: model.rawArtist
                                           })
             }
 

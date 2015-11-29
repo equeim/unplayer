@@ -21,10 +21,7 @@ import Sailfish.Silica 1.0
 PullDownMenu {
     MenuItem {
         text: qsTr("Add to playlist")
-        onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", {
-                                      parentPage: page,
-                                      tracks: tracksProxyModel.getTracks()
-                                  })
+        onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: tracksProxyModel.getTracks() })
     }
 
     MenuItem {
