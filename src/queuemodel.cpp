@@ -29,8 +29,7 @@ enum QueueModelRole
     TitleRole = Qt::UserRole,
     DurationRole,
     ArtistRole,
-    AlbumRole,
-    MediaArtRole
+    AlbumRole
 };
 
 void QueueModel::classBegin()
@@ -59,8 +58,6 @@ QVariant QueueModel::data(const QModelIndex &index, int role) const
         return track->artist;
     case AlbumRole:
         return track->album;
-    case MediaArtRole:
-        return track->mediaArt;
     default:
         return QVariant();
     }
@@ -90,7 +87,6 @@ QHash<int, QByteArray> QueueModel::roleNames() const
     roles.insert(DurationRole, "duration");
     roles.insert(ArtistRole, "artist");
     roles.insert(AlbumRole, "album");
-    roles.insert(MediaArtRole, "mediaArt");
 
     return roles;
 }
