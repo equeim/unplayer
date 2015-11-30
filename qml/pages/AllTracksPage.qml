@@ -38,9 +38,7 @@ Page {
 
         anchors.fill: parent
         headerTitle: title
-        delegate: LibraryTrackDelegate {
-            allAlbums: true
-        }
+        delegate: LibraryTrackDelegate { }
         model: TracksProxyModel {
             id: tracksProxyModel
 

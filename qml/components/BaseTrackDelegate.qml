@@ -20,7 +20,6 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 ListItem {
-    property bool allAlbums: false
     property bool current
 
     Column {
@@ -52,8 +51,7 @@ ListItem {
                 }
                 color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeExtraSmall
-                text: allAlbums ? model.artist + " - " + model.album :
-                                  model.artist
+                text: model.artist + " - " + model.album
                 textFormat: Text.StyledText
                 truncationMode: TruncationMode.Fade
             }
