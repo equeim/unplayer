@@ -63,10 +63,7 @@ Page {
                                           })
             }
 
-            MenuItem {
-                text: qsTr("Search")
-                onClicked: listView.showSearchField = true
-            }
+            SearchPullDownMenuItem { }
         }
 
         ViewPlaceholder {
