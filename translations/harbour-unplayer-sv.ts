@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="sv">
 <context>
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Enkel musikspelare för SailfishOS</translation>
     </message>
     <message>
         <source>Show license</source>
-        <translation type="unfinished"></translation>
+        <translation>Visa licens</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Översättningar</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Översättare</translation>
     </message>
 </context>
 <context>
@@ -62,7 +62,7 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Ange omslagsbild</translation>
     </message>
 </context>
 <context>
@@ -73,15 +73,15 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Ange omslagsbild</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
 </context>
 <context>
@@ -158,11 +158,11 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i kön</translation>
     </message>
 </context>
 <context>
@@ -249,7 +249,7 @@
     <name>LicensePage</name>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Licens</translation>
     </message>
 </context>
 <context>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
 </context>
 <context>
@@ -422,33 +422,33 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Lägg till i spellista</translation>
     </message>
 </context>
 <context>
     <name>SearchPullDownMenuItem</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Sök</translation>
+        <translation>Sök</translation>
     </message>
 </context>
 <context>
     <name>SetCoverPage</name>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished"></translation>
+        <translation>Välj JPEG-bild</translation>
     </message>
     <message>
         <source>SD card</source>
-        <translation type="unfinished"></translation>
+        <translation>SD-kort</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Hemkatalog</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga filer</translation>
     </message>
 </context>
 <context>
