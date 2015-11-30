@@ -34,10 +34,7 @@ BaseTrackDelegate {
 
         MenuItem {
             text: qsTr("Add to playlist")
-            onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", {
-                                          parentPage: page,
-                                          tracks: model.url
-                                      })
+            onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: model.url })
         }
     }
 
