@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="nl">
 <context>
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Over</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Eenvoudige muziekspeler voor Sailfish OS</translation>
     </message>
     <message>
         <source>Show license</source>
-        <translation type="unfinished"></translation>
+        <translation>Toon licentie</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Vertalingen</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Vertalers</translation>
     </message>
 </context>
 <context>
@@ -62,7 +62,7 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Albumhoes instellen</translation>
     </message>
 </context>
 <context>
@@ -73,15 +73,15 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Albumhoes instellen</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Toevoegen aan speellijst</translation>
+        <translation>Toevoegen aan speellijst</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished">Toevoegen aan wachtrij</translation>
+        <translation>Toevoegen aan wachtrij</translation>
     </message>
 </context>
 <context>
@@ -158,11 +158,11 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Toevoegen aan speellijst</translation>
+        <translation>Toevoegen aan speellijst</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished">Toevoegen aan wachtrij</translation>
+        <translation>Toevoegen aan wachtrij</translation>
     </message>
 </context>
 <context>
@@ -249,7 +249,7 @@
     <name>LicensePage</name>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Licentie</translation>
     </message>
 </context>
 <context>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Over</translation>
     </message>
 </context>
 <context>
@@ -422,33 +422,33 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Toevoegen aan speellijst</translation>
+        <translation>Toevoegen aan speellijst</translation>
     </message>
 </context>
 <context>
     <name>SearchPullDownMenuItem</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Zoeken</translation>
+        <translation>Zoeken</translation>
     </message>
 </context>
 <context>
     <name>SetCoverPage</name>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished"></translation>
+        <translation>Kies JPEG-bestand</translation>
     </message>
     <message>
         <source>SD card</source>
-        <translation type="unfinished"></translation>
+        <translation>SD-kaart</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Thuismap</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen bestanden</translation>
     </message>
 </context>
 <context>
