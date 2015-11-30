@@ -32,13 +32,14 @@ class PlaylistUtils : public QObject
 public:
     PlaylistUtils();
 
-    Q_INVOKABLE void newPlaylist(const QString &name, const QVariantList &tracks);
-    Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariantList &newTracks);
+    Q_INVOKABLE void newPlaylist(const QString &name, const QVariant &tracksVariant);
+    Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant);
     Q_INVOKABLE void removeTrackFromPlaylist(const QString &playlistUrl, int trackIndex);
     Q_INVOKABLE void clearPlaylist(const QString &url);
     Q_INVOKABLE static void removePlaylist(const QString &url);
     static QStringList parsePlaylist(const QString &playlistUrl);
 private:
+    QStringList unboxTracks(const QVariant &tracksVariant);
     void setPlaylistTracksCount(const QString &playlistUrl, int tracksCount);
     static void savePlaylist(const QString &playlistUrl, const QStringList &tracks);
 private slots:

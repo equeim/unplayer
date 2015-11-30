@@ -36,7 +36,7 @@ BaseTrackDelegate {
             text: qsTr("Add to playlist")
             onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", {
                                           parentPage: page,
-                                          tracks: [tracksModel.get(tracksProxyModel.sourceIndex(model.index))]
+                                          tracks: model.url
                                       })
         }
     }

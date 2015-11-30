@@ -44,32 +44,24 @@ PlaylistUtils::PlaylistUtils()
                                           SLOT(onTrackerGraphUpdated(QString)));
 }
 
-void PlaylistUtils::newPlaylist(const QString &name, const QVariantList &tracks)
+void PlaylistUtils::newPlaylist(const QString &name, const QVariant &tracksVariant)
 {
     m_newPlaylist = true;
-    m_newPlaylistUrl = QUrl("file://" + QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + "/playlists/" + name + ".pls").toEncoded();
+    m_newPlaylistUrl = QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
+                                           "/playlists/" +
+                                           name +
+                                           ".pls").toEncoded();
+
+    QStringList tracks = unboxTracks(tracksVariant);
+
     m_newPlaylistTracksCount = tracks.size();
-
-    QStringList trackUrls;
-    QVariantList::const_iterator iterator = tracks.cbegin();
-    while (iterator != tracks.cend()) {
-        trackUrls.append((*iterator).toMap().value("url").toString());
-        iterator++;
-    }
-
-    savePlaylist(m_newPlaylistUrl, trackUrls);
+    savePlaylist(m_newPlaylistUrl, tracks);
 }
 
-void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVariantList &newTracks)
+void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant)
 {
     QStringList tracks = parsePlaylist(playlistUrl);
-
-    QVariantList::const_iterator iterator = newTracks.cbegin();
-    while (iterator != newTracks.cend()) {
-        tracks.append((*iterator).toMap().value("url").toString());
-        iterator++;
-    }
-
+    tracks.append(unboxTracks(newTracksVariant));
     savePlaylist(playlistUrl, tracks);
     setPlaylistTracksCount(playlistUrl, tracks.size());
 }
@@ -113,6 +105,25 @@ QStringList PlaylistUtils::parsePlaylist(const QString &playlistUrl)
             }
             return tracks;
         }
+    }
+
+    return QStringList();
+}
+
+QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)
+{
+    if (tracksVariant.type() == QVariant::String)
+        return QStringList() << tracksVariant.toString();
+
+    if (tracksVariant.type() == QVariant::List) {
+        QStringList tracks;
+        QVariantList trackObjects = tracksVariant.toList();
+        QVariantList::const_iterator iterator = trackObjects.cbegin();
+        while (iterator != trackObjects.cend()) {
+            tracks.append((*iterator).toMap().value("url").toString());
+            iterator++;
+        }
+        return tracks;
     }
 
     return QStringList();

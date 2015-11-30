@@ -46,12 +46,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Add to playlist")
-                onClicked: addTracksToPlaylist()
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
             }
 
             MenuItem {
                 text: qsTr("Add to queue")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                onClicked: addTracksToQueue()
             }
 
             MenuItem {
