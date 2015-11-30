@@ -39,6 +39,7 @@ qml/components/MediaArt.qml
 qml/components/MediaContainerListItem.qml
 qml/components/NowPlayingPanel.qml
 qml/components/SearchListView.qml
+qml/components/SearchPullDownMenuItem.qml
 
 qml/cover/CoverPage.qml
 
