@@ -227,14 +227,14 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Lägg till spellista</translation>
+        <translation>Lägg till i spellista</translation>
     </message>
 </context>
 <context>
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation type="vanished">Lägg till spellista</translation>
+        <translation>Lägg till i spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
