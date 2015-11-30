@@ -1,13 +1,38 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="fr">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple music player for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Add to playlist</source>
         <translation>Ajouter à une liste de lecture</translation>
@@ -18,7 +43,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Rechercher</translation>
+        <translation type="vanished">Rechercher</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -35,6 +60,10 @@
         <source>Add to playlist</source>
         <translation>Ajouter à une liste de lecture</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPage</name>
@@ -42,14 +71,28 @@
         <source>No tracks</source>
         <translation>Pas de pistes</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Ajouter à une liste de lecture</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Ajouter à la file</translation>
+    </message>
 </context>
 <context>
     <name>AlbumPageHeader</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>AlbumsModel</name>
@@ -70,31 +113,33 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>No albums</source>
-        <translation>Pas d'albums</translation>
+        <translation>Pas d&apos;albums</translation>
     </message>
 </context>
 <context>
     <name>AllArtistsPage</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artistes</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>No artists</source>
-        <translation>Pas d'artistes</translation>
+        <translation>Pas d&apos;artistes</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -111,25 +156,35 @@
         <source>No tracks</source>
         <translation>Pas de pistes</translation>
     </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Ajouter à une liste de lecture</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Ajouter à la file</translation>
+    </message>
 </context>
 <context>
     <name>ArtistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
     <message>
         <source>All tracks</source>
         <translation>Toutes les pistes</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>No albums</source>
-        <translation>Pas d'albums</translation>
+        <translation>Pas d&apos;albums</translation>
     </message>
     <message>
         <source>Add to playlist</source>
@@ -144,14 +199,18 @@
     <name>ArtistPageHeader</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>ArtistsModel</name>
@@ -175,39 +234,54 @@
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation>Ajouter à une liste de lecture</translation>
+        <translation type="vanished">Ajouter à une liste de lecture</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation>Ajouter à la file</translation>
+        <translation type="vanished">Ajouter à la file</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
+    </message>
+</context>
+<context>
+    <name>LicensePage</name>
+    <message>
+        <source>License</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation><numerusform>%n artiste</numerusform>
-        <numerusform>%n artistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n artiste</numerusform>
+            <numerusform>%n artistes</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform>%n liste de lecture</numerusform>
-        <numerusform>%n listes de lecture</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n liste de lecture</numerusform>
+            <numerusform>%n listes de lecture</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artistes</translation>
@@ -223,6 +297,10 @@
     <message>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -275,7 +353,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>Loading</source>
@@ -290,9 +368,11 @@
     <name>PlaylistsPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n piste</numerusform>
-        <numerusform>%n pistes</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n piste</numerusform>
+            <numerusform>%n pistes</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Playlists</source>
         <translation>Listes de lecture</translation>
@@ -311,7 +391,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -334,22 +414,52 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Recherche</translation>
+        <translation type="vanished">Recherche</translation>
     </message>
     <message>
         <source>No tracks</source>
         <translation>Pas de pistes</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Ajouter à une liste de lecture</translation>
+    </message>
+</context>
+<context>
+    <name>SearchPullDownMenuItem</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation>Artiste inconnu</translation>
+        <translation type="vanished">Artiste inconnu</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation>Album inconnu</translation>
+        <translation type="vanished">Album inconnu</translation>
     </message>
 </context>
 <context>

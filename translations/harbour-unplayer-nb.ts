@@ -1,13 +1,38 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="nb">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple music player for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Add to playlist</source>
         <translation>Legg til i spilleliste</translation>
@@ -18,7 +43,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -35,6 +60,10 @@
         <source>Add to playlist</source>
         <translation>Legg til i spilleliste</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPage</name>
@@ -42,14 +71,28 @@
         <source>No tracks</source>
         <translation>Ingen spor</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Legg til i spilleliste</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Legg til i køen</translation>
+    </message>
 </context>
 <context>
     <name>AlbumPageHeader</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>AlbumsModel</name>
@@ -70,7 +113,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -81,16 +124,18 @@
     <name>AllArtistsPage</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n album</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n album</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artister</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No artists</source>
@@ -111,21 +156,31 @@
         <source>No tracks</source>
         <translation>Ingen spor</translation>
     </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Legg til i spilleliste</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Legg til i køen</translation>
+    </message>
 </context>
 <context>
     <name>ArtistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
     <message>
         <source>All tracks</source>
         <translation>Alle spor</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -144,14 +199,18 @@
     <name>ArtistPageHeader</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n album</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n album</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>ArtistsModel</name>
@@ -175,39 +234,54 @@
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation>Legg til i spilleliste</translation>
+        <translation type="vanished">Legg til i spilleliste</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation>Legg til i køen</translation>
+        <translation type="vanished">Legg til i køen</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
+    </message>
+</context>
+<context>
+    <name>LicensePage</name>
+    <message>
+        <source>License</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation><numerusform>%n artist</numerusform>
-        <numerusform>%n artister</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n artist</numerusform>
+            <numerusform>%n artister</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n album</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n album</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform>%n spilleliste</numerusform>
-        <numerusform>%n spillelister</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spilleliste</numerusform>
+            <numerusform>%n spillelister</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artister</translation>
@@ -223,6 +297,10 @@
     <message>
         <source>Playlists</source>
         <translation>Spillelister</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -275,7 +353,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>Loading</source>
@@ -290,9 +368,11 @@
     <name>PlaylistsPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n spor</numerusform>
-        <numerusform>%n spor</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n spor</numerusform>
+            <numerusform>%n spor</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Playlists</source>
         <translation>Spillelister</translation>
@@ -311,7 +391,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -334,22 +414,52 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Søk</translation>
+        <translation type="vanished">Søk</translation>
     </message>
     <message>
         <source>No tracks</source>
         <translation>Ingen spor</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Legg til i spilleliste</translation>
+    </message>
+</context>
+<context>
+    <name>SearchPullDownMenuItem</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Søk</translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation>Ukjent artist</translation>
+        <translation type="vanished">Ukjent artist</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation>Ukjent album</translation>
+        <translation type="vanished">Ukjent album</translation>
     </message>
 </context>
 <context>

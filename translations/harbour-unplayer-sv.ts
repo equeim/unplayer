@@ -1,6 +1,29 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="sv">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple music player for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
@@ -20,7 +43,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -37,12 +60,28 @@
         <source>Add to playlist</source>
         <translation>Lägg till i spellista</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPage</name>
     <message>
         <source>No tracks</source>
         <translation>Inga spår</translation>
+    </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -74,7 +113,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -96,7 +135,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No artists</source>
@@ -117,6 +156,14 @@
         <source>No tracks</source>
         <translation>Inga spår</translation>
     </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ArtistPage</name>
@@ -133,7 +180,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -187,15 +234,22 @@
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation>Lägg till spellista</translation>
+        <translation type="vanished">Lägg till spellista</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation>Lägg till i kön</translation>
+        <translation type="vanished">Lägg till i kön</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
+    </message>
+</context>
+<context>
+    <name>LicensePage</name>
+    <message>
+        <source>License</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -243,6 +297,10 @@
     <message>
         <source>Playlists</source>
         <translation>Spellistor</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -295,7 +353,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>Loading</source>
@@ -333,7 +391,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -356,11 +414,41 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Sök</translation>
+        <translation type="vanished">Sök</translation>
     </message>
     <message>
         <source>No tracks</source>
         <translation>Inga spår</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SearchPullDownMenuItem</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Sök</translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,22 +1,44 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="es">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple music player for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -34,6 +56,10 @@
         <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPage</name>
@@ -41,13 +67,28 @@
         <source>No tracks</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPageHeader</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>AlbumsModel</name>
@@ -67,10 +108,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No albums</source>
         <translation type="unfinished"></translation>
     </message>
@@ -79,14 +116,13 @@
     <name>AllArtistsPage</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
-    <message>
-        <source>Artists</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <source>Search</source>
+        <source>Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -108,19 +144,26 @@
         <source>No tracks</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ArtistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
-    <message>
-        <source>All tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <source>Search</source>
+        <source>All tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -140,12 +183,18 @@
     <name>ArtistPageHeader</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>ArtistsModel</name>
@@ -166,17 +215,9 @@
     </message>
 </context>
 <context>
-    <name>LibraryTracksPullDownMenu</name>
+    <name>LicensePage</name>
     <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add to queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search</source>
+        <source>License</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -184,20 +225,32 @@
     <name>MainPage</name>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation type="unfinished"></translation>
@@ -212,6 +265,10 @@
     </message>
     <message>
         <source>Playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -264,10 +321,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Loading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -280,8 +333,11 @@
     <name>PlaylistsPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished"><numerusform></numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
@@ -296,10 +352,6 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -322,22 +374,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search</source>
+        <source>No tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No tracks</source>
+        <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>TracksModel</name>
+    <name>SearchPullDownMenuItem</name>
     <message>
-        <source>Unknown artist</source>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
+    <message>
+        <source>Select JPEG file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unknown album</source>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

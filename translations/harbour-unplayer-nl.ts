@@ -1,13 +1,38 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="nl">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple music player for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show license</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Add to playlist</source>
         <translation>Toevoegen aan speellijst</translation>
@@ -18,7 +43,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -35,6 +60,10 @@
         <source>Add to playlist</source>
         <translation>Toevoegen aan speellijst</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumPage</name>
@@ -42,14 +71,28 @@
         <source>No tracks</source>
         <translation>Geen nummers</translation>
     </message>
+    <message>
+        <source>Set cover image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Toevoegen aan speellijst</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Toevoegen aan wachtrij</translation>
+    </message>
 </context>
 <context>
     <name>AlbumPageHeader</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>AlbumsModel</name>
@@ -70,7 +113,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -81,16 +124,18 @@
     <name>AllArtistsPage</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artiesten</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No artists</source>
@@ -111,21 +156,31 @@
         <source>No tracks</source>
         <translation>Geen nummers</translation>
     </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Toevoegen aan speellijst</translation>
+    </message>
+    <message>
+        <source>Add to queue</source>
+        <translation type="unfinished">Toevoegen aan wachtrij</translation>
+    </message>
 </context>
 <context>
     <name>ArtistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message>
         <source>All tracks</source>
         <translation>Alle nummers</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No albums</source>
@@ -144,14 +199,18 @@
     <name>ArtistPageHeader</name>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>ArtistsModel</name>
@@ -175,39 +234,54 @@
     <name>LibraryTracksPullDownMenu</name>
     <message>
         <source>Add to playlist</source>
-        <translation>Toevoegen aan speellijst</translation>
+        <translation type="vanished">Toevoegen aan speellijst</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation>Toevoegen aan wachtrij</translation>
+        <translation type="vanished">Toevoegen aan wachtrij</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
+    </message>
+</context>
+<context>
+    <name>LicensePage</name>
+    <message>
+        <source>License</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation><numerusform>%n artiest</numerusform>
-        <numerusform>%n artiesten</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n artiest</numerusform>
+            <numerusform>%n artiesten</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform>%n speellijst</numerusform>
-        <numerusform>%n speellijsten</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n speellijst</numerusform>
+            <numerusform>%n speellijsten</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artiesten</translation>
@@ -223,6 +297,10 @@
     <message>
         <source>Playlists</source>
         <translation>Speellijsten</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -275,7 +353,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>Loading</source>
@@ -290,9 +368,11 @@
     <name>PlaylistsPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Playlists</source>
         <translation>Speellijsten</translation>
@@ -311,7 +391,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -334,22 +414,52 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation type="vanished">Zoeken</translation>
     </message>
     <message>
         <source>No tracks</source>
         <translation>Geen nummers</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished">Toevoegen aan speellijst</translation>
+    </message>
+</context>
+<context>
+    <name>SearchPullDownMenuItem</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Zoeken</translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation>Onbekende artiest</translation>
+        <translation type="vanished">Onbekende artiest</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation>Onbekend album</translation>
+        <translation type="vanished">Onbekend album</translation>
     </message>
 </context>
 <context>
