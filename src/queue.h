@@ -20,7 +20,8 @@
 #define UNPLAYER_QUEUE_H
 
 #include <QObject>
-#include <QVariant>
+#include <QVariantMap>
+#include <QUrl>
 
 namespace Unplayer
 {
@@ -33,7 +34,9 @@ struct QueueTrack
     qint64 duration;
     QString artist;
     QString album;
-    QString mediaArt;
+
+    QString rawArtist;
+    QString rawAlbum;
 };
 
 class Queue : public QObject
@@ -46,7 +49,7 @@ class Queue : public QObject
     Q_PROPERTY(int currentDuration READ currentDuration NOTIFY currentTrackChanged)
     Q_PROPERTY(QString currentArtist READ currentArtist NOTIFY currentTrackChanged)
     Q_PROPERTY(QString currentAlbum READ currentAlbum NOTIFY currentTrackChanged)
-    Q_PROPERTY(QString currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
+    Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
 
     Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
     Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
@@ -64,7 +67,7 @@ public:
     int currentDuration() const;
     QString currentArtist() const;
     QString currentAlbum() const;
-    QString currentMediaArt() const;
+    QUrl currentMediaArt() const;
 
     bool isShuffle() const;
     void setShuffle(bool shuffle);

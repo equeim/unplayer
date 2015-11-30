@@ -30,7 +30,8 @@ QueueTrack::QueueTrack(const QVariantMap &trackMap)
       duration(trackMap.value("duration").toLongLong()),
       artist(trackMap.value("artist").toString()),
       album(trackMap.value("album").toString()),
-      mediaArt(Utils::mediaArt(trackMap.value("rawArtist").toString(), trackMap.value("rawAlbum").toString(), url))
+      rawArtist(trackMap.value("rawArtist").toString()),
+      rawAlbum(trackMap.value("rawAlbum").toString())
 {
 
 }
@@ -100,11 +101,13 @@ QString Queue::currentAlbum() const
     return QString();
 }
 
-QString Queue::currentMediaArt() const
+QUrl Queue::currentMediaArt() const
 {
-    if (m_currentIndex >= 0 && m_currentIndex < m_tracks.length())
-        return m_tracks.at(m_currentIndex)->mediaArt;
-    return QString();
+    if (m_currentIndex >= 0 && m_currentIndex < m_tracks.length()) {
+        const QueueTrack *track = m_tracks.at(m_currentIndex);
+        return Utils::mediaArt(track->rawArtist, track->rawAlbum, track->url);
+    }
+    return QUrl();
 }
 
 bool Queue::isShuffle() const

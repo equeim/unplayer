@@ -67,8 +67,7 @@ Item {
 
             anchors.verticalCenter: parent.verticalCenter
             x: Theme.horizontalPageMargin
-
-            source: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
+            source: albumDelegate.mediaArt
             size: Theme.itemSizeExtraLarge
         }
 

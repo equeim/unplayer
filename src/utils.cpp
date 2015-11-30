@@ -31,30 +31,24 @@
 namespace Unplayer
 {
 
-const QString Utils::m_mediaArtDirectoryPath = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + "/media-art";
+const QString Utils::m_mediaArtDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + "/media-art";
+const QString Utils::m_homeDirectory = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
 
 Utils::Utils()
 {
     qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
-QString Utils::mediaArt(const QString &artist, const QString &album, const QString &trackUrl)
+QUrl Utils::mediaArt(const QString &artist, const QString &album, const QString &trackUrl)
 {
     if (!artist.isEmpty() && !album.isEmpty()) {
-        QString filePath = m_mediaArtDirectoryPath +
-                QDir::separator() +
-                "album-" +
-                mediaArtMd5(artist) +
-                "-" +
-                mediaArtMd5(album) +
-                ".jpeg";
-
+        QString filePath = mediaArtPath(artist, album);
         if (QFileInfo(filePath).exists())
-            return filePath;
+            return QUrl::fromLocalFile(filePath);
     }
 
     if (trackUrl.isEmpty())
-        return QString();
+        return QUrl();
 
     QString trackDirectory = QFileInfo(QUrl(trackUrl).path()).path();
 
@@ -64,17 +58,17 @@ QString Utils::mediaArt(const QString &artist, const QString &album, const QStri
                                       QRegularExpression::CaseInsensitiveOption));
 
     if (foundMediaArt.isEmpty())
-        return QString();
+        return QUrl();
 
-    return trackDirectory + QDir::separator() + foundMediaArt.first();
+    return QUrl::fromLocalFile(trackDirectory + QDir::separator() + foundMediaArt.first());
 }
 
-QString Utils::mediaArtForArtist(const QString &artist)
+QUrl Utils::mediaArtForArtist(const QString &artist)
 {
     if (artist.isEmpty())
         return QString();
 
-    QFileInfoList mediaArtList = QDir(m_mediaArtDirectoryPath)
+    QFileInfoList mediaArtList = QDir(m_mediaArtDirectory)
             .entryInfoList(QStringList() << "album-" + mediaArtMd5(artist) + "-?*.jpeg",
                            QDir::Files);
 
@@ -82,18 +76,26 @@ QString Utils::mediaArtForArtist(const QString &artist)
         return QString();
 
     static int random = qrand();
-    return mediaArtList.at(random % mediaArtList.size()).filePath();
+    return QUrl::fromLocalFile(mediaArtList.at(random % mediaArtList.size()).filePath());
 }
 
-QString Utils::randomMediaArt()
+QUrl Utils::randomMediaArt()
 {
-    QFileInfoList mediaArtList = QDir(m_mediaArtDirectoryPath).entryInfoList(QStringList() << "album-?*-?*.jpeg",
+    QFileInfoList mediaArtList = QDir(m_mediaArtDirectory).entryInfoList(QStringList() << "album-?*-?*.jpeg",
                                                                              QDir::Files);
 
     if (mediaArtList.isEmpty())
         return QString();
 
-    return mediaArtList.at(qrand() % mediaArtList.size()).filePath();
+    return QUrl::fromLocalFile(mediaArtList.at(qrand() % mediaArtList.size()).filePath());
+}
+
+void Utils::setMediaArt(const QString &filePath, const QString &artist, const QString &album)
+{
+    QString newFilePath = mediaArtPath(artist, album);
+    QFile::remove(newFilePath);
+    QFile::copy(filePath,
+                newFilePath);
 }
 
 QString Utils::formatDuration(uint seconds)
@@ -180,6 +182,40 @@ QString Utils::tracksSparqlQuery(bool allArtists,
     query += "}";
 
     return query;
+}
+
+QString Utils::homeDirectory()
+{
+    return m_homeDirectory;
+}
+
+QString Utils::sdcard()
+{
+    QFile mtab("/etc/mtab");
+    if (mtab.open(QIODevice::ReadOnly)) {
+        QStringList mounts = QString(mtab.readAll()).split('\n').filter("/dev/mmcblk1p1");
+        mtab.close();
+
+        if (!mounts.isEmpty())
+            return mounts.first().split(' ').at(1);
+    }
+    return "/media/sdcard";
+}
+
+QString Utils::urlToPath(const QUrl &url)
+{
+    return url.path();
+}
+
+QString Utils::mediaArtPath(const QString &artist, const QString &album)
+{
+    return m_mediaArtDirectory +
+            QDir::separator() +
+            "album-" +
+            mediaArtMd5(artist) +
+            "-" +
+            mediaArtMd5(album) +
+            ".jpeg";
 }
 
 QString Utils::mediaArtMd5(QString string)

@@ -21,8 +21,8 @@ import Sailfish.Silica 1.0
 
 Item {
     property bool highlighted
-    property alias source: mediaArtImage.source
     property int size
+    property alias source: mediaArtImage.source
 
     width: size
     height: size
@@ -46,14 +46,15 @@ Item {
             asynchronous: true
             source: highlighted ? "image://theme/icon-m-music?" + Theme.highlightColor :
                                   "image://theme/icon-m-music"
-            visible: mediaArtImage.status != Image.Loading
         }
     }
 
     Image {
         id: mediaArtImage
+
         anchors.fill: parent
         asynchronous: true
+        cache: false
         fillMode: Image.PreserveAspectCrop
         sourceSize.height: size
         visible: status === Image.Ready

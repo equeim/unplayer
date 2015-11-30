@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
@@ -49,7 +50,39 @@ Page {
             }
         }
 
-        LibraryTracksPullDownMenu { }
+        PullDownMenu {
+            MenuItem {
+                enabled: !unknownArtist && !unknownAlbum
+                text: qsTr("Set cover image")
+                onClicked: pageStack.push(setCoverPage)
+
+                Component {
+                    id: setCoverPage
+                    SetCoverPage { }
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Add to playlist")
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: tracksProxyModel.getTracks() })
+            }
+
+            MenuItem {
+                text: qsTr("Add to queue")
+                onClicked: {
+                    player.queue.add(tracksProxyModel.getTracks())
+                    if (player.queue.currentIndex === -1) {
+                        player.queue.currentIndex = 0
+                        player.queue.currentTrackChanged()
+                    }
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Search")
+                onClicked: listView.showSearchField = true
+            }
+        }
 
         ViewPlaceholder {
             enabled: listView.count === 0

@@ -123,22 +123,6 @@ Page {
 
             onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page }).positionViewAtCurrentIndex()
 
-            Image {
-                id: mediaArtImage
-                anchors.fill: parent
-                asynchronous: true
-                fillMode: Image.PreserveAspectCrop
-                source: player.queue.currentMediaArt
-                visible: status === Image.Ready
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: Theme.highlightBackgroundColor
-                    opacity: Theme.highlightBackgroundOpacity
-                    visible: pressItem.highlighted
-                }
-            }
-
             Rectangle {
                 anchors.fill: parent
                 gradient: Gradient {
@@ -157,6 +141,36 @@ Page {
                     anchors.centerIn: parent
                     asynchronous: true
                     source: "image://theme/icon-l-music"
+                }
+            }
+
+            Image {
+                id: mediaArtImage
+                anchors.fill: parent
+                asynchronous: true
+                cache: false
+                fillMode: Image.PreserveAspectCrop
+                visible: status === Image.Ready
+
+                Binding {
+                    target: mediaArtImage
+                    property: "source"
+                    value: player.queue.currentMediaArt
+                }
+
+                Connections {
+                    target: rootWindow
+                    onMediaArtReloadNeeded: {
+                        mediaArtImage.source = String()
+                        mediaArtImage.source = player.queue.currentMediaArt
+                    }
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: Theme.highlightBackgroundColor
+                    opacity: Theme.highlightBackgroundOpacity
+                    visible: pressItem.highlighted
                 }
             }
         }

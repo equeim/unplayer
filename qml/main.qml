@@ -25,8 +25,12 @@ import "components"
 
 ApplicationWindow
 {
+    id: rootWindow
+
     property bool largeScreen: Screen.sizeCategory === Screen.Large ||
                                Screen.sizeCategory === Screen.ExtraLarge
+
+    signal mediaArtReloadNeeded()
 
     _defaultPageOrientations: Orientation.All
     allowedOrientations: defaultAllowedOrientations

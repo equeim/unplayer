@@ -38,6 +38,14 @@ MediaContainerListItem {
                                                                         unknownAlbum))
     }
 
+    function reloadMediaArt() {
+        mediaArt = String()
+        mediaArt = Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
+        if (typeof artistDelegate !== "undefined")
+            artistDelegate.reloadMediaArt()
+        rootWindow.mediaArtReloadNeeded()
+    }
+
     title: Theme.highlightText(model.album, listView.searchFieldText.trim(), Theme.highlightColor)
     mediaArt: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
     menu: ContextMenu {
@@ -55,6 +63,17 @@ MediaContainerListItem {
         MenuItem {
             text: qsTr("Add to playlist")
             onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: getTracks() })
+        }
+
+        MenuItem {
+            enabled: !unknownArtist && !unknownAlbum
+            text: qsTr("Set cover image")
+            onClicked: pageStack.push(setCoverPage)
+
+            Component {
+                id: setCoverPage
+                SetCoverPage { }
+            }
         }
     }
 

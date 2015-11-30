@@ -20,6 +20,7 @@
 #define UNPLAYER_UTILS_H
 
 #include <QObject>
+#include <QUrl>
 
 namespace Unplayer
 {
@@ -30,9 +31,10 @@ class Utils : public QObject
 public:
     Utils();
 
-    Q_INVOKABLE static QString mediaArt(const QString &artist, const QString &album, const QString &trackUrl = QString());
-    Q_INVOKABLE static QString mediaArtForArtist(const QString &artist);
-    Q_INVOKABLE static QString randomMediaArt();
+    Q_INVOKABLE static QUrl mediaArt(const QString &artist, const QString &album, const QString &trackUrl = QString());
+    Q_INVOKABLE static QUrl mediaArtForArtist(const QString &artist);
+    Q_INVOKABLE static QUrl randomMediaArt();
+    Q_INVOKABLE static void setMediaArt(const QString &filePath, const QString &artist, const QString &album);
 
     Q_INVOKABLE static QString formatDuration(uint seconds);
 
@@ -45,10 +47,16 @@ public:
                                                  bool unknownArtist,
                                                  const QString &album,
                                                  bool unknownAlbum);
+
+    Q_INVOKABLE static QString homeDirectory();
+    Q_INVOKABLE static QString sdcard();
+    Q_INVOKABLE static QString urlToPath(const QUrl &url);
 private:
+    static QString mediaArtPath(const QString &artist, const QString &album);
     static QString mediaArtMd5(QString string);
 private:
-    static const QString m_mediaArtDirectoryPath;
+    static const QString m_mediaArtDirectory;
+    static const QString m_homeDirectory;
 };
 
 }

@@ -95,8 +95,21 @@ DockedPanel {
             MediaArt {
                 id: mediaArt
                 highlighted: pressItem.highlighted
-                source: player.queue.currentMediaArt
                 size: parent.height
+
+                Binding {
+                    target: mediaArt
+                    property: "source"
+                    value: player.queue.currentMediaArt
+                }
+
+                Connections {
+                    target: rootWindow
+                    onMediaArtReloadNeeded: {
+                        mediaArt.source = String()
+                        mediaArt.source = player.queue.currentMediaArt
+                    }
+                }
             }
 
             Column {

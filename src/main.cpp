@@ -33,6 +33,7 @@
 #include "queue.h"
 #include "queuemodel.h"
 #include "utils.h"
+#include "folderlistmodel/qquickfolderlistmodel.h"
 
 static QObject *utils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -62,11 +63,14 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Unplayer::QueueModel>("harbour.unplayer", 0, 1, "QueueModel");
     qmlRegisterType<Unplayer::PlaylistModel>("harbour.unplayer", 0, 1, "PlaylistModel");
+
     qmlRegisterType<Unplayer::FilterProxyModel>("harbour.unplayer", 0, 1, "FilterProxyModel");
     qmlRegisterType<QAbstractItemModel>();
 
     qmlRegisterSingletonType<Unplayer::Utils>("harbour.unplayer", 0, 1, "Utils", utils_singletontype_provider);
     qmlRegisterSingletonType<Unplayer::PlaylistUtils>("harbour.unplayer", 0, 1, "PlaylistUtils", playlistutils_singletontype_provider);
+
+    qmlRegisterType<QQuickFolderListModel, 1>("harbour.unplayer", 0, 1, "FolderListModel");
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->show();

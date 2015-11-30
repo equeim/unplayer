@@ -16,7 +16,7 @@ def build(context):
     context.program(
         target="harbour-unplayer",
         features="qt5",
-        includes="src",
+        includes="src src/folderlistmodel",
         uselib=[
             "AUDIORESOURCE-QT",
             "GSTREAMER-0.10",
@@ -37,6 +37,8 @@ def build(context):
             "src/queue.cpp",
             "src/queuemodel.cpp",
             "src/utils.cpp",
+            "src/folderlistmodel/fileinfothread.cpp",
+            "src/folderlistmodel/qquickfolderlistmodel.cpp"
         ],
         lang=[
             "translations/harbour-unplayer-en",

@@ -20,6 +20,12 @@ src/queuemodel.h
 src/utils.cpp
 src/utils.h
 
+src/folderlistmodel/fileinfothread.cpp
+src/folderlistmodel/fileinfothread_p.h
+src/folderlistmodel/fileproperty_p.h
+src/folderlistmodel/qquickfolderlistmodel.cpp
+src/folderlistmodel/qquickfolderlistmodel.h
+
 
 qml/main.qml
 
@@ -28,7 +34,6 @@ qml/components/AlbumPageHeader.qml
 qml/components/ArtistPageHeader.qml
 qml/components/BaseTrackDelegate.qml
 qml/components/LibraryTrackDelegate.qml
-qml/components/LibraryTracksPullDownMenu.qml
 qml/components/MainPageListItem.qml
 qml/components/MediaArt.qml
 qml/components/MediaContainerListItem.qml
@@ -55,5 +60,6 @@ qml/pages/NowPlayingPage.qml
 qml/pages/PlaylistPage.qml
 qml/pages/PlaylistsPage.qml
 qml/pages/QueuePage.qml
+qml/pages/SetCoverPage.qml
 
 translations/update.sh

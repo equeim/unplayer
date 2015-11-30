@@ -52,9 +52,14 @@ Page {
                 }
             }
 
+            function reloadMediaArt() {
+                mediaArt = String()
+                mediaArt = Unplayer.Utils.mediaArtForArtist(model.rawArtist)
+            }
+
             title: Theme.highlightText(model.artist, listView.searchFieldText.trim(), Theme.highlightColor)
             description: qsTr("%n album(s)", String(), model.albumsCount)
-            mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist);
+            mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist)
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Add to queue")
