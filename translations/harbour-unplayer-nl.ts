@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Show license</source>
-        <translation>Toon licentie</translation>
+        <translation>Licentie weergeven</translation>
     </message>
     <message>
         <source>Translations</source>
