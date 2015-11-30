@@ -22,6 +22,7 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 import "../components"
+import "../models"
 
 Page {
     property NowPlayingPage nowPlayingPage
@@ -64,11 +65,16 @@ Page {
         delegate: BaseTrackDelegate {
             id: trackDelegate
 
-            current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
+            current: model.index === tracksProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
+                    text: qsTr("Add to playlist")
+                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.url })
+                }
+
+                MenuItem {
                     function remove() {
-                        player.queue.remove(queueProxyModel.sourceIndex(model.index))
+                        player.queue.remove(tracksProxyModel.sourceIndex(model.index))
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 
@@ -89,8 +95,8 @@ Page {
             }
             ListView.onRemove: animateRemoval()
         }
-        model: Unplayer.FilterProxyModel {
-            id: queueProxyModel
+        model: TracksProxyModel {
+            id: tracksProxyModel
 
             filterRoleName: "title"
             sourceModel: Unplayer.QueueModel {
@@ -116,9 +122,11 @@ Page {
             }
 
             MenuItem {
-                text: qsTr("Search")
-                onClicked: listView.showSearchField = true
+                text: qsTr("Add to playlist")
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: tracksProxyModel.getTracks() })
             }
+
+            SearchPullDownMenuItem { }
         }
 
         ViewPlaceholder {
