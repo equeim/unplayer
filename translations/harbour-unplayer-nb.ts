@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="nb">
 <context>
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Enkel musikkspillere for Sailfish OS</translation>
     </message>
     <message>
         <source>Show license</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis lisens</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Oversettelser</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Oversettere</translation>
     </message>
 </context>
 <context>
@@ -62,7 +62,7 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Angi forsidebilde</translation>
     </message>
 </context>
 <context>
@@ -73,15 +73,15 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Angi forsidebilde</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Legg til i spilleliste</translation>
+        <translation>Legg til i spilleliste</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished">Legg til i køen</translation>
+        <translation>Legg til i køen</translation>
     </message>
 </context>
 <context>
@@ -158,11 +158,11 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Legg til i spilleliste</translation>
+        <translation>Legg til i spilleliste</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished">Legg til i køen</translation>
+        <translation>Legg til i køen</translation>
     </message>
 </context>
 <context>
@@ -249,7 +249,7 @@
     <name>LicensePage</name>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisens</translation>
     </message>
 </context>
 <context>
@@ -300,7 +300,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
 </context>
 <context>
@@ -422,33 +422,33 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Legg til i spilleliste</translation>
+        <translation>Legg til i spilleliste</translation>
     </message>
 </context>
 <context>
     <name>SearchPullDownMenuItem</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Søk</translation>
+        <translation>Søk</translation>
     </message>
 </context>
 <context>
     <name>SetCoverPage</name>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg JPEG-bilde</translation>
     </message>
     <message>
         <source>SD card</source>
-        <translation type="unfinished"></translation>
+        <translation>SD-kort</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Hjemmekatalog</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen filer</translation>
     </message>
 </context>
 <context>
