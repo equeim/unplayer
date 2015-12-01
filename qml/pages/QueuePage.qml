@@ -87,7 +87,7 @@ Page {
                     if (!player.playing)
                         player.play()
                 } else {
-                    player.queue.currentIndex = queueProxyModel.sourceIndex(model.index)
+                    player.queue.currentIndex = tracksProxyModel.sourceIndex(model.index)
                     player.queue.currentTrackChanged()
                     if (player.queue.shuffle)
                         player.queue.resetNotPlayedTracks()
