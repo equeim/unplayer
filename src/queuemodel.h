@@ -41,6 +41,8 @@ public:
 
     Queue* queue() const;
     void setQueue(Queue *newQueue);
+
+    Q_INVOKABLE QVariantMap get(int trackIndex) const;
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:

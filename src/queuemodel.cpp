@@ -79,6 +79,13 @@ void QueueModel::setQueue(Queue *newQueue)
     m_queue = newQueue;
 }
 
+QVariantMap QueueModel::get(int trackIndex) const
+{
+    QVariantMap map;
+    map.insert("url", m_queue->tracks().at(trackIndex)->url);
+    return map;
+}
+
 QHash<int, QByteArray> QueueModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
