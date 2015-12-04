@@ -70,7 +70,7 @@ Page {
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeLarge
-                        text: "Unplayer 0.1.2"
+                        text: "Unplayer 0.2.1"
                     }
 
                     Label {
