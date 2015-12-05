@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>Remove playlist</source>
-        <translation>Entferne Playlist</translation>
+        <translation>Playlist entfernen</translation>
     </message>
     <message>
         <source>Removing playlist</source>
