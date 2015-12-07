@@ -88,8 +88,10 @@ void PlaylistModel::componentComplete()
     } else {
         QSparqlConnection *connection = new QSparqlConnection("QTRACKER_DIRECT", QSparqlConnectionOptions(), this);
 
-        QStringList::const_iterator iterator = tracksList.cbegin();
-        while (iterator != tracksList.cend()) {
+        for (QStringList::const_iterator iterator = tracksList.cbegin(), cend = tracksList.cend();
+             iterator != cend;
+             iterator++) {
+
             QString url = QUrl(*iterator).toEncoded();
             if (m_uniqueTracksHash.contains(url)) {
                 m_tracks.append(m_uniqueTracksHash.value(url));
@@ -111,8 +113,6 @@ void PlaylistModel::componentComplete()
                 connect(result, &QSparqlResult::finished, this, &PlaylistModel::onQueryFinished);
                 m_queries.append(result);
             }
-
-            iterator++;
         }
     }
 }

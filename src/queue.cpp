@@ -141,12 +141,13 @@ void Queue::setRepeat(bool repeat)
 void Queue::add(const QVariantList &trackList)
 {
     if (!trackList.isEmpty()) {
-        QVariantList::const_iterator iterator = trackList.cbegin();
-        while (iterator != trackList.cend()) {
+        for (QVariantList::const_iterator iterator = trackList.cbegin(), cend = trackList.cend();
+             iterator != cend;
+             iterator++) {
+
             QueueTrack *track = new QueueTrack((*iterator).toMap());
             m_tracks.append(track);
             m_notPlayedTracks.append(track);
-            iterator++;
         }
     }
 }
@@ -179,11 +180,12 @@ void Queue::clear()
 
 bool Queue::hasUrl(const QString &url)
 {
-    QList<QueueTrack*>::const_iterator iterator = m_tracks.cbegin();
-    while (iterator != m_tracks.cend()) {
+    for (QList<QueueTrack*>::const_iterator iterator = m_tracks.cbegin(), cend = m_tracks.cend();
+         iterator != cend;
+         iterator++) {
+
         if ((*iterator)->url == url)
             return true;
-        iterator++;
     }
 
     return false;

@@ -118,11 +118,14 @@ QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)
     if (tracksVariant.type() == QVariant::List) {
         QStringList tracks;
         QVariantList trackObjects = tracksVariant.toList();
-        QVariantList::const_iterator iterator = trackObjects.cbegin();
-        while (iterator != trackObjects.cend()) {
+
+        for (QVariantList::const_iterator iterator = trackObjects.cbegin(), cend = trackObjects.cend();
+             iterator != cend;
+             iterator++) {
+
             tracks.append((*iterator).toMap().value("url").toString());
-            iterator++;
         }
+
         return tracks;
     }
 
