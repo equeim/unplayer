@@ -43,14 +43,6 @@ Page {
 
     objectName: "queuePage"
 
-    Connections {
-        target: player.queue
-        onCurrentIndexChanged: {
-            if (player.queue.currentIndex === -1)
-                pageStack.pop(pageStack.previousPage(nowPlayingPage))
-        }
-    }
-
     SearchListView {
         id: listView
 
@@ -115,8 +107,7 @@ Page {
 
                 text: qsTr("Clear")
                 onClicked: {
-                    player.queue.currentIndex = -1
-                    player.queue.currentTrackChanged()
+                    pageStack.pop(pageStack.previousPage(nowPlayingPage))
                     pageStack.busyChanged.connect(clear)
                 }
             }

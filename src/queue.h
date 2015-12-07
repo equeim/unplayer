@@ -85,12 +85,12 @@ public:
     bool nextOnEos();
     Q_INVOKABLE void previous();
 
+    Q_INVOKABLE void setCurrentToFirstIfNeeded();
     Q_INVOKABLE void resetNotPlayedTracks();
 private:
     QList<QueueTrack*> m_tracks;
     QList<QueueTrack*> m_notPlayedTracks;
 
-    QString m_hash;
     int m_currentIndex;
     bool m_shuffle;
     bool m_repeat;

@@ -53,10 +53,7 @@ MediaContainerListItem {
             text: qsTr("Add to queue")
             onClicked: {
                 player.queue.add(getTracks())
-                if (player.queue.currentIndex === -1) {
-                    player.queue.currentIndex = 0
-                    player.queue.currentTrackChanged()
-                }
+                player.queue.setCurrentToFirstIfNeeded()
             }
         }
 

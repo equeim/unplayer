@@ -25,10 +25,7 @@ BaseTrackDelegate {
             text: qsTr("Add to queue")
             onClicked: {
                 player.queue.add([tracksModel.get(tracksProxyModel.sourceIndex(model.index))])
-                if (player.queue.currentIndex === -1) {
-                    player.queue.currentIndex = 0
-                    player.queue.currentTrackChanged()
-                }
+                player.queue.setCurrentToFirstIfNeeded()
             }
         }
 

@@ -44,10 +44,7 @@ Page {
                     text: qsTr("Add to queue")
                     onClicked: {
                         player.queue.add([playlistModel.get(listView.model.sourceIndex(model.index))])
-                        if (player.queue.currentIndex === -1) {
-                            player.queue.currentIndex = 0
-                            player.queue.currentTrackChanged()
-                        }
+                        player.queue.setCurrentToFirstIfNeeded()
                     }
                 }
 
@@ -116,10 +113,7 @@ Page {
                         tracks[i] = playlistModel.get(listView.model.sourceIndex(i))
 
                     player.queue.add(tracks)
-                    if (player.queue.currentIndex === -1) {
-                        player.queue.currentIndex = 0
-                        player.queue.currentTrackChanged()
-                    }
+                    player.queue.setCurrentToFirstIfNeeded()
                 }
             }
 
