@@ -58,7 +58,7 @@ Page {
                 description: qsTr("%n artist(s)", String(), artistsCount)
                 mediaArt: Unplayer.Utils.randomMediaArt()
 
-                onClicked: pageStack.push("AllArtistsPage.qml")
+                onClicked: pageStack.push("ArtistsPage.qml")
             }
 
             MainPageListItem {

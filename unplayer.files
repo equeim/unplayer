@@ -59,9 +59,9 @@ qml/pages/AboutPage.qml
 qml/pages/AddToPlaylistPage.qml
 qml/pages/AlbumPage.qml
 qml/pages/AllAlbumsPage.qml
-qml/pages/AllArtistsPage.qml
 qml/pages/AllTracksPage.qml
 qml/pages/ArtistPage.qml
+qml/pages/ArtistsPage.qml
 qml/pages/LicensePage.qml
 qml/pages/MainPage.qml
 qml/pages/NewPlaylistDialog.qml
