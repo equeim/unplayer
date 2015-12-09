@@ -29,6 +29,14 @@ Page {
 
     property alias bottomPanelOpen: selectionPanel.open
 
+    function getTracksForSelectedPlaylists() {
+        var selectedIndexes = playlistsProxyModel.selectedSourceIndexes()
+        var selectedTracks = []
+        for (var i = 0, playlistsCount = selectedIndexes.length; i < playlistsCount; i++)
+            selectedTracks = selectedTracks.concat(Unplayer.PlaylistUtils.syncParsePlaylist(playlistsModel.get(selectedIndexes[i]).url))
+        return selectedTracks
+    }
+
     Connections {
         target: Unplayer.PlaylistUtils
         onPlaylistsChanged: playlistsModel.reload()
@@ -47,6 +55,16 @@ Page {
         selectionText: qsTr("%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
+            AddToQueueMenuItem {
+                enabled: playlistsProxyModel.selectedIndexesCount !== 0
+
+                onClicked: {
+                    player.queue.add(getTracksForSelectedPlaylists())
+                    player.queue.setCurrentToFirstIfNeeded()
+                    selectionPanel.showPanel = false
+                }
+            }
+
             MenuItem {
                 enabled: playlistsProxyModel.selectedIndexesCount !== 0
 
@@ -85,6 +103,13 @@ Page {
                                                            qsTr("%n track(s)", String(), model.tracksCount)
             menu: Component {
                 ContextMenu {
+                    AddToQueueMenuItem {
+                        onClicked: {
+                            player.queue.add(Unplayer.PlaylistUtils.syncParsePlaylist(model.url))
+                            player.queue.setCurrentToFirstIfNeeded()
+                        }
+                    }
+
                     MenuItem {
                         text: qsTr("Remove")
                         onClicked: remorseAction(qsTr("Removing"), function() {

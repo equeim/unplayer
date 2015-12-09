@@ -20,6 +20,7 @@
 #include "playlistutils.moc"
 
 #include <QDBusConnection>
+#include <QDebug>
 #include <QFile>
 #include <QStandardPaths>
 #include <QUrl>
@@ -28,6 +29,8 @@
 #include <QSparqlConnectionOptions>
 #include <QSparqlQuery>
 #include <QSparqlResult>
+
+#include "utils.h"
 
 namespace Unplayer
 {
@@ -82,6 +85,38 @@ void PlaylistUtils::removePlaylist(const QString &url)
     QFile(QUrl(url).path()).remove();
 }
 
+QVariantList PlaylistUtils::syncParsePlaylist(const QString &playlistUrl)
+{
+    QStringList tracks = parsePlaylist(playlistUrl);
+    QVariantList trackVariants;
+
+    for (QStringList::const_iterator iterator = tracks.cbegin(), cend = tracks.cend();
+         iterator != cend;
+         iterator++) {
+
+        QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(Utils::singleTrackSparqlQuery(*iterator),
+                                                                          QSparqlQuery::SelectStatement));
+
+        if (result->next()) {
+            QSparqlResultRow row = result->current();
+
+            QVariantMap trackMap;
+            trackMap.insert("title", row.value("title"));
+            trackMap.insert("url", row.value("url"));
+            trackMap.insert("duration", row.value("duration"));
+            trackMap.insert("artist", row.value("artist"));
+            trackMap.insert("rawArtist", row.value("rawArtist"));
+            trackMap.insert("album", row.value("album"));
+            trackMap.insert("rawAlbum", row.value("rawAlbum"));
+
+            trackVariants.append(trackMap);
+            result->deleteLater();
+        }
+    }
+
+    return trackVariants;
+}
+
 QStringList PlaylistUtils::parsePlaylist(const QString &playlistUrl)
 {
     QFile file(QUrl(playlistUrl).path());
@@ -129,23 +164,25 @@ QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)
     return QStringList();
 }
 
-void PlaylistUtils::setPlaylistTracksCount(const QString &playlistUrl, int tracksCount)
+void PlaylistUtils::setPlaylistTracksCount(QString playlistUrl, int tracksCount)
 {
+    playlistUrl = QUrl(playlistUrl).toEncoded();
+
     QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(QString("DELETE {\n"
-                                             "    ?playlist nfo:entryCounter ?tracksCount\n"
-                                             "} WHERE {\n"
-                                             "    ?playlist nie:url \"%1\";\n"
-                                             "              nfo:entryCounter ?tracksCount.\n"
-                                             "}\n").arg(playlistUrl),
-                                     QSparqlQuery::DeleteStatement));
+                                                                              "    ?playlist nfo:entryCounter ?tracksCount\n"
+                                                                              "} WHERE {\n"
+                                                                              "    ?playlist nie:url \"" + playlistUrl + "\";\n"
+                                                                              "              nfo:entryCounter ?tracksCount.\n"
+                                                                              "}\n"),
+                                                                      QSparqlQuery::DeleteStatement));
     result->deleteLater();
 
     result = m_sparqlConnection->exec(QSparqlQuery(QString("INSERT {\n"
-                                             "    ?playlist nfo:entryCounter %1\n"
-                                             "} WHERE {\n"
-                                             "    ?playlist nie:url \"%2\".\n"
-                                             "}\n").arg(tracksCount).arg(playlistUrl),
-                                     QSparqlQuery::InsertStatement));
+                                                           "    ?playlist nfo:entryCounter " + QString::number(tracksCount) + "\n"
+                                                           "} WHERE {\n"
+                                                           "    ?playlist nie:url \"" + playlistUrl + "\".\n"
+                                                           "}\n"),
+                                                   QSparqlQuery::InsertStatement));
 
     connect(result, &QSparqlResult::finished, result, &QObject::deleteLater);
 }

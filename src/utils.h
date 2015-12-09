@@ -48,6 +48,8 @@ public:
                                                  const QString &album,
                                                  bool unknownAlbum);
 
+    static QString singleTrackSparqlQuery(const QString &trackUrl);
+
     Q_INVOKABLE static QString homeDirectory();
     Q_INVOKABLE static QString sdcard();
     Q_INVOKABLE static QString urlToPath(const QUrl &url);
