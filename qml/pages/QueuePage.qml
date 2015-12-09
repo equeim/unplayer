@@ -62,9 +62,8 @@ Page {
         selectionText: qsTr("%n track(s) selected", String(), queueProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            visible: queueProxyModel.selectedIndexesCount !== 0
-
             AddToPlaylistMenuItem {
+                enabled: queueProxyModel.selectedIndexesCount !== 0
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -81,8 +80,8 @@ Page {
             }
 
             MenuItem {
+                enabled: queueProxyModel.selectedIndexesCount !== 0
                 text: qsTr("Remove")
-                //onClicked: trackDelegate.menuOpenChanged.connect(remove)
                 onClicked: {
                     player.queue.remove(queueProxyModel.selectedSourceIndexes())
                     selectionPanel.showPanel = false

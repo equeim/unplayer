@@ -140,7 +140,8 @@ Page {
                 Image {
                     anchors.centerIn: parent
                     asynchronous: true
-                    source: "image://theme/icon-l-music"
+                    source: pressItem.highlighted ? "image://theme/icon-l-music?" + Theme.highlightColor :
+                                                    "image://theme/icon-l-music"
                 }
             }
 

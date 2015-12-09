@@ -38,9 +38,9 @@ Page {
         selectionText: qsTr("%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            visible: artistsProxyModel.selectedIndexesCount !== 0
-
             AddToQueueMenuItem {
+                enabled: artistsProxyModel.selectedIndexesCount !== 0
+
                 onClicked: {
                     player.queue.add(selectionPanel.getTracksForSelectedArtists())
                     player.queue.setCurrentToFirstIfNeeded()
@@ -49,6 +49,7 @@ Page {
             }
 
             AddToPlaylistMenuItem {
+                enabled: artistsProxyModel.selectedIndexesCount !== 0
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {

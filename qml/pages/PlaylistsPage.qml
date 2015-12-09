@@ -47,8 +47,9 @@ Page {
         selectionText: qsTr("%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            visible: playlistsProxyModel.selectedIndexesCount !== 0
             MenuItem {
+                enabled: playlistsProxyModel.selectedIndexesCount !== 0
+
                 text: qsTr("Remove")
                 onClicked: {
                     remorsePopup.execute(qsTr("Removing %n playlist(s)", String(), playlistsProxyModel.selectedIndexesCount),

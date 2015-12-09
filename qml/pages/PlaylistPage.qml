@@ -45,9 +45,9 @@ Page {
         selectionText: qsTr("%n track(s) selected", String(), playlistProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            visible: playlistProxyModel.selectedIndexesCount !== 0
-
             AddToQueueMenuItem {
+                enabled: playlistProxyModel.selectedIndexesCount !== 0
+
                 onClicked: {
                     player.queue.add(selectionPanel.getSelectedTracks())
                     player.queue.setCurrentToFirstIfNeeded()
@@ -56,6 +56,8 @@ Page {
             }
 
             MenuItem {
+                enabled: playlistProxyModel.selectedIndexesCount !== 0
+
                 text: qsTr("Remove from playlist")
                 onClicked: {
                     var selectedIndexes = playlistProxyModel.selectedSourceIndexes()
