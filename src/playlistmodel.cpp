@@ -70,7 +70,7 @@ PlaylistModel::PlaylistModel()
 PlaylistModel::~PlaylistModel()
 {
     qDeleteAll(m_queries);
-    qDeleteAll(m_uniqueTracksHash);
+    qDeleteAll(m_tracks);
 }
 
 void PlaylistModel::classBegin()
@@ -88,31 +88,22 @@ void PlaylistModel::componentComplete()
     } else {
         QSparqlConnection *connection = new QSparqlConnection("QTRACKER_DIRECT", QSparqlConnectionOptions(), this);
 
-        for (QStringList::const_iterator iterator = tracksList.cbegin(), cend = tracksList.cend();
-             iterator != cend;
-             iterator++) {
+        for (int i = 0, tracksCount = tracksList.size(); i < tracksCount; i++) {
+            QString url = QUrl(tracksList.at(i)).toEncoded();
+            m_tracks.append(new PlaylistTrack(url));
 
-            QString url = QUrl(*iterator).toEncoded();
-            if (m_uniqueTracksHash.contains(url)) {
-                m_tracks.append(m_uniqueTracksHash.value(url));
-            } else {
-                PlaylistTrack *track = new PlaylistTrack(url);
-                m_uniqueTracksHash.insert(url, track);
-                m_tracks.append(track);
-
-                QSparqlResult *result = connection->exec(QSparqlQuery(QString("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-                                                                              "       nie:url(?track) AS ?url\n"
-                                                                              "       nfo:duration(?track) AS ?duration\n"
-                                                                              "       nmm:artistName(nmm:performer(?track)) AS ?artist\n"
-                                                                              "       nie:title(nmm:musicAlbum(?track)) AS ?album\n"
-                                                                              "WHERE {\n"
-                                                                              "    ?track nie:url \"%1\".\n"
-                                                                              "}").arg(url),
-                                                                      QSparqlQuery::SelectStatement));
-
-                connect(result, &QSparqlResult::finished, this, &PlaylistModel::onQueryFinished);
-                m_queries.append(result);
-            }
+            QSparqlResult *result = connection->exec(QSparqlQuery(QString("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
+                                                                          "       nie:url(?track) AS ?url\n"
+                                                                          "       nfo:duration(?track) AS ?duration\n"
+                                                                          "       nmm:artistName(nmm:performer(?track)) AS ?artist\n"
+                                                                          "       nie:title(nmm:musicAlbum(?track)) AS ?album\n"
+                                                                          "WHERE {\n"
+                                                                          "    ?track nie:url \"%1\".\n"
+                                                                          "}").arg(url),
+                                                                  QSparqlQuery::SelectStatement));
+            result->setProperty("trackIndex", i);
+            connect(result, &QSparqlResult::finished, this, &PlaylistModel::onQueryFinished);
+            m_queries.append(result);
         }
     }
 }
@@ -185,24 +176,15 @@ QVariantMap PlaylistModel::get(int trackIndex) const
     return map;
 }
 
-void PlaylistModel::removeAt(int trackIndex)
+void PlaylistModel::removeAtIndexes(const QList<int> &trackIndexes)
 {
-    beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
-    PlaylistTrack *track = m_tracks.takeAt(trackIndex);
-    m_uniqueTracksHash.remove(m_uniqueTracksHash.key(track));
-    delete track;
-    m_rowCount = m_tracks.size();
-    endRemoveRows();
-}
-
-void PlaylistModel::clear()
-{
-    beginResetModel();
-    qDeleteAll(m_uniqueTracksHash);
-    m_uniqueTracksHash.clear();
-    m_tracks.clear();
-    m_rowCount = 0;
-    endResetModel();
+    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
+        int trackIndex = trackIndexes.at(i) - i;
+        beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
+        delete m_tracks.takeAt(trackIndex);
+        m_rowCount--;
+        endRemoveRows();
+    }
 }
 
 QHash<int, QByteArray> PlaylistModel::roleNames() const
@@ -226,7 +208,7 @@ void PlaylistModel::onQueryFinished()
         result->next();
         QSparqlResultRow row = result->current();
 
-        PlaylistTrack *track = m_uniqueTracksHash.value(row.value("url").toString());
+        PlaylistTrack *track = m_tracks.at(result->property("trackIndex").toInt());
 
         track->title = row.value("title").toString();
         track->duration = row.value("duration").toLongLong();
@@ -250,7 +232,7 @@ void PlaylistModel::onQueryFinished()
 
     m_loadedTracks++;
 
-    if (m_loadedTracks == m_uniqueTracksHash.size()) {
+    if (m_loadedTracks == m_tracks.size()) {
         m_loaded = true;
         emit loadedChanged();
 

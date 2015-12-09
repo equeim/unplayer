@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
@@ -27,18 +28,31 @@ Page {
     id: page
 
     property var tracks
+    property bool added: false
 
-    SearchListView {
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
-        headerTitle: qsTr("Add to playlist")
+        anchors {
+            fill: parent
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
+
+        header: PageHeader {
+            title: qsTr("Add to playlist")
+        }
         delegate: MediaContainerListItem {
-            title: Theme.highlightText(model.title, listView.searchFieldText.trim(), Theme.highlightColor)
+            title: Theme.highlightText(model.title, searchPanel.searchText, Theme.highlightColor)
             description: model.tracksCount === undefined ? String() :
                                                            qsTr("%n track(s)", String(), model.tracksCount)
             onClicked: {
                 Unplayer.PlaylistUtils.addTracksToPlaylist(model.url, tracks)
+                added = true
                 pageStack.pop()
             }
         }
@@ -50,19 +64,26 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("New playlist...")
-                onClicked: pageStack.push("NewPlaylistDialog.qml", {
-                                              acceptDestination: pageStack.previousPage(),
-                                              acceptDestinationAction: PageStackAction.Pop,
-                                              tracks: page.tracks
-                                          })
+                onClicked: pageStack.push(newPlaylistDialog, { acceptDestination: pageStack.previousPage() })
+
+                Component {
+                    id: newPlaylistDialog
+
+                    NewPlaylistDialog {
+                        acceptDestinationAction: PageStackAction.Pop
+                        tracks: page.tracks
+                        onAccepted: added = true
+                    }
+                }
             }
 
-            SearchPullDownMenuItem { }
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No playlists")
         }
+
+        VerticalScrollDecorator { }
     }
 }

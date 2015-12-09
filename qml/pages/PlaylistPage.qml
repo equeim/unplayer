@@ -22,28 +22,73 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 import "../components"
+import "../models"
 
 Page {
-    property alias title: listView.headerTitle
+    id: page
+
+    property alias bottomPanelOpen: selectionPanel.open
+
+    property string pageTitle
     property alias playlistUrl: playlistModel.url
 
     RemorsePopup {
         id: remorsePopup
     }
 
-    SearchListView {
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n track(s) selected", String(), playlistProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: playlistProxyModel.selectedIndexesCount !== 0
+
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add(selectionPanel.getSelectedTracks())
+                    player.queue.setCurrentToFirstIfNeeded()
+                    selectionPanel.showPanel = false
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Remove from playlist")
+                onClicked: {
+                    var selectedIndexes = playlistProxyModel.selectedSourceIndexes()
+                    remorsePopup.execute(qsTr("Removing %n track(s)", String(), playlistProxyModel.selectedIndexesCount),
+                                         function() {
+                                             playlistModel.removeAtIndexes(selectedIndexes)
+                                             Unplayer.PlaylistUtils.removeTracksFromPlaylist(playlistUrl, selectedIndexes)
+                                             selectionPanel.showPanel = false
+                                         })
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
-        delegate: BaseTrackDelegate {
-            id: trackDelegate
+        anchors {
+            fill: parent
+            bottomMargin: selectionPanel.visibleSize
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
 
+        header: PageHeader {
+            title: pageTitle
+        }
+        delegate: BaseTrackDelegate {
             current: model.url === player.queue.currentUrl
             menu: ContextMenu {
-                MenuItem {
-                    text: qsTr("Add to queue")
+                AddToQueueMenuItem {
                     onClicked: {
-                        player.queue.add([playlistModel.get(listView.model.sourceIndex(model.index))])
+                        player.queue.add([playlistModel.get(playlistProxyModel.sourceIndex(model.index))])
                         player.queue.setCurrentToFirstIfNeeded()
                     }
                 }
@@ -51,38 +96,42 @@ Page {
                 MenuItem {
                     text: qsTr("Remove from playlist")
                     onClicked: remorseAction(qsTr("Removing"), function() {
-                        var trackIndex = listView.model.sourceIndex(model.index)
-                        playlistModel.removeAt(trackIndex)
-                        Unplayer.PlaylistUtils.removeTrackFromPlaylist(playlistModel.url, trackIndex)
+                        var trackIndex = playlistProxyModel.sourceIndex(model.index)
+                        playlistModel.removeAtIndexes([trackIndex])
+                        Unplayer.PlaylistUtils.removeTracksFromPlaylist(playlistUrl, [trackIndex])
                     })
                 }
             }
 
             onClicked: {
-                if (current) {
-                    if (!player.playing)
-                        player.play()
-                    return
+                if (selectionPanel.showPanel) {
+                    playlistProxyModel.select(model.index)
+                } else {
+                    if (current) {
+                        if (!player.playing)
+                            player.play()
+                        return
+                    }
+
+                    player.queue.clear()
+                    player.queue.add(playlistProxyModel.getTracks())
+
+                    player.queue.currentIndex = model.index
+                    player.queue.currentTrackChanged()
                 }
-
-                var trackList = []
-                var count = listView.model.count()
-                for (var i = 0; i < count; i++) {
-                    trackList[i] = playlistModel.get(listView.model.sourceIndex(i))
-                }
-
-                player.queue.clear()
-                player.queue.add(trackList)
-
-                player.queue.currentIndex = model.index
-                player.queue.currentTrackChanged()
             }
             ListView.onRemove: animateRemoval()
         }
-        model: Unplayer.FilterProxyModel {
-            filterRoleName: "title"
+        model: TracksProxyModel {
+            id: playlistProxyModel
             sourceModel: Unplayer.PlaylistModel {
                 id: playlistModel
+            }
+        }
+        section {
+            property: "artist"
+            delegate: SectionHeader {
+                text: section
             }
         }
 
@@ -95,29 +144,11 @@ Page {
                 })
             }
 
-            MenuItem {
-                enabled: listView.count !== 0
-                text: qsTr("Clear playlist")
-                onClicked: remorsePopup.execute(qsTr("Clearing playlist"), function() {
-                    playlistModel.clear()
-                    Unplayer.PlaylistUtils.clearPlaylist(playlistModel.url)
-                })
+            SelectionMenuItem {
+                text: qsTr("Select tracks")
             }
 
-            MenuItem {
-                text: qsTr("Add to queue")
-                onClicked: {
-                    var tracks = []
-                    var count = listView.model.count()
-                    for (var i = 0; i < count; i++)
-                        tracks[i] = playlistModel.get(listView.model.sourceIndex(i))
-
-                    player.queue.add(tracks)
-                    player.queue.setCurrentToFirstIfNeeded()
-                }
-            }
-
-            SearchPullDownMenuItem { }
+            SearchMenuItem { }
         }
 
         ViewPlaceholder {
@@ -125,9 +156,11 @@ Page {
             text: qsTr("Loading")
         }
 
-        ViewPlaceholder {
+        ListViewPlaceholder {
             enabled: playlistModel.loaded && listView.count === 0
             text: qsTr("No tracks")
         }
+
+        VerticalScrollDecorator { }
     }
 }

@@ -34,8 +34,7 @@ public:
 
     Q_INVOKABLE void newPlaylist(const QString &name, const QVariant &tracksVariant);
     Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant);
-    Q_INVOKABLE void removeTrackFromPlaylist(const QString &playlistUrl, int trackIndex);
-    Q_INVOKABLE void clearPlaylist(const QString &url);
+    Q_INVOKABLE void removeTracksFromPlaylist(const QString &playlistUrl, const QList<int> &trackIndexes);
     Q_INVOKABLE static void removePlaylist(const QString &url);
     static QStringList parsePlaylist(const QString &playlistUrl);
 private:

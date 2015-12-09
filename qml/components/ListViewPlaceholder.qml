@@ -18,7 +18,12 @@
 
 import Sailfish.Silica 1.0
 
-MenuItem {
-    text: qsTr("Search")
-    onClicked: listView.showSearchField = true
+ViewPlaceholder {
+    enabled: listView.count === 0
+    verticalOffset: {
+        var windowHeight = isLandscape ? rootWindow.width :
+                                         rootWindow.height
+
+        return (listView.headerItem.height + listView.height - windowHeight) / 2
+    }
 }

@@ -20,7 +20,22 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 ListItem {
+    id: trackDelegate
+
     property bool current
+
+    showMenuOnPressAndHold: !selectionPanel.showPanel
+
+    Binding {
+        target: trackDelegate
+        property: "highlighted"
+        value: down || menuOpen || listView.model.isSelected(model.index)
+    }
+
+    Connections {
+        target: listView.model
+        onSelectionChanged: trackDelegate.highlighted = listView.model.isSelected(model.index)
+    }
 
     Column {
         anchors {
@@ -33,7 +48,7 @@ ListItem {
 
         Label {
             color: highlighted || current ? Theme.highlightColor : Theme.primaryColor
-            text: Theme.highlightText(model.title, listView.searchFieldText.trim(), Theme.highlightColor)
+            text: Theme.highlightText(model.title, searchPanel.searchText, Theme.highlightColor)
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             width: parent.width

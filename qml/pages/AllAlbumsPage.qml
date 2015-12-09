@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
@@ -24,17 +25,66 @@ import "../components"
 import "../models"
 
 Page {
-    id: albumsPage
+    id: page
 
-    SearchListView {
+    property alias bottomPanelOpen: selectionPanel.open
+
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: albumsProxyModel.selectedIndexesCount !== 0
+
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add(selectionPanel.getTracksForSelectedAlbums())
+                    player.queue.setCurrentToFirstIfNeeded()
+                    selectionPanel.showPanel = false
+                }
+            }
+
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push(addToPlaylistPage)
+
+                Component {
+                    id: addToPlaylistPage
+
+                    AddToPlaylistPage {
+                        tracks: selectionPanel.getTracksForSelectedAlbums()
+                        Component.onDestruction: {
+                            if (added)
+                                selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
-        headerTitle: qsTr("Albums")
+        anchors {
+            fill: parent
+            bottomMargin: selectionPanel.visibleSize
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
+
+        header: PageHeader {
+            title: qsTr("Albums")
+        }
         delegate: AlbumDelegate {
             description: model.artist
         }
         model: Unplayer.FilterProxyModel {
+            id: albumsProxyModel
+
             filterRoleName: "album"
             sourceModel: AlbumsModel {
                 id: albumsModel
@@ -49,13 +99,18 @@ Page {
         }
 
         PullDownMenu {
-            SearchPullDownMenuItem { }
+            SelectionMenuItem {
+                text: qsTr("Select albums")
+            }
+
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No albums")
         }
+
+        VerticalScrollDecorator { }
     }
 }
 

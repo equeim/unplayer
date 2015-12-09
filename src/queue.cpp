@@ -152,21 +152,58 @@ void Queue::add(const QVariantList &trackList)
     }
 }
 
-void Queue::remove(int index)
+void Queue::remove(const QList<int> &indexes)
 {
-    if (index < m_currentIndex) {
-        setCurrentIndex(m_currentIndex - 1);
-    } else if (index == m_currentIndex) {
-        if (m_tracks.size() == 1)
-            setCurrentIndex(-1);
-        emit currentTrackChanged();
+    QueueTrack *currentTrack = m_tracks.at(m_currentIndex);
+
+    bool trackChanged = false;
+    QueueTrack *newTrack = nullptr;
+
+    if (indexes.contains(m_currentIndex)) {
+        trackChanged = true;
+
+        int newIndex = -1;
+
+        if (indexes.size() != m_tracks.size()) {
+            for (int i = m_currentIndex + 1, tracksCount = m_tracks.size(); i < tracksCount; i++) {
+                if (!indexes.contains(i)) {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            if (newIndex == -1) {
+                for (int i = 0, max = m_currentIndex; i < max; i++) {
+                    if (!indexes.contains(i)) {
+                        newIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (newIndex != -1)
+                newTrack = m_tracks.at(newIndex);
+        }
     }
 
-    QueueTrack *track = m_tracks.takeAt(index);
-    m_notPlayedTracks.removeOne(track);
-    delete track;
+    emit tracksRemoved(indexes);
 
-    emit trackRemoved(index);
+    for (int i = 0, indexesCount = indexes.size(); i < indexesCount; i++) {
+        QueueTrack *track = m_tracks.takeAt(indexes.at(i) - i);
+        m_notPlayedTracks.removeOne(track);
+        delete track;
+    }
+
+    if (trackChanged) {
+        if (newTrack)
+            setCurrentIndex(m_tracks.indexOf(newTrack));
+        else
+            setCurrentIndex(-1);
+        emit currentTrackChanged();
+    } else {
+        if (m_currentIndex >= indexes.first())
+            setCurrentIndex(m_tracks.indexOf(currentTrack));
+    }
 }
 
 void Queue::clear()

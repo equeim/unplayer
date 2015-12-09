@@ -32,8 +32,10 @@ DockedPanel {
     Binding {
         target: panel
         property: "open"
-        value: pageStack.currentPage !== nowPlayingPage &&
-               player.queue.currentIndex !== -1
+        value: player.queue.currentIndex !== -1 &&
+               pageStack.currentPage !== nowPlayingPage &&
+               (typeof pageStack.currentPage.bottomPanelOpen === "boolean" ? !pageStack.currentPage.bottomPanelOpen :
+                                                                             true)
     }
 
     NowPlayingPage {

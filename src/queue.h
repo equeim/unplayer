@@ -76,7 +76,7 @@ public:
     void setRepeat(bool repeat);
 
     Q_INVOKABLE void add(const QVariantList &trackList);
-    Q_INVOKABLE void remove(int index);
+    Q_INVOKABLE void remove(const QList<int> &indexes);
     Q_INVOKABLE void clear();
 
     Q_INVOKABLE bool hasUrl(const QString &url);
@@ -101,7 +101,7 @@ signals:
     void shuffleChanged();
     void repeatChanged();
 
-    void trackRemoved(int index);
+    void tracksRemoved(QList<int> indexes);
 };
 
 }

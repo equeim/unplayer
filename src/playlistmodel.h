@@ -50,8 +50,7 @@ public:
     bool isLoaded() const;
 
     Q_INVOKABLE QVariantMap get(int trackIndex) const;
-    Q_INVOKABLE void removeAt(int trackIndex);
-    Q_INVOKABLE void clear();
+    Q_INVOKABLE void removeAtIndexes(const QList<int> &trackIndexes);
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
@@ -61,7 +60,6 @@ private:
     int m_rowCount;
 
     QList<QSparqlResult*> m_queries;
-    QHash<QString, PlaylistTrack*> m_uniqueTracksHash;
     int m_loadedTracks;
 
     QString m_url;

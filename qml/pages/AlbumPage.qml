@@ -25,10 +25,57 @@ import "../components"
 import "../models"
 
 Page {
-    SearchListView {
+    id: page
+
+    property alias bottomPanelOpen: selectionPanel.open
+
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: tracksProxyModel.selectedIndexesCount !== 0
+
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add(selectionPanel.getSelectedTracks())
+                    player.queue.setCurrentToFirstIfNeeded()
+                    selectionPanel.showPanel = false
+                }
+            }
+
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push(addToPlaylistPage)
+
+                Component {
+                    id: addToPlaylistPage
+
+                    AddToPlaylistPage {
+                        tracks: selectionPanel.getSelectedTracks()
+                        Component.onDestruction: {
+                            if (added)
+                                selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            bottomMargin: selectionPanel.visibleSize
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
+
         header: AlbumPageHeader { }
         delegate: LibraryTrackDelegate { }
         model: TracksProxyModel {
@@ -60,25 +107,17 @@ Page {
                 }
             }
 
-            MenuItem {
-                text: qsTr("Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: tracksProxyModel.getTracks() })
+            SelectionMenuItem {
+                text: qsTr("Select tracks")
             }
 
-            MenuItem {
-                text: qsTr("Add to queue")
-                onClicked: {
-                    player.queue.add(tracksProxyModel.getTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
-                }
-            }
-
-            SearchPullDownMenuItem { }
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No tracks")
         }
+
+        VerticalScrollDecorator { }
     }
 }

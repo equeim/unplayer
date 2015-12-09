@@ -25,7 +25,9 @@ import "../components"
 import "../models"
 
 Page {
-    property NowPlayingPage nowPlayingPage
+    id: page
+
+    property alias bottomPanelOpen: selectionPanel.open
 
     function positionViewAtCurrentIndex() {
         listView.positionViewAtIndex(listView.currentIndex, ListView.Center)
@@ -43,21 +45,73 @@ Page {
 
     objectName: "queuePage"
 
-    SearchListView {
+    Connections {
+        target: player.queue
+        onCurrentTrackChanged: {
+            if (player.queue.currentIndex === -1)
+                pageStack.pop(pageStack.previousPage(pageStack.previousPage()))
+        }
+    }
+
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n track(s) selected", String(), queueProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: queueProxyModel.selectedIndexesCount !== 0
+
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push(addToPlaylistPage)
+
+                Component {
+                    id: addToPlaylistPage
+
+                    AddToPlaylistPage {
+                        tracks: selectionPanel.getSelectedTracks()
+                        Component.onDestruction: {
+                            if (added)
+                                selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Remove")
+                //onClicked: trackDelegate.menuOpenChanged.connect(remove)
+                onClicked: {
+                    player.queue.remove(queueProxyModel.selectedSourceIndexes())
+                    selectionPanel.showPanel = false
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
         anchors {
             fill: parent
-            bottomMargin: nowPlayingPanel.open ? nowPlayingPanel.height - nowPlayingPanel.visibleSize :
-                                                 0
+            bottomMargin: selectionPanel.expanded ? selectionPanel.visibleSize :
+                                                    nowPlayingPanel.height - nowPlayingPanel.visibleSize
+            topMargin: searchPanel.visibleSize
         }
+        clip: true
+
         currentIndex: player.queue.currentIndex
-        headerTitle: qsTr("Queue")
         highlightFollowsCurrentItem: !player.queue.shuffle
+
+        header: PageHeader {
+            title: qsTr("Queue")
+        }
         delegate: BaseTrackDelegate {
             id: trackDelegate
 
-            current: model.index === tracksProxyModel.proxyIndex(player.queue.currentIndex)
+            current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Add to playlist")
@@ -66,7 +120,7 @@ Page {
 
                 MenuItem {
                     function remove() {
-                        player.queue.remove(tracksProxyModel.sourceIndex(model.index))
+                        player.queue.remove([queueProxyModel.sourceIndex(model.index)])
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 
@@ -75,20 +129,24 @@ Page {
                 }
             }
             onClicked: {
-                if (current) {
-                    if (!player.playing)
-                        player.play()
+                if (selectionPanel.showPanel) {
+                    queueProxyModel.select(model.index)
                 } else {
-                    player.queue.currentIndex = tracksProxyModel.sourceIndex(model.index)
-                    player.queue.currentTrackChanged()
-                    if (player.queue.shuffle)
-                        player.queue.resetNotPlayedTracks()
+                    if (current) {
+                        if (!player.playing)
+                            player.play()
+                    } else {
+                        player.queue.currentIndex = queueProxyModel.sourceIndex(model.index)
+                        player.queue.currentTrackChanged()
+                        if (player.queue.shuffle)
+                            player.queue.resetNotPlayedTracks()
+                    }
                 }
             }
             ListView.onRemove: animateRemoval()
         }
         model: TracksProxyModel {
-            id: tracksProxyModel
+            id: queueProxyModel
 
             filterRoleName: "title"
             sourceModel: Unplayer.QueueModel {
@@ -97,32 +155,17 @@ Page {
         }
 
         PullDownMenu {
-            id: pullDownMenu
-
-            MenuItem {
-                function clear() {
-                    player.queue.clear()
-                    pageStack.busyChanged.disconnect(clear)
-                }
-
-                text: qsTr("Clear")
-                onClicked: {
-                    pageStack.pop(pageStack.previousPage(nowPlayingPage))
-                    pageStack.busyChanged.connect(clear)
-                }
+            SelectionMenuItem {
+                text: qsTr("Select tracks")
             }
 
-            MenuItem {
-                text: qsTr("Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: tracksProxyModel.getTracks() })
-            }
-
-            SearchPullDownMenuItem { }
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No tracks")
         }
+
+        VerticalScrollDecorator { }
     }
 }
