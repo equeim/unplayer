@@ -154,39 +154,46 @@ void Queue::add(const QVariantList &trackList)
 
 void Queue::remove(const QList<int> &indexes)
 {
-    QueueTrack *currentTrack = m_tracks.at(m_currentIndex);
+    if (indexes.size() == m_tracks.size()) {
+        qDeleteAll(m_tracks);
+        m_tracks.clear();
+        m_notPlayedTracks.clear();
 
+        setCurrentIndex(-1);
+        emit currentTrackChanged();
+
+        return;
+    }
+
+    emit tracksRemoved(indexes);
+
+    QueueTrack *currentTrack = m_tracks.at(m_currentIndex);
     bool trackChanged = false;
     QueueTrack *newTrack = nullptr;
 
     if (indexes.contains(m_currentIndex)) {
         trackChanged = true;
-
         int newIndex = -1;
 
-        if (indexes.size() != m_tracks.size()) {
-            for (int i = m_currentIndex + 1, tracksCount = m_tracks.size(); i < tracksCount; i++) {
+        for (int i = m_currentIndex + 1, tracksCount = m_tracks.size(); i < tracksCount; i++) {
+            if (!indexes.contains(i)) {
+                newIndex = i;
+                break;
+            }
+        }
+
+        if (newIndex == -1) {
+            for (int i = 0, max = m_currentIndex; i < max; i++) {
                 if (!indexes.contains(i)) {
                     newIndex = i;
                     break;
                 }
             }
-
-            if (newIndex == -1) {
-                for (int i = 0, max = m_currentIndex; i < max; i++) {
-                    if (!indexes.contains(i)) {
-                        newIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            if (newIndex != -1)
-                newTrack = m_tracks.at(newIndex);
         }
-    }
 
-    emit tracksRemoved(indexes);
+        if (newIndex != -1)
+            newTrack = m_tracks.at(newIndex);
+    }
 
     for (int i = 0, indexesCount = indexes.size(); i < indexesCount; i++) {
         QueueTrack *track = m_tracks.takeAt(indexes.at(i) - i);

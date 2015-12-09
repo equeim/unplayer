@@ -36,10 +36,11 @@ public:
     Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant);
     Q_INVOKABLE void removeTracksFromPlaylist(const QString &playlistUrl, const QList<int> &trackIndexes);
     Q_INVOKABLE static void removePlaylist(const QString &url);
+    Q_INVOKABLE QVariantList syncParsePlaylist(const QString &playlistUrl);
     static QStringList parsePlaylist(const QString &playlistUrl);
 private:
     QStringList unboxTracks(const QVariant &tracksVariant);
-    void setPlaylistTracksCount(const QString &playlistUrl, int tracksCount);
+    void setPlaylistTracksCount(QString playlistUrl, int tracksCount);
     static void savePlaylist(const QString &playlistUrl, const QStringList &tracks);
 private slots:
     void onTrackerGraphUpdated(QString className);

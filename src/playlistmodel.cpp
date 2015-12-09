@@ -27,6 +27,7 @@
 #include <QSparqlResult>
 
 #include "playlistutils.h"
+#include "utils.h"
 
 namespace Unplayer
 {
@@ -92,14 +93,7 @@ void PlaylistModel::componentComplete()
             QString url = QUrl(tracksList.at(i)).toEncoded();
             m_tracks.append(new PlaylistTrack(url));
 
-            QSparqlResult *result = connection->exec(QSparqlQuery(QString("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-                                                                          "       nie:url(?track) AS ?url\n"
-                                                                          "       nfo:duration(?track) AS ?duration\n"
-                                                                          "       nmm:artistName(nmm:performer(?track)) AS ?artist\n"
-                                                                          "       nie:title(nmm:musicAlbum(?track)) AS ?album\n"
-                                                                          "WHERE {\n"
-                                                                          "    ?track nie:url \"%1\".\n"
-                                                                          "}").arg(url),
+            QSparqlResult *result = connection->exec(QSparqlQuery(Utils::singleTrackSparqlQuery(url),
                                                                   QSparqlQuery::SelectStatement));
             result->setProperty("trackIndex", i);
             connect(result, &QSparqlResult::finished, this, &PlaylistModel::onQueryFinished);

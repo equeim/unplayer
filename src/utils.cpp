@@ -184,6 +184,20 @@ QString Utils::tracksSparqlQuery(bool allArtists,
     return query;
 }
 
+QString Utils::singleTrackSparqlQuery(const QString &trackUrl)
+{
+    return QString("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
+                   "       nie:url(?track) AS ?url\n"
+                   "       nfo:duration(?track) AS ?duration\n"
+                   "       tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + tr("Unknown artist") + "\") AS ?artist\n"
+                   "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
+                   "       tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" + tr("Unknown album") + "\") AS ?album\n"
+                   "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
+                   "WHERE {\n"
+                   "    ?track nie:url \"" + QUrl(trackUrl).toEncoded() + "\".\n"
+                   "}");
+}
+
 QString Utils::homeDirectory()
 {
     return m_homeDirectory;
