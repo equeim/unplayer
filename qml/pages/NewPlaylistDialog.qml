@@ -24,9 +24,9 @@ import harbour.unplayer 0.1 as Unplayer
 Dialog {
     property var tracks
 
-    canAccept: playlistNameField.text
+    canAccept: playlistNameField.text.trim().length !== 0
 
-    onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text, tracks)
+    onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text.trim(), tracks)
 
     SilicaFlickable {
         anchors.fill: parent
