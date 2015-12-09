@@ -78,15 +78,13 @@ DockedPanel {
     Binding {
         target: selectionPanel
         property: "open"
-        value: showPanel && !Qt.inputMethod.visible && pageStack.currentPage === page
+        value: showPanel && !Qt.inputMethod.visible
     }
 
     onOpenChanged: {
-        if (!open) {
-            if (!Qt.inputMethod.visible && pageStack.currentPage === page) {
-                showPanel = false
-                listView.model.selectionModel.clear()
-            }
+        if (!open && !Qt.inputMethod.visible) {
+            showPanel = false
+            listView.model.selectionModel.clear()
         }
     }
 

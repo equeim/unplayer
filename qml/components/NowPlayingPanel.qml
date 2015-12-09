@@ -27,12 +27,17 @@ DockedPanel {
     width: parent.width
     height: largeScreen ? Theme.itemSizeExtraLarge : Theme.itemSizeMedium
 
-    visible: !Qt.inputMethod.visible
+    opacity: open ? 1 : 0
+
+    Behavior on opacity {
+        FadeAnimation { }
+    }
 
     Binding {
         target: panel
         property: "open"
         value: player.queue.currentIndex !== -1 &&
+               !Qt.inputMethod.visible &&
                pageStack.currentPage !== nowPlayingPage &&
                (typeof pageStack.currentPage.bottomPanelOpen === "boolean" ? !pageStack.currentPage.bottomPanelOpen :
                                                                              true)
