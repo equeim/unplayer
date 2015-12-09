@@ -16,15 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import harbour.unplayer 0.1 as Unplayer
+import QtQuick 2.2
 
-Unplayer.FilterProxyModel {
-    function getTracks() {
-        var tracks = []
-        for (var i = 0, tracksCount = count(); i < tracksCount; i++)
-            tracks.push(sourceModel.get(sourceIndex(i)))
-        return tracks
+MediaContainerListItem {
+    id: delegate
+
+    showMenuOnPressAndHold: !selectionPanel.showPanel
+
+    Binding {
+        target: delegate
+        property: "highlighted"
+        value: down || menuOpen || listView.model.isSelected(model.index)
     }
 
-    filterRoleName: "title"
+    Connections {
+        target: listView.model
+        onSelectionChanged: delegate.highlighted = listView.model.isSelected(model.index)
+    }
 }

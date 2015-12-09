@@ -67,6 +67,7 @@ Item {
 
             anchors.verticalCenter: parent.verticalCenter
             x: Theme.horizontalPageMargin
+
             source: albumDelegate.mediaArt
             size: Theme.itemSizeExtraLarge
         }

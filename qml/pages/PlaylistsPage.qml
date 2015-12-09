@@ -25,33 +25,84 @@ import "../components"
 import "../models"
 
 Page {
+    id: page
+
+    property alias bottomPanelOpen: selectionPanel.open
+
     Connections {
         target: Unplayer.PlaylistUtils
         onPlaylistsChanged: playlistsModel.reload()
     }
 
-    SearchListView {
+    RemorsePopup {
+        id: remorsePopup
+    }
+
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: playlistsProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                text: qsTr("Remove")
+                onClicked: {
+                    remorsePopup.execute(qsTr("Removing %n playlist(s)", String(), playlistsProxyModel.selectedIndexesCount),
+                                         function() {
+                                             var selectedIndexes = playlistsProxyModel.selectedSourceIndexes()
+
+                                             for (var i = 0, playlistsCount = selectedIndexes.length; i < playlistsCount; i++)
+                                                 Unplayer.PlaylistUtils.removePlaylist(playlistsModel.get(selectedIndexes[i]).url)
+
+                                             selectionPanel.showPanel = false
+                                         })
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
-        headerTitle: qsTr("Playlists")
-        delegate: MediaContainerListItem {
-            title: Theme.highlightText(model.title, listView.searchFieldText.trim(), Theme.highlightColor)
+        anchors {
+            fill: parent
+            bottomMargin: selectionPanel.visibleSize
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
+
+        header: PageHeader {
+            title: qsTr("Playlists")
+        }
+        delegate: MediaContainerSelectionDelegate {
+            title: Theme.highlightText(model.title, selectionPanel.searchText, Theme.highlightColor)
             description: model.tracksCount === undefined ? String() :
                                                            qsTr("%n track(s)", String(), model.tracksCount)
-            menu: ContextMenu {
-                MenuItem {
-                    text: qsTr("Remove")
-                    onClicked: remorseAction(qsTr("Removing"), function() {
-                        Unplayer.PlaylistUtils.removePlaylist(model.url)
-                    })
+            menu: Component {
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Remove")
+                        onClicked: remorseAction(qsTr("Removing"), function() {
+                            Unplayer.PlaylistUtils.removePlaylist(model.url)
+                        })
+                    }
                 }
             }
 
-            onClicked: pageStack.push("PlaylistPage.qml", {
-                                          title: model.title,
-                                          playlistUrl: model.url
-                                      })
+            onClicked: {
+                if (selectionPanel.showPanel) {
+                    playlistsProxyModel.select(model.index)
+                } else {
+                    pageStack.push("PlaylistPage.qml", {
+                                       pageTitle: model.title,
+                                       playlistUrl: model.url
+                                   })
+                }
+            }
         }
         model: Unplayer.FilterProxyModel {
             id: playlistsProxyModel
@@ -68,12 +119,17 @@ Page {
                 onClicked: pageStack.push("NewPlaylistDialog.qml")
             }
 
-            SearchPullDownMenuItem { }
+            SelectionMenuItem {
+                text: qsTr("Select playlists")
+            }
+
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No playlists")
         }
+
+        VerticalScrollDecorator { }
     }
 }

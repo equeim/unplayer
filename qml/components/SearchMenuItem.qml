@@ -16,15 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import harbour.unplayer 0.1 as Unplayer
+import Sailfish.Silica 1.0
 
-Unplayer.FilterProxyModel {
-    function getTracks() {
-        var tracks = []
-        for (var i = 0, tracksCount = count(); i < tracksCount; i++)
-            tracks.push(sourceModel.get(sourceIndex(i)))
-        return tracks
+MenuItem {
+    enabled: listView.count === 0 ? searchPanel.searchText.length !== 0 :
+                                    true
+    text: qsTr("Search")
+
+    onClicked: {
+        if (searchPanel.open)
+            searchPanel.focusSearchField()
+        else
+            searchPanel.open = true
     }
-
-    filterRoleName: "title"
 }

@@ -16,39 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import QtQuick 2.2
 import Sailfish.Silica 1.0
+
+import "../components"
 
 BaseTrackDelegate {
     current: model.url === player.queue.currentUrl
-    menu: ContextMenu {
-        MenuItem {
-            text: qsTr("Add to queue")
-            onClicked: {
-                player.queue.add([tracksModel.get(tracksProxyModel.sourceIndex(model.index))])
-                if (player.queue.currentIndex === -1) {
-                    player.queue.currentIndex = 0
-                    player.queue.currentTrackChanged()
+    menu: Component {
+        ContextMenu {
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add([listView.model.sourceModel.get(listView.model.sourceIndex(model.index))])
+                    player.queue.setCurrentToFirstIfNeeded()
                 }
             }
-        }
 
-        MenuItem {
-            text: qsTr("Add to playlist")
-            onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: model.url })
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: model.url })
+            }
         }
     }
 
     onClicked: {
-        if (current) {
-            if (!player.playing)
-                player.play()
-            return
+        if (selectionPanel.showPanel) {
+            listView.model.select(model.index)
+        } else {
+            if (current) {
+                if (!player.playing)
+                    player.play()
+                return
+            }
+
+            player.queue.clear()
+            player.queue.add(listView.model.getTracks())
+
+            player.queue.currentIndex = model.index
+            player.queue.currentTrackChanged()
         }
-
-        player.queue.clear()
-        player.queue.add(tracksProxyModel.getTracks())
-
-        player.queue.currentIndex = model.index
-        player.queue.currentTrackChanged()
     }
 }

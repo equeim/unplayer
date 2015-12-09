@@ -39,7 +39,7 @@ void QueueModel::classBegin()
 
 void QueueModel::componentComplete()
 {
-    connect(m_queue, &Queue::trackRemoved, this, &QueueModel::removeTrack);
+    connect(m_queue, &Queue::tracksRemoved, this, &QueueModel::removeTracks);
 }
 
 QVariant QueueModel::data(const QModelIndex &index, int role) const
@@ -98,10 +98,13 @@ QHash<int, QByteArray> QueueModel::roleNames() const
     return roles;
 }
 
-void QueueModel::removeTrack(int trackIndex)
+void QueueModel::removeTracks(QList<int> trackIndexes)
 {
-    beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
-    endRemoveRows();
+    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
+        int trackIndex = trackIndexes.at(i) - i;
+        beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
+        endRemoveRows();
+    }
 }
 
 }

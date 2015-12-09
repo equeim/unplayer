@@ -121,7 +121,7 @@ Page {
                 top: parent.top
             }
 
-            onClicked: pageStack.push("QueuePage.qml", { nowPlayingPage: page }).positionViewAtCurrentIndex()
+            onClicked: pageStack.push("QueuePage.qml").positionViewAtCurrentIndex()
 
             Rectangle {
                 anchors.fill: parent

@@ -29,17 +29,23 @@ src/folderlistmodel/qquickfolderlistmodel.h
 
 qml/main.qml
 
+qml/components/AddToPlaylistMenuItem.qml
+qml/components/AddToQueueMenuItem.qml
 qml/components/AlbumDelegate.qml
 qml/components/AlbumPageHeader.qml
 qml/components/ArtistPageHeader.qml
 qml/components/BaseTrackDelegate.qml
 qml/components/LibraryTrackDelegate.qml
+qml/components/ListViewPlaceholder.qml
 qml/components/MainPageListItem.qml
 qml/components/MediaArt.qml
 qml/components/MediaContainerListItem.qml
+qml/components/MediaContainerSelectionDelegate.qml
 qml/components/NowPlayingPanel.qml
-qml/components/SearchListView.qml
-qml/components/SearchPullDownMenuItem.qml
+qml/components/SearchMenuItem.qml
+qml/components/SearchPanel.qml
+qml/components/SelectionMenuItem.qml
+qml/components/SelectionPanel.qml
 
 qml/cover/CoverPage.qml
 

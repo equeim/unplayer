@@ -46,7 +46,7 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
-    void removeTrack(int trackIndex);
+    void removeTracks(QList<int> trackIndexes);
 private:
     Queue *m_queue;
 };

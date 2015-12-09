@@ -21,9 +21,10 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
+import "../components"
 import "../pages"
 
-MediaContainerListItem {
+MediaContainerSelectionDelegate {
     id: albumDelegate
 
     property bool unknownAlbum: model.rawAlbum === undefined
@@ -46,38 +47,40 @@ MediaContainerListItem {
         rootWindow.mediaArtReloadNeeded()
     }
 
-    title: Theme.highlightText(model.album, listView.searchFieldText.trim(), Theme.highlightColor)
+    title: Theme.highlightText(model.album, searchPanel.searchText, Theme.highlightColor)
     mediaArt: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
-    menu: ContextMenu {
-        MenuItem {
-            text: qsTr("Add to queue")
-            onClicked: {
-                player.queue.add(getTracks())
-                if (player.queue.currentIndex === -1) {
-                    player.queue.currentIndex = 0
-                    player.queue.currentTrackChanged()
+    menu: Component {
+        ContextMenu {
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add(getTracks())
+                    player.queue.setCurrentToFirstIfNeeded()
                 }
             }
-        }
 
-        MenuItem {
-            text: qsTr("Add to playlist")
-            onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: getTracks() })
-        }
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: getTracks() })
+            }
 
-        MenuItem {
-            enabled: !unknownArtist && !unknownAlbum
-            text: qsTr("Set cover image")
-            onClicked: pageStack.push(setCoverPage)
+            MenuItem {
+                enabled: !unknownArtist && !unknownAlbum
+                text: qsTr("Set cover image")
+                onClicked: pageStack.push(setCoverPage)
 
-            Component {
-                id: setCoverPage
-                SetCoverPage { }
+                Component {
+                    id: setCoverPage
+                    SetCoverPage { }
+                }
             }
         }
     }
 
-    onClicked: pageStack.push(albumPage)
+    onClicked: {
+        if (selectionPanel.showPanel)
+            listView.model.select(model.index)
+        else
+            pageStack.push(albumPage)
+    }
 
     Component {
         id: albumPage

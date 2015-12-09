@@ -19,8 +19,18 @@
 #include "filterproxymodel.h"
 #include "filterproxymodel.moc"
 
+#include <algorithm>
+
+#include <QItemSelectionModel>
+
 namespace Unplayer
 {
+
+FilterProxyModel::FilterProxyModel()
+    : m_selectionModel(new QItemSelectionModel(this))
+{
+    connect(m_selectionModel, &QItemSelectionModel::selectionChanged, this, &FilterProxyModel::selectionChanged);
+}
 
 void FilterProxyModel::classBegin()
 {
@@ -31,6 +41,7 @@ void FilterProxyModel::componentComplete()
 {
     setFilterRole(sourceModel()->roleNames().key(m_filterRoleName));
 }
+
 
 QByteArray FilterProxyModel::filterRoleName() const
 {
@@ -55,6 +66,45 @@ int FilterProxyModel::proxyIndex(int sourceIndex) const
 int FilterProxyModel::sourceIndex(int proxyIndex) const
 {
     return mapToSource(index(proxyIndex, 0)).row();
+}
+
+QItemSelectionModel* FilterProxyModel::selectionModel() const
+{
+    return m_selectionModel;
+}
+
+int FilterProxyModel::selectedIndexesCount() const
+{
+    return m_selectionModel->selectedIndexes().size();
+}
+
+QList<int> FilterProxyModel::selectedSourceIndexes() const
+{
+    QList<int> indexes;
+    QModelIndexList modelIndexes = m_selectionModel->selectedIndexes();
+    std::sort(modelIndexes.begin(), modelIndexes.end());
+    for (QModelIndexList::const_iterator iterator = modelIndexes.cbegin(), cend = modelIndexes.cend();
+         iterator != cend;
+         iterator++) {
+
+        indexes.append(sourceIndex(iterator->row()));
+    }
+    return indexes;
+}
+
+bool FilterProxyModel::isSelected(int row) const
+{
+    return m_selectionModel->isSelected(index(row, 0));
+}
+
+void FilterProxyModel::select(int row)
+{
+    m_selectionModel->select(index(row, 0), QItemSelectionModel::Toggle);
+}
+
+void FilterProxyModel::selectAll()
+{
+    m_selectionModel->select(QItemSelection(index(0, 0), index(rowCount() - 1, 0)), QItemSelectionModel::Select);
 }
 
 }

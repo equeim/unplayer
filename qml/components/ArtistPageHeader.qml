@@ -34,7 +34,7 @@ Item {
 
     PageHeader {
         id: pageHeader
-        title: artist
+        title: model.artist
     }
 
     Rectangle {

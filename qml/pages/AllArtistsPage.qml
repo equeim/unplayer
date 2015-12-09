@@ -25,12 +25,61 @@ import "../components"
 import "../models"
 
 Page {
-    SearchListView {
+    id: page
+
+    property alias bottomPanelOpen: selectionPanel.open
+
+    SearchPanel {
+        id: searchPanel
+    }
+
+    SelectionPanel {
+        id: selectionPanel
+        selectionText: qsTr("%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
+
+        PushUpMenu {
+            visible: artistsProxyModel.selectedIndexesCount !== 0
+
+            AddToQueueMenuItem {
+                onClicked: {
+                    player.queue.add(selectionPanel.getTracksForSelectedArtists())
+                    player.queue.setCurrentToFirstIfNeeded()
+                    selectionPanel.showPanel = false
+                }
+            }
+
+            AddToPlaylistMenuItem {
+                onClicked: pageStack.push(addToPlaylistPage)
+
+                Component {
+                    id: addToPlaylistPage
+
+                    AddToPlaylistPage {
+                        tracks: selectionPanel.getTracksForSelectedArtists()
+                        Component.onDestruction: {
+                            if (added)
+                                selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SilicaListView {
         id: listView
 
-        anchors.fill: parent
-        headerTitle: qsTr("Artists")
-        delegate: MediaContainerListItem {
+        anchors {
+            fill: parent
+            bottomMargin: selectionPanel.visibleSize
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
+
+        header: PageHeader {
+            title: qsTr("Artists")
+        }
+        delegate: MediaContainerSelectionDelegate {
             id: artistDelegate
 
             property bool unknownArtist: model.rawArtist === undefined
@@ -44,35 +93,44 @@ Page {
                                                                                 false))
             }
 
-            function addTracksToQueue() {
-                player.queue.add(getTracks())
-                if (player.queue.currentIndex === -1) {
-                    player.queue.currentIndex = 0
-                    player.queue.currentTrackChanged()
-                }
-            }
-
             function reloadMediaArt() {
                 mediaArt = String()
                 mediaArt = Unplayer.Utils.mediaArtForArtist(model.rawArtist)
             }
 
-            title: Theme.highlightText(model.artist, listView.searchFieldText.trim(), Theme.highlightColor)
+            title: Theme.highlightText(model.artist, searchPanel.searchText, Theme.highlightColor)
             description: qsTr("%n album(s)", String(), model.albumsCount)
             mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist)
-            menu: ContextMenu {
-                MenuItem {
-                    text: qsTr("Add to queue")
-                    onClicked: addTracksToQueue()
-                }
+            menu: Component {
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("All tracks")
+                        onClicked: pageStack.push("AllTracksPage.qml", {
+                                                      title: model.artist,
+                                                      unknownArtist: artistDelegate.unknownArtist,
+                                                      artist: model.rawArtist
+                                                  })
+                    }
 
-                MenuItem {
-                    text: qsTr("Add to playlist")
-                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                    AddToQueueMenuItem {
+                        onClicked: {
+                            player.queue.add(getTracks())
+                            player.queue.setCurrentToFirstIfNeeded()
+                        }
+                    }
+
+                    AddToPlaylistMenuItem {
+                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                    }
                 }
             }
 
-            onClicked: pageStack.push(artistPage)
+            onClicked: {
+                if (selectionPanel.showPanel)
+                    artistsProxyModel.select(model.index)
+                else
+                    pageStack.push(artistPage)
+            }
 
             Component {
                 id: artistPage
@@ -80,17 +138,26 @@ Page {
             }
         }
         model: Unplayer.FilterProxyModel {
+            id: artistsProxyModel
+
             filterRoleName: "artist"
-            sourceModel: ArtistsModel { }
+            sourceModel: ArtistsModel {
+                id: artistsModel
+            }
         }
 
         PullDownMenu {
-            SearchPullDownMenuItem { }
+            SelectionMenuItem {
+                text: qsTr("Select artists")
+            }
+
+            SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: listView.count === 0
+        ListViewPlaceholder {
             text: qsTr("No artists")
         }
+
+        VerticalScrollDecorator { }
     }
 }

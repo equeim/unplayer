@@ -76,7 +76,7 @@ public:
     void setRepeat(bool repeat);
 
     Q_INVOKABLE void add(const QVariantList &trackList);
-    Q_INVOKABLE void remove(int index);
+    Q_INVOKABLE void remove(const QList<int> &indexes);
     Q_INVOKABLE void clear();
 
     Q_INVOKABLE bool hasUrl(const QString &url);
@@ -85,12 +85,12 @@ public:
     bool nextOnEos();
     Q_INVOKABLE void previous();
 
+    Q_INVOKABLE void setCurrentToFirstIfNeeded();
     Q_INVOKABLE void resetNotPlayedTracks();
 private:
     QList<QueueTrack*> m_tracks;
     QList<QueueTrack*> m_notPlayedTracks;
 
-    QString m_hash;
     int m_currentIndex;
     bool m_shuffle;
     bool m_repeat;
@@ -101,7 +101,7 @@ signals:
     void shuffleChanged();
     void repeatChanged();
 
-    void trackRemoved(int index);
+    void tracksRemoved(QList<int> indexes);
 };
 
 }

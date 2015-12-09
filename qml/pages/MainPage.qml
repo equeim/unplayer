@@ -104,7 +104,7 @@ Page {
                 mediaArt: Unplayer.Utils.randomMediaArt()
 
                 onClicked: pageStack.push("AllTracksPage.qml", {
-                                              title: qsTr("Tracks"),
+                                              pageTitle: qsTr("Tracks"),
                                               allArtists: true
                                           })
             }

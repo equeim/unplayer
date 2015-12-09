@@ -141,32 +141,68 @@ void Queue::setRepeat(bool repeat)
 void Queue::add(const QVariantList &trackList)
 {
     if (!trackList.isEmpty()) {
-        QVariantList::const_iterator iterator = trackList.cbegin();
-        while (iterator != trackList.cend()) {
+        for (QVariantList::const_iterator iterator = trackList.cbegin(), cend = trackList.cend();
+             iterator != cend;
+             iterator++) {
+
             QueueTrack *track = new QueueTrack((*iterator).toMap());
             m_tracks.append(track);
             m_notPlayedTracks.append(track);
-            iterator++;
         }
     }
 }
 
-void Queue::remove(int index)
+void Queue::remove(const QList<int> &indexes)
 {
-    QueueTrack *track = m_tracks.takeAt(index);
-    m_notPlayedTracks.removeOne(track);
-    delete track;
+    QueueTrack *currentTrack = m_tracks.at(m_currentIndex);
 
-    emit trackRemoved(index);
+    bool trackChanged = false;
+    QueueTrack *newTrack = nullptr;
 
-    if (index < m_currentIndex) {
-        setCurrentIndex(m_currentIndex - 1);
-    } else if (index == m_currentIndex) {
-        if (m_tracks.isEmpty())
-            setCurrentIndex(-1);
+    if (indexes.contains(m_currentIndex)) {
+        trackChanged = true;
+
+        int newIndex = -1;
+
+        if (indexes.size() != m_tracks.size()) {
+            for (int i = m_currentIndex + 1, tracksCount = m_tracks.size(); i < tracksCount; i++) {
+                if (!indexes.contains(i)) {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            if (newIndex == -1) {
+                for (int i = 0, max = m_currentIndex; i < max; i++) {
+                    if (!indexes.contains(i)) {
+                        newIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (newIndex != -1)
+                newTrack = m_tracks.at(newIndex);
+        }
+    }
+
+    emit tracksRemoved(indexes);
+
+    for (int i = 0, indexesCount = indexes.size(); i < indexesCount; i++) {
+        QueueTrack *track = m_tracks.takeAt(indexes.at(i) - i);
+        m_notPlayedTracks.removeOne(track);
+        delete track;
+    }
+
+    if (trackChanged) {
+        if (newTrack)
+            setCurrentIndex(m_tracks.indexOf(newTrack));
         else
-            emit currentIndexChanged();
+            setCurrentIndex(-1);
         emit currentTrackChanged();
+    } else {
+        if (m_currentIndex >= indexes.first())
+            setCurrentIndex(m_tracks.indexOf(currentTrack));
     }
 }
 
@@ -175,15 +211,18 @@ void Queue::clear()
     qDeleteAll(m_tracks);
     m_tracks.clear();
     m_notPlayedTracks.clear();
+    setCurrentIndex(-1);
+    emit currentTrackChanged();
 }
 
 bool Queue::hasUrl(const QString &url)
 {
-    QList<QueueTrack*>::const_iterator iterator = m_tracks.cbegin();
-    while (iterator != m_tracks.cend()) {
+    for (QList<QueueTrack*>::const_iterator iterator = m_tracks.cbegin(), cend = m_tracks.cend();
+         iterator != cend;
+         iterator++) {
+
         if ((*iterator)->url == url)
             return true;
-        iterator++;
     }
 
     return false;
@@ -247,6 +286,14 @@ void Queue::previous()
         setCurrentIndex(m_currentIndex - 1);
 
     emit currentTrackChanged();
+}
+
+void Queue::setCurrentToFirstIfNeeded()
+{
+    if (m_currentIndex == -1) {
+        setCurrentIndex(0);
+        emit currentTrackChanged();
+    }
 }
 
 void Queue::resetNotPlayedTracks()

@@ -17,6 +17,8 @@
  */
 
 import Sailfish.Silica 1.0
+import Sailfish.Media 1.0
+import org.nemomobile.policy 1.0
 import QtSparql 1.0
 
 import harbour.unplayer 0.1 as Unplayer
@@ -40,6 +42,58 @@ ApplicationWindow
 
     Unplayer.Player {
         id: player
+    }
+
+    Permissions {
+        applicationClass: "player"
+        enabled: player.queue.currentIndex !== -1
+
+        Resource {
+            type: Resource.HeadsetButtons
+            optional: true
+        }
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaTogglePlayPause
+        onReleased: player.playing ? player.pause() : player.play()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaPlay
+        onReleased: player.play()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaPause
+        onReleased: player.pause()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaStop
+        onReleased: player.stop()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaNext
+        onReleased: player.queue.next()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaPrevious
+        onReleased: player.queue.previous()
+    }
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_ToggleCallHangup
+        onReleased: player.playing ? player.pause() : player.play()
     }
 
     SparqlConnection {

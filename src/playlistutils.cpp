@@ -66,18 +66,15 @@ void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVaria
     setPlaylistTracksCount(playlistUrl, tracks.size());
 }
 
-void PlaylistUtils::removeTrackFromPlaylist(const QString &playlistUrl, int trackIndex)
+void PlaylistUtils::removeTracksFromPlaylist(const QString &playlistUrl, const QList<int> &trackIndexes)
 {
     QStringList tracks = parsePlaylist(playlistUrl);
-    tracks.removeAt(trackIndex);
+
+    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++)
+        tracks.removeAt(trackIndexes.at(i) - i);
+
     savePlaylist(playlistUrl, tracks);
     setPlaylistTracksCount(playlistUrl, tracks.size());
-}
-
-void PlaylistUtils::clearPlaylist(const QString &url)
-{
-    savePlaylist(url, QStringList());
-    setPlaylistTracksCount(url, 0);
 }
 
 void PlaylistUtils::removePlaylist(const QString &url)
@@ -118,11 +115,14 @@ QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)
     if (tracksVariant.type() == QVariant::List) {
         QStringList tracks;
         QVariantList trackObjects = tracksVariant.toList();
-        QVariantList::const_iterator iterator = trackObjects.cbegin();
-        while (iterator != trackObjects.cend()) {
+
+        for (QVariantList::const_iterator iterator = trackObjects.cbegin(), cend = trackObjects.cend();
+             iterator != cend;
+             iterator++) {
+
             tracks.append((*iterator).toMap().value("url").toString());
-            iterator++;
         }
+
         return tracks;
     }
 
