@@ -88,11 +88,8 @@ Page {
                 allArtists: false
                 allAlbums: false
 
-                artist: model.rawArtist
-                unknownArtist: albumDelegate.unknownArtist
-
-                album: model.rawAlbum
-                unknownAlbum: albumDelegate.unknownAlbum
+                artist: model.rawArtist ? model.rawArtist : String()
+                album: model.rawAlbum ? model.rawAlbum : String()
             }
         }
 

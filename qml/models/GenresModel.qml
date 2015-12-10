@@ -18,22 +18,17 @@
 
 import QtSparql 1.0
 
-import harbour.unplayer 0.1 as Unplayer
-
 SparqlListModel {
-    property bool allArtists
-    property bool allAlbums
-
-    property string artist
-    property string album
-    property string genre
-
     connection: SparqlConnection {
         driver: "QTRACKER_DIRECT"
     }
-    query: Unplayer.Utils.tracksSparqlQuery(allArtists,
-                                            allAlbums,
-                                            artist,
-                                            album,
-                                            genre)
+    query: "SELECT ?genre\n" +
+           "       COUNT(?track) AS ?tracksCount\n" +
+           "       SUM(nfo:duration(?track)) AS ?duration\n" +
+           "WHERE {\n" +
+           "    ?track a nmm:MusicPiece;\n" +
+           "           nfo:genre ?genre.\n" +
+           "}\n" +
+           "GROUP BY ?genre\n" +
+           "ORDER BY ?genre"
 }

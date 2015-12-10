@@ -87,20 +87,18 @@ Page {
             filterRoleName: "album"
             sourceModel: AlbumsModel {
                 id: albumsModel
-
                 allArtists: false
-                unknownArtist: artistDelegate.unknownArtist
-                artist: model.rawArtist
+                artist: model.rawArtist ? model.rawArtist : String()
             }
         }
 
         PullDownMenu {
             MenuItem {
                 text: qsTr("All tracks")
-                onClicked: pageStack.push("AllTracksPage.qml", {
+                onClicked: pageStack.push("TracksPage.qml", {
                                               pageTitle: model.artist,
-                                              unknownArtist: artistDelegate.unknownArtist,
-                                              artist: model.rawArtist
+                                              allArtists: false,
+                                              artist: model.rawArtist ? model.rawArtist : String()
                                           })
             }
 

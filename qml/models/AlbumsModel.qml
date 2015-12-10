@@ -18,9 +18,10 @@
 
 import QtSparql 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 SparqlListModel {
     property bool allArtists
-    property bool unknownArtist
     property string artist
 
     connection: SparqlConnection {
@@ -51,10 +52,10 @@ SparqlListModel {
             return queryString
         }
 
-        if (unknownArtist)
+        if (artist.length === 0)
             queryString += "    FILTER(!bound(?rawArtist)).\n"
         else
-            queryString += "    FILTER(?rawArtist = \"" + artist + "\").\n"
+            queryString += "    FILTER(?rawArtist = \"" + Unplayer.Utils.escapeSparql(artist) + "\").\n"
 
         queryString += "}"
 

@@ -52,11 +52,11 @@ struct PlaylistTrack
 
 enum PlaylistModelRole
 {
-    TitleRole = Qt::UserRole,
-    UrlRole,
-    DurationRole,
+    UrlRole = Qt::UserRole,
+    TitleRole,
     ArtistRole,
-    AlbumRole
+    AlbumRole,
+    DurationRole
 };
 
 PlaylistModel::PlaylistModel()
@@ -109,16 +109,16 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
     const PlaylistTrack *track = m_tracks.at(index.row());
 
     switch (role) {
-    case TitleRole:
-        return track->title;
     case UrlRole:
         return track->url;
-    case DurationRole:
-        return track->duration;
+    case TitleRole:
+        return track->title;
     case ArtistRole:
         return track->artist;
     case AlbumRole:
         return track->album;
+    case DurationRole:
+        return track->duration;
     default:
         return QVariant();
     }
@@ -194,11 +194,11 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
 
-    roles.insert(TitleRole, "title");
     roles.insert(UrlRole, "url");
-    roles.insert(DurationRole, "duration");
+    roles.insert(TitleRole, "title");
     roles.insert(ArtistRole, "artist");
     roles.insert(AlbumRole, "album");
+    roles.insert(DurationRole, "duration");
 
     return roles;
 }

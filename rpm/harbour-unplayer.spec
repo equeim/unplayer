@@ -6,6 +6,7 @@ Group: Applications/Music
 License: GPLv3
 URL: https://github.com/equeim/unplayer
 Source0: %{name}-%{version}.tar.xz
+Requires: nemo-qml-plugin-policy-qt5
 Requires: sailfishsilica-qt5
 BuildRequires: pkgconfig(audioresource-qt)
 BuildRequires: pkgconfig(gstreamer-0.10)

@@ -168,22 +168,21 @@ QString Utils::escapeRegExp(const QString &string)
 QString Utils::escapeSparql(QString string)
 {
     return string.
+            replace("\\", "\\\\").
             replace("\t", "\\t").
             replace("\n", "\\n").
             replace("\r", "\\r").
             replace("\b", "\\b").
             replace("\f", "\\f").
             replace("\"", "\\\"").
-            replace("'", "\\'").
-            replace("\\", "\\\\");
+            replace("'", "\\'");
 }
 
 QString Utils::tracksSparqlQuery(bool allArtists,
                                  bool allAlbums,
                                  const QString &artist,
-                                 bool unknownArtist,
                                  const QString &album,
-                                 bool unknownAlbum)
+                                 const QString &genre)
 {
     QString query =
             "SELECT ?url ?title ?artist ?rawArtist ?album ?rawAlbum ?trackNumber ?genre ?duration\n"
@@ -206,18 +205,21 @@ QString Utils::tracksSparqlQuery(bool allArtists,
             "    }.\n";
 
     if (!allArtists) {
-        if (unknownArtist)
+        if (artist.isEmpty())
             query += "    FILTER(!bound(?rawArtist)).\n";
         else
-            query += "    FILTER(?rawArtist = \"" + artist + "\").\n";
+            query += "    FILTER(?rawArtist = \"" + escapeSparql(artist) + "\").\n";
     }
 
     if (!allAlbums) {
-        if (unknownAlbum)
+        if (album.isEmpty())
             query += "    FILTER(!bound(?rawAlbum)).\n";
         else
-            query += "    FILTER(?rawAlbum = \"" + album + "\").\n";
+            query += "    FILTER(?rawAlbum = \"" + escapeSparql(album) + "\").\n";
     }
+
+    if (!genre.isEmpty())
+        query += "    FILTER(?genre = \"" + escapeSparql(genre) + "\").\n";
 
     query += "}";
 
