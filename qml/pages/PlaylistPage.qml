@@ -86,6 +86,7 @@ Page {
             title: pageTitle
         }
         delegate: BaseTrackDelegate {
+            showArtistAndAlbum: true
             current: model.url === player.queue.currentUrl
             menu: ContextMenu {
                 MenuItem {

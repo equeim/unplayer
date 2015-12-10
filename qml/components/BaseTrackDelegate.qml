@@ -24,6 +24,9 @@ ListItem {
 
     property bool current
 
+    property bool showArtistAndAlbum: false
+    property bool showAlbum: false
+
     showMenuOnPressAndHold: !selectionPanel.showPanel
 
     Binding {
@@ -41,8 +44,8 @@ ListItem {
         anchors {
             left: parent.left
             leftMargin: Theme.horizontalPageMargin
-            right: parent.right
-            rightMargin: Theme.horizontalPageMargin
+            right: durationLabel.left
+            rightMargin: Theme.paddingMedium
             verticalCenter: parent.verticalCenter
         }
 
@@ -54,32 +57,38 @@ ListItem {
             width: parent.width
         }
 
-        Item {
+        Label {
+            color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            font.pixelSize: Theme.fontSizeExtraSmall
+            text: {
+                if (showArtistAndAlbum)
+                    return model.artist + " - " + model.album
+
+                if (showAlbum)
+                    return model.album
+
+                return String()
+            }
+            textFormat: Text.StyledText
+            truncationMode: TruncationMode.Fade
             width: parent.width
-            height: childrenRect.height
-
-            Label {
-                anchors {
-                    left: parent.left
-                    right: durationLabel.left
-                    rightMargin: Theme.paddingMedium
-                }
-                color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
-                font.pixelSize: Theme.fontSizeExtraSmall
-                text: model.artist + " - " + model.album
-                textFormat: Text.StyledText
-                truncationMode: TruncationMode.Fade
-            }
-
-            Label {
-                id: durationLabel
-
-                anchors.right: parent.right
-                color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
-                font.pixelSize: Theme.fontSizeExtraSmall
-                text: Format.formatDuration(model.duration, model.duration >= 3600? Format.DurationLong :
-                                                                                    Format.DurationShort)
-            }
+            visible: showArtistAndAlbum || showAlbum
         }
+    }
+
+    Label {
+        id: durationLabel
+
+        anchors {
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin
+            bottom: parent.bottom
+            bottomMargin: Theme.paddingSmall
+        }
+
+        color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
+        font.pixelSize: Theme.fontSizeExtraSmall
+        text: Format.formatDuration(model.duration, model.duration >= 3600? Format.DurationLong :
+                                                                            Format.DurationShort)
     }
 }
