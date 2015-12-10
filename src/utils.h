@@ -44,10 +44,9 @@ public:
 
     Q_INVOKABLE static QString tracksSparqlQuery(bool allArtists,
                                                  bool allAlbums,
-                                                 const QString &artist,
-                                                 bool unknownArtist,
-                                                 const QString &album,
-                                                 bool unknownAlbum);
+                                                 const QString &artist = QString(),
+                                                 const QString &album = QString(),
+                                                 const QString &genre = QString());
 
     Q_INVOKABLE static QString homeDirectory();
     Q_INVOKABLE static QString sdcard();

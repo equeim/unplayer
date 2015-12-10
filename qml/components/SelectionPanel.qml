@@ -31,13 +31,9 @@ DockedPanel {
         var selectedIndexes = listView.model.selectedSourceIndexes()
         var selectedTracks = []
         for (var i = 0, artistsCount = selectedIndexes.length; i < artistsCount; i++) {
-            var artistObject = listView.model.sourceModel.get(selectedIndexes[i])
             selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
                                                                                                             true,
-                                                                                                            artistObject.artist,
-                                                                                                            artistObject.rawArtist === undefined,
-                                                                                                            String(),
-                                                                                                            false)))
+                                                                                                            listView.model.sourceModel.get(selectedIndexes[i]).rawArtist)))
         }
         return selectedTracks
     }
@@ -49,10 +45,21 @@ DockedPanel {
             var albumObject = listView.model.sourceModel.get(selectedIndexes[i])
             selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
                                                                                                             false,
-                                                                                                            albumObject.artist,
-                                                                                                            albumObject.rawArtist === undefined,
-                                                                                                            albumObject.album,
-                                                                                                            albumObject.rawAlbum === undefined)))
+                                                                                                            albumObject.rawArtist,
+                                                                                                            albumObject.rawAlbum)))
+        }
+        return selectedTracks
+    }
+
+    function getTracksForSelectedGenres() {
+        var selectedIndexes = listView.model.selectedSourceIndexes()
+        var selectedTracks = []
+        for (var i = 0, albumsCount = selectedIndexes.length; i < albumsCount; i++) {
+            selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(true,
+                                                                                                            true,
+                                                                                                            String(),
+                                                                                                            String(),
+                                                                                                            listView.model.sourceModel.get(selectedIndexes[i]).genre)))
         }
         return selectedTracks
     }

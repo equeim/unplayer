@@ -33,10 +33,8 @@ MediaContainerSelectionDelegate {
     function getTracks() {
         return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
                                                                         false,
-                                                                        model.artist,
-                                                                        unknownArtist,
-                                                                        model.album,
-                                                                        unknownAlbum))
+                                                                        model.rawArtist,
+                                                                        model.rawAlbum))
     }
 
     function reloadMediaArt() {
