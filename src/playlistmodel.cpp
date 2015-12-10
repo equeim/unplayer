@@ -27,7 +27,6 @@
 #include <QSparqlResult>
 
 #include "playlistutils.h"
-#include "utils.h"
 
 namespace Unplayer
 {
@@ -93,7 +92,7 @@ void PlaylistModel::componentComplete()
             QString url = QUrl(tracksList.at(i)).toEncoded();
             m_tracks.append(new PlaylistTrack(url));
 
-            QSparqlResult *result = connection->exec(QSparqlQuery(Utils::singleTrackSparqlQuery(url),
+            QSparqlResult *result = connection->exec(QSparqlQuery(PlaylistUtils::trackSparqlQuery(url),
                                                                   QSparqlQuery::SelectStatement));
             result->setProperty("trackIndex", i);
             connect(result, &QSparqlResult::finished, this, &PlaylistModel::onQueryFinished);

@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE static void removePlaylist(const QString &url);
     Q_INVOKABLE QVariantList syncParsePlaylist(const QString &playlistUrl);
     static QStringList parsePlaylist(const QString &playlistUrl);
+    static QString trackSparqlQuery(const QString &trackUrl);
 private:
     QStringList unboxTracks(const QVariant &tracksVariant);
     void setPlaylistTracksCount(QString playlistUrl, int tracksCount);

@@ -94,7 +94,7 @@ QVariantList PlaylistUtils::syncParsePlaylist(const QString &playlistUrl)
          iterator != cend;
          iterator++) {
 
-        QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(Utils::singleTrackSparqlQuery(*iterator),
+        QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(trackSparqlQuery(*iterator),
                                                                           QSparqlQuery::SelectStatement));
 
         if (result->next()) {
@@ -140,6 +140,20 @@ QStringList PlaylistUtils::parsePlaylist(const QString &playlistUrl)
     }
 
     return QStringList();
+}
+
+QString PlaylistUtils::trackSparqlQuery(const QString &trackUrl)
+{
+    return QString("SELECT nie:url(?track) AS ?url\n"
+                   "       tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
+                   "       tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + tr("Unknown artist") + "\") AS ?artist\n"
+                   "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
+                   "       tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" + tr("Unknown album") + "\") AS ?album\n"
+                   "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
+                   "       nfo:duration(?track) AS ?duration\n"
+                   "WHERE {\n"
+                   "    ?track nie:url \"" + QUrl(trackUrl).toEncoded() + "\".\n"
+                   "}");
 }
 
 QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)

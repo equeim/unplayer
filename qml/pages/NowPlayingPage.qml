@@ -111,6 +111,11 @@ Page {
                 text: qsTr("Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentUrl })
             }
+
+            MenuItem {
+                text: qsTr("Track information")
+                onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: player.queue.currentUrl })
+            }
         }
 
         BackgroundItem {
