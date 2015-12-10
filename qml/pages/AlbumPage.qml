@@ -98,7 +98,7 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                enabled: !unknownArtist && !unknownAlbum
+                visible: !unknownArtist && !unknownAlbum
                 text: qsTr("Set cover image")
                 onClicked: pageStack.push(setCoverPage)
 
