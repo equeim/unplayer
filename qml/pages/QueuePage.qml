@@ -110,6 +110,8 @@ Page {
         delegate: BaseTrackDelegate {
             id: trackDelegate
 
+            showArtistAndAlbum: true
+
             current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {

@@ -87,7 +87,10 @@ Page {
         header: PageHeader {
             title: pageTitle
         }
-        delegate: LibraryTrackDelegate { }
+        delegate: LibraryTrackDelegate {
+            showArtistAndAlbum: allArtists
+            showAlbum: !allArtists
+        }
         model: TracksProxyModel {
             id: tracksProxyModel
 
