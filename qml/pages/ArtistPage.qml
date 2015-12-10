@@ -98,7 +98,7 @@ Page {
             MenuItem {
                 text: qsTr("All tracks")
                 onClicked: pageStack.push("AllTracksPage.qml", {
-                                              title: model.artist,
+                                              pageTitle: model.artist,
                                               unknownArtist: artistDelegate.unknownArtist,
                                               artist: model.rawArtist
                                           })
