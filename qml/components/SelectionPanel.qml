@@ -91,44 +91,50 @@ DockedPanel {
     Column {
         id: column
 
-        anchors.verticalCenter: parent.verticalCenter
-        width: parent.width
+        anchors {
+            left: parent.left
+            leftMargin: Theme.horizontalPageMargin
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin
+            verticalCenter: parent.verticalCenter
+        }
 
         Label {
             id: selectionLabel
-            anchors.horizontalCenter: parent.horizontalCenter
+
+            width: parent.width
+            horizontalAlignment: implicitWidth > width ? Text.AlignRight : Text.AlignHCenter
+            truncationMode: TruncationMode.Fade
         }
 
         Item {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: childrenRect.width + row.x
-            height: Math.max(closeButton.height, row.height)
+            implicitWidth: Theme.itemSizeHuge * 3 - Theme.horizontalPageMargin * 2
+            width: implicitWidth > parent.width ? parent.width : implicitWidth
+            height: Math.max(selectionButtons.height, closeButton.height)
 
             Row {
-                id: row
+                id: selectionButtons
 
-                property int implicitRowWidth: selectAllButton.implicitWidth + spacing + selectNoneButton.implicitWidth
-                property int filledRowWidth: column.width - x - closeButton.width
-                property bool fillButtons: implicitRowWidth > filledRowWidth
-                property int filledButtonWidth: (filledRowWidth - spacing) / 2
+                property int buttonWidth: (width - spacing) / 2
 
-                anchors.verticalCenter: parent.verticalCenter
-                x: Theme.paddingMedium
+                anchors {
+                    left: parent.left
+                    right: closeButton.left
+                    verticalCenter: parent.verticalCenter
+                }
+                height: childrenRect.height
+
                 spacing: Theme.paddingMedium
 
                 Button {
-                    id: selectAllButton
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: row.fillButtons ? row.filledButtonWidth : implicitWidth
                     text: qsTr("All")
-
+                    width: selectionButtons.buttonWidth
                     onClicked: listView.model.selectAll()
                 }
 
                 Button {
-                    id: selectNoneButton
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: row.fillButtons ? row.filledButtonWidth : implicitWidth
+                    width: selectionButtons.buttonWidth
                     text: qsTr("None")
                     onClicked: listView.model.selectionModel.clear()
                 }
@@ -138,7 +144,7 @@ DockedPanel {
                 id: closeButton
 
                 anchors {
-                    left: row.right
+                    right: parent.right
                     verticalCenter: parent.verticalCenter
                 }
                 icon.source: "image://theme/icon-m-close"
