@@ -172,12 +172,22 @@ QVariantMap PlaylistModel::get(int trackIndex) const
 
 void PlaylistModel::removeAtIndexes(const QList<int> &trackIndexes)
 {
-    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
-        int trackIndex = trackIndexes.at(i) - i;
-        beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
-        delete m_tracks.takeAt(trackIndex);
-        m_rowCount--;
-        endRemoveRows();
+    int indexesCount = trackIndexes.size();
+
+    if (indexesCount == m_tracks.size()) {
+        beginResetModel();
+        qDeleteAll(m_tracks);
+        m_tracks.clear();
+        m_rowCount = 0;
+        endResetModel();
+    } else {
+        for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
+            int trackIndex = trackIndexes.at(i) - i;
+            beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
+            delete m_tracks.takeAt(trackIndex);
+            m_rowCount--;
+            endRemoveRows();
+        }
     }
 }
 
