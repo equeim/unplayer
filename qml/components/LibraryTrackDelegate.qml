@@ -25,6 +25,11 @@ BaseTrackDelegate {
     current: model.url === player.queue.currentUrl
     menu: Component {
         ContextMenu {
+            MenuItem {
+                text: qsTr("Information")
+                onClicked: pageStack.push("../pages/TrackInfoPage.qml", { trackUrl: model.url })
+            }
+
             AddToQueueMenuItem {
                 onClicked: {
                     player.queue.add([listView.model.sourceModel.get(listView.model.sourceIndex(model.index))])

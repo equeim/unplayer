@@ -37,6 +37,7 @@ public:
     Q_INVOKABLE static void setMediaArt(const QString &filePath, const QString &artist, const QString &album);
 
     Q_INVOKABLE static QString formatDuration(uint seconds);
+    Q_INVOKABLE static QString formatByteSize(double size);
 
     Q_INVOKABLE static QString escapeRegExp(const QString &string);
     Q_INVOKABLE static QString escapeSparql(QString string);
@@ -47,8 +48,6 @@ public:
                                                  bool unknownArtist,
                                                  const QString &album,
                                                  bool unknownAlbum);
-
-    static QString singleTrackSparqlQuery(const QString &trackUrl);
 
     Q_INVOKABLE static QString homeDirectory();
     Q_INVOKABLE static QString sdcard();

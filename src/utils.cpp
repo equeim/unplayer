@@ -24,6 +24,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QUrl>
@@ -82,7 +83,7 @@ QUrl Utils::mediaArtForArtist(const QString &artist)
 QUrl Utils::randomMediaArt()
 {
     QFileInfoList mediaArtList = QDir(m_mediaArtDirectory).entryInfoList(QStringList() << "album-?*-?*.jpeg",
-                                                                             QDir::Files);
+                                                                         QDir::Files);
 
     if (mediaArtList.isEmpty())
         return QString();
@@ -121,6 +122,44 @@ QString Utils::formatDuration(uint seconds)
     return etaString;
 }
 
+QString Utils::formatByteSize(double size)
+{
+    int unit = 0;
+    while (size >= 1024.0 && unit < 8) {
+        size /= 1024.0;
+        unit++;
+    }
+
+    QString string;
+    if (unit == 0)
+        string = QString::number(size);
+    else
+        string = QLocale::system().toString(size, 'f', 1);
+
+    switch (unit) {
+    case 0:
+        return tr("%1 B").arg(string);
+    case 1:
+        return tr("%1 KiB").arg(string);
+    case 2:
+        return tr("%1 MiB").arg(string);
+    case 3:
+        return tr("%1 GiB").arg(string);
+    case 4:
+        return tr("%1 TiB").arg(string);
+    case 5:
+        return tr("%1 PiB").arg(string);
+    case 6:
+        return tr("%1 EiB").arg(string);
+    case 7:
+        return tr("%1 ZiB").arg(string);
+    case 8:
+        return tr("%1 YiB").arg(string);
+    }
+
+    return QString();
+}
+
 QString Utils::escapeRegExp(const QString &string)
 {
     return QRegularExpression::escape(string);
@@ -147,22 +186,23 @@ QString Utils::tracksSparqlQuery(bool allArtists,
                                  bool unknownAlbum)
 {
     QString query =
-            "SELECT ?title ?url ?duration ?artist ?rawArtist ?album ?rawAlbum\n"
+            "SELECT ?url ?title ?artist ?rawArtist ?album ?rawAlbum ?trackNumber ?genre ?duration\n"
             "WHERE {\n"
             "    {\n"
-            "        SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-            "               nie:url(?track) AS ?url\n"
-            "               nfo:duration(?track) AS ?duration\n"
-            "               nmm:trackNumber(?track) AS ?trackNumber\n"
+            "        SELECT nie:url(?track) AS ?url\n"
+            "               tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
             "               tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + tr("Unknown artist") + "\") AS ?artist\n"
             "               nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
             "               tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" + tr("Unknown album") + "\") AS ?album\n"
             "               nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
-            "               nie:informationElementDate(?track) AS ?year\n"
+            "               nie:informationElementDate(?track) AS ?date\n"
+            "               nmm:trackNumber(?track) AS ?trackNumber\n"
+            "               nfo:genre(?track) AS ?genre\n"
+            "               nfo:duration(?track) AS ?duration\n"
             "        WHERE {\n"
             "            ?track a nmm:MusicPiece.\n"
             "        }\n"
-            "        ORDER BY !bound(?rawArtist) ?rawArtist !bound(?rawAlbum) ?year ?rawAlbum ?trackNumber ?title\n"
+            "        ORDER BY !bound(?rawArtist) ?rawArtist !bound(?rawAlbum) ?date ?rawAlbum ?trackNumber ?title\n"
             "    }.\n";
 
     if (!allArtists) {
@@ -182,20 +222,6 @@ QString Utils::tracksSparqlQuery(bool allArtists,
     query += "}";
 
     return query;
-}
-
-QString Utils::singleTrackSparqlQuery(const QString &trackUrl)
-{
-    return QString("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-                   "       nie:url(?track) AS ?url\n"
-                   "       nfo:duration(?track) AS ?duration\n"
-                   "       tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + tr("Unknown artist") + "\") AS ?artist\n"
-                   "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
-                   "       tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" + tr("Unknown album") + "\") AS ?album\n"
-                   "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
-                   "WHERE {\n"
-                   "    ?track nie:url \"" + QUrl(trackUrl).toEncoded() + "\".\n"
-                   "}");
 }
 
 QString Utils::homeDirectory()

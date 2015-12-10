@@ -70,5 +70,6 @@ qml/pages/PlaylistPage.qml
 qml/pages/PlaylistsPage.qml
 qml/pages/QueuePage.qml
 qml/pages/SetCoverPage.qml
+qml/pages/TrackInfoPage.qml
 
 translations/update.sh

@@ -88,6 +88,11 @@ Page {
         delegate: BaseTrackDelegate {
             current: model.url === player.queue.currentUrl
             menu: ContextMenu {
+                MenuItem {
+                    text: qsTr("Information")
+                    onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
+                }
+
                 AddToQueueMenuItem {
                     onClicked: {
                         player.queue.add([playlistModel.get(playlistProxyModel.sourceIndex(model.index))])
