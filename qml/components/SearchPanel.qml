@@ -51,18 +51,20 @@ DockedPanel {
         FadeAnimation { }
     }
 
-    Row {
-        anchors.centerIn: parent
+    Item {
+        anchors.horizontalCenter: parent.horizontalCenter
+        implicitWidth: Theme.itemSizeHuge * 3 - Theme.horizontalPageMargin
+        width: implicitWidth > parent.width ? parent.width : implicitWidth
+        height: Math.max(searchField.height, closeButton.height)
 
         SearchField {
             id: searchField
 
-            property int filledWidth: searchPanel.width - closeButton.width
-
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: Theme.buttonWidthMedium * 2
-            width: implicitWidth > filledWidth ? filledWidth : implicitWidth
-
+            anchors {
+                left: parent.left
+                right: closeButton.left
+                verticalCenter: parent.verticalCenter
+            }
             enabled: open
 
             onTextChanged: {
@@ -76,8 +78,14 @@ DockedPanel {
 
         IconButton {
             id: closeButton
-            anchors.verticalCenter: parent.verticalCenter
+
+            anchors {
+                right: parent.right
+                rightMargin: Theme.horizontalPageMargin
+                verticalCenter: parent.verticalCenter
+            }
             icon.source: "image://theme/icon-m-close"
+
             onClicked: open = false
         }
     }
