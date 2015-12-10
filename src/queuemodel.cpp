@@ -26,10 +26,11 @@ namespace Unplayer
 
 enum QueueModelRole
 {
-    TitleRole = Qt::UserRole,
-    DurationRole,
+    UrlRole = Qt::UserRole,
+    TitleRole,
     ArtistRole,
-    AlbumRole
+    AlbumRole,
+    DurationRole
 };
 
 void QueueModel::classBegin()
@@ -50,14 +51,16 @@ QVariant QueueModel::data(const QModelIndex &index, int role) const
     const QueueTrack *track = m_queue->tracks().at(index.row());
 
     switch (role) {
+    case UrlRole:
+        return track->url;
     case TitleRole:
         return track->title;
-    case DurationRole:
-        return track->duration;
     case ArtistRole:
         return track->artist;
     case AlbumRole:
         return track->album;
+    case DurationRole:
+        return track->duration;
     default:
         return QVariant();
     }
@@ -90,10 +93,11 @@ QHash<int, QByteArray> QueueModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
 
+    roles.insert(UrlRole, "url");
     roles.insert(TitleRole, "title");
-    roles.insert(DurationRole, "duration");
     roles.insert(ArtistRole, "artist");
     roles.insert(AlbumRole, "album");
+    roles.insert(DurationRole, "duration");
 
     return roles;
 }
