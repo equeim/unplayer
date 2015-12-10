@@ -88,6 +88,8 @@ public:
     Q_INVOKABLE void setCurrentToFirstIfNeeded();
     Q_INVOKABLE void resetNotPlayedTracks();
 private:
+    void reset();
+private:
     QList<QueueTrack*> m_tracks;
     QList<QueueTrack*> m_notPlayedTracks;
 

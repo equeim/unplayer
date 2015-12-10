@@ -155,13 +155,7 @@ void Queue::add(const QVariantList &trackList)
 void Queue::remove(const QList<int> &indexes)
 {
     if (indexes.size() == m_tracks.size()) {
-        qDeleteAll(m_tracks);
-        m_tracks.clear();
-        m_notPlayedTracks.clear();
-
-        setCurrentIndex(-1);
-        emit currentTrackChanged();
-
+        reset();
         return;
     }
 
@@ -218,8 +212,6 @@ void Queue::clear()
     qDeleteAll(m_tracks);
     m_tracks.clear();
     m_notPlayedTracks.clear();
-    setCurrentIndex(-1);
-    emit currentTrackChanged();
 }
 
 bool Queue::hasUrl(const QString &url)
@@ -306,6 +298,13 @@ void Queue::setCurrentToFirstIfNeeded()
 void Queue::resetNotPlayedTracks()
 {
     m_notPlayedTracks = m_tracks;
+}
+
+void Queue::reset()
+{
+    clear();
+    setCurrentIndex(-1);
+    emit currentTrackChanged();
 }
 
 }
