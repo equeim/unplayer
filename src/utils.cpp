@@ -249,6 +249,11 @@ QString Utils::urlToPath(const QUrl &url)
     return url.path();
 }
 
+QByteArray Utils::encodeUrl(const QUrl &url)
+{
+    return QUrl::toPercentEncoding(url.toString(), "/!$&'()*+,;=:@");
+}
+
 QString Utils::mediaArtPath(const QString &artist, const QString &album)
 {
     return m_mediaArtDirectory +

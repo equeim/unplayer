@@ -3,7 +3,8 @@ wscript
 
 rpm/harbour-unplayer.spec
 
-
+src/directorytracksmodel.cpp
+src/directorytracksmodel.h
 src/filterproxymodel.cpp
 src/filterproxymodel.h
 src/main.cpp
@@ -62,6 +63,7 @@ qml/pages/AlbumPage.qml
 qml/pages/AllAlbumsPage.qml
 qml/pages/ArtistPage.qml
 qml/pages/ArtistsPage.qml
+qml/pages/DirectoriesPage.qml
 qml/pages/GenresPage.qml
 qml/pages/LicensePage.qml
 qml/pages/MainPage.qml

@@ -25,6 +25,7 @@ ListItem {
     property alias title: titleLabel.text
     property alias description: descriptionLabel.text
     property alias mediaArt: mediaArt.source
+    property alias fallbackIcon: mediaArt.fallbackIcon
 
     contentHeight: Theme.itemSizeExtraLarge
 
@@ -58,6 +59,7 @@ ListItem {
             color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeSmall
             truncationMode: TruncationMode.Fade
+            visible: text.length !== 0
             width: parent.width
         }
     }

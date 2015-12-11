@@ -23,6 +23,7 @@ Item {
     property bool highlighted
     property int size
     property alias source: mediaArtImage.source
+    property string fallbackIcon: "image://theme/icon-m-music"
 
     width: size
     height: size
@@ -44,8 +45,8 @@ Item {
         Image {
             anchors.centerIn: parent
             asynchronous: true
-            source: highlighted ? "image://theme/icon-m-music?" + Theme.highlightColor :
-                                  "image://theme/icon-m-music"
+            source: highlighted ? fallbackIcon + "?" + Theme.highlightColor :
+                                  fallbackIcon
         }
     }
 

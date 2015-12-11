@@ -110,20 +110,7 @@ Page {
             }
 
             MainPageListItem {
-                property int genresCount: {
-                    if (sparqlConnection.ready)
-                        return sparqlConnection.select("SELECT ?genre\n" +
-                                                       "WHERE {\n" +
-                                                       "    ?track a nmm:MusicPiece;\n" +
-                                                       "           nfo:genre ?genre" +
-                                                       "}\n" +
-                                                       "GROUP BY ?genre").length
-                    return 0
-                }
-
                 title: qsTr("Genres")
-                description: qsTr("%n genre(s)", String(), genresCount)
-                mediaArt: Unplayer.Utils.randomMediaArt()
                 onClicked: pageStack.push("GenresPage.qml")
             }
 
@@ -147,13 +134,19 @@ Page {
 
                 title: qsTr("Playlists")
                 description: qsTr("%n playlist(s)", String(), playlistsCount)
-                mediaArt: Unplayer.Utils.randomMediaArt()
+                fallbackIcon: "image://theme/icon-m-document"
                 onClicked: pageStack.push("PlaylistsPage.qml")
 
                 Connections {
                     target: Unplayer.PlaylistUtils
                     onPlaylistsChanged: playlistsListItem.playlistsCount = playlistsListItem.getPlaylistsCount()
                 }
+            }
+
+            MainPageListItem {
+                title: qsTr("Directories")
+                fallbackIcon: "image://theme/icon-m-folder"
+                onClicked: pageStack.push("DirectoriesPage.qml")
             }
         }
 
