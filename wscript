@@ -26,7 +26,7 @@ def build(context):
             "QT5SPARQL",
             "SAILFISHAPP"
         ],
-        cxxflags="-std=c++11 -ggdb",
+        cxxflags="-std=c++11",
         linkflags="-pie -rdynamic",
         source=[
             "src/directorytracksmodel.cpp",
