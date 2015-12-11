@@ -25,6 +25,13 @@
     </message>
 </context>
 <context>
+    <name>AddToPlaylistMenuItem</name>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddToPlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s)</source>
@@ -47,15 +54,14 @@
     </message>
 </context>
 <context>
-    <name>AlbumDelegate</name>
+    <name>AddToQueueMenuItem</name>
     <message>
         <source>Add to queue</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
+</context>
+<context>
+    <name>AlbumDelegate</name>
     <message>
         <source>Set cover image</source>
         <translation type="unfinished"></translation>
@@ -71,12 +77,15 @@
         <source>Set cover image</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+    <message numerus="yes">
+        <source>%n track(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <source>Add to queue</source>
+        <source>Select tracks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -111,45 +120,15 @@
         <source>No albums</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>AllArtistsPage</name>
     <message numerus="yes">
-        <source>%n album(s)</source>
+        <source>%n album(s) selected</source>
         <translation type="unfinished">
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
-        <source>Artists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No artists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add to queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AllTracksPage</name>
-    <message>
-        <source>No tracks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add to queue</source>
+        <source>Select albums</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -170,12 +149,15 @@
         <source>No albums</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+    <message numerus="yes">
+        <source>%n album(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <source>Add to queue</source>
+        <source>Select albums</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -204,13 +186,109 @@
     </message>
 </context>
 <context>
-    <name>LibraryTrackDelegate</name>
+    <name>ArtistsPage</name>
+    <message numerus="yes">
+        <source>%n artist(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
-        <source>Add to queue</source>
+        <source>Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n album(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>All tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add to playlist</source>
+        <source>Select artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DirectoriesPage</name>
+    <message numerus="yes">
+        <source>%n track(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SD card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No files</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GenresPage</name>
+    <message numerus="yes">
+        <source>%n genre(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Genres</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n track(s), %1</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Select genres</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No genres</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LibraryTrackDelegate</name>
+    <message>
+        <source>Track information</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -271,6 +349,14 @@
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Genres</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NewPlaylistDialog</name>
@@ -289,13 +375,13 @@
         <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Track information</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaylistPage</name>
-    <message>
-        <source>Add to queue</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Remove from playlist</source>
         <translation type="unfinished"></translation>
@@ -313,19 +399,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clearing playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Loading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n track(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Removing %n track(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Track information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select tracks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -358,6 +458,24 @@
         <source>No playlists</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <source>%n playlist(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Removing %n playlist(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Select playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QueuePage</name>
@@ -370,10 +488,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No tracks</source>
         <translation type="unfinished"></translation>
     </message>
@@ -381,20 +495,42 @@
         <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <source>%n track(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Track information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>SearchPullDownMenuItem</name>
+    <name>SearchMenuItem</name>
     <message>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>SetCoverPage</name>
+    <name>SelectionPanel</name>
     <message>
-        <source>Select JPEG file</source>
+        <source>All</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SetCoverPage</name>
     <message>
         <source>SD card</source>
         <translation type="unfinished"></translation>
@@ -407,9 +543,108 @@
         <source>No files</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Select image</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TrackInfoPage</name>
+    <message>
+        <source>Track information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Genre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MIME type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TracksPage</name>
+    <message numerus="yes">
+        <source>%n track(s) selected</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Select tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Unplayer::DirectoryTracksModel</name>
+    <message>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Unplayer::PlaylistModel</name>
+    <message>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Unplayer::PlaylistUtils</name>
     <message>
         <source>Unknown artist</source>
         <translation type="unfinished"></translation>
@@ -439,6 +674,42 @@
     </message>
     <message>
         <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 MiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 GiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 TiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 PiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 EiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 ZiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 YiB</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
