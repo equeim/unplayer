@@ -136,12 +136,6 @@ Page {
                 id: playlistModel
             }
         }
-        section {
-            property: "artist"
-            delegate: SectionHeader {
-                text: section
-            }
-        }
 
         PullDownMenu {
             MenuItem {
