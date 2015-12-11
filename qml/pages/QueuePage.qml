@@ -95,8 +95,12 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.expanded ? selectionPanel.visibleSize :
-                                                    nowPlayingPanel.height - nowPlayingPanel.visibleSize
+            bottomMargin: {
+                if (selectionPanel.expanded)
+                    return selectionPanel.visibleSize
+                if (nowPlayingPanel.expanded)
+                    return nowPlayingPanel.height - nowPlayingPanel.visibleSize
+            }
             topMargin: searchPanel.visibleSize
         }
         clip: true
