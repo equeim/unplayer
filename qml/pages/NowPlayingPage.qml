@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
-    id: page
-
     property bool landscapeLayout: isLandscape && !largeScreen
 
     states: [

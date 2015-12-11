@@ -25,8 +25,6 @@ import "../components"
 import "../models"
 
 Page {
-    id: page
-
     property alias bottomPanelOpen: selectionPanel.open
 
     function getTracksForSelectedPlaylists() {
