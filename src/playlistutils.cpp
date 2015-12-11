@@ -20,7 +20,6 @@
 #include "playlistutils.moc"
 
 #include <QDBusConnection>
-#include <QDebug>
 #include <QFile>
 #include <QStandardPaths>
 #include <QUrl>

@@ -89,7 +89,7 @@ void PlaylistModel::componentComplete()
         QSparqlConnection *connection = new QSparqlConnection("QTRACKER_DIRECT", QSparqlConnectionOptions(), this);
 
         for (int i = 0, tracksCount = tracksList.size(); i < tracksCount; i++) {
-            QString url = QUrl(tracksList.at(i)).toEncoded();
+            QString url = tracksList.at(i);
             m_tracks.append(new PlaylistTrack(url));
 
             QSparqlResult *result = connection->exec(QSparqlQuery(PlaylistUtils::trackSparqlQuery(url),

@@ -19,7 +19,6 @@
 #include "directorytracksmodel.h"
 #include "directorytracksmodel.moc"
 
-#include <QDebug>
 #include <QDir>
 #include <QItemSelectionModel>
 #include <QUrl>
