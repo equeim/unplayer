@@ -24,6 +24,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QImageReader>
 #include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
@@ -95,8 +96,12 @@ void Utils::setMediaArt(const QString &filePath, const QString &artist, const QS
 {
     QString newFilePath = mediaArtPath(artist, album);
     QFile::remove(newFilePath);
-    QFile::copy(filePath,
-                newFilePath);
+
+    if (filePath.endsWith(".jpeg") || filePath.endsWith(".jpg")) {
+        QFile::copy(filePath, newFilePath);
+    } else {
+        QImage(filePath).save(newFilePath);
+    }
 }
 
 QString Utils::formatDuration(uint seconds)
@@ -242,6 +247,19 @@ QString Utils::sdcard()
             return mounts.first().split(' ').at(1);
     }
     return "/media/sdcard";
+}
+
+QStringList Utils::imageNameFilters()
+{
+    QStringList nameFilters;
+    QList<QByteArray> formats = QImageReader::supportedImageFormats();
+    for (QList<QByteArray>::const_iterator iterator = formats.cbegin(), cend = formats.cend();
+         iterator != cend;
+         iterator++) {
+
+        nameFilters.append("*." + *iterator);
+    }
+    return nameFilters;
 }
 
 QString Utils::urlToPath(const QUrl &url)

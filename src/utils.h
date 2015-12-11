@@ -20,6 +20,7 @@
 #define UNPLAYER_UTILS_H
 
 #include <QObject>
+#include <QStringList>
 #include <QUrl>
 
 namespace Unplayer
@@ -50,6 +51,8 @@ public:
 
     Q_INVOKABLE static QString homeDirectory();
     Q_INVOKABLE static QString sdcard();
+
+    Q_INVOKABLE static QStringList imageNameFilters();
 
     Q_INVOKABLE static QString urlToPath(const QUrl &url);
     static QByteArray encodeUrl(const QUrl &url);
