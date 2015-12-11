@@ -50,7 +50,9 @@ public:
 
     Q_INVOKABLE static QString homeDirectory();
     Q_INVOKABLE static QString sdcard();
+
     Q_INVOKABLE static QString urlToPath(const QUrl &url);
+    static QByteArray encodeUrl(const QUrl &url);
 private:
     static QString mediaArtPath(const QString &artist, const QString &album);
     static QString mediaArtMd5(QString string);

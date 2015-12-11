@@ -29,6 +29,7 @@ def build(context):
         cxxflags="-std=c++11",
         linkflags="-pie -rdynamic",
         source=[
+            "src/directorytracksmodel.cpp",
             "src/filterproxymodel.cpp",
             "src/main.cpp",
             "src/player.cpp",
