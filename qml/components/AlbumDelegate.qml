@@ -64,11 +64,6 @@ MediaContainerSelectionDelegate {
                 visible: !unknownArtist && !unknownAlbum
                 text: qsTr("Set cover image")
                 onClicked: pageStack.push(setCoverPage)
-
-                Component {
-                    id: setCoverPage
-                    SetCoverPage { }
-                }
             }
         }
     }
@@ -78,6 +73,11 @@ MediaContainerSelectionDelegate {
             listView.model.select(model.index)
         else
             pageStack.push(albumPage)
+    }
+
+    Component {
+        id: setCoverPage
+        SetCoverPage { }
     }
 
     Component {
