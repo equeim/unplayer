@@ -5,6 +5,8 @@ rpm/harbour-unplayer.spec
 
 src/directorytracksmodel.cpp
 src/directorytracksmodel.h
+src/filepickermodel.cpp
+src/filepickermodel.h
 src/filterproxymodel.cpp
 src/filterproxymodel.h
 src/main.cpp
@@ -20,12 +22,6 @@ src/queuemodel.cpp
 src/queuemodel.h
 src/utils.cpp
 src/utils.h
-
-src/folderlistmodel/fileinfothread.cpp
-src/folderlistmodel/fileinfothread_p.h
-src/folderlistmodel/fileproperty_p.h
-src/folderlistmodel/qquickfolderlistmodel.cpp
-src/folderlistmodel/qquickfolderlistmodel.h
 
 
 qml/main.qml

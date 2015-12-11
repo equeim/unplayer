@@ -27,23 +27,34 @@ Page {
     property string artist: model.artist
     property string album: model.album
 
+    SearchPanel {
+        id: searchPanel
+    }
+
     SilicaListView {
         id: listView
 
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            topMargin: searchPanel.visibleSize
+        }
+        clip: true
         header: Column {
             width: listView.width
 
             PageHeader {
                 title: qsTr("Select JPEG file")
-                description: Unplayer.Utils.urlToPath(folderListModel.folder)
+                description: filePickerModel.directory
             }
 
             BackgroundItem {
                 id: parentDirectoryItem
 
-                visible: folderListModel.folder !== "file:///"
-                onClicked: folderListModel.folder = folderListModel.parentFolder
+                visible: filePickerModel.directory !== "/"
+                onClicked: {
+                    searchPanel.open = false
+                    filePickerModel.directory = filePickerModel.parentDirectory
+                }
 
                 Row {
                     anchors {
@@ -57,7 +68,7 @@ Page {
                         anchors.verticalCenter: parent.verticalCenter
                         asynchronous: true
                         source: parentDirectoryItem.highlighted ? "image://theme/icon-m-folder?" + Theme.highlightColor :
-                                              "image://theme/icon-m-folder"
+                                                                  "image://theme/icon-m-folder"
                     }
 
                     Label {
@@ -70,8 +81,9 @@ Page {
         }
         delegate: BackgroundItem {
             onClicked: {
-                if (model.fileIsDir) {
-                    folderListModel.folder = model.filePath
+                if (model.isDirectory) {
+                    searchPanel.open = false
+                    filePickerModel.directory = model.filePath
                 } else {
                     Unplayer.Utils.setMediaArt(model.filePath, artist, album)
                     reloadMediaArt()
@@ -89,8 +101,8 @@ Page {
                 }
                 asynchronous: true
                 source: {
-                    var iconSource = model.fileIsDir ? "image://theme/icon-m-folder"
-                                                     : "image://theme/icon-m-image"
+                    var iconSource = model.isDirectory ? "image://theme/icon-m-folder"
+                                                       : "image://theme/icon-m-image"
                     if (highlighted)
                         iconSource += "?" + Theme.highlightColor
                     return iconSource
@@ -105,17 +117,19 @@ Page {
                     rightMargin: Theme.horizontalPageMargin
                     verticalCenter: parent.verticalCenter
                 }
-                text: model.fileName
+                text: Theme.highlightText(model.fileName, searchPanel.searchText, Theme.highlightColor)
                 color: highlighted ? Theme.highlightColor : Theme.primaryColor
                 truncationMode: TruncationMode.Fade
             }
         }
-        model: Unplayer.FolderListModel {
-            id: folderListModel
+        model: Unplayer.FilterProxyModel {
+            id: filePickerProxyModel
 
-            folder: Unplayer.Utils.homeDirectory()
-            nameFilters: [ "*.jpeg", "*.jpg" ]
-            showDirsFirst: true
+            filterRoleName: "fileName"
+            sourceModel: Unplayer.FilePickerModel {
+                id: filePickerModel
+                nameFilters: [ "*.jpeg", "*.jpg" ]
+            }
         }
 
         PullDownMenu {
@@ -123,7 +137,7 @@ Page {
 
             MenuItem {
                 function goToScard() {
-                    folderListModel.folder = Unplayer.Utils.sdcard()
+                    filePickerModel.directory = Unplayer.Utils.sdcard()
                     pullDownMenu.activeChanged.disconnect(goToScard)
                 }
 
@@ -133,13 +147,15 @@ Page {
 
             MenuItem {
                 function goToHome() {
-                    folderListModel.folder = Unplayer.Utils.homeDirectory()
+                    filePickerModel.directory = Unplayer.Utils.homeDirectory()
                     pullDownMenu.activeChanged.disconnect(goToHome)
                 }
 
                 text: qsTr("Home directory")
                 onClicked: pullDownMenu.activeChanged.connect(goToHome)
             }
+
+            SearchMenuItem { }
         }
 
         ViewPlaceholder {
