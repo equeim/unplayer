@@ -90,7 +90,7 @@ Page {
             current: model.url === player.queue.currentUrl
             menu: ContextMenu {
                 MenuItem {
-                    text: qsTr("Information")
+                    text: qsTr("Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
                 }
 
@@ -134,12 +134,6 @@ Page {
             id: playlistProxyModel
             sourceModel: Unplayer.PlaylistModel {
                 id: playlistModel
-            }
-        }
-        section {
-            property: "artist"
-            delegate: SectionHeader {
-                text: section
             }
         }
 

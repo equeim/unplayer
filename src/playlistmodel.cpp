@@ -41,13 +41,13 @@ struct PlaylistTrack
 
     }
 
-    QString title;
     QString url;
-    qint64 duration;
+    QString title;
     QString artist;
     bool unknownArtist;
     QString album;
     bool unknownAlbum;
+    qint64 duration;
 };
 
 enum PlaylistModelRole

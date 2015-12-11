@@ -152,7 +152,7 @@ QString PlaylistUtils::trackSparqlQuery(const QString &trackUrl)
                    "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
                    "       nfo:duration(?track) AS ?duration\n"
                    "WHERE {\n"
-                   "    ?track nie:url \"" + QUrl(trackUrl).toEncoded() + "\".\n"
+                   "    ?track nie:url \"" + Utils::encodeUrl(trackUrl) + "\".\n"
                    "}");
 }
 

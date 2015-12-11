@@ -19,8 +19,7 @@
 import Sailfish.Silica 1.0
 
 MenuItem {
-    enabled: listView.count === 0 ? searchPanel.searchText.length !== 0 :
-                                    true
+    enabled: listView.count !== 0 || searchPanel.searchText.length !== 0
     onClicked: {
         if (typeof searchPanel !== "undefined")
             searchPanel.unfocusSearchField()
