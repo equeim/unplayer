@@ -28,6 +28,7 @@
 #include <gst/gst.h>
 
 #include "directorytracksmodel.h"
+#include "filepickermodel.h"
 #include "filterproxymodel.h"
 #include "player.h"
 #include "playlistmodel.h"
@@ -35,7 +36,6 @@
 #include "queue.h"
 #include "queuemodel.h"
 #include "utils.h"
-#include "folderlistmodel/qquickfolderlistmodel.h"
 
 static QObject *utils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<Unplayer::PlaylistModel>("harbour.unplayer", 0, 1, "PlaylistModel");
     qmlRegisterType<Unplayer::DirectoryTracksModel>("harbour.unplayer", 0, 1, "DirectoryTracksModel");
     qmlRegisterType<Unplayer::DirectoryTracksProxyModel>("harbour.unplayer", 0, 1, "DirectoryTracksProxyModel");
+    qmlRegisterType<Unplayer::FilePickerModel>("harbour.unplayer", 0, 1, "FilePickerModel");
 
     qmlRegisterType<Unplayer::FilterProxyModel>("harbour.unplayer", 0, 1, "FilterProxyModel");
 
-    qmlRegisterType<QQuickFolderListModel, 1>("harbour.unplayer", 0, 1, "FolderListModel");
     qmlRegisterType<QItemSelectionModel>();
     qmlRegisterType<QAbstractItemModel>();
 

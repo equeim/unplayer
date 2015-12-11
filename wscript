@@ -16,7 +16,7 @@ def build(context):
     context.program(
         target="harbour-unplayer",
         features="qt5",
-        includes="src src/folderlistmodel",
+        includes="src",
         uselib=[
             "AUDIORESOURCE-QT",
             "GSTREAMER-0.10",
@@ -26,10 +26,11 @@ def build(context):
             "QT5SPARQL",
             "SAILFISHAPP"
         ],
-        cxxflags="-std=c++11",
+        cxxflags="-std=c++11 -ggdb",
         linkflags="-pie -rdynamic",
         source=[
             "src/directorytracksmodel.cpp",
+            "src/filepickermodel.cpp",
             "src/filterproxymodel.cpp",
             "src/main.cpp",
             "src/player.cpp",
@@ -37,9 +38,7 @@ def build(context):
             "src/playlistutils.cpp",
             "src/queue.cpp",
             "src/queuemodel.cpp",
-            "src/utils.cpp",
-            "src/folderlistmodel/fileinfothread.cpp",
-            "src/folderlistmodel/qquickfolderlistmodel.cpp"
+            "src/utils.cpp"
         ],
         lang=[
             "translations/harbour-unplayer-en",

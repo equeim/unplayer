@@ -33,7 +33,7 @@
 namespace Unplayer
 {
 
-struct File
+struct DirectoryTrackFile
 {
     QString url;
     QString fileName;
@@ -90,7 +90,7 @@ QVariant DirectoryTracksModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    const File *file = m_files.at(index.row());
+    const DirectoryTrackFile *file = m_files.at(index.row());
 
     switch (role) {
     case UrlRole:
@@ -149,7 +149,7 @@ int DirectoryTracksModel::tracksCount() const
 
 QVariantMap DirectoryTracksModel::get(int fileIndex) const
 {
-    const File* track = m_files.at(fileIndex);
+    const DirectoryTrackFile* track = m_files.at(fileIndex);
     QVariantMap map;
 
     map.insert("title", track->title);
@@ -225,7 +225,7 @@ void DirectoryTracksModel::onQueryFinished()
          iterator != cend;
          iterator++) {
 
-        m_files.append(new File {
+        m_files.append(new DirectoryTrackFile {
                            QUrl::fromLocalFile(iterator->filePath()).toString(),
                            iterator->fileName(),
                            true
@@ -234,7 +234,7 @@ void DirectoryTracksModel::onQueryFinished()
 
     while (m_result->next()) {
         QSparqlResultRow row = m_result->current();
-        m_files.append(new File {
+        m_files.append(new DirectoryTrackFile {
                            row.value("url").toString(),
                            row.value("fileName").toString(),
                            false,

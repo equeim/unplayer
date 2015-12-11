@@ -16,33 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UNPLAYER_DIRECTORYTRACKSMODEL_H
-#define UNPLAYER_DIRECTORYTRACKSMODEL_H
+#ifndef UNPLAYER_FILEPICKERMODEL_H
+#define UNPLAYER_FILEPICKERMODEL_H
 
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
-#include "filterproxymodel.h"
-
-class QSparqlConnection;
-class QSparqlResult;
-
 namespace Unplayer
 {
 
-struct DirectoryTrackFile;
+struct FilePickerFile;
 
-class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
+class FilePickerModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
     Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
     Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
-    Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
-    Q_PROPERTY(int tracksCount READ tracksCount NOTIFY loadedChanged)
+    Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters)
 public:
-    DirectoryTracksModel();
-    ~DirectoryTracksModel();
+    ~FilePickerModel();
     void classBegin();
     void componentComplete();
 
@@ -53,45 +46,21 @@ public:
     void setDirectory(QString newDirectory);
 
     QString parentDirectory() const;
-    bool isLoaded() const;
-    int tracksCount() const;
 
-    Q_INVOKABLE QVariantMap get(int fileIndex) const;
+    QStringList nameFilters() const;
+    void setNameFilters(const QStringList &filters);
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
     void loadDirectory();
-    void onQueryFinished();
 private:
-    QList<DirectoryTrackFile*> m_files;
-    int m_rowCount;
-
-    QSparqlConnection *m_sparqlConnection;
-    QSparqlResult *m_result;
-
+    QList<FilePickerFile*> m_files;
     QString m_directory;
-    bool m_loaded;
-    int m_tracksCount;
+    QStringList m_nameFilters;
 signals:
     void directoryChanged();
-    void loadedChanged();
-};
-
-class DirectoryTracksProxyModel : public FilterProxyModel
-{
-    Q_OBJECT
-    Q_PROPERTY(int tracksCount READ tracksCount NOTIFY tracksCountChanged)
-public:
-    void componentComplete();
-
-    int tracksCount() const;
-    Q_INVOKABLE QVariantList getTracks() const;
-    Q_INVOKABLE QVariantList getSelectedTracks() const;
-    Q_INVOKABLE void selectAll();
-signals:
-    void tracksCountChanged();
 };
 
 }
 
-#endif // UNPLAYER_DIRECTORYTRACKSMODEL_H
+#endif // UNPLAYER_FILEPICKERMODEL_H
