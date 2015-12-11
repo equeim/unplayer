@@ -43,7 +43,7 @@ Page {
             width: listView.width
 
             PageHeader {
-                title: qsTr("Select JPEG file")
+                title: qsTr("Select image")
                 description: filePickerModel.directory
             }
 
@@ -128,7 +128,7 @@ Page {
             filterRoleName: "fileName"
             sourceModel: Unplayer.FilePickerModel {
                 id: filePickerModel
-                nameFilters: [ "*.jpeg", "*.jpg" ]
+                nameFilters: Unplayer.Utils.imageNameFilters()
             }
         }
 
