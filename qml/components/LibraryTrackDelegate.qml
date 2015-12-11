@@ -26,7 +26,7 @@ BaseTrackDelegate {
     menu: Component {
         ContextMenu {
             MenuItem {
-                text: qsTr("Information")
+                text: qsTr("Track information")
                 onClicked: pageStack.push("../pages/TrackInfoPage.qml", { trackUrl: model.url })
             }
 

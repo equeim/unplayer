@@ -33,7 +33,6 @@ Page {
 
     property alias allArtists: tracksModel.allArtists
     property alias artist: tracksModel.artist
-
     property alias genre: tracksModel.genre
 
     SearchPanel {

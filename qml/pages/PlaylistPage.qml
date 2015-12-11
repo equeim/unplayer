@@ -90,7 +90,7 @@ Page {
             current: model.url === player.queue.currentUrl
             menu: ContextMenu {
                 MenuItem {
-                    text: qsTr("Information")
+                    text: qsTr("Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
                 }
 

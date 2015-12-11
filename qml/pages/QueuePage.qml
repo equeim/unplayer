@@ -115,7 +115,7 @@ Page {
             current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
-                    text: qsTr("Information")
+                    text: qsTr("Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
                 }
 
