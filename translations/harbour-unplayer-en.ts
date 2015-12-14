@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="en">
 <context>
@@ -15,11 +15,9 @@
     <name>AlbumPage</name>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track selected</numerusform>
+        <numerusform>%n tracks selected</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>AlbumPageHeader</name>
@@ -35,11 +33,9 @@
     <name>AllAlbumsPage</name>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n album selected</numerusform>
+        <numerusform>%n albums selected</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>AllArtistsPage</name>
@@ -62,11 +58,9 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n album selected</numerusform>
+        <numerusform>%n albums selected</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>ArtistPageHeader</name>
@@ -89,14 +83,12 @@
     <name>ArtistsPage</name>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n artist selected</numerusform>
+        <numerusform>%n artists selected</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n album</numerusform>
             <numerusform>%n albums</numerusform>
         </translation>
@@ -106,28 +98,22 @@
     <name>DirectoriesPage</name>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track selected</numerusform>
+        <numerusform>%n tracks selected</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>GenresPage</name>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n genre selected</numerusform>
+        <numerusform>%n genres selected</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track, %1</numerusform>
+        <numerusform>%n tracks, %1</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>MainPage</name>
@@ -164,18 +150,14 @@
     <name>PlaylistPage</name>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track selected</numerusform>
+        <numerusform>%n tracks selected</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Removing %n track</numerusform>
+        <numerusform>Removing %n tracks</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>PlaylistsPage</name>
@@ -188,37 +170,29 @@
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n playlist selected</numerusform>
+        <numerusform>%n playlists selected</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Removing %n playlist</numerusform>
+        <numerusform>Removing %n playlists</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>QueuePage</name>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track selected</numerusform>
+        <numerusform>%n tracks selected</numerusform>
+        </translation></message>
 </context>
 <context>
     <name>TracksPage</name>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n track selected</numerusform>
+        <numerusform>%n tracks selected</numerusform>
+        </translation></message>
 </context>
 </TS>
