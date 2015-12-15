@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="de">
 <context>
@@ -28,7 +28,7 @@
     <name>AddToPlaylistMenuItem</name>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished">Zu Playlist hinzufügen</translation>
+        <translation>Zu Playlist hinzufügen</translation>
     </message>
 </context>
 <context>
@@ -61,7 +61,7 @@
     <name>AddToQueueMenuItem</name>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished">Zu Warteschlange hinzufügen</translation>
+        <translation>Zu Warteschlange hinzufügen</translation>
     </message>
 </context>
 <context>
@@ -277,18 +277,18 @@
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished">Interpreten</translation>
+        <translation>Interpreten</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n Album</numerusform>
             <numerusform>%n Alben</numerusform>
         </translation>
     </message>
     <message>
         <source>All tracks</source>
-        <translation type="unfinished">Alle Lieder</translation>
+        <translation>Alle Lieder</translation>
     </message>
     <message>
         <source>Select artists</source>
@@ -296,7 +296,7 @@
     </message>
     <message>
         <source>No artists</source>
-        <translation type="unfinished">Keine Interpreten</translation>
+        <translation>Keine Interpreten</translation>
     </message>
 </context>
 <context>
@@ -318,11 +318,11 @@
     </message>
     <message>
         <source>SD card</source>
-        <translation type="unfinished">SD-Karte</translation>
+        <translation>SD-Karte</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation type="unfinished">Home-Verzeichnis</translation>
+        <translation>Home-Verzeichnis</translation>
     </message>
     <message>
         <source>Select tracks</source>
@@ -330,11 +330,11 @@
     </message>
     <message>
         <source>Loading</source>
-        <translation type="unfinished">Lade</translation>
+        <translation>Lade</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation type="unfinished">Keine Dateien</translation>
+        <translation>Keine Dateien</translation>
     </message>
 </context>
 <context>
@@ -647,7 +647,7 @@
     <name>SearchMenuItem</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Suche</translation>
+        <translation>Suche</translation>
     </message>
 </context>
 <context>
@@ -707,7 +707,7 @@
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished">Unbekannter Interpret</translation>
+        <translation>Unbekannter Interpret</translation>
     </message>
     <message>
         <source>Album</source>
@@ -715,7 +715,7 @@
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished">Unbekanntes Album</translation>
+        <translation>Unbekanntes Album</translation>
     </message>
     <message>
         <source>Track number</source>
@@ -772,18 +772,18 @@
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished">Keine Lieder</translation>
+        <translation>Keine Lieder</translation>
     </message>
 </context>
 <context>
     <name>Unplayer::DirectoryTracksModel</name>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished">Unbekannter Interpret</translation>
+        <translation>Unbekannter Interpret</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished">Unbekanntes Album</translation>
+        <translation>Unbekanntes Album</translation>
     </message>
 </context>
 <context>
@@ -801,11 +801,11 @@
     <name>Unplayer::PlaylistUtils</name>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished">Unbekannter Interpret</translation>
+        <translation>Unbekannter Interpret</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished">Unbekanntes Album</translation>
+        <translation>Unbekanntes Album</translation>
     </message>
 </context>
 <context>
