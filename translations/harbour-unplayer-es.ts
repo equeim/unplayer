@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="es">
 <context>
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Acerca de</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Reproductor de música simple para Sailfish OS</translation>
     </message>
     <message>
         <source>Show license</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar la licencia</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Traducciones</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Traductores</translation>
     </message>
 </context>
 <context>
