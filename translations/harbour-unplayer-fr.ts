@@ -514,8 +514,8 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation><numerusform>%n piste sélectionné</numerusform>
-        <numerusform>%n pistes sélectionnés</numerusform>
+        <translation><numerusform>%n piste sélectionnée</numerusform>
+        <numerusform>%n pistes sélectionnées</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
