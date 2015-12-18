@@ -70,7 +70,7 @@ Page {
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeLarge
-                        text: "Unplayer 0.2.1"
+                        text: "Unplayer 0.3"
                     }
 
                     Label {
@@ -134,7 +134,15 @@ Page {
                 text: "Nederlands
     Nathan Follens <nathan@email.is>
 
+English
+    Alexey Rochev <equeim@gmail.com>
+    Nathan Follens <nathan@email.is>
+
 Français
+    Nathan Follens <nathan@email.is>
+
+Deutsch
+    velox <jngibbon@gmail.com>
     Nathan Follens <nathan@email.is>
 
 Norsk bokmål
@@ -142,6 +150,9 @@ Norsk bokmål
 
 Русский
     Alexey Rochev <equeim@gmail.com>
+
+Español
+    Nathan Follens <nathan@email.is>
 
 Svenska
     Åke Engelbrektson <eson57@users.noreply.github.com>
