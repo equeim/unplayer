@@ -44,6 +44,7 @@ def build(context):
             "translations/harbour-unplayer-en",
             "translations/harbour-unplayer-es",
             "translations/harbour-unplayer-fr",
+            "translations/harbour-unplayer-it",
             "translations/harbour-unplayer-nb",
             "translations/harbour-unplayer-nl",
             "translations/harbour-unplayer-ru",

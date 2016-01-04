@@ -145,6 +145,9 @@ Deutsch
     velox <jngibbon@gmail.com>
     Nathan Follens <nathan@email.is>
 
+Italiano
+    Tichy <tichy@cryptolab.net>
+
 Norsk bokmål
     Nathan Follens <nathan@email.is>
 
