@@ -29,6 +29,7 @@ namespace Unplayer
 struct QueueTrack
 {
     QueueTrack(const QVariantMap &trackMap);
+
     QString title;
     QString url;
     qint64 duration;
@@ -54,7 +55,7 @@ class Queue : public QObject
     Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
     Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
 public:
-    Queue(QObject *parent = 0);
+    explicit Queue(QObject *parent);
     ~Queue();
 
     const QList<QueueTrack*>& tracks() const;
@@ -103,7 +104,7 @@ signals:
     void shuffleChanged();
     void repeatChanged();
 
-    void tracksRemoved(QList<int> indexes);
+    void tracksRemoved(const QList<int> &indexes);
 };
 
 }

@@ -23,6 +23,18 @@
 
 #include "utils.h"
 
+namespace
+{
+
+enum FilePickerModelRole
+{
+    FilePathRole = Qt::UserRole,
+    FileNameRole,
+    IsDirectoryRole,
+};
+
+}
+
 namespace Unplayer
 {
 
@@ -31,13 +43,6 @@ struct FilePickerFile
     QString filePath;
     QString fileName;
     bool isDirectory;
-};
-
-enum FilePickerModelRole
-{
-    FilePathRole = Qt::UserRole,
-    FileNameRole,
-    IsDirectoryRole,
 };
 
 FilePickerModel::~FilePickerModel()
@@ -127,17 +132,14 @@ void FilePickerModel::loadDirectory()
     qDeleteAll(m_files);
     m_files.clear();
 
-    QFileInfoList infoList = QDir(m_directory).entryInfoList(m_nameFilters,
-                                                             QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot,
-                                                             QDir::DirsFirst);
-    for (QFileInfoList::const_iterator iterator = infoList.cbegin(), cend = infoList.cend();
-         iterator != cend;
-         iterator++) {
+    for (const QFileInfo &info : QDir(m_directory).entryInfoList(m_nameFilters,
+                                                                 QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot,
+                                                                 QDir::DirsFirst)) {
 
         m_files.append(new FilePickerFile {
-                           iterator->filePath(),
-                           iterator->fileName(),
-                           iterator->isDir()
+                           info.filePath(),
+                           info.fileName(),
+                           info.isDir()
                        });
     }
 

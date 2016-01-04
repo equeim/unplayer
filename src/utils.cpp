@@ -30,11 +30,15 @@
 #include <QStandardPaths>
 #include <QUrl>
 
-namespace Unplayer
+namespace
 {
 
-const QString Utils::m_mediaArtDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + "/media-art";
-const QString Utils::m_homeDirectory = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+const QString mediaArtDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + "/media-art");
+
+}
+
+namespace Unplayer
+{
 
 Utils::Utils()
 {
@@ -44,7 +48,7 @@ Utils::Utils()
 QUrl Utils::mediaArt(const QString &artist, const QString &album, const QString &trackUrl)
 {
     if (!artist.isEmpty() && !album.isEmpty()) {
-        QString filePath = mediaArtPath(artist, album);
+        QString filePath(mediaArtPath(artist, album));
         if (QFileInfo(filePath).exists())
             return QUrl::fromLocalFile(filePath);
     }
@@ -52,12 +56,14 @@ QUrl Utils::mediaArt(const QString &artist, const QString &album, const QString 
     if (trackUrl.isEmpty())
         return QUrl();
 
-    QString trackDirectory = QFileInfo(QUrl(trackUrl).path()).path();
+    QString trackDirectory(QFileInfo(QUrl(trackUrl).path()).path());
 
-    QStringList foundMediaArt = QDir(trackDirectory).
-            entryList(QDir::Files).
-            filter(QRegularExpression("^(albumart.*|cover|folder|front)\\.(jpeg|jpg|png)$",
-                                      QRegularExpression::CaseInsensitiveOption));
+    QStringList foundMediaArt(
+                QDir(trackDirectory).
+                entryList(QDir::Files).
+                filter(QRegularExpression("^(albumart.*|cover|folder|front)\\.(jpeg|jpg|png)$",
+                                          QRegularExpression::CaseInsensitiveOption))
+    );
 
     if (foundMediaArt.isEmpty())
         return QUrl();
@@ -70,9 +76,10 @@ QUrl Utils::mediaArtForArtist(const QString &artist)
     if (artist.isEmpty())
         return QString();
 
-    QFileInfoList mediaArtList = QDir(m_mediaArtDirectory)
-            .entryInfoList(QStringList() << "album-" + mediaArtMd5(artist) + "-?*.jpeg",
-                           QDir::Files);
+    QFileInfoList mediaArtList(
+                QDir(mediaArtDirectory)
+                .entryInfoList(QStringList({"album-" + mediaArtMd5(artist) + "-?*.jpeg"}), QDir::Files)
+    );
 
     if (mediaArtList.isEmpty())
         return QString();
@@ -83,8 +90,8 @@ QUrl Utils::mediaArtForArtist(const QString &artist)
 
 QUrl Utils::randomMediaArt()
 {
-    QFileInfoList mediaArtList = QDir(m_mediaArtDirectory).entryInfoList(QStringList() << "album-?*-?*.jpeg",
-                                                                         QDir::Files);
+    QFileInfoList mediaArtList(QDir(mediaArtDirectory).entryInfoList(QStringList({"album-?*-?*.jpeg"}),
+                                                                       QDir::Files));
 
     if (mediaArtList.isEmpty())
         return QString();
@@ -94,14 +101,13 @@ QUrl Utils::randomMediaArt()
 
 void Utils::setMediaArt(const QString &filePath, const QString &artist, const QString &album)
 {
-    QString newFilePath = mediaArtPath(artist, album);
+    QString newFilePath(mediaArtPath(artist, album));
     QFile::remove(newFilePath);
 
-    if (filePath.endsWith(".jpeg") || filePath.endsWith(".jpg")) {
+    if (filePath.endsWith(".jpeg") || filePath.endsWith(".jpg"))
         QFile::copy(filePath, newFilePath);
-    } else {
+    else
         QImage(filePath).save(newFilePath);
-    }
 }
 
 QString Utils::formatDuration(uint seconds)
@@ -189,7 +195,7 @@ QString Utils::tracksSparqlQuery(bool allArtists,
                                  const QString &album,
                                  const QString &genre)
 {
-    QString query =
+    QString query(
             "SELECT ?url ?title ?artist ?rawArtist ?album ?rawAlbum ?trackNumber ?genre ?duration\n"
             "WHERE {\n"
             "    {\n"
@@ -207,7 +213,8 @@ QString Utils::tracksSparqlQuery(bool allArtists,
             "            ?track a nmm:MusicPiece.\n"
             "        }\n"
             "        ORDER BY !bound(?rawArtist) ?rawArtist !bound(?rawAlbum) ?date ?rawAlbum ?trackNumber ?title\n"
-            "    }.\n";
+            "    }.\n"
+    );
 
     if (!allArtists) {
         if (artist.isEmpty())
@@ -233,14 +240,14 @@ QString Utils::tracksSparqlQuery(bool allArtists,
 
 QString Utils::homeDirectory()
 {
-    return m_homeDirectory;
+    return QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
 }
 
 QString Utils::sdcard()
 {
     QFile mtab("/etc/mtab");
     if (mtab.open(QIODevice::ReadOnly)) {
-        QStringList mounts = QString(mtab.readAll()).split('\n').filter("/dev/mmcblk1p1");
+        QStringList mounts(QString(mtab.readAll()).split('\n').filter("/dev/mmcblk1p1"));
         mtab.close();
 
         if (!mounts.isEmpty())
@@ -252,13 +259,8 @@ QString Utils::sdcard()
 QStringList Utils::imageNameFilters()
 {
     QStringList nameFilters;
-    QList<QByteArray> formats = QImageReader::supportedImageFormats();
-    for (QList<QByteArray>::const_iterator iterator = formats.cbegin(), cend = formats.cend();
-         iterator != cend;
-         iterator++) {
-
-        nameFilters.append("*." + *iterator);
-    }
+    for (const QByteArray &format : QImageReader::supportedImageFormats())
+        nameFilters.append("*." + format);
     return nameFilters;
 }
 
@@ -274,7 +276,7 @@ QByteArray Utils::encodeUrl(const QUrl &url)
 
 QString Utils::mediaArtPath(const QString &artist, const QString &album)
 {
-    return m_mediaArtDirectory +
+    return mediaArtDirectory +
             QDir::separator() +
             "album-" +
             mediaArtMd5(artist) +

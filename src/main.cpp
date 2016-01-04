@@ -37,17 +37,13 @@
 #include "queuemodel.h"
 #include "utils.h"
 
-static QObject *utils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+static QObject *utils_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
     return new Unplayer::Utils;
 }
 
-static QObject *playlistutils_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+static QObject *playlistutils_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
     return new Unplayer::PlaylistUtils;
 }
 

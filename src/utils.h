@@ -59,9 +59,6 @@ public:
 private:
     static QString mediaArtPath(const QString &artist, const QString &album);
     static QString mediaArtMd5(QString string);
-private:
-    static const QString m_mediaArtDirectory;
-    static const QString m_homeDirectory;
 };
 
 }

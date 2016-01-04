@@ -29,6 +29,22 @@
 
 #include "utils.h"
 
+namespace
+{
+
+enum DirectoryTracksModelRole
+{
+    UrlRole = Qt::UserRole,
+    FileNameRole,
+    IsDirectoryRole,
+    TitleRole,
+    ArtistRole,
+    AlbumRole,
+    DurationRole
+};
+
+}
+
 namespace Unplayer
 {
 
@@ -46,17 +62,6 @@ struct DirectoryTrackFile
     qint64 duration;
 };
 
-enum DirectoryTracksModelRole
-{
-    UrlRole = Qt::UserRole,
-    FileNameRole,
-    IsDirectoryRole,
-    TitleRole,
-    ArtistRole,
-    AlbumRole,
-    DurationRole
-};
-
 DirectoryTracksModel::DirectoryTracksModel()
     : m_rowCount(0),
       m_sparqlConnection(new QSparqlConnection("QTRACKER_DIRECT", QSparqlConnectionOptions(), this)),
@@ -69,7 +74,7 @@ DirectoryTracksModel::DirectoryTracksModel()
 
 DirectoryTracksModel::~DirectoryTracksModel()
 {
-    if (m_result)
+    if (m_result != nullptr)
         m_result->deleteLater();
     qDeleteAll(m_files);
 }
@@ -148,7 +153,7 @@ int DirectoryTracksModel::tracksCount() const
 
 QVariantMap DirectoryTracksModel::get(int fileIndex) const
 {
-    const DirectoryTrackFile* track = m_files.at(fileIndex);
+    const DirectoryTrackFile *track = m_files.at(fileIndex);
     QVariantMap map;
 
     map.insert("title", track->title);
@@ -218,21 +223,16 @@ void DirectoryTracksModel::loadDirectory()
 
 void DirectoryTracksModel::onQueryFinished()
 {
-    QFileInfoList directories = QDir(m_directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-
-    for (QFileInfoList::const_iterator iterator = directories.cbegin(), cend = directories.cend();
-         iterator != cend;
-         iterator++) {
-
+    for (const QFileInfo &info : QDir(m_directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         m_files.append(new DirectoryTrackFile {
-                           QUrl::fromLocalFile(iterator->filePath()).toString(),
-                           iterator->fileName(),
+                           QUrl::fromLocalFile(info.filePath()).toString(),
+                           info.fileName(),
                            true
                        });
     }
 
     while (m_result->next()) {
-        QSparqlResultRow row = m_result->current();
+        QSparqlResultRow row(m_result->current());
         m_files.append(new DirectoryTrackFile {
                            row.value("url").toString(),
                            row.value("fileName").toString(),
@@ -269,7 +269,7 @@ void DirectoryTracksProxyModel::componentComplete()
 int DirectoryTracksProxyModel::tracksCount() const
 {
     int count = 0;
-    for (int i = 0, filesCount = rowCount(); i < filesCount; i++) {
+    for (int i = 0, max = rowCount(); i < max; i++) {
         if (!index(i, 0).data(IsDirectoryRole).toBool())
             count++;
     }
@@ -280,7 +280,7 @@ QVariantList DirectoryTracksProxyModel::getTracks() const
 {
     QVariantList tracks;
     DirectoryTracksModel *model = static_cast<DirectoryTracksModel*>(sourceModel());
-    for (int i = 0, filesCount = rowCount(); i < filesCount; i++) {
+    for (int i = 0, max = rowCount(); i < max; i++) {
         if (!index(i, 0).data(IsDirectoryRole).toBool())
             tracks.append(model->get(sourceIndex(i)));
     }
@@ -291,20 +291,17 @@ QVariantList DirectoryTracksProxyModel::getSelectedTracks() const
 {
     QVariantList tracks;
     DirectoryTracksModel *model = static_cast<DirectoryTracksModel*>(sourceModel());
-    QList<int> sourceIndexes = selectedSourceIndexes();
-    for (QList<int>::const_iterator iterator = sourceIndexes.cbegin(), cend = sourceIndexes.cend();
-         iterator != cend;
-         iterator++) {
 
-        tracks.append(model->get(sourceIndex(*iterator)));
-    }
+    for (int index : selectedSourceIndexes())
+        tracks.append(model->get(index));
+
     return tracks;
 }
 
 void DirectoryTracksProxyModel::selectAll()
 {
-    for (int i = 0, filesCount = rowCount(); i < filesCount; i++) {
-        QModelIndex modelIndex = index(i, 0);
+    for (int i = 0, max = rowCount(); i < max; i++) {
+        QModelIndex modelIndex(index(i, 0));
         if (!modelIndex.data(IsDirectoryRole).toBool())
             selectionModel()->select(modelIndex, QItemSelectionModel::Select);
     }

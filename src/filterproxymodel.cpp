@@ -48,9 +48,9 @@ QByteArray FilterProxyModel::filterRoleName() const
     return m_filterRoleName;
 }
 
-void FilterProxyModel::setFilterRoleName(const QByteArray &newFilterRoleName)
+void FilterProxyModel::setFilterRoleName(const QByteArray &filterRoleName)
 {
-    m_filterRoleName = newFilterRoleName;
+    m_filterRoleName = filterRoleName;
 }
 
 int FilterProxyModel::count() const
@@ -81,14 +81,13 @@ int FilterProxyModel::selectedIndexesCount() const
 QList<int> FilterProxyModel::selectedSourceIndexes() const
 {
     QList<int> indexes;
-    QModelIndexList modelIndexes = m_selectionModel->selectedIndexes();
-    std::sort(modelIndexes.begin(), modelIndexes.end());
-    for (QModelIndexList::const_iterator iterator = modelIndexes.cbegin(), cend = modelIndexes.cend();
-         iterator != cend;
-         iterator++) {
 
-        indexes.append(sourceIndex(iterator->row()));
-    }
+    QModelIndexList modelIndexes(m_selectionModel->selectedIndexes());
+    std::sort(modelIndexes.begin(), modelIndexes.end());
+
+    for (const QModelIndex &index : modelIndexes)
+        indexes.append(index.row());
+
     return indexes;
 }
 

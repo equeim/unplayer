@@ -21,7 +21,7 @@
 
 #include "queue.h"
 
-namespace Unplayer
+namespace
 {
 
 enum QueueModelRole
@@ -32,6 +32,11 @@ enum QueueModelRole
     AlbumRole,
     DurationRole
 };
+
+}
+
+namespace Unplayer
+{
 
 void QueueModel::classBegin()
 {
@@ -66,9 +71,8 @@ QVariant QueueModel::data(const QModelIndex &index, int role) const
     }
 }
 
-int QueueModel::rowCount(const QModelIndex &parent) const
+int QueueModel::rowCount(const QModelIndex&) const
 {
-    Q_UNUSED(parent)
     return m_queue->tracks().length();
 }
 
@@ -77,9 +81,9 @@ Queue* QueueModel::queue() const
     return m_queue;
 }
 
-void QueueModel::setQueue(Queue *newQueue)
+void QueueModel::setQueue(Queue *queue)
 {
-    m_queue = newQueue;
+    m_queue = queue;
 }
 
 QVariantMap QueueModel::get(int trackIndex) const
@@ -102,11 +106,11 @@ QHash<int, QByteArray> QueueModel::roleNames() const
     return roles;
 }
 
-void QueueModel::removeTracks(QList<int> trackIndexes)
+void QueueModel::removeTracks(const QList<int> &trackIndexes)
 {
-    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
-        int trackIndex = trackIndexes.at(i) - i;
-        beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
+    for (int i = 0, max = trackIndexes.size(); i < max; i++) {
+        int index = trackIndexes.at(i) - i;
+        beginRemoveRows(QModelIndex(), index, index);
         endRemoveRows();
     }
 }

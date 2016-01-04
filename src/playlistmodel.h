@@ -42,7 +42,7 @@ public:
     void componentComplete();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex&) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     QString url() const;
     void setUrl(const QString &newUrl);

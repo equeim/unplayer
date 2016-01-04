@@ -54,7 +54,7 @@ void PlaylistUtils::newPlaylist(const QString &name, const QVariant &tracksVaria
                                            name +
                                            ".pls").toEncoded();
 
-    QStringList tracks = unboxTracks(tracksVariant);
+    QStringList tracks(unboxTracks(tracksVariant));
 
     m_newPlaylistTracksCount = tracks.size();
     savePlaylist(m_newPlaylistUrl, tracks);
@@ -62,7 +62,7 @@ void PlaylistUtils::newPlaylist(const QString &name, const QVariant &tracksVaria
 
 void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant)
 {
-    QStringList tracks = parsePlaylist(playlistUrl);
+    QStringList tracks(parsePlaylist(playlistUrl));
     tracks.append(unboxTracks(newTracksVariant));
     savePlaylist(playlistUrl, tracks);
     setPlaylistTracksCount(playlistUrl, tracks.size());
@@ -70,9 +70,9 @@ void PlaylistUtils::addTracksToPlaylist(const QString &playlistUrl, const QVaria
 
 void PlaylistUtils::removeTracksFromPlaylist(const QString &playlistUrl, const QList<int> &trackIndexes)
 {
-    QStringList tracks = parsePlaylist(playlistUrl);
+    QStringList tracks(parsePlaylist(playlistUrl));
 
-    for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++)
+    for (int i = 0, max = trackIndexes.size(); i < max; i++)
         tracks.removeAt(trackIndexes.at(i) - i);
 
     savePlaylist(playlistUrl, tracks);
@@ -81,23 +81,19 @@ void PlaylistUtils::removeTracksFromPlaylist(const QString &playlistUrl, const Q
 
 void PlaylistUtils::removePlaylist(const QString &url)
 {
-    QFile(QUrl(url).path()).remove();
+    QFile::remove(QUrl(url).path());
 }
 
 QVariantList PlaylistUtils::syncParsePlaylist(const QString &playlistUrl)
 {
-    QStringList tracks = parsePlaylist(playlistUrl);
     QVariantList trackVariants;
 
-    for (QStringList::const_iterator iterator = tracks.cbegin(), cend = tracks.cend();
-         iterator != cend;
-         iterator++) {
-
-        QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(trackSparqlQuery(*iterator),
+    for (const QString &trackUrl : parsePlaylist(playlistUrl)) {
+        QSparqlResult *result = m_sparqlConnection->syncExec(QSparqlQuery(trackSparqlQuery(trackUrl),
                                                                           QSparqlQuery::SelectStatement));
 
         if (result->next()) {
-            QSparqlResultRow row = result->current();
+            QSparqlResultRow row(result->current());
 
             QVariantMap trackMap;
             trackMap.insert("title", row.value("title"));
@@ -120,7 +116,7 @@ QStringList PlaylistUtils::parsePlaylist(const QString &playlistUrl)
 {
     QFile file(QUrl(playlistUrl).path());
     if (file.open(QIODevice::ReadOnly)) {
-        QByteArray line = file.readLine();
+        QByteArray line(file.readLine());
         if (line.trimmed() == "[playlist]") {
             QStringList tracks;
             while (!file.atEnd()) {
@@ -128,7 +124,7 @@ QStringList PlaylistUtils::parsePlaylist(const QString &playlistUrl)
                 if (line.startsWith("File")) {
                     int index = line.indexOf('=');
                     if (index >= 0) {
-                        QByteArray url = line.mid(index + 1).trimmed();
+                        QByteArray url(line.mid(index + 1).trimmed());
                         if (!url.isEmpty())
                             tracks.append(url);
                     }
@@ -158,19 +154,12 @@ QString PlaylistUtils::trackSparqlQuery(const QString &trackUrl)
 QStringList PlaylistUtils::unboxTracks(const QVariant &tracksVariant)
 {
     if (tracksVariant.type() == QVariant::String)
-        return QStringList() << tracksVariant.toString();
+        return QStringList({tracksVariant.toString()});
 
     if (tracksVariant.type() == QVariant::List) {
         QStringList tracks;
-        QVariantList trackObjects = tracksVariant.toList();
-
-        for (QVariantList::const_iterator iterator = trackObjects.cbegin(), cend = trackObjects.cend();
-             iterator != cend;
-             iterator++) {
-
-            tracks.append((*iterator).toMap().value("url").toString());
-        }
-
+        for (const QVariant &trackVariant : tracksVariant.toList())
+            tracks.append(trackVariant.toMap().value("url").toString());
         return tracks;
     }
 
@@ -220,7 +209,7 @@ void PlaylistUtils::savePlaylist(const QString &playlistUrl, const QStringList &
     file.close();
 }
 
-void PlaylistUtils::onTrackerGraphUpdated(QString className)
+void PlaylistUtils::onTrackerGraphUpdated(const QString &className)
 {
     if (className == "http://www.tracker-project.org/temp/nmm#Playlist") {
         emit playlistsChanged();
