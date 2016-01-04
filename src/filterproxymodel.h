@@ -40,7 +40,7 @@ public:
     void componentComplete();
 
     QByteArray filterRoleName() const;
-    void setFilterRoleName(const QByteArray &newFilterRoleName);
+    void setFilterRoleName(const QByteArray &filterRoleName);
 
     Q_INVOKABLE int count() const;
     Q_INVOKABLE int proxyIndex(int sourceIndex) const;

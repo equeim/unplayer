@@ -28,12 +28,26 @@
 
 #include "playlistutils.h"
 
+namespace
+{
+
+enum PlaylistModelRole
+{
+    UrlRole = Qt::UserRole,
+    TitleRole,
+    ArtistRole,
+    AlbumRole,
+    DurationRole
+};
+
+}
+
 namespace Unplayer
 {
 
 struct PlaylistTrack
 {
-    PlaylistTrack(const QString &url)
+    explicit PlaylistTrack(const QString &url)
         : url(url),
           unknownArtist(false),
           unknownAlbum(false)
@@ -48,15 +62,6 @@ struct PlaylistTrack
     QString album;
     bool unknownAlbum;
     qint64 duration;
-};
-
-enum PlaylistModelRole
-{
-    UrlRole = Qt::UserRole,
-    TitleRole,
-    ArtistRole,
-    AlbumRole,
-    DurationRole
 };
 
 PlaylistModel::PlaylistModel()
@@ -80,7 +85,7 @@ void PlaylistModel::classBegin()
 
 void PlaylistModel::componentComplete()
 {
-    QStringList tracksList = PlaylistUtils::parsePlaylist(m_url);
+    QStringList tracksList(PlaylistUtils::parsePlaylist(m_url));
 
     if (tracksList.isEmpty()) {
         m_loaded = true;
@@ -88,8 +93,8 @@ void PlaylistModel::componentComplete()
     } else {
         QSparqlConnection *connection = new QSparqlConnection("QTRACKER_DIRECT", QSparqlConnectionOptions(), this);
 
-        for (int i = 0, tracksCount = tracksList.size(); i < tracksCount; i++) {
-            QString url = tracksList.at(i);
+        for (int i = 0, max = tracksList.size(); i < max; i++) {
+            QString url(tracksList.at(i));
             m_tracks.append(new PlaylistTrack(url));
 
             QSparqlResult *result = connection->exec(QSparqlQuery(PlaylistUtils::trackSparqlQuery(url),
@@ -180,10 +185,10 @@ void PlaylistModel::removeAtIndexes(const QList<int> &trackIndexes)
         m_rowCount = 0;
         endResetModel();
     } else {
-        for (int i = 0, indexesCount = trackIndexes.size(); i < indexesCount; i++) {
-            int trackIndex = trackIndexes.at(i) - i;
-            beginRemoveRows(QModelIndex(), trackIndex, trackIndex);
-            delete m_tracks.takeAt(trackIndex);
+        for (int i = 0, max = trackIndexes.size(); i < max; i++) {
+            int index = trackIndexes.at(i) - i;
+            beginRemoveRows(QModelIndex(), index, index);
+            delete m_tracks.takeAt(index);
             m_rowCount--;
             endRemoveRows();
         }
@@ -209,14 +214,14 @@ void PlaylistModel::onQueryFinished()
 
     if (result->size() > 0) {
         result->next();
-        QSparqlResultRow row = result->current();
+        QSparqlResultRow row(result->current());
 
         PlaylistTrack *track = m_tracks.at(result->property("trackIndex").toInt());
 
         track->title = row.value("title").toString();
         track->duration = row.value("duration").toLongLong();
 
-        QVariant artist = row.value("artist");
+        QVariant artist(row.value("artist"));
         if (artist.isValid()) {
             track->artist = artist.toString();
         } else {
@@ -224,7 +229,7 @@ void PlaylistModel::onQueryFinished()
             track->unknownArtist = true;
         }
 
-        QVariant album = row.value("album");
+        QVariant album(row.value("album"));
         if (album.isValid()) {
             track->album = album.toString();
         } else {

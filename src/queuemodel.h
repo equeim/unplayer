@@ -40,13 +40,13 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     Queue* queue() const;
-    void setQueue(Queue *newQueue);
+    void setQueue(Queue *queue);
 
     Q_INVOKABLE QVariantMap get(int trackIndex) const;
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
-    void removeTracks(QList<int> trackIndexes);
+    void removeTracks(const QList<int> &trackIndexes);
 private:
     Queue *m_queue;
 };

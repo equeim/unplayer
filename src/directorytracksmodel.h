@@ -47,7 +47,7 @@ public:
     void componentComplete();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex&) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     QString directory() const;
     void setDirectory(QString newDirectory);

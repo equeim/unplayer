@@ -44,7 +44,7 @@ private:
     void setPlaylistTracksCount(QString playlistUrl, int tracksCount);
     static void savePlaylist(const QString &playlistUrl, const QStringList &tracks);
 private slots:
-    void onTrackerGraphUpdated(QString className);
+    void onTrackerGraphUpdated(const QString &className);
 private:
     QSparqlConnection *m_sparqlConnection;
 
