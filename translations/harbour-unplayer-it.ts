@@ -70,7 +70,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>Set cover image</source>
@@ -430,11 +430,11 @@
     <name>NewPlaylistDialog</name>
     <message>
         <source>Add playlist</source>
-        <translation>Aggiungi playlist</translation>
+        <translation>Aggiungi scaletta</translation>
     </message>
     <message>
         <source>Playlist name</source>
-        <translation>Nome playlist</translation>
+        <translation>Nome scaletta</translation>
     </message>
 </context>
 <context>
@@ -468,15 +468,15 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Rimozione playlist</translation>
+        <translation>Rimozione scaletta</translation>
     </message>
     <message>
         <source>Clear playlist</source>
-        <translation>Cancella playlist</translation>
+        <translation>Cancella scaletta</translation>
     </message>
     <message>
         <source>Clearing playlist</source>
-        <translation>Cancellazione playlist</translation>
+        <translation>Cancellazione scaletta</translation>
     </message>
     <message>
         <source>Search</source>
@@ -530,7 +530,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Nuova playlist…</translation>
+        <translation>Nuova scaletta…</translation>
     </message>
     <message>
         <source>Search</source>
@@ -538,7 +538,7 @@
     </message>
     <message>
         <source>No playlists</source>
-        <translation>Nessuna playlist</translation>
+        <translation>Nessuna scaletta</translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
@@ -613,11 +613,11 @@
     <name>SelectionPanel</name>
     <message>
         <source>All</source>
-        <translation>Tutto</translation>
+        <translation>Tutti</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Niente</translation>
+        <translation>Nessuno</translation>
     </message>
 </context>
 <context>
