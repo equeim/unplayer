@@ -28,7 +28,7 @@
     <name>AddToPlaylistMenuItem</name>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
 </context>
 <context>
@@ -40,7 +40,7 @@
         </translation></message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>New playlist...</source>
@@ -89,7 +89,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -173,7 +173,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
 </context>
 <context>
@@ -184,7 +184,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -212,7 +212,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -346,7 +346,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message>
         <source>Track information</source>
@@ -579,7 +579,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Aggiungi alla playlist</translation>
+        <translation>Aggiungi alla scaletta</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
@@ -762,15 +762,15 @@
     <name>Unplayer::Utils</name>
     <message>
         <source>%1 h </source>
-        <translation>%1 o </translation>
+        <translation>%1 ore </translation>
     </message>
     <message>
         <source>%1 m </source>
-        <translation>%1 m </translation>
+        <translation>%1 min </translation>
     </message>
     <message>
         <source>%1 s</source>
-        <translation>%1 s</translation>
+        <translation>%1 sec</translation>
     </message>
     <message>
         <source>Unknown artist</source>
