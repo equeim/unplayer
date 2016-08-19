@@ -20,7 +20,10 @@ def build(context):
             "AUDIORESOURCE-QT",
             "GSTREAMER-1.0",
             "MPRIS-QT5",
+            "QT5CORE",
             "QT5DBUS",
+            "QT5GUI",
+            "QT5QML",
             "QT5QUICK",
             "QT5SPARQL",
             "SAILFISHAPP"
