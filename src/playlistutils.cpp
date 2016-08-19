@@ -17,7 +17,6 @@
  */
 
 #include "playlistutils.h"
-#include "playlistutils.moc"
 
 #include <QDBusConnection>
 #include <QFile>

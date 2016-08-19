@@ -17,7 +17,6 @@
  */
 
 #include "queue.h"
-#include "queue.moc"
 
 #include "utils.h"
 
