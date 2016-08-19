@@ -9,7 +9,7 @@ Source0: %{name}-%{version}.tar.xz
 Requires: nemo-qml-plugin-policy-qt5
 Requires: sailfishsilica-qt5
 BuildRequires: pkgconfig(audioresource-qt)
-BuildRequires: pkgconfig(gstreamer-0.10)
+BuildRequires: pkgconfig(gstreamer-1.0)
 BuildRequires: pkgconfig(mpris-qt5)
 BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Quick)

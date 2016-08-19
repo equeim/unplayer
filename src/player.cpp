@@ -76,7 +76,7 @@ qint64 Player::position() const
 {
     GstFormat format = GST_FORMAT_TIME;
     gint64 cur;
-    gboolean result = gst_element_query_position(m_pipeline, &format, &cur);
+    gboolean result = gst_element_query_position(m_pipeline, format, &cur);
     if (result)
         // msecs
         return cur / 1000000;
