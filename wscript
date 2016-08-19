@@ -6,7 +6,7 @@ def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
     context.check_cfg(package="audioresource-qt", args="--libs --cflags")
-    context.check_cfg(package="gstreamer-0.10", args="--libs --cflags")
+    context.check_cfg(package="gstreamer-1.0", args="--libs --cflags")
     context.check_cfg(package="mpris-qt5", args="--libs --cflags")
     context.check_cfg(package="Qt5Sparql", args="--libs --cflags")
     context.check_cfg(package="sailfishapp", args="--libs --cflags")
@@ -19,7 +19,7 @@ def build(context):
         includes="src",
         uselib=[
             "AUDIORESOURCE-QT",
-            "GSTREAMER-0.10",
+            "GSTREAMER-1.0",
             "MPRIS-QT5",
             "QT5DBUS",
             "QT5QUICK",
