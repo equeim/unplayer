@@ -17,7 +17,6 @@
  */
 
 #include "player.h"
-#include "player.moc"
 
 #include <QTimer>
 

@@ -17,7 +17,6 @@
  */
 
 #include "utils.h"
-#include "utils.moc"
 
 #include <QCryptographicHash>
 #include <QDateTime>

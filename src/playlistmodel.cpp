@@ -17,7 +17,6 @@
  */
 
 #include "playlistmodel.h"
-#include "playlistmodel.moc"
 
 #include <QUrl>
 

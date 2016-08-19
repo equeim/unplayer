@@ -17,7 +17,6 @@
  */
 
 #include "filepickermodel.h"
-#include "filepickermodel.moc"
 
 #include <QDir>
 

@@ -20,6 +20,7 @@
 #define UNPLAYER_PLAYLISTUTILS_H
 
 #include <QObject>
+#include <QVariant>
 
 class QSparqlConnection;
 

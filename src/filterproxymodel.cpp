@@ -17,7 +17,6 @@
  */
 
 #include "filterproxymodel.h"
-#include "filterproxymodel.moc"
 
 #include <algorithm>
 
