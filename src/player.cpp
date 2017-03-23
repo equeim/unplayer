@@ -25,7 +25,7 @@
 
 #include "queue.h"
 
-namespace Unplayer
+namespace unplayer
 {
 
 Player::Player()

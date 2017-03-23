@@ -34,7 +34,7 @@ enum QueueModelRole
 
 }
 
-namespace Unplayer
+namespace unplayer
 {
 
 void QueueModel::classBegin()

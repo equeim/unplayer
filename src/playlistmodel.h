@@ -24,7 +24,7 @@
 
 class QSparqlResult;
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct PlaylistTrack;

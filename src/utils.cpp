@@ -36,7 +36,7 @@ const QString mediaArtDirectory(QStandardPaths::writableLocation(QStandardPaths:
 
 }
 
-namespace Unplayer
+namespace unplayer
 {
 
 Utils::Utils()

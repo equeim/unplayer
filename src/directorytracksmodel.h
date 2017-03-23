@@ -27,7 +27,7 @@
 class QSparqlConnection;
 class QSparqlResult;
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct DirectoryTrackFile;

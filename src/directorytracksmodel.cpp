@@ -44,7 +44,7 @@ enum DirectoryTracksModelRole
 
 }
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct DirectoryTrackFile

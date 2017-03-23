@@ -20,7 +20,7 @@
 
 #include "utils.h"
 
-namespace Unplayer
+namespace unplayer
 {
 
 QueueTrack::QueueTrack(const QVariantMap &trackMap)

@@ -22,7 +22,7 @@
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct FilePickerFile;

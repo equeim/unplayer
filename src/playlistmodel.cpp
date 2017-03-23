@@ -41,7 +41,7 @@ enum PlaylistModelRole
 
 }
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct PlaylistTrack

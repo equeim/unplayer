@@ -24,7 +24,7 @@
 
 class QItemSelectionModel;
 
-namespace Unplayer
+namespace unplayer
 {
 
 class FilterProxyModel : public QSortFilterProxyModel, public QQmlParserStatus

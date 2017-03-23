@@ -34,7 +34,7 @@ enum FilePickerModelRole
 
 }
 
-namespace Unplayer
+namespace unplayer
 {
 
 struct FilePickerFile

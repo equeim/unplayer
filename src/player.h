@@ -30,7 +30,7 @@ class AudioResource;
 class QTimer;
 class MprisPlayer;
 
-namespace Unplayer
+namespace unplayer
 {
 
 class Queue;

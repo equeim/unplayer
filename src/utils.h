@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QUrl>
 
-namespace Unplayer
+namespace unplayer
 {
 
 class Utils : public QObject

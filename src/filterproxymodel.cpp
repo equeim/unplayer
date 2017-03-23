@@ -22,7 +22,7 @@
 
 #include <QItemSelectionModel>
 
-namespace Unplayer
+namespace unplayer
 {
 
 FilterProxyModel::FilterProxyModel()
