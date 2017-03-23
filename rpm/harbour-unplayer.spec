@@ -28,11 +28,11 @@ BuildRequires: python
 %setup -q -n %{name}-%{version}
 
 %build
-./waf configure build --prefix=/usr --out=build-%{_arch}
+python waf configure build --prefix=/usr --out=build-%{_arch}
 
 %install
 rm -rf %{buildroot}
-./waf install --destdir=%{buildroot}
+python waf install --destdir=%{buildroot}
 desktop-file-install --delete-original \
     --dir %{buildroot}%{_datadir}/applications \
     %{buildroot}%{_datadir}/applications/*.desktop
