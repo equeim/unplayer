@@ -153,14 +153,13 @@ Page {
                         directoryTracksModel.directory = Unplayer.Utils.urlToPath(model.url)
                     } else {
                         if (current) {
-                            if (!player.playing)
+                            if (!player.playing) {
                                 player.play()
+                            }
                         } else {
                             player.queue.clear()
-
                             var tracks = directoryTracksProxyModel.getTracks()
-                            player.queue.add(tracks)
-
+                            player.queue.addTracks(tracks)
                             var trackUrl = model.url
                             for (var i = 0, tracksCount = tracks.length; i < tracksCount; i++) {
                                 if (tracks[i].url === model.url) {
@@ -168,8 +167,8 @@ Page {
                                     break
                                 }
                             }
-
                             player.queue.currentTrackChanged()
+                            player.play()
                         }
                     }
                 }

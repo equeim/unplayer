@@ -20,16 +20,26 @@
 #define UNPLAYER_DIRECTORYTRACKSMODEL_H
 
 #include <QAbstractListModel>
+#include <QMimeDatabase>
 #include <QQmlParserStatus>
 
 #include "filterproxymodel.h"
 
-class QSparqlConnection;
-class QSparqlResult;
-
 namespace unplayer
 {
-    struct DirectoryTrackFile;
+    struct DirectoryTrackFile
+    {
+        QString url;
+        QString fileName;
+        bool isDirectory;
+
+        QString title;
+        QString artist;
+        bool unknownArtist;
+        QString album;
+        bool unknownAlbum;
+        int duration;
+    };
 
     class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
     {
@@ -41,7 +51,6 @@ namespace unplayer
         Q_PROPERTY(int tracksCount READ tracksCount NOTIFY loadedChanged)
     public:
         DirectoryTracksModel();
-        ~DirectoryTracksModel() override;
         void classBegin() override;
         void componentComplete() override;
 
@@ -65,11 +74,7 @@ namespace unplayer
         void onQueryFinished();
 
     private:
-        QList<DirectoryTrackFile*> mFiles;
-        int mRowCount;
-
-        QSparqlConnection* mSparqlConnection;
-        QSparqlResult* mResult;
+        QList<DirectoryTrackFile> mFiles;
 
         QString mDirectory;
         bool mLoaded;

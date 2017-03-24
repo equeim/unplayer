@@ -1,5 +1,6 @@
 ~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5
 ~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5/MprisQt
+~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5/QtConcurrent
 ~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5/QtCore
 ~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5/QtDBus
 ~/SailfishOS/mersdk/targets/SailfishOS-i486/usr/include/qt5/QtGui

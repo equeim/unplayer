@@ -1,6 +1,9 @@
 def options(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
+    context.add_option("--taglib-includes", action="store")
+    context.add_option("--taglib-libpath", action="store")
+
 
 def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
@@ -8,6 +11,11 @@ def configure(context):
     context.check_cfg(package="mpris-qt5", args="--libs --cflags")
     context.check_cfg(package="Qt5Sparql", args="--libs --cflags")
     context.check_cfg(package="sailfishapp", args="--libs --cflags")
+    context.check_cfg(package="zlib", args="--libs --cflags")
+
+    context.env.INCLUDES_TAGLIB = context.options.taglib_includes
+    context.env.LIBPATH_TAGLIB = context.options.taglib_libpath
+    context.env.LIB_TAGLIB = ["tag"] + context.env.LIB_ZLIB
 
 
 def build(context):
@@ -16,6 +24,7 @@ def build(context):
         features="qt5",
         uselib=[
             "MPRIS-QT5",
+            "QT5CONCURRENT",
             "QT5CORE",
             "QT5DBUS",
             "QT5GUI",
@@ -23,7 +32,8 @@ def build(context):
             "QT5QML",
             "QT5QUICK",
             "QT5SPARQL",
-            "SAILFISHAPP"
+            "SAILFISHAPP",
+            "TAGLIB"
         ],
         source=[
             "src/directorytracksmodel.cpp",

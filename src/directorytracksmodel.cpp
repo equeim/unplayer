@@ -18,13 +18,15 @@
 
 #include "directorytracksmodel.h"
 
+#include <QDebug>
 #include <QDir>
+#include <QFutureWatcher>
 #include <QItemSelectionModel>
 #include <QUrl>
+#include <QtConcurrentRun>
 
-#include <QSparqlConnection>
-#include <QSparqlQuery>
-#include <QSparqlResult>
+#include <fileref.h>
+#include <tag.h>
 
 #include "utils.h"
 
@@ -44,35 +46,10 @@ namespace unplayer
         };
     }
 
-    struct DirectoryTrackFile
-    {
-        QString url;
-        QString fileName;
-        bool isDirectory;
-
-        QString title;
-        QString artist;
-        bool unknownArtist;
-        QString album;
-        bool unknownAlbum;
-        qint64 duration;
-    };
-
     DirectoryTracksModel::DirectoryTracksModel()
-        : mRowCount(0),
-          mSparqlConnection(new QSparqlConnection(QStringLiteral("QTRACKER_DIRECT"), QSparqlConnectionOptions(), this)),
-          mResult(nullptr),
-          mLoaded(false),
+        : mLoaded(false),
           mTracksCount(0)
     {
-    }
-
-    DirectoryTracksModel::~DirectoryTracksModel()
-    {
-        if (mResult) {
-            mResult->deleteLater();
-        }
-        qDeleteAll(mFiles);
     }
 
     void DirectoryTracksModel::classBegin()
@@ -86,26 +63,19 @@ namespace unplayer
 
     QVariant DirectoryTracksModel::data(const QModelIndex& index, int role) const
     {
-        if (!index.isValid())
+        if (!index.isValid()) {
             return QVariant();
+        }
 
-        const DirectoryTrackFile* file = mFiles.at(index.row());
+        const DirectoryTrackFile& file = mFiles.at(index.row());
 
         switch (role) {
         case UrlRole:
-            return file->url;
+            return file.url;
         case FileNameRole:
-            return file->fileName;
+            return file.fileName;
         case IsDirectoryRole:
-            return file->isDirectory;
-        case TitleRole:
-            return file->title;
-        case ArtistRole:
-            return file->artist;
-        case AlbumRole:
-            return file->album;
-        case DurationRole:
-            return file->duration;
+            return file.isDirectory;
         default:
             return QVariant();
         }
@@ -113,7 +83,7 @@ namespace unplayer
 
     int DirectoryTracksModel::rowCount(const QModelIndex&) const
     {
-        return mRowCount;
+        return mFiles.size();
     }
 
     QString DirectoryTracksModel::directory() const
@@ -148,20 +118,20 @@ namespace unplayer
 
     QVariantMap DirectoryTracksModel::get(int fileIndex) const
     {
-        const DirectoryTrackFile* track = mFiles.at(fileIndex);
+        const DirectoryTrackFile& track = mFiles.at(fileIndex);
 
-        QVariantMap map{{QStringLiteral("title"), track->title},
-                        {QStringLiteral("url"), track->url},
-                        {QStringLiteral("artist"), track->artist},
-                        {QStringLiteral("album"), track->album},
-                        {QStringLiteral("duration"), track->duration}};
+        QVariantMap map{{QStringLiteral("title"), track.title},
+                        {QStringLiteral("url"), track.url},
+                        {QStringLiteral("artist"), track.artist},
+                        {QStringLiteral("album"), track.album},
+                        {QStringLiteral("duration"), track.duration}};
 
-        if (!track->unknownArtist) {
-            map.insert(QStringLiteral("rawArtist"), track->artist);
+        if (!track.unknownArtist) {
+            map.insert(QStringLiteral("rawArtist"), track.artist);
         }
 
-        if (!track->unknownAlbum) {
-            map.insert(QStringLiteral("rawAlbum"), track->album);
+        if (!track.unknownAlbum) {
+            map.insert(QStringLiteral("rawAlbum"), track.album);
         }
 
         return map;
@@ -171,11 +141,7 @@ namespace unplayer
     {
         return {{UrlRole, QByteArrayLiteral("url")},
                 {FileNameRole, QByteArrayLiteral("fileName")},
-                {IsDirectoryRole, QByteArrayLiteral("isDirectory")},
-                {TitleRole, QByteArrayLiteral("title")},
-                {ArtistRole, QByteArrayLiteral("artist")},
-                {AlbumRole, QByteArrayLiteral("album")},
-                {DurationRole, QByteArrayLiteral("duration")}};
+                {IsDirectoryRole, QByteArrayLiteral("isDirectory")}};
     }
 
     void DirectoryTracksModel::loadDirectory()
@@ -185,65 +151,75 @@ namespace unplayer
         emit loadedChanged();
 
         beginResetModel();
-        qDeleteAll(mFiles);
         mFiles.clear();
-        mRowCount = 0;
-        endResetModel();
 
-        mResult = mSparqlConnection->exec(QSparqlQuery(QStringLiteral("SELECT nie:url(?track) AS ?url\n"
-                                                                      "       nfo:fileName(?track) AS ?fileName\n"
-                                                                      "       tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-                                                                      "       tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"%1\") AS ?artist\n"
-                                                                      "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
-                                                                      "       tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"%2\") AS ?album\n"
-                                                                      "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
-                                                                      "       nie:informationElementDate(?track) AS ?date\n"
-                                                                      "       nfo:duration(?track) AS ?duration\n"
-                                                                      "WHERE {\n"
-                                                                      "    ?track a nmm:MusicPiece;\n"
-                                                                      "    nie:isPartOf [ nie:url \"%3\" ].\n"
-                                                                      "}\n"
-                                                                      "ORDER BY ?fileName")
-                                                           .arg(tr("Unknown artist"))
-                                                           .arg(tr("Unknown album"))
-                                                           .arg(Utils::encodeUrl(QUrl::fromLocalFile(mDirectory)))));
+        const QString directory = mDirectory;
+        const auto future = QtConcurrent::run([directory]() {
+            QList<DirectoryTrackFile> files;
+            int tracksCount = 0;
 
-        QObject::connect(mResult, &QSparqlResult::finished, this, &DirectoryTracksModel::onQueryFinished);
-    }
+            const QDir dir(directory);
 
-    void DirectoryTracksModel::onQueryFinished()
-    {
-        for (const QFileInfo& info : QDir(mDirectory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-            mFiles.append(new DirectoryTrackFile{
-                QUrl::fromLocalFile(info.filePath()).toString(),
-                info.fileName(),
-                true});
-        }
+            for (const QFileInfo& info : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+                files.append(DirectoryTrackFile{QUrl::fromLocalFile(info.filePath()).toString(),
+                                                 info.fileName(),
+                                                 true});
+            }
 
-        while (mResult->next()) {
-            QSparqlResultRow row(mResult->current());
-            mFiles.append(new DirectoryTrackFile{
-                row.value(QStringLiteral("url")).toString(),
-                row.value(QStringLiteral("fileName")).toString(),
-                false,
-                row.value(QStringLiteral("title")).toString(),
-                row.value(QStringLiteral("artist")).toString(),
-                !row.value(QStringLiteral("rawArtist")).isValid(),
-                row.value(QStringLiteral("album")).toString(),
-                !row.value(QStringLiteral("rawAlbum")).isValid(),
-                row.value(QStringLiteral("duration")).toLongLong()});
-            mTracksCount++;
-        }
+            const QMimeDatabase mimeDb;
+            for (const QFileInfo& info : dir.entryInfoList(QDir::Files)) {
+                if (mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name().startsWith(QLatin1String("audio/"))) {
+                    DirectoryTrackFile file{QUrl::fromLocalFile(info.filePath()).toString(),
+                                            info.fileName(),
+                                            false};
 
-        beginResetModel();
-        mRowCount = mFiles.size();
-        endResetModel();
+                    TagLib::FileRef tagFile(info.filePath().toUtf8().constData());
 
-        mLoaded = true;
-        emit loadedChanged();
+                    if (tagFile.tag()) {
+                        const TagLib::Tag* tag = tagFile.tag();
 
-        mResult->deleteLater();
-        mResult = nullptr;
+                        file.title = tag->title().toCString();
+                        if (file.title.isEmpty()) {
+                            file.title = file.fileName;
+                        }
+
+                        file.artist = tag->artist().toCString();
+                        file.unknownArtist = (file.artist.isEmpty());
+                        if (file.unknownArtist) {
+                            file.artist = tr("Unknown artist");
+                        }
+
+                        file.album = tag->album().toCString();
+                        file.unknownAlbum = (file.album.isEmpty());
+                        if (file.unknownAlbum) {
+                            file.album = tr("Unknown album");
+                        }
+                    }
+
+                    if (tagFile.audioProperties()) {
+                        file.duration = tagFile.audioProperties()->length();
+                    }
+
+                    files.append(file);
+
+                    tracksCount++;
+                }
+            }
+
+            return std::pair<QList<DirectoryTrackFile>, int>(files, tracksCount);
+        });
+
+        using FutureWatcher = QFutureWatcher<std::pair<QList<DirectoryTrackFile>, int>>;
+        auto watcher = new FutureWatcher(this);
+        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+            const auto result = watcher->result();
+            mFiles = result.first;
+            endResetModel();
+            mTracksCount = result.second;
+            mLoaded = true;
+            emit loadedChanged();
+        });
+        watcher->setFuture(future);
     }
 
     void DirectoryTracksProxyModel::componentComplete()
