@@ -5,8 +5,6 @@ def options(context):
 def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
-    context.check_cfg(package="audioresource-qt", args="--libs --cflags")
-    context.check_cfg(package="gstreamer-1.0", args="--libs --cflags")
     context.check_cfg(package="mpris-qt5", args="--libs --cflags")
     context.check_cfg(package="Qt5Sparql", args="--libs --cflags")
     context.check_cfg(package="sailfishapp", args="--libs --cflags")
@@ -17,12 +15,11 @@ def build(context):
         target="harbour-unplayer",
         features="qt5",
         uselib=[
-            "AUDIORESOURCE-QT",
-            "GSTREAMER-1.0",
             "MPRIS-QT5",
             "QT5CORE",
             "QT5DBUS",
             "QT5GUI",
+            "QT5MULTIMEDIA",
             "QT5QML",
             "QT5QUICK",
             "QT5SPARQL",

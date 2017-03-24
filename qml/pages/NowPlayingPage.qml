@@ -216,14 +216,15 @@ Page {
             Slider {
                 id: progressBar
 
-                property int duration: player.queue.currentDuration
+                property int duration: player.duration
                 property int position: player.position
 
                 enabled: duration !== 0
                 handleVisible: false
-                label: Format.formatDuration(duration, duration >= 3600 ? Format.DurationLong :
-                                                                          Format.DurationShort)
-                maximumValue: duration === 0 ? 1 : duration * 1000
+                label: Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
+                                                                                    Format.DurationShort)
+                minimumValue: 0
+                maximumValue: duration === 0 ? 1 : duration
 
                 valueText: Format.formatDuration(value / 1000, value >= 3600000 ? Format.DurationLong :
                                                                                   Format.DurationShort)

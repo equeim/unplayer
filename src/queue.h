@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015, 2017 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,93 +19,100 @@
 #ifndef UNPLAYER_QUEUE_H
 #define UNPLAYER_QUEUE_H
 
+#include <memory>
+
 #include <QObject>
-#include <QVariantMap>
 #include <QUrl>
 
-namespace Unplayer
+namespace unplayer
 {
+    struct QueueTrack
+    {
+        explicit QueueTrack(const QString& url,
+                            const QString& title,
+                            long long duration,
+                            const QString& artist,
+                            const QString& album,
+                            const QString& rawArtist,
+                            const QString& rawAlbum);
 
-struct QueueTrack
-{
-    QueueTrack(const QVariantMap &trackMap);
+        QString url;
+        QString title;
+        long long duration;
+        QString artist;
+        QString album;
+        QString rawArtist;
+        QString rawAlbum;
+    };
 
-    QString title;
-    QString url;
-    qint64 duration;
-    QString artist;
-    QString album;
+    class Queue : public QObject
+    {
+        Q_OBJECT
 
-    QString rawArtist;
-    QString rawAlbum;
-};
+        Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
-class Queue : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+        Q_PROPERTY(QString currentUrl READ currentUrl NOTIFY currentTrackChanged)
+        Q_PROPERTY(QString currentTitle READ currentTitle NOTIFY currentTrackChanged)
+        Q_PROPERTY(QString currentArtist READ currentArtist NOTIFY currentTrackChanged)
+        Q_PROPERTY(QString currentAlbum READ currentAlbum NOTIFY currentTrackChanged)
+        Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
 
-    Q_PROPERTY(QString currentTitle READ currentTitle NOTIFY currentTrackChanged)
-    Q_PROPERTY(QString currentUrl READ currentUrl NOTIFY currentTrackChanged)
-    Q_PROPERTY(int currentDuration READ currentDuration NOTIFY currentTrackChanged)
-    Q_PROPERTY(QString currentArtist READ currentArtist NOTIFY currentTrackChanged)
-    Q_PROPERTY(QString currentAlbum READ currentAlbum NOTIFY currentTrackChanged)
-    Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
+        Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
+        Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
+    public:
+        explicit Queue(QObject* parent);
 
-    Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
-    Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
-public:
-    explicit Queue(QObject *parent);
-    ~Queue();
+        const QList<std::shared_ptr<QueueTrack>>& tracks() const;
 
-    const QList<QueueTrack*>& tracks() const;
+        int currentIndex() const;
+        void setCurrentIndex(int index);
 
-    int currentIndex() const;
-    void setCurrentIndex(int index);
+        QString currentUrl() const;
+        QString currentTitle() const;
+        QString currentArtist() const;
+        QString currentAlbum() const;
+        QUrl currentMediaArt() const;
 
-    QString currentTitle() const;
-    QString currentUrl() const;
-    int currentDuration() const;
-    QString currentArtist() const;
-    QString currentAlbum() const;
-    QUrl currentMediaArt() const;
+        bool isShuffle() const;
+        void setShuffle(bool shuffle);
 
-    bool isShuffle() const;
-    void setShuffle(bool shuffle);
+        bool isRepeat() const;
+        void setRepeat(bool repeat);
 
-    bool isRepeat() const;
-    void setRepeat(bool repeat);
+        Q_INVOKABLE void addTracks(const QVariantList& tracks);
+        Q_INVOKABLE void removeTrack(int index);
+        Q_INVOKABLE void removeTracks(QList<int> indexes);
+        Q_INVOKABLE void clear();
 
-    Q_INVOKABLE void add(const QVariantList &trackList);
-    Q_INVOKABLE void remove(const QList<int> &indexes);
-    Q_INVOKABLE void clear();
+        Q_INVOKABLE bool hasUrl(const QString &url);
 
-    Q_INVOKABLE bool hasUrl(const QString &url);
+        Q_INVOKABLE void next();
+        void nextOnEos();
+        Q_INVOKABLE void previous();
 
-    Q_INVOKABLE void next();
-    bool nextOnEos();
-    Q_INVOKABLE void previous();
+        Q_INVOKABLE void setCurrentToFirstIfNeeded();
+        Q_INVOKABLE void resetNotPlayedTracks();
+    private:
+        void reset();
+    private:
+        QList<std::shared_ptr<QueueTrack>> mTracks;
+        QList<std::shared_ptr<QueueTrack>> mNotPlayedTracks;
 
-    Q_INVOKABLE void setCurrentToFirstIfNeeded();
-    Q_INVOKABLE void resetNotPlayedTracks();
-private:
-    void reset();
-private:
-    QList<QueueTrack*> m_tracks;
-    QList<QueueTrack*> m_notPlayedTracks;
+        int mCurrentIndex;
+        bool mShuffle;
+        bool mRepeat;
+    signals:
+        void currentTrackChanged();
 
-    int m_currentIndex;
-    bool m_shuffle;
-    bool m_repeat;
-signals:
-    void currentTrackChanged();
+        void currentIndexChanged();
+        void shuffleChanged();
+        void repeatChanged();
 
-    void currentIndexChanged();
-    void shuffleChanged();
-    void repeatChanged();
-
-    void tracksRemoved(const QList<int> &indexes);
-};
+        void tracksAdded(int start);
+        void trackRemoved(int index);
+        void tracksRemoved(const QList<int>& indexes);
+        void cleared();
+    };
 
 }
 

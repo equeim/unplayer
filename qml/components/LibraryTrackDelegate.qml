@@ -54,10 +54,10 @@ BaseTrackDelegate {
             }
 
             player.queue.clear()
-            player.queue.add(listView.model.getTracks())
-
+            player.queue.addTracks(listView.model.getTracks())
             player.queue.currentIndex = model.index
             player.queue.currentTrackChanged()
+            player.play()
         }
     }
 }

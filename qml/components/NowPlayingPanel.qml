@@ -73,10 +73,10 @@ DockedPanel {
             Rectangle {
                 id: progressBar
 
-                property int duration: player.queue.currentDuration
+                property int duration: player.duration
 
                 height: parent.height
-                width: duration === 0 ? 0 : parent.width * (player.position / (duration * 1000))
+                width: duration === 0 ? 0 : parent.width * (player.position / duration)
                 color: Theme.highlightColor
                 opacity: 0.5
             }
@@ -176,10 +176,11 @@ DockedPanel {
                     }
 
                     onClicked: {
-                        if (playing)
+                        if (playing) {
                             player.pause()
-                        else
+                        } else {
                             player.play()
+                        }
                     }
                 }
 

@@ -24,7 +24,7 @@
 
 class QSparqlConnection;
 
-namespace Unplayer
+namespace unplayer
 {
 
 class PlaylistUtils : public QObject

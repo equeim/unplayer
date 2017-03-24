@@ -18,100 +18,100 @@
 
 #include "queuemodel.h"
 
-#include "queue.h"
-
-namespace
-{
-
-enum QueueModelRole
-{
-    UrlRole = Qt::UserRole,
-    TitleRole,
-    ArtistRole,
-    AlbumRole,
-    DurationRole
-};
-
-}
-
 namespace unplayer
 {
-
-void QueueModel::classBegin()
-{
-
-}
-
-void QueueModel::componentComplete()
-{
-    connect(m_queue, &Queue::tracksRemoved, this, &QueueModel::removeTracks);
-}
-
-QVariant QueueModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    const QueueTrack *track = m_queue->tracks().at(index.row());
-
-    switch (role) {
-    case UrlRole:
-        return track->url;
-    case TitleRole:
-        return track->title;
-    case ArtistRole:
-        return track->artist;
-    case AlbumRole:
-        return track->album;
-    case DurationRole:
-        return track->duration;
-    default:
-        return QVariant();
+    namespace
+    {
+        enum QueueModelRole
+        {
+            UrlRole = Qt::UserRole,
+            TitleRole,
+            ArtistRole,
+            AlbumRole,
+            DurationRole
+        };
     }
-}
 
-int QueueModel::rowCount(const QModelIndex&) const
-{
-    return m_queue->tracks().length();
-}
+    QVariant QueueModel::data(const QModelIndex &index, int role) const
+    {
+        if (!index.isValid()) {
+            return QVariant();
+        }
 
-Queue* QueueModel::queue() const
-{
-    return m_queue;
-}
+        const QueueTrack* track = mTracks.at(index.row()).get();
 
-void QueueModel::setQueue(Queue *queue)
-{
-    m_queue = queue;
-}
-
-QVariantMap QueueModel::get(int trackIndex) const
-{
-    QVariantMap map;
-    map.insert("url", m_queue->tracks().at(trackIndex)->url);
-    return map;
-}
-
-QHash<int, QByteArray> QueueModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-
-    roles.insert(UrlRole, "url");
-    roles.insert(TitleRole, "title");
-    roles.insert(ArtistRole, "artist");
-    roles.insert(AlbumRole, "album");
-    roles.insert(DurationRole, "duration");
-
-    return roles;
-}
-
-void QueueModel::removeTracks(const QList<int> &trackIndexes)
-{
-    for (int i = 0, max = trackIndexes.size(); i < max; i++) {
-        int index = trackIndexes.at(i) - i;
-        beginRemoveRows(QModelIndex(), index, index);
-        endRemoveRows();
+        switch (role) {
+        case UrlRole:
+            return track->url;
+        case TitleRole:
+            return track->title;
+        case ArtistRole:
+            return track->artist;
+        case AlbumRole:
+            return track->album;
+        case DurationRole:
+            return track->duration;
+        default:
+            return QVariant();
+        }
     }
-}
 
+    int QueueModel::rowCount(const QModelIndex&) const
+    {
+        return mTracks.size();
+    }
+
+    Queue* QueueModel::queue() const
+    {
+        return mQueue;
+    }
+
+    void QueueModel::setQueue(Queue* queue)
+    {
+        mQueue = queue;
+        mTracks = mQueue->tracks();
+
+        QObject::connect(mQueue, &Queue::tracksAdded, this, [=](int start) {
+            const QList<std::shared_ptr<QueueTrack>>& tracks = mQueue->tracks();
+            for (int i = start, max = tracks.size(); i < max; i++) {
+                beginInsertRows(QModelIndex(), i, i);
+                mTracks.append(tracks.at(i));
+                endInsertRows();
+            }
+        });
+
+        QObject::connect(mQueue, &Queue::trackRemoved, this, [=](int index) {
+            beginRemoveRows(QModelIndex(), index, index);
+            mTracks.removeAt(index);
+            endRemoveRows();
+        });
+
+        QObject::connect(mQueue, &Queue::tracksRemoved, this, [=](const QList<int>& indexes) {
+            for (int index : indexes) {
+                beginRemoveRows(QModelIndex(), index, index);
+                mTracks.removeAt(index);
+                endRemoveRows();
+            }
+        });
+
+        QObject::connect(mQueue, &Queue::cleared, this, [=]() {
+            beginRemoveRows(QModelIndex(), 0, mTracks.size() - 1);
+            mTracks.clear();
+            endRemoveRows();
+        });
+    }
+
+    QVariantMap QueueModel::get(int index) const
+    {
+        return {{QStringLiteral("url"), mTracks.at(index)->url}};
+    }
+
+    QHash<int, QByteArray> QueueModel::roleNames() const
+    {
+        return {{UrlRole, QByteArrayLiteral("url")},
+                {TitleRole, QByteArrayLiteral("title")},
+                {ArtistRole, QByteArrayLiteral("artist")},
+                {AlbumRole, QByteArrayLiteral("album")},
+                {DurationRole, QByteArrayLiteral("duration")}};
+    }
 }

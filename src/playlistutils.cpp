@@ -30,7 +30,7 @@
 
 #include "utils.h"
 
-namespace Unplayer
+namespace unplayer
 {
 
 PlaylistUtils::PlaylistUtils()

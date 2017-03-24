@@ -81,7 +81,7 @@ Page {
                 enabled: queueProxyModel.selectedIndexesCount !== 0
                 text: qsTr("Remove")
                 onClicked: {
-                    player.queue.remove(queueProxyModel.selectedSourceIndexes())
+                    player.queue.removeTracks(queueProxyModel.selectedSourceIndexes())
                     selectionPanel.showPanel = false
                 }
             }
@@ -128,7 +128,7 @@ Page {
 
                 MenuItem {
                     function remove() {
-                        player.queue.remove([queueProxyModel.sourceIndex(model.index)])
+                        player.queue.removeTrack(queueProxyModel.sourceIndex(model.index))
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 

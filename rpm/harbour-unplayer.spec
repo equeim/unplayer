@@ -6,14 +6,12 @@ Group: Applications/Music
 License: GPLv3
 URL: https://github.com/equeim/unplayer
 Source0: %{name}-%{version}.tar.xz
-Requires: nemo-qml-plugin-policy-qt5
 Requires: sailfishsilica-qt5
-BuildRequires: pkgconfig(audioresource-qt)
-BuildRequires: pkgconfig(gstreamer-1.0)
 BuildRequires: pkgconfig(mpris-qt5)
 BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Gui)
+BuildRequires: pkgconfig(Qt5Multimedia)
 BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Sparql)
@@ -28,7 +26,8 @@ BuildRequires: python
 %setup -q -n %{name}-%{version}
 
 %build
-python waf configure build --prefix=/usr --out=build-%{_arch}
+python waf configure --prefix=/usr --out=build-%{_arch}
+python waf build
 
 %install
 rm -rf %{buildroot}
