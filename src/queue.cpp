@@ -41,7 +41,6 @@ namespace unplayer
           rawArtist(rawArtist),
           rawAlbum(rawAlbum)
     {
-
     }
 
     Queue::Queue(QObject* parent)
@@ -50,7 +49,6 @@ namespace unplayer
           mShuffle(false),
           mRepeat(false)
     {
-
     }
 
     const QList<std::shared_ptr<QueueTrack>>& Queue::tracks() const
@@ -211,7 +209,7 @@ namespace unplayer
         emit cleared();
     }
 
-    bool Queue::hasUrl(const QString &url)
+    bool Queue::hasUrl(const QString& url)
     {
         for (const std::shared_ptr<QueueTrack>& track : mTracks) {
             if (track->url == url) {

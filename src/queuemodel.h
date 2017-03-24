@@ -31,15 +31,17 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(unplayer::Queue* queue READ queue WRITE setQueue)
     public:
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
         Queue* queue() const;
         void setQueue(Queue* queue);
 
         Q_INVOKABLE QVariantMap get(int index) const;
+
     protected:
         QHash<int, QByteArray> roleNames() const override;
+
     private:
         Queue* mQueue = nullptr;
         QList<std::shared_ptr<QueueTrack>> mTracks;

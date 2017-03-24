@@ -35,17 +35,7 @@
 #include "queuemodel.h"
 #include "utils.h"
 
-static QObject *utils_singletontype_provider(QQmlEngine*, QJSEngine*)
-{
-    return new unplayer::Utils;
-}
-
-static QObject *playlistutils_singletontype_provider(QQmlEngine*, QJSEngine*)
-{
-    return new unplayer::PlaylistUtils;
-}
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
 
@@ -55,23 +45,25 @@ int main(int argc, char *argv[])
     const int major = 0;
     const int minor = 1;
 
-    qmlRegisterType<unplayer::Player>(url, major, minor, "Player");
+    using namespace unplayer;
 
-    qmlRegisterType<unplayer::Queue>();
-    qmlRegisterType<unplayer::QueueModel>(url, major, minor, "QueueModel");
+    qmlRegisterType<Player>(url, major, minor, "Player");
 
-    qmlRegisterType<unplayer::PlaylistModel>(url, major, minor, "PlaylistModel");
-    qmlRegisterType<unplayer::DirectoryTracksModel>(url, major, minor, "DirectoryTracksModel");
-    qmlRegisterType<unplayer::DirectoryTracksProxyModel>(url, major, minor, "DirectoryTracksProxyModel");
-    qmlRegisterType<unplayer::FilePickerModel>(url, major, minor, "FilePickerModel");
+    qmlRegisterType<Queue>();
+    qmlRegisterType<QueueModel>(url, major, minor, "QueueModel");
 
-    qmlRegisterType<unplayer::FilterProxyModel>(url, major, minor, "FilterProxyModel");
+    qmlRegisterType<PlaylistModel>(url, major, minor, "PlaylistModel");
+    qmlRegisterType<DirectoryTracksModel>(url, major, minor, "DirectoryTracksModel");
+    qmlRegisterType<DirectoryTracksProxyModel>(url, major, minor, "DirectoryTracksProxyModel");
+    qmlRegisterType<FilePickerModel>(url, major, minor, "FilePickerModel");
+
+    qmlRegisterType<FilterProxyModel>(url, major, minor, "FilterProxyModel");
 
     qmlRegisterType<QItemSelectionModel>();
     qmlRegisterType<QAbstractItemModel>();
 
-    qmlRegisterSingletonType<unplayer::Utils>(url, major, minor, "Utils", utils_singletontype_provider);
-    qmlRegisterSingletonType<unplayer::PlaylistUtils>(url, major, minor, "PlaylistUtils", playlistutils_singletontype_provider);
+    qmlRegisterSingletonType<Utils>(url, major, minor, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils(); });
+    qmlRegisterSingletonType<PlaylistUtils>(url, major, minor, "PlaylistUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new PlaylistUtils(); });
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->show();

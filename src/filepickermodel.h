@@ -24,43 +24,44 @@
 
 namespace unplayer
 {
+    struct FilePickerFile;
 
-struct FilePickerFile;
+    class FilePickerModel : public QAbstractListModel, public QQmlParserStatus
+    {
+        Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
+        Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
+        Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
+        Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters)
+    public:
+        ~FilePickerModel() override;
+        void classBegin() override;
+        void componentComplete() override;
 
-class FilePickerModel : public QAbstractListModel, public QQmlParserStatus
-{
-    Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
-    Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
-    Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters)
-public:
-    ~FilePickerModel();
-    void classBegin();
-    void componentComplete();
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        QString directory() const;
+        void setDirectory(QString newDirectory);
 
-    QString directory() const;
-    void setDirectory(QString newDirectory);
+        QString parentDirectory() const;
 
-    QString parentDirectory() const;
+        QStringList nameFilters() const;
+        void setNameFilters(const QStringList& filters);
 
-    QStringList nameFilters() const;
-    void setNameFilters(const QStringList &filters);
-protected:
-    QHash<int, QByteArray> roleNames() const;
-private:
-    void loadDirectory();
-private:
-    QList<FilePickerFile*> m_files;
-    QString m_directory;
-    QStringList m_nameFilters;
-signals:
-    void directoryChanged();
-};
+    protected:
+        QHash<int, QByteArray> roleNames() const override;
 
+    private:
+        void loadDirectory();
+
+    private:
+        QList<FilePickerFile*> mFiles;
+        QString mDirectory;
+        QStringList mNameFilters;
+    signals:
+        void directoryChanged();
+    };
 }
 
 #endif // UNPLAYER_FILEPICKERMODEL_H

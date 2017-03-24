@@ -26,48 +26,49 @@ class QSparqlResult;
 
 namespace unplayer
 {
+    struct PlaylistTrack;
 
-struct PlaylistTrack;
+    class PlaylistModel : public QAbstractListModel, public QQmlParserStatus
+    {
+        Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
+        Q_PROPERTY(QString url READ url WRITE setUrl)
+        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
+    public:
+        PlaylistModel();
+        ~PlaylistModel() override;
+        void classBegin() override;
+        void componentComplete() override;
 
-class PlaylistModel : public QAbstractListModel, public QQmlParserStatus
-{
-    Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(QString url READ url WRITE setUrl)
-    Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
-public:
-    PlaylistModel();
-    ~PlaylistModel();
-    void classBegin();
-    void componentComplete();
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        QString url() const;
+        void setUrl(const QString& newUrl);
 
-    QString url() const;
-    void setUrl(const QString &newUrl);
+        bool isLoaded() const;
 
-    bool isLoaded() const;
+        Q_INVOKABLE QVariantMap get(int trackIndex) const;
+        Q_INVOKABLE void removeAtIndexes(const QList<int>& trackIndexes);
 
-    Q_INVOKABLE QVariantMap get(int trackIndex) const;
-    Q_INVOKABLE void removeAtIndexes(const QList<int> &trackIndexes);
-protected:
-    QHash<int, QByteArray> roleNames() const;
-private:
-    void onQueryFinished();
-private:
-    QList<PlaylistTrack*> m_tracks;
-    int m_rowCount;
+    protected:
+        QHash<int, QByteArray> roleNames() const override;
 
-    QList<QSparqlResult*> m_queries;
-    int m_loadedTracks;
+    private:
+        void onQueryFinished();
 
-    QString m_url;
-    bool m_loaded;
-signals:
-    void loadedChanged();
-};
+    private:
+        QList<PlaylistTrack*> mTracks;
+        int mRowCount;
 
+        QList<QSparqlResult*> mQueries;
+        int mLoadedTracks;
+
+        QString mUrl;
+        bool mLoaded;
+    signals:
+        void loadedChanged();
+    };
 }
 
 #endif // UNPLAYER_PLAYLISTMODEL_H

@@ -84,7 +84,7 @@ namespace unplayer
         Q_INVOKABLE void removeTracks(QList<int> indexes);
         Q_INVOKABLE void clear();
 
-        Q_INVOKABLE bool hasUrl(const QString &url);
+        Q_INVOKABLE bool hasUrl(const QString& url);
 
         Q_INVOKABLE void next();
         void nextOnEos();
@@ -92,8 +92,10 @@ namespace unplayer
 
         Q_INVOKABLE void setCurrentToFirstIfNeeded();
         Q_INVOKABLE void resetNotPlayedTracks();
+
     private:
         void reset();
+
     private:
         QList<std::shared_ptr<QueueTrack>> mTracks;
         QList<std::shared_ptr<QueueTrack>> mNotPlayedTracks;
@@ -113,7 +115,6 @@ namespace unplayer
         void tracksRemoved(const QList<int>& indexes);
         void cleared();
     };
-
 }
 
 #endif // UNPLAYER_QUEUE_H

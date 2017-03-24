@@ -25,42 +25,41 @@
 
 namespace unplayer
 {
+    class Utils : public QObject
+    {
+        Q_OBJECT
+    public:
+        Utils();
 
-class Utils : public QObject
-{
-    Q_OBJECT
-public:
-    Utils();
+        Q_INVOKABLE static QUrl mediaArt(const QString& artist, const QString& album, const QString& trackUrl = QString());
+        Q_INVOKABLE static QUrl mediaArtForArtist(const QString& artist);
+        Q_INVOKABLE static QUrl randomMediaArt();
+        Q_INVOKABLE static void setMediaArt(const QString& filePath, const QString& artist, const QString& album);
 
-    Q_INVOKABLE static QUrl mediaArt(const QString &artist, const QString &album, const QString &trackUrl = QString());
-    Q_INVOKABLE static QUrl mediaArtForArtist(const QString &artist);
-    Q_INVOKABLE static QUrl randomMediaArt();
-    Q_INVOKABLE static void setMediaArt(const QString &filePath, const QString &artist, const QString &album);
+        Q_INVOKABLE static QString formatDuration(uint seconds);
+        Q_INVOKABLE static QString formatByteSize(double size);
 
-    Q_INVOKABLE static QString formatDuration(uint seconds);
-    Q_INVOKABLE static QString formatByteSize(double size);
+        Q_INVOKABLE static QString escapeRegExp(const QString& string);
+        Q_INVOKABLE static QString escapeSparql(QString string);
 
-    Q_INVOKABLE static QString escapeRegExp(const QString &string);
-    Q_INVOKABLE static QString escapeSparql(QString string);
+        Q_INVOKABLE static QString tracksSparqlQuery(bool allArtists,
+                                                     bool allAlbums,
+                                                     const QString& artist = QString(),
+                                                     const QString& album = QString(),
+                                                     const QString& genre = QString());
 
-    Q_INVOKABLE static QString tracksSparqlQuery(bool allArtists,
-                                                 bool allAlbums,
-                                                 const QString &artist = QString(),
-                                                 const QString &album = QString(),
-                                                 const QString &genre = QString());
+        Q_INVOKABLE static QString homeDirectory();
+        Q_INVOKABLE static QString sdcard();
 
-    Q_INVOKABLE static QString homeDirectory();
-    Q_INVOKABLE static QString sdcard();
+        Q_INVOKABLE static QStringList imageNameFilters();
 
-    Q_INVOKABLE static QStringList imageNameFilters();
+        Q_INVOKABLE static QString urlToPath(const QUrl& url);
+        static QString encodeUrl(const QUrl& url);
 
-    Q_INVOKABLE static QString urlToPath(const QUrl &url);
-    static QByteArray encodeUrl(const QUrl &url);
-private:
-    static QString mediaArtPath(const QString &artist, const QString &album);
-    static QString mediaArtMd5(QString string);
-};
-
+    private:
+        static QString mediaArtPath(const QString& artist, const QString& album);
+        static QString mediaArtMd5(QString string);
+    };
 }
 
 #endif // UNPLAYER_UTILS_H
