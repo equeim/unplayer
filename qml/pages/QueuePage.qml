@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ Page {
                 enabled: queueProxyModel.selectedIndexesCount !== 0
                 text: qsTr("Remove")
                 onClicked: {
-                    player.queue.remove(queueProxyModel.selectedSourceIndexes())
+                    player.queue.removeTracks(queueProxyModel.selectedSourceIndexes())
                     selectionPanel.showPanel = false
                 }
             }
@@ -128,7 +128,7 @@ Page {
 
                 MenuItem {
                     function remove() {
-                        player.queue.remove([queueProxyModel.sourceIndex(model.index)])
+                        player.queue.removeTrack(queueProxyModel.sourceIndex(model.index))
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 

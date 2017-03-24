@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +25,6 @@
 
 #include <sailfishapp.h>
 
-#include <gst/gst.h>
-
 #include "directorytracksmodel.h"
 #include "filepickermodel.h"
 #include "filterproxymodel.h"
@@ -39,39 +37,41 @@
 
 static QObject *utils_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-    return new Unplayer::Utils;
+    return new unplayer::Utils;
 }
 
 static QObject *playlistutils_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-    return new Unplayer::PlaylistUtils;
+    return new unplayer::PlaylistUtils;
 }
 
 int main(int argc, char *argv[])
 {
     std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
-    gst_init(&argc, &argv);
 
     std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
-    qmlRegisterType<Unplayer::Player>("harbour.unplayer", 0, 1, "Player");
+    const char* url = "harbour.unplayer";
+    const int major = 0;
+    const int minor = 1;
 
-    qmlRegisterType<Unplayer::Queue>();
-    qRegisterMetaType<Unplayer::Queue*>("Queue*");
+    qmlRegisterType<unplayer::Player>(url, major, minor, "Player");
 
-    qmlRegisterType<Unplayer::QueueModel>("harbour.unplayer", 0, 1, "QueueModel");
-    qmlRegisterType<Unplayer::PlaylistModel>("harbour.unplayer", 0, 1, "PlaylistModel");
-    qmlRegisterType<Unplayer::DirectoryTracksModel>("harbour.unplayer", 0, 1, "DirectoryTracksModel");
-    qmlRegisterType<Unplayer::DirectoryTracksProxyModel>("harbour.unplayer", 0, 1, "DirectoryTracksProxyModel");
-    qmlRegisterType<Unplayer::FilePickerModel>("harbour.unplayer", 0, 1, "FilePickerModel");
+    qmlRegisterType<unplayer::Queue>();
+    qmlRegisterType<unplayer::QueueModel>(url, major, minor, "QueueModel");
 
-    qmlRegisterType<Unplayer::FilterProxyModel>("harbour.unplayer", 0, 1, "FilterProxyModel");
+    qmlRegisterType<unplayer::PlaylistModel>(url, major, minor, "PlaylistModel");
+    qmlRegisterType<unplayer::DirectoryTracksModel>(url, major, minor, "DirectoryTracksModel");
+    qmlRegisterType<unplayer::DirectoryTracksProxyModel>(url, major, minor, "DirectoryTracksProxyModel");
+    qmlRegisterType<unplayer::FilePickerModel>(url, major, minor, "FilePickerModel");
+
+    qmlRegisterType<unplayer::FilterProxyModel>(url, major, minor, "FilterProxyModel");
 
     qmlRegisterType<QItemSelectionModel>();
     qmlRegisterType<QAbstractItemModel>();
 
-    qmlRegisterSingletonType<Unplayer::Utils>("harbour.unplayer", 0, 1, "Utils", utils_singletontype_provider);
-    qmlRegisterSingletonType<Unplayer::PlaylistUtils>("harbour.unplayer", 0, 1, "PlaylistUtils", playlistutils_singletontype_provider);
+    qmlRegisterSingletonType<unplayer::Utils>(url, major, minor, "Utils", utils_singletontype_provider);
+    qmlRegisterSingletonType<unplayer::PlaylistUtils>(url, major, minor, "PlaylistUtils", playlistutils_singletontype_provider);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->show();

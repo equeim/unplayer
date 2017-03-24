@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ Page {
                         horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeExtraSmall
-                        text: "Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>"
+                        text: "Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>"
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                     }

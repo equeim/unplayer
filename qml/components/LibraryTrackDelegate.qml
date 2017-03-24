@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,10 +54,10 @@ BaseTrackDelegate {
             }
 
             player.queue.clear()
-            player.queue.add(listView.model.getTracks())
-
+            player.queue.addTracks(listView.model.getTracks())
             player.queue.currentIndex = model.index
             player.queue.currentTrackChanged()
+            player.play()
         }
     }
 }
