@@ -26,36 +26,36 @@ class QSparqlConnection;
 
 namespace unplayer
 {
+    class PlaylistUtils : public QObject
+    {
+        Q_OBJECT
+    public:
+        PlaylistUtils();
 
-class PlaylistUtils : public QObject
-{
-    Q_OBJECT
-public:
-    PlaylistUtils();
+        Q_INVOKABLE void newPlaylist(const QString& name, const QVariant& tracksVariant);
+        Q_INVOKABLE void addTracksToPlaylist(const QString& playlistUrl, const QVariant& newTracksVariant);
+        Q_INVOKABLE void removeTracksFromPlaylist(const QString& playlistUrl, const QList<int>& trackIndexes);
+        Q_INVOKABLE static void removePlaylist(const QString& url);
+        Q_INVOKABLE QVariantList syncParsePlaylist(const QString& playlistUrl);
+        static QStringList parsePlaylist(const QString& playlistUrl);
+        static QString trackSparqlQuery(const QString& trackUrl);
 
-    Q_INVOKABLE void newPlaylist(const QString &name, const QVariant &tracksVariant);
-    Q_INVOKABLE void addTracksToPlaylist(const QString &playlistUrl, const QVariant &newTracksVariant);
-    Q_INVOKABLE void removeTracksFromPlaylist(const QString &playlistUrl, const QList<int> &trackIndexes);
-    Q_INVOKABLE static void removePlaylist(const QString &url);
-    Q_INVOKABLE QVariantList syncParsePlaylist(const QString &playlistUrl);
-    static QStringList parsePlaylist(const QString &playlistUrl);
-    static QString trackSparqlQuery(const QString &trackUrl);
-private:
-    QStringList unboxTracks(const QVariant &tracksVariant);
-    void setPlaylistTracksCount(QString playlistUrl, int tracksCount);
-    static void savePlaylist(const QString &playlistUrl, const QStringList &tracks);
-private slots:
-    void onTrackerGraphUpdated(const QString &className);
-private:
-    QSparqlConnection *m_sparqlConnection;
+    private:
+        QStringList unboxTracks(const QVariant& tracksVariant);
+        void setPlaylistTracksCount(QString playlistUrl, int tracksCount);
+        static void savePlaylist(const QString& playlistUrl, const QStringList& tracks);
+    private slots:
+        void onTrackerGraphUpdated(const QString& className);
 
-    bool m_newPlaylist;
-    QString m_newPlaylistUrl;
-    int m_newPlaylistTracksCount;
-signals:
-    void playlistsChanged();
-};
+    private:
+        QSparqlConnection* mSparqlConnection;
 
+        bool mNewPlaylist;
+        QString mNewPlaylistUrl;
+        int mNewPlaylistTracksCount;
+    signals:
+        void playlistsChanged();
+    };
 }
 
 #endif // UNPLAYER_PLAYLISTUTILS_H

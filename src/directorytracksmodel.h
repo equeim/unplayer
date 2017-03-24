@@ -29,69 +29,70 @@ class QSparqlResult;
 
 namespace unplayer
 {
+    struct DirectoryTrackFile;
 
-struct DirectoryTrackFile;
+    class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
+    {
+        Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
+        Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
+        Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
+        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
+        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY loadedChanged)
+    public:
+        DirectoryTracksModel();
+        ~DirectoryTracksModel() override;
+        void classBegin() override;
+        void componentComplete() override;
 
-class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
-{
-    Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
-    Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
-    Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
-    Q_PROPERTY(int tracksCount READ tracksCount NOTIFY loadedChanged)
-public:
-    DirectoryTracksModel();
-    ~DirectoryTracksModel();
-    void classBegin();
-    void componentComplete();
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        QString directory() const;
+        void setDirectory(QString newDirectory);
 
-    QString directory() const;
-    void setDirectory(QString newDirectory);
+        QString parentDirectory() const;
+        bool isLoaded() const;
+        int tracksCount() const;
 
-    QString parentDirectory() const;
-    bool isLoaded() const;
-    int tracksCount() const;
+        Q_INVOKABLE QVariantMap get(int fileIndex) const;
 
-    Q_INVOKABLE QVariantMap get(int fileIndex) const;
-protected:
-    QHash<int, QByteArray> roleNames() const;
-private:
-    void loadDirectory();
-    void onQueryFinished();
-private:
-    QList<DirectoryTrackFile*> m_files;
-    int m_rowCount;
+    protected:
+        QHash<int, QByteArray> roleNames() const override;
 
-    QSparqlConnection *m_sparqlConnection;
-    QSparqlResult *m_result;
+    private:
+        void loadDirectory();
+        void onQueryFinished();
 
-    QString m_directory;
-    bool m_loaded;
-    int m_tracksCount;
-signals:
-    void directoryChanged();
-    void loadedChanged();
-};
+    private:
+        QList<DirectoryTrackFile*> mFiles;
+        int mRowCount;
 
-class DirectoryTracksProxyModel : public FilterProxyModel
-{
-    Q_OBJECT
-    Q_PROPERTY(int tracksCount READ tracksCount NOTIFY tracksCountChanged)
-public:
-    void componentComplete();
+        QSparqlConnection* mSparqlConnection;
+        QSparqlResult* mResult;
 
-    int tracksCount() const;
-    Q_INVOKABLE QVariantList getTracks() const;
-    Q_INVOKABLE QVariantList getSelectedTracks() const;
-    Q_INVOKABLE void selectAll();
-signals:
-    void tracksCountChanged();
-};
+        QString mDirectory;
+        bool mLoaded;
+        int mTracksCount;
+    signals:
+        void directoryChanged();
+        void loadedChanged();
+    };
 
+    class DirectoryTracksProxyModel : public FilterProxyModel
+    {
+        Q_OBJECT
+        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY tracksCountChanged)
+    public:
+        void componentComplete() override;
+
+        int tracksCount() const;
+        Q_INVOKABLE QVariantList getTracks() const;
+        Q_INVOKABLE QVariantList getSelectedTracks() const;
+        Q_INVOKABLE void selectAll();
+    signals:
+        void tracksCountChanged();
+    };
 }
 
 #endif // UNPLAYER_DIRECTORYTRACKSMODEL_H

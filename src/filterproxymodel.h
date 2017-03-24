@@ -26,39 +26,38 @@ class QItemSelectionModel;
 
 namespace unplayer
 {
+    class FilterProxyModel : public QSortFilterProxyModel, public QQmlParserStatus
+    {
+        Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
+        Q_PROPERTY(QByteArray filterRoleName READ filterRoleName WRITE setFilterRoleName)
+        Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
+        Q_PROPERTY(int selectedIndexesCount READ selectedIndexesCount NOTIFY selectionChanged)
+    public:
+        FilterProxyModel();
+        void classBegin() override;
+        void componentComplete() override;
 
-class FilterProxyModel : public QSortFilterProxyModel, public QQmlParserStatus
-{
-    Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(QByteArray filterRoleName READ filterRoleName WRITE setFilterRoleName)
-    Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
-    Q_PROPERTY(int selectedIndexesCount READ selectedIndexesCount NOTIFY selectionChanged)
-public:
-    FilterProxyModel();
-    void classBegin();
-    void componentComplete();
+        QByteArray filterRoleName() const;
+        void setFilterRoleName(const QByteArray& filterRoleName);
 
-    QByteArray filterRoleName() const;
-    void setFilterRoleName(const QByteArray &filterRoleName);
+        Q_INVOKABLE int count() const;
+        Q_INVOKABLE int proxyIndex(int sourceIndex) const;
+        Q_INVOKABLE int sourceIndex(int proxyIndex) const;
 
-    Q_INVOKABLE int count() const;
-    Q_INVOKABLE int proxyIndex(int sourceIndex) const;
-    Q_INVOKABLE int sourceIndex(int proxyIndex) const;
+        QItemSelectionModel* selectionModel() const;
+        int selectedIndexesCount() const;
+        Q_INVOKABLE QList<int> selectedSourceIndexes() const;
+        Q_INVOKABLE bool isSelected(int row) const;
+        Q_INVOKABLE void select(int row);
+        Q_INVOKABLE void selectAll();
 
-    QItemSelectionModel* selectionModel() const;
-    int selectedIndexesCount() const;
-    Q_INVOKABLE QList<int> selectedSourceIndexes() const;
-    Q_INVOKABLE bool isSelected(int row) const;
-    Q_INVOKABLE void select(int row);
-    Q_INVOKABLE void selectAll();
-private:
-    QByteArray m_filterRoleName;
-    QItemSelectionModel *m_selectionModel;
-signals:
-    void selectionChanged();
-};
-
+    private:
+        QByteArray mFilterRoleName;
+        QItemSelectionModel* mSelectionModel;
+    signals:
+        void selectionChanged();
+    };
 }
 
 #endif // UNPLAYER_FILTERPROXYMODEL_H

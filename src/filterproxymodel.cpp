@@ -24,85 +24,82 @@
 
 namespace unplayer
 {
+    FilterProxyModel::FilterProxyModel()
+        : mSelectionModel(new QItemSelectionModel(this))
+    {
+        QObject::connect(mSelectionModel, &QItemSelectionModel::selectionChanged, this, &FilterProxyModel::selectionChanged);
+    }
 
-FilterProxyModel::FilterProxyModel()
-    : m_selectionModel(new QItemSelectionModel(this))
-{
-    connect(m_selectionModel, &QItemSelectionModel::selectionChanged, this, &FilterProxyModel::selectionChanged);
-}
+    void FilterProxyModel::classBegin()
+    {
+    }
 
-void FilterProxyModel::classBegin()
-{
+    void FilterProxyModel::componentComplete()
+    {
+        setFilterRole(sourceModel()->roleNames().key(mFilterRoleName));
+    }
 
-}
+    QByteArray FilterProxyModel::filterRoleName() const
+    {
+        return mFilterRoleName;
+    }
 
-void FilterProxyModel::componentComplete()
-{
-    setFilterRole(sourceModel()->roleNames().key(m_filterRoleName));
-}
+    void FilterProxyModel::setFilterRoleName(const QByteArray& filterRoleName)
+    {
+        mFilterRoleName = filterRoleName;
+    }
 
+    int FilterProxyModel::count() const
+    {
+        return rowCount();
+    }
 
-QByteArray FilterProxyModel::filterRoleName() const
-{
-    return m_filterRoleName;
-}
+    int FilterProxyModel::proxyIndex(int sourceIndex) const
+    {
+        return mapFromSource(sourceModel()->index(sourceIndex, 0)).row();
+    }
 
-void FilterProxyModel::setFilterRoleName(const QByteArray &filterRoleName)
-{
-    m_filterRoleName = filterRoleName;
-}
+    int FilterProxyModel::sourceIndex(int proxyIndex) const
+    {
+        return mapToSource(index(proxyIndex, 0)).row();
+    }
 
-int FilterProxyModel::count() const
-{
-    return rowCount();
-}
+    QItemSelectionModel* FilterProxyModel::selectionModel() const
+    {
+        return mSelectionModel;
+    }
 
-int FilterProxyModel::proxyIndex(int sourceIndex) const
-{
-    return mapFromSource(sourceModel()->index(sourceIndex, 0)).row();
-}
+    int FilterProxyModel::selectedIndexesCount() const
+    {
+        return mSelectionModel->selectedIndexes().size();
+    }
 
-int FilterProxyModel::sourceIndex(int proxyIndex) const
-{
-    return mapToSource(index(proxyIndex, 0)).row();
-}
+    QList<int> FilterProxyModel::selectedSourceIndexes() const
+    {
+        QList<int> indexes;
 
-QItemSelectionModel* FilterProxyModel::selectionModel() const
-{
-    return m_selectionModel;
-}
+        QModelIndexList modelIndexes(mSelectionModel->selectedIndexes());
+        std::sort(modelIndexes.begin(), modelIndexes.end());
 
-int FilterProxyModel::selectedIndexesCount() const
-{
-    return m_selectionModel->selectedIndexes().size();
-}
+        for (const QModelIndex& index : modelIndexes) {
+            indexes.append(index.row());
+        }
 
-QList<int> FilterProxyModel::selectedSourceIndexes() const
-{
-    QList<int> indexes;
+        return indexes;
+    }
 
-    QModelIndexList modelIndexes(m_selectionModel->selectedIndexes());
-    std::sort(modelIndexes.begin(), modelIndexes.end());
+    bool FilterProxyModel::isSelected(int row) const
+    {
+        return mSelectionModel->isSelected(index(row, 0));
+    }
 
-    for (const QModelIndex &index : modelIndexes)
-        indexes.append(index.row());
+    void FilterProxyModel::select(int row)
+    {
+        mSelectionModel->select(index(row, 0), QItemSelectionModel::Toggle);
+    }
 
-    return indexes;
-}
-
-bool FilterProxyModel::isSelected(int row) const
-{
-    return m_selectionModel->isSelected(index(row, 0));
-}
-
-void FilterProxyModel::select(int row)
-{
-    m_selectionModel->select(index(row, 0), QItemSelectionModel::Toggle);
-}
-
-void FilterProxyModel::selectAll()
-{
-    m_selectionModel->select(QItemSelection(index(0, 0), index(rowCount() - 1, 0)), QItemSelectionModel::Select);
-}
-
+    void FilterProxyModel::selectAll()
+    {
+        mSelectionModel->select(QItemSelection(index(0, 0), index(rowCount() - 1, 0)), QItemSelectionModel::Select);
+    }
 }
