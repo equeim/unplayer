@@ -177,23 +177,23 @@ namespace unplayer
 
                     if (tagFile.tag()) {
                         const TagLib::Tag* tag = tagFile.tag();
-
                         file.title = tag->title().toCString();
-                        if (file.title.isEmpty()) {
-                            file.title = file.fileName;
-                        }
-
                         file.artist = tag->artist().toCString();
-                        file.unknownArtist = (file.artist.isEmpty());
-                        if (file.unknownArtist) {
-                            file.artist = tr("Unknown artist");
-                        }
-
                         file.album = tag->album().toCString();
-                        file.unknownAlbum = (file.album.isEmpty());
-                        if (file.unknownAlbum) {
-                            file.album = tr("Unknown album");
-                        }
+                    }
+
+                    if (file.title.isEmpty()) {
+                        file.title = file.fileName;
+                    }
+
+                    file.unknownArtist = (file.artist.isEmpty());
+                    if (file.unknownArtist) {
+                        file.artist = tr("Unknown artist");
+                    }
+
+                    file.unknownAlbum = (file.album.isEmpty());
+                    if (file.unknownAlbum) {
+                        file.album = tr("Unknown album");
                     }
 
                     if (tagFile.audioProperties()) {
