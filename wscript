@@ -1,9 +1,6 @@
 def options(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
-    context.add_option("--taglib-includes", action="store")
-    context.add_option("--taglib-libpath", action="store")
-
 
 def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
@@ -11,11 +8,10 @@ def configure(context):
     context.check_cfg(package="mpris-qt5", args="--libs --cflags")
     context.check_cfg(package="Qt5Sparql", args="--libs --cflags")
     context.check_cfg(package="sailfishapp", args="--libs --cflags")
-    context.check_cfg(package="zlib", args="--libs --cflags")
 
-    context.env.INCLUDES_TAGLIB = context.options.taglib_includes
-    context.env.LIBPATH_TAGLIB = context.options.taglib_libpath
-    context.env.LIB_TAGLIB = ["tag"] + context.env.LIB_ZLIB
+    context.env.INCLUDES_TAGLIB = ["{}/taglib/install/include/taglib".format(context.path.get_bld())]
+    context.env.LIBPATH_TAGLIB = ["{}/taglib/install/lib".format(context.path.get_bld())]
+    context.env.LIB_TAGLIB = ["tag"]
 
 
 def build(context):
@@ -59,7 +55,7 @@ def build(context):
             "src/utils.h"
         ],
         cxxflags="-std=c++11",
-        linkflags="-pie -rdynamic",
+        linkflags="-pie -rdynamic -Wl,-rpath={}/harbour-unplayer".format(context.env.LIBDIR),
         lang=[
             "translations/harbour-unplayer-en",
             "translations/harbour-unplayer-es",

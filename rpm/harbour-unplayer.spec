@@ -38,22 +38,22 @@ cd build-%{_arch}/taglib/build
 cmake "%{_builddir}/3rdparty/taglib" \
     -DCMAKE_INSTALL_PREFIX=../install \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_FLAGS="-fPIC" \
-    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_SHARED_LIBS=ON \
     -DWITH_MP4=ON
-%{__make} %{?_smp_mflags}
+VERBOSE=1 %{__make} %{?_smp_mflags}
 %{__make} install
 cd -
 
-./waf configure --prefix=/usr \
-    --out=build-%{_arch} \
-    --taglib-includes="%{_builddir}/build-%{_arch}/taglib/install/include/taglib" \
-    --taglib-libpath="%{_builddir}/build-%{_arch}/taglib/install/lib"
-./waf build -v
+python waf configure --prefix=/usr --out=build-%{_arch}
+python waf build -v
 
 %install
 rm -rf %{buildroot}
-python waf install --destdir=%{buildroot}
+
+mkdir -p %{buildroot}%{_libdir}/%{name}
+cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_libdir}/%{name}
+
+python waf install --destdir=%{buildroot} -v
 desktop-file-install --delete-original \
     --dir %{buildroot}%{_datadir}/applications \
     %{buildroot}%{_datadir}/applications/*.desktop
@@ -64,3 +64,4 @@ desktop-file-install --delete-original \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_libdir}/%{name}
