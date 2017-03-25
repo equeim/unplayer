@@ -19,15 +19,13 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
-import "../components"
-
 BaseTrackDelegate {
     current: model.url === player.queue.currentUrl
     menu: Component {
         ContextMenu {
             MenuItem {
                 text: qsTr("Track information")
-                onClicked: pageStack.push("../pages/TrackInfoPage.qml", { trackUrl: model.url })
+                onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
             }
 
             AddToQueueMenuItem {
@@ -38,7 +36,7 @@ BaseTrackDelegate {
             }
 
             AddToPlaylistMenuItem {
-                onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: model.url })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.url })
             }
         }
     }

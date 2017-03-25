@@ -21,8 +21,7 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-import "../models"
+import "models"
 
 Page {
     property alias bottomPanelOpen: selectionPanel.open

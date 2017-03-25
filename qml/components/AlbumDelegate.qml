@@ -21,9 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-import "../pages"
-
 MediaContainerSelectionDelegate {
     id: albumDelegate
 
@@ -57,7 +54,7 @@ MediaContainerSelectionDelegate {
             }
 
             AddToPlaylistMenuItem {
-                onClicked: pageStack.push("../pages/AddToPlaylistPage.qml", { tracks: getTracks() })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
             }
 
             MenuItem {

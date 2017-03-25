@@ -21,8 +21,7 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-import "../models"
+import "models"
 
 Page {
     property alias bottomPanelOpen: selectionPanel.open
@@ -126,7 +125,7 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTr("Track information")
-                        onClicked: pageStack.push("../pages/TrackInfoPage.qml", { trackUrl: model.url })
+                        onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
                     }
 
                     AddToQueueMenuItem {

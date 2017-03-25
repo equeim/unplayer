@@ -21,8 +21,7 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-import "../models"
+import "models"
 
 Page {
     property alias bottomPanelOpen: selectionPanel.open
@@ -33,28 +32,28 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n genre(s) selected", String(), genresProxyModel.selectedIndexesCount)
+        selectionText: qsTr("%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             AddToQueueMenuItem {
-                enabled: genresProxyModel.selectedIndexesCount !== 0
+                enabled: artistsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getTracksForSelectedGenres())
+                    player.queue.add(selectionPanel.getTracksForSelectedArtists())
                     player.queue.setCurrentToFirstIfNeeded()
                     selectionPanel.showPanel = false
                 }
             }
 
             AddToPlaylistMenuItem {
-                enabled: genresProxyModel.selectedIndexesCount !== 0
+                enabled: artistsProxyModel.selectedIndexesCount !== 0
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getTracksForSelectedGenres()
+                        tracks: selectionPanel.getTracksForSelectedArtists()
                         Component.onDestruction: {
                             if (added)
                                 selectionPanel.showPanel = false
@@ -76,21 +75,38 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Genres")
+            title: qsTr("Artists")
         }
         delegate: MediaContainerSelectionDelegate {
+            id: artistDelegate
+
+            property bool unknownArtist: model.rawArtist === undefined
+
             function getTracks() {
-                return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(true,
-                                                                         true,
-                                                                         String(),
-                                                                         String(),
-                                                                         model.genre))
+                return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
+                                                                                true,
+                                                                                model.rawArtist))
             }
 
-            title: Theme.highlightText(model.genre, searchPanel.searchText, Theme.highlightColor)
-            description: qsTr("%n track(s), %1", String(), model.tracksCount).arg(Unplayer.Utils.formatDuration(model.duration))
+            function reloadMediaArt() {
+                mediaArt = String()
+                mediaArt = Unplayer.Utils.mediaArtForArtist(model.rawArtist)
+            }
+
+            title: Theme.highlightText(model.artist, searchPanel.searchText, Theme.highlightColor)
+            description: qsTr("%n album(s)", String(), model.albumsCount)
+            mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist)
             menu: Component {
                 ContextMenu {
+                    MenuItem {
+                        text: qsTr("All tracks")
+                        onClicked: pageStack.push("TracksPage.qml", {
+                                                      pageTitle: model.artist,
+                                                      allArtists: false,
+                                                      artist: model.rawArtist ? model.rawArtist : String()
+                                                  })
+                    }
+
                     AddToQueueMenuItem {
                         onClicked: {
                             player.queue.add(getTracks())
@@ -106,30 +122,35 @@ Page {
 
             onClicked: {
                 if (selectionPanel.showPanel)
-                    genresProxyModel.select(model.index)
+                    artistsProxyModel.select(model.index)
                 else
-                    pageStack.push("TracksPage.qml", {
-                                       pageTitle: model.genre,
-                                       allArtists: true,
-                                       genre: model.genre
-                                   })
+                    pageStack.push(artistPage)
+            }
+
+            Component {
+                id: artistPage
+                ArtistPage { }
             }
         }
         model: Unplayer.FilterProxyModel {
-            id: genresProxyModel
-            sourceModel: GenresModel { }
+            id: artistsProxyModel
+
+            filterRoleName: "artist"
+            sourceModel: ArtistsModel {
+                id: artistsModel
+            }
         }
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select genres")
+                text: qsTr("Select artists")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No genres")
+            text: qsTr("No artists")
         }
 
         VerticalScrollDecorator { }

@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-
 Page {
     SilicaFlickable {
         anchors.fill: parent
