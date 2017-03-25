@@ -85,7 +85,7 @@ Page {
             BackgroundItem {
                 id: parentDirectoryItem
 
-                visible: directoryTracksModel.directory !== "/"
+                visible: directoryTracksModel.loaded && directoryTracksModel.directory !== "/"
                 onClicked: {
                     if (!selectionPanel.showPanel) {
                         searchPanel.open = false
@@ -261,6 +261,7 @@ Page {
         }
 
         ListViewPlaceholder {
+            enabled: directoryTracksModel.loaded && (listView.count === 0)
             text: qsTr("No files")
         }
 

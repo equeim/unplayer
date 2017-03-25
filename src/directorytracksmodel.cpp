@@ -152,6 +152,7 @@ namespace unplayer
 
         beginResetModel();
         mFiles.clear();
+        endResetModel();
 
         const QString directory = mDirectory;
         const auto future = QtConcurrent::run([directory]() {
@@ -213,6 +214,7 @@ namespace unplayer
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             const auto result = watcher->result();
+            beginResetModel();
             mFiles = result.first;
             endResetModel();
             mTracksCount = result.second;
