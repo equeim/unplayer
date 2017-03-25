@@ -21,8 +21,7 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "../components"
-import "../models"
+import "models"
 
 Page {
     property alias bottomPanelOpen: selectionPanel.open
@@ -33,28 +32,28 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
+        selectionText: qsTr("%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             AddToQueueMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
+                enabled: albumsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getSelectedTracks())
+                    player.queue.add(selectionPanel.getTracksForSelectedAlbums())
                     player.queue.setCurrentToFirstIfNeeded()
                     selectionPanel.showPanel = false
                 }
             }
 
             AddToPlaylistMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
+                enabled: albumsProxyModel.selectedIndexesCount !== 0
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getSelectedTracks()
+                        tracks: selectionPanel.getTracksForSelectedAlbums()
                         Component.onDestruction: {
                             if (added)
                                 selectionPanel.showPanel = false
@@ -75,43 +74,40 @@ Page {
         }
         clip: true
 
-        header: AlbumPageHeader { }
-        delegate: LibraryTrackDelegate { }
-        model: TracksProxyModel {
-            id: tracksProxyModel
+        header: ArtistPageHeader { }
+        delegate: AlbumDelegate {
+            description: qsTr("%n track(s)", String(), model.tracksCount)
+        }
+        model: Unplayer.FilterProxyModel {
+            id: albumsProxyModel
 
-            sourceModel: TracksModel {
-                id: tracksModel
-
+            filterRoleName: "album"
+            sourceModel: AlbumsModel {
+                id: albumsModel
                 allArtists: false
-                allAlbums: false
-
                 artist: model.rawArtist ? model.rawArtist : String()
-                album: model.rawAlbum ? model.rawAlbum : String()
             }
         }
 
         PullDownMenu {
             MenuItem {
-                visible: !unknownArtist && !unknownAlbum
-                text: qsTr("Set cover image")
-                onClicked: pageStack.push(setCoverPage)
-
-                Component {
-                    id: setCoverPage
-                    SetCoverPage { }
-                }
+                text: qsTr("All tracks")
+                onClicked: pageStack.push("TracksPage.qml", {
+                                              pageTitle: model.artist,
+                                              allArtists: false,
+                                              artist: model.rawArtist ? model.rawArtist : String()
+                                          })
             }
 
             SelectionMenuItem {
-                text: qsTr("Select tracks")
+                text: qsTr("Select albums")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No tracks")
+            text: qsTr("No albums")
         }
 
         VerticalScrollDecorator { }

@@ -36,8 +36,8 @@ ApplicationWindow
     _defaultPageOrientations: Orientation.All
     allowedOrientations: defaultAllowedOrientations
     bottomMargin: nowPlayingPanel.visibleSize
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    initialPage: Qt.resolvedUrl("pages/MainPage.qml")
+    cover: Qt.resolvedUrl("components/Cover.qml")
+    initialPage: Qt.resolvedUrl("components/MainPage.qml")
 
     Unplayer.Player {
         id: player

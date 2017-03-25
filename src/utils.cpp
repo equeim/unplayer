@@ -184,44 +184,47 @@ namespace unplayer
                                      const QString& album,
                                      const QString& genre)
     {
-        QString query(
-            "SELECT ?url ?title ?artist ?rawArtist ?album ?rawAlbum ?trackNumber ?genre ?duration\n"
-            "WHERE {\n"
-            "    {\n"
-            "        SELECT nie:url(?track) AS ?url\n"
-            "               tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-            "               tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" +
-            tr("Unknown artist") + "\") AS ?artist\n"
-                                   "               nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
-                                   "               tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"" +
-            tr("Unknown album") + "\") AS ?album\n"
-                                  "               nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
-                                  "               nie:informationElementDate(?track) AS ?date\n"
-                                  "               nmm:trackNumber(?track) AS ?trackNumber\n"
-                                  "               nfo:genre(?track) AS ?genre\n"
-                                  "               nfo:duration(?track) AS ?duration\n"
-                                  "        WHERE {\n"
-                                  "            ?track a nmm:MusicPiece.\n"
-                                  "        }\n"
-                                  "        ORDER BY !bound(?rawArtist) ?rawArtist !bound(?rawAlbum) ?date ?rawAlbum ?trackNumber ?title\n"
-                                  "    }.\n");
+        QString query(QStringLiteral(
+                          "SELECT ?url ?title ?artist ?rawArtist ?album ?rawAlbum ?trackNumber ?genre ?duration\n"
+                          "WHERE {\n"
+                          "    {\n"
+                          "        SELECT nie:url(?track) AS ?url\n"
+                          "               tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
+                          "               tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"%1\") AS ?artist\n"
+                          "               nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
+                          "               tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"%2\") AS ?album\n"
+                          "               nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
+                          "               nie:informationElementDate(?track) AS ?date\n"
+                          "               nmm:trackNumber(?track) AS ?trackNumber\n"
+                          "               nfo:genre(?track) AS ?genre\n"
+                          "               nfo:duration(?track) AS ?duration\n"
+                          "        WHERE {\n"
+                          "            ?track a nmm:MusicPiece.\n"
+                          "        }\n"
+                          "        ORDER BY !bound(?rawArtist) ?artist !bound(?rawAlbum) ?date ?album ?trackNumber ?title\n"
+                          "    }.\n")
+                          .arg(tr("Unknown artist"))
+                          .arg(tr("Unknown album")));
 
         if (!allArtists) {
-            if (artist.isEmpty())
+            if (artist.isEmpty()) {
                 query += "    FILTER(!bound(?rawArtist)).\n";
-            else
-                query += "    FILTER(?rawArtist = \"" + escapeSparql(artist) + "\").\n";
+            } else {
+                query += QStringLiteral("    FILTER(?rawArtist = \"%1\").\n").arg(escapeSparql(artist));
+            }
         }
 
         if (!allAlbums) {
-            if (album.isEmpty())
+            if (album.isEmpty()) {
                 query += "    FILTER(!bound(?rawAlbum)).\n";
-            else
-                query += "    FILTER(?rawAlbum = \"" + escapeSparql(album) + "\").\n";
+            } else {
+                query += QStringLiteral("    FILTER(?rawAlbum = \"%1\").\n").arg(escapeSparql(album));
+            }
         }
 
-        if (!genre.isEmpty())
-            query += "    FILTER(?genre = \"" + escapeSparql(genre) + "\").\n";
+        if (!genre.isEmpty()) {
+            query += QStringLiteral("    FILTER(?genre = \"%1\").\n").arg(escapeSparql(genre));
+        }
 
         query += "}";
 
@@ -235,22 +238,22 @@ namespace unplayer
 
     QString Utils::sdcard()
     {
-        QFile mtab("/etc/mtab");
+        QFile mtab(QStringLiteral("/etc/mtab"));
         if (mtab.open(QIODevice::ReadOnly)) {
-            QStringList mounts(QString(mtab.readAll()).split('\n').filter("/dev/mmcblk1p1"));
-            mtab.close();
-
-            if (!mounts.isEmpty())
+            const QStringList mounts(QString(mtab.readAll()).split('\n').filter(QStringLiteral("/dev/mmcblk1p1")));
+            if (!mounts.isEmpty()) {
                 return mounts.first().split(' ').at(1);
+            }
         }
-        return "/media/sdcard";
+        return QStringLiteral("/media/sdcard");
     }
 
     QStringList Utils::imageNameFilters()
     {
         QStringList nameFilters;
-        for (const QByteArray& format : QImageReader::supportedImageFormats())
+        for (const QByteArray& format : QImageReader::supportedImageFormats()) {
             nameFilters.append("*." + format);
+        }
         return nameFilters;
     }
 
@@ -261,26 +264,30 @@ namespace unplayer
 
     QString Utils::encodeUrl(const QUrl& url)
     {
-        return QUrl::toPercentEncoding(url.toString(), "/!$&'()*+,;=:@");
+        return QUrl::toPercentEncoding(url.toString(), QByteArrayLiteral("/!$&'()*+,;=:@"));
     }
 
     QString Utils::mediaArtPath(const QString& artist, const QString& album)
     {
-        return mediaArtDirectory +
-               QDir::separator() +
-               "album-" +
-               mediaArtMd5(artist) +
-               "-" +
-               mediaArtMd5(album) +
-               ".jpeg";
+        return QStringLiteral("%1/album-%2-%3.jpeg").arg(mediaArtDirectory).arg(mediaArtMd5(artist)).arg(mediaArtMd5(album));
     }
 
     QString Utils::mediaArtMd5(QString string)
     {
-        string = string.replace(QRegularExpression("\\([^\\)]*\\)"), QString()).replace(QRegularExpression("\\{[^\\}]*\\}"), QString()).replace(QRegularExpression("\\[[^\\]]*\\]"), QString()).replace(QRegularExpression("<[^>]*>"), QString()).replace(QRegularExpression("[\\(\\)_\\{\\}\\[\\]!@#\\$\\^&\\*\\+=|/\\\'\"?<>~`]"), QString()).trimmed().replace("\t", " ").replace(QRegularExpression("  +"), " ").normalized(QString::NormalizationForm_KD).toLower();
+        string = string.replace(QRegularExpression(QStringLiteral("\\([^\\)]*\\)")), QString())
+                     .replace(QRegularExpression(QStringLiteral("\\{[^\\}]*\\}")), QString())
+                     .replace(QRegularExpression(QStringLiteral("\\[[^\\]]*\\]")), QString())
+                     .replace(QRegularExpression(QStringLiteral("<[^>]*>")), QString())
+                     .replace(QRegularExpression(QStringLiteral("[\\(\\)_\\{\\}\\[\\]!@#\\$\\^&\\*\\+=|/\\\'\"?<>~`]")), QString())
+                     .trimmed()
+                     .replace('\t', ' ')
+                     .replace(QRegularExpression(QStringLiteral("  +")), QStringLiteral(" "))
+                     .normalized(QString::NormalizationForm_KD)
+                     .toLower();
 
-        if (string.isEmpty())
+        if (string.isEmpty()) {
             string = " ";
+        }
 
         return QCryptographicHash::hash(string.toUtf8(), QCryptographicHash::Md5).toHex();
     }
