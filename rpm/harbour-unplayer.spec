@@ -24,6 +24,11 @@ BuildRequires: cmake
 BuildRequires: desktop-file-utils
 BuildRequires: python
 
+# >> macros
+%define __provides_exclude_from ^%{_datadir}/.*$
+%define __requires_exclude ^libtag.*$
+# << macros
+
 %description
 %{summary}
 
@@ -50,8 +55,8 @@ python waf build -v
 %install
 rm -rf %{buildroot}
 
-mkdir -p %{buildroot}%{_libdir}/%{name}
-cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_datadir}/%{name}/lib
+cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_datadir}/%{name}/lib
 
 python waf install --destdir=%{buildroot} -v
 desktop-file-install --delete-original \
@@ -64,4 +69,3 @@ desktop-file-install --delete-original \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-%{_libdir}/%{name}

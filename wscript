@@ -55,7 +55,7 @@ def build(context):
             "src/utils.h"
         ],
         cxxflags="-std=c++11",
-        linkflags="-pie -rdynamic -Wl,-rpath={}/harbour-unplayer".format(context.env.LIBDIR),
+        linkflags="-pie -rdynamic -Wl,-rpath={}/harbour-unplayer/lib".format(context.env.DATADIR),
         lang=[
             "translations/harbour-unplayer-en",
             "translations/harbour-unplayer-es",
