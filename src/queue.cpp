@@ -47,7 +47,7 @@ namespace unplayer
         : QObject(parent),
           mCurrentIndex(-1),
           mShuffle(false),
-          mRepeat(false)
+          mRepeatMode(NoRepeat)
     {
     }
 
@@ -126,20 +126,27 @@ namespace unplayer
         }
     }
 
-    bool Queue::isRepeat() const
+    Queue::RepeatMode Queue::repeatMode() const
     {
-        return mRepeat;
+        return mRepeatMode;
     }
 
-    void Queue::setRepeat(bool repeat)
+    void Queue::changeRepeatMode()
     {
-        if (repeat != mRepeat) {
-            mRepeat = repeat;
-            emit repeatChanged();
-            if (mShuffle && !repeat) {
+        switch (mRepeatMode) {
+        case NoRepeat:
+            mRepeatMode = RepeatAll;
+            break;
+        case RepeatAll:
+            mRepeatMode = RepeatOne;
+            if (mShuffle) {
                 resetNotPlayedTracks();
             }
+            break;
+        case RepeatOne:
+            mRepeatMode = NoRepeat;
         }
+        emit repeatModeChanged();
     }
 
     void Queue::addTracks(const QVariantList& tracks)
@@ -240,11 +247,16 @@ namespace unplayer
 
     void Queue::nextOnEos()
     {
+        if (mRepeatMode == RepeatOne) {
+            emit currentTrackChanged();
+            return;
+        }
+
         if (mShuffle) {
             const std::shared_ptr<QueueTrack>& track = mTracks.at(mCurrentIndex);
             mNotPlayedTracks.removeOne(track);
             if (mNotPlayedTracks.size() == 0) {
-                if (mRepeat) {
+                if (mRepeatMode == RepeatAll) {
                     resetNotPlayedTracks();
                     mNotPlayedTracks.removeOne(track);
                 } else {
@@ -254,7 +266,7 @@ namespace unplayer
             setCurrentIndex(mTracks.indexOf(mNotPlayedTracks.at(qrand() % mNotPlayedTracks.size())));
         } else {
             if (mCurrentIndex == (mTracks.size() - 1)) {
-                if (mRepeat) {
+                if (mRepeatMode == RepeatAll) {
                     setCurrentIndex(0);
                 } else {
                     return;

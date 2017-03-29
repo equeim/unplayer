@@ -49,6 +49,8 @@ namespace unplayer
     {
         Q_OBJECT
 
+        Q_ENUMS(RepeatMode)
+
         Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
         Q_PROPERTY(QString currentUrl READ currentUrl NOTIFY currentTrackChanged)
@@ -58,8 +60,15 @@ namespace unplayer
         Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
 
         Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
-        Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
+        Q_PROPERTY(RepeatMode repeatMode READ repeatMode NOTIFY repeatModeChanged)
     public:
+        enum RepeatMode
+        {
+            NoRepeat,
+            RepeatAll,
+            RepeatOne
+        };
+
         explicit Queue(QObject* parent);
 
         const QList<std::shared_ptr<QueueTrack>>& tracks() const;
@@ -76,8 +85,8 @@ namespace unplayer
         bool isShuffle() const;
         void setShuffle(bool shuffle);
 
-        bool isRepeat() const;
-        void setRepeat(bool repeat);
+        RepeatMode repeatMode() const;
+        Q_INVOKABLE void changeRepeatMode();
 
         Q_INVOKABLE void addTracks(const QVariantList& tracks);
         Q_INVOKABLE void removeTrack(int index);
@@ -102,13 +111,13 @@ namespace unplayer
 
         int mCurrentIndex;
         bool mShuffle;
-        bool mRepeat;
+        RepeatMode mRepeatMode;
     signals:
         void currentTrackChanged();
 
         void currentIndexChanged();
         void shuffleChanged();
-        void repeatChanged();
+        void repeatModeChanged();
 
         void tracksAdded(int start);
         void trackRemoved(int index);
