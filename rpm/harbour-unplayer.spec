@@ -39,7 +39,7 @@ mkdir -p build-%{_arch}/taglib/build
 mkdir -p build-%{_arch}/taglib/install
 
 cd build-%{_arch}/taglib/build
-cmake "%{_builddir}/3rdparty/taglib" \
+cmake "%{_builddir}/3rdparty/taglib-1.11.1" \
     -DCMAKE_INSTALL_PREFIX=../install \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON \
