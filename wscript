@@ -81,7 +81,7 @@ def build(context):
             "src/tracksmodel.h",
             "src/utils.h"
         ],
-        cxxflags="-std=c++11",
+        cxxflags=["-std=c++11", "-Wall", "-Wextra", "-pedantic"],
         defines=["UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
         lang=[
             "translations/harbour-unplayer-en",
