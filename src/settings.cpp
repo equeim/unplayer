@@ -29,6 +29,7 @@ namespace unplayer
     namespace
     {
         const QString libraryDirectoriesKey(QLatin1String("libraryDirectories"));
+        const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
 
         Settings* instancePointer = nullptr;
     }
@@ -55,6 +56,16 @@ namespace unplayer
     {
         mSettings->setValue(libraryDirectoriesKey, directories);
         emit libraryDirectoriesChanged();
+    }
+
+    bool Settings::openLibraryOnStartup() const
+    {
+        return mSettings->value(openLibraryOnStartupKey, false).toBool();
+    }
+
+    void Settings::setOpenLibraryOnStartup(bool open)
+    {
+        mSettings->setValue(openLibraryOnStartupKey, open);
     }
 
     Settings::Settings(QObject* parent)
