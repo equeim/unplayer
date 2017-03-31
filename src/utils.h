@@ -31,6 +31,8 @@ namespace unplayer
         Q_PROPERTY(QString homeDirectory READ homeDirectory)
         Q_PROPERTY(QString sdcardPath READ sdcardPath)
         Q_PROPERTY(QStringList imageNameFilters READ imageNameFilters CONSTANT)
+        Q_PROPERTY(QString translators READ translators CONSTANT)
+        Q_PROPERTY(QString license READ license CONSTANT)
     public:
         Utils();
 
@@ -46,6 +48,9 @@ namespace unplayer
 
         Q_INVOKABLE static QString urlToPath(const QUrl& url);
         static QString encodeUrl(const QUrl& url);
+
+        static QString translators();
+        static QString license();
     };
 }
 

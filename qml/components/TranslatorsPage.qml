@@ -31,7 +31,7 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("License")
+                title: qsTr("Translators")
             }
 
             Label {
@@ -43,7 +43,7 @@ Page {
                 }
                 font.pixelSize: Theme.fontSizeExtraSmall
                 wrapMode: Text.WordWrap
-                text: Unplayer.Utils.license.arg(Theme.highlightColor)
+                text: Unplayer.Utils.translators.arg(Theme.highlightColor)
                 textFormat: Text.RichText
 
                 onLinkActivated: Qt.openUrlExternally(link)

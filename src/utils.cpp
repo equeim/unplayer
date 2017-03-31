@@ -135,4 +135,18 @@ namespace unplayer
     {
         return QUrl::toPercentEncoding(url.toString(), "/!$&'()*+,;=:@");
     }
+
+    QString Utils::translators()
+    {
+        QFile file(":/translators.html");
+        file.open(QIODevice::ReadOnly);
+        return QString(file.readAll());
+    }
+
+    QString Utils::license()
+    {
+        QFile file(":/license.html");
+        file.open(QIODevice::ReadOnly);
+        return QLatin1String(file.readAll());
+    }
 }
