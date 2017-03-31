@@ -7,7 +7,6 @@ License: GPLv3
 URL: https://github.com/equeim/unplayer
 Source0: %{name}-%{version}.tar.xz
 Requires: sailfishsilica-qt5
-BuildRequires: pkgconfig(mpris-qt5)
 BuildRequires: pkgconfig(Qt5Concurrent)
 BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5DBus)
@@ -25,7 +24,7 @@ BuildRequires: python
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libtag.*$
+%define __requires_exclude ^libdbusextended-qt5.*|libmpris-qt5.*|libtag.*$
 # << macros
 
 %description
@@ -35,12 +34,43 @@ BuildRequires: python
 %setup -q -n %{name}-%{version}
 
 %build
-mkdir -p build-%{_arch}/taglib/build
-mkdir -p build-%{_arch}/taglib/install
+build_directory="%{_builddir}/build-%{_arch}"
 
-cd build-%{_arch}/taglib/build
+qtdbusextended_build="${build_directory}/3rdparty/qtdbusextended/build"
+qtdbusextended_install="${build_directory}/3rdparty/qtdbusextended/install"
+mkdir -p "${qtdbusextended_build}"
+mkdir -p "${qtdbusextended_install}"
+
+cd "${qtdbusextended_build}"
+%qmake5 "%{_builddir}/3rdparty/qtdbusextended-0.0.3" \
+    CONFIG+=release
+%{__make} %{?_smp_mflags}
+%{__make} INSTALL_ROOT="${qtdbusextended_install}" install
+cd -
+
+qtmpris_build="${build_directory}/3rdparty/qtmpris/build"
+qtmpris_install="${build_directory}/3rdparty/qtmpris/install"
+mkdir -p "${qtmpris_build}"
+mkdir -p "${qtmpris_install}"
+
+cd "${qtmpris_build}"
+%qmake5 "%{_builddir}/3rdparty/qtmpris-0.0.8" \
+    CONFIG+=release \
+    DBUSEXTENDED_INCLUDEPATH="${qtdbusextended_install}/usr/include/qt5/DBusExtended" \
+    DBUSEXTENDED_LIBPATH="${qtdbusextended_install}/usr/lib"
+%{__make} %{?_smp_mflags}
+%{__make} INSTALL_ROOT="${qtmpris_install}" install
+cd -
+
+
+taglib_build="${build_directory}/3rdparty/taglib/build"
+taglib_install="${build_directory}/3rdparty/taglib/install"
+mkdir -p "${taglib_build}"
+mkdir -p "${taglib_install}"
+
+cd "${taglib_build}"
 cmake "%{_builddir}/3rdparty/taglib-1.11.1" \
-    -DCMAKE_INSTALL_PREFIX=../install \
+    -DCMAKE_INSTALL_PREFIX="${taglib_install}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON \
     -DWITH_MP4=ON
@@ -48,19 +78,29 @@ VERBOSE=1 %{__make} %{?_smp_mflags}
 %{__make} install
 cd -
 
-python waf configure --prefix=/usr --out=build-%{_arch}
+python waf configure --prefix="%{_prefix}" \
+    --out="${build_directory}" \
+    --taglib-includepath="${taglib_install}/include/taglib" \
+    --taglib-libpath="${taglib_install}/lib" \
+    --qtmpris-includepath="${qtmpris_install}/usr/include/qt5/MprisQt" \
+    --qtmpris-libpath="${qtmpris_install}/usr/lib"
 python waf build -v
 
 %install
-rm -rf %{buildroot}
+rm -rf "%{buildroot}"
 
-mkdir -p %{buildroot}%{_datadir}/%{name}/lib
-cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_datadir}/%{name}/lib
+lib_dir="%{buildroot}%{_datadir}/%{name}/lib"
+build_directory="%{_builddir}/build-%{_arch}"
+mkdir -p "${lib_dir}"
+cp -d "${build_directory}/3rdparty/qtdbusextended/install/usr/lib"/libdbusextended-qt5.so* "${lib_dir}"
+cp -d "${build_directory}/3rdparty/qtmpris/install/usr/lib"/libmpris-qt5.so* "${lib_dir}"
+cp -d "${build_directory}/3rdparty/taglib/install/lib"/libtag.so* "${lib_dir}"
 
-python waf install --destdir=%{buildroot}
+python waf install --destdir="%{buildroot}"
+
 desktop-file-install --delete-original \
-    --dir %{buildroot}%{_datadir}/applications \
-    %{buildroot}%{_datadir}/applications/*.desktop
+    --dir "%{buildroot}%{_datadir}/applications" \
+    "%{buildroot}%{_datadir}/applications"/*.desktop
 
 %files
 %defattr(-,root,root,-)
