@@ -83,16 +83,7 @@ def build(context):
         ],
         cxxflags=["-std=c++11", "-Wall", "-Wextra", "-pedantic"],
         defines=["UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
-        lang=[
-            "translations/harbour-unplayer-en",
-            "translations/harbour-unplayer-es",
-            "translations/harbour-unplayer-fr",
-            "translations/harbour-unplayer-it",
-            "translations/harbour-unplayer-nb",
-            "translations/harbour-unplayer-nl",
-            "translations/harbour-unplayer-ru",
-            "translations/harbour-unplayer-sv"
-        ]
+        lang=context.path.ant_glob("translations/*.ts")
     )
 
     context.install_files("${DATADIR}/harbour-unplayer",
