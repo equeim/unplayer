@@ -24,7 +24,6 @@
 #include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
-#include <QUrl>
 
 namespace unplayer
 {
@@ -124,16 +123,6 @@ namespace unplayer
             nameFilters.append(QString::fromLatin1("*.%1").arg(QString::fromLatin1(format)));
         }
         return nameFilters;
-    }
-
-    QString Utils::urlToPath(const QUrl& url)
-    {
-        return url.path();
-    }
-
-    QString Utils::encodeUrl(const QUrl& url)
-    {
-        return QUrl::toPercentEncoding(url.toString(), "/!$&'()*+,;=:@");
     }
 
     QString Utils::translators()

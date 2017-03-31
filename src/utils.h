@@ -46,9 +46,6 @@ namespace unplayer
 
         static QStringList imageNameFilters();
 
-        Q_INVOKABLE static QString urlToPath(const QUrl& url);
-        static QString encodeUrl(const QUrl& url);
-
         static QString translators();
         static QString license();
     };
