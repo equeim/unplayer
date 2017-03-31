@@ -29,18 +29,18 @@ MediaContainerSelectionDelegate {
     menu: Component {
         ContextMenu {
             MenuItem {
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: player.queue.addTracks(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
             }
 
             MenuItem {
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)) })
             }
 
             MenuItem {
                 visible: !model.unknownArtist && !model.unknownAlbum
-                text: qsTr("Set cover image")
+                text: qsTranslate("unplayer", "Set cover image")
                 onClicked: pageStack.push(filePickerDialogComponent)
             }
         }
@@ -75,7 +75,7 @@ MediaContainerSelectionDelegate {
     Component {
         id: filePickerDialogComponent
         FilePickerDialog {
-            title: qsTr("Select Image")
+            title: qsTranslate("unplayer", "Select Image")
             fileIcon: "image://theme/icon-m-image"
             nameFilters: Unplayer.Utils.imageNameFilters
             onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)

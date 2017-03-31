@@ -170,7 +170,7 @@ Dialog {
                     pullDownMenu.activeChanged.disconnect(goToScard)
                 }
 
-                text: qsTr("SD card")
+                text: qsTranslate("unplayer", "SD card")
                 onClicked: pullDownMenu.activeChanged.connect(goToScard)
             }
 
@@ -180,7 +180,7 @@ Dialog {
                     pullDownMenu.activeChanged.disconnect(goToHome)
                 }
 
-                text: qsTr("Home directory")
+                text: qsTranslate("unplayer", "Home directory")
                 onClicked: pullDownMenu.activeChanged.connect(goToHome)
             }
 
@@ -189,7 +189,7 @@ Dialog {
 
         ViewPlaceholder {
             enabled: !directoryContentModel.loading && !listView.count
-            text: qsTr("No files")
+            text: qsTranslate("unplayer", "No files")
         }
 
         BusyIndicator {

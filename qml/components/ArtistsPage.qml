@@ -28,12 +28,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: artistsProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -42,7 +42,7 @@ Page {
 
             MenuItem {
                 enabled: artistsProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -72,18 +72,18 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Artists")
+            title: qsTranslate("unplayer", "Artists")
         }
         delegate: MediaContainerSelectionDelegate {
             id: artistDelegate
 
             title: Theme.highlightText(model.displayedArtist, searchPanel.searchText, Theme.highlightColor)
-            description: qsTr("%n album(s)", String(), model.albumsCount)
+            description: qsTranslate("unplayer", "%n album(s)", String(), model.albumsCount)
             mediaArt: Unplayer.LibraryUtils.randomMediaArtForArtist(model.artist)
             menu: Component {
                 ContextMenu {
                     MenuItem {
-                        text: qsTr("All tracks")
+                        text: qsTranslate("unplayer", "All tracks")
                         onClicked: pageStack.push(tracksPageComponent)
 
                         Component {
@@ -97,12 +97,12 @@ Page {
                     }
 
                     MenuItem {
-                        text: qsTr("Add to queue")
+                        text: qsTranslate("unplayer", "Add to queue")
                         onClicked: player.queue.addTracks(artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)))
                     }
 
                     MenuItem {
-                        text: qsTr("Add to playlist")
+                        text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)) })
                     }
                 }
@@ -144,14 +144,14 @@ Page {
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select artists")
+                text: qsTranslate("unplayer", "Select artists")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No artists")
+            text: qsTranslate("unplayer", "No artists")
         }
 
         VerticalScrollDecorator { }

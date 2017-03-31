@@ -20,20 +20,16 @@
 
 #include <algorithm>
 
-#include <QVariantMap>
-
-#include "utils.h"
-
-#include <QtConcurrentRun>
-#include <QFutureWatcher>
-
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDebug>
+#include <QFileInfo>
+#include <QFutureWatcher>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlDatabase>
 #include <QSqlRecord>
-#include <QFileInfo>
+#include <QtConcurrentRun>
 
 #include <fileref.h>
 #include <tag.h>
@@ -299,11 +295,11 @@ namespace unplayer
                     }
 
                     if (artist.isEmpty()) {
-                        artist = tr("Unknown artist");
+                        artist = qApp->translate("unplayer", "Unknown artist");
                     }
 
                     if (album.isEmpty()) {
-                        album = tr("Unknown artist");
+                        album = qApp->translate("unplayer", "Unknown artist");
                     }
 
                     tracks.append(std::make_shared<QueueTrack>(filePath,

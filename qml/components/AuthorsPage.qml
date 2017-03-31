@@ -24,7 +24,7 @@ Page {
         anchors.fill: parent
 
         header: PageHeader {
-            title: qsTr("Authors")
+            title: qsTranslate("unplayer", "Authors")
         }
         delegate: Column {
             anchors {
@@ -50,7 +50,7 @@ Page {
             Label {
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.secondaryColor
-                text: model.type === "maintainer" ? qsTr("Maintainer") : String()
+                text: model.type === "maintainer" ? qsTranslate("unplayer", "Maintainer") : String()
             }
         }
 

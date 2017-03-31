@@ -28,12 +28,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n file(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n file(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: directoryTracksProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
@@ -42,7 +42,7 @@ Page {
 
             MenuItem {
                 enabled: directoryTracksProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -86,7 +86,7 @@ Page {
             Component.onCompleted: oldHeight = height
 
             PageHeader {
-                title: qsTr("Directories")
+                title: qsTranslate("unplayer", "Directories")
                 description: directoryTracksModel.directory
             }
 
@@ -109,25 +109,25 @@ Page {
                 ContextMenu {
                     MenuItem {
                         visible: model.isDirectory
-                        text: qsTr("Set as default directory")
+                        text: qsTranslate("unplayer", "Set as default directory")
                         onClicked: Unplayer.Settings.defaultDirectory = model.filePath
                     }
 
                     MenuItem {
                         visible: !model.isDirectory
-                        text: qsTr("Track information")
+                        text: qsTranslate("unplayer", "Track information")
                         onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                     }
 
                     MenuItem {
                         visible: !model.isDirectory
-                        text: qsTr("Add to queue")
+                        text: qsTranslate("unplayer", "Add to queue")
                         onClicked: player.queue.addTrack(model.filePath)
                     }
 
                     MenuItem {
                         visible: !model.isDirectory
-                        text: qsTr("Add to playlist")
+                        text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                     }
                 }
@@ -229,28 +229,28 @@ Page {
             }
 
             MenuItem {
-                text: qsTr("Set as default directory")
+                text: qsTranslate("unplayer", "Set as default directory")
                 onClicked: Unplayer.Settings.defaultDirectory = directoryTracksModel.directory
             }
 
             MenuItem {
-                text: qsTr("Default directory")
+                text: qsTranslate("unplayer", "Default directory")
                 onClicked: pullDownMenu.goBegin(Unplayer.Settings.defaultDirectory)
             }
 
             MenuItem {
-                text: qsTr("SD card")
+                text: qsTranslate("unplayer", "SD card")
                 onClicked: pullDownMenu.goBegin(Unplayer.Utils.sdcardPath)
             }
 
             MenuItem {
-                text: qsTr("Home directory")
+                text: qsTranslate("unplayer", "Home directory")
                 onClicked: pullDownMenu.goBegin(Unplayer.Utils.homeDirectory)
             }
 
             SelectionMenuItem {
                 enabled: directoryTracksProxyModel.tracksCount || (searchPanel.searchText.length && directoryTracksModel.tracksCount)
-                text: qsTr("Select files")
+                text: qsTranslate("unplayer", "Select files")
             }
 
             SearchMenuItem { }
@@ -258,7 +258,7 @@ Page {
 
         ListViewPlaceholder {
             enabled: directoryTracksModel.loaded && !listView.count
-            text: qsTr("No files")
+            text: qsTranslate("unplayer", "No files")
         }
 
         BusyIndicator {

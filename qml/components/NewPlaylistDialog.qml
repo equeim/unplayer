@@ -37,12 +37,12 @@ Dialog {
             width: parent.width
 
             DialogHeader {
-                title: qsTr("Add playlist")
+                title: qsTranslate("unplayer", "Add playlist")
             }
 
             TextField {
                 id: playlistNameField
-                label: qsTr("Playlist name")
+                label: qsTranslate("unplayer", "Playlist name")
                 placeholderText: label
                 width: parent.width
 

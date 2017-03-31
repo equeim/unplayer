@@ -37,12 +37,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: albumsProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -51,7 +51,7 @@ Page {
 
             MenuItem {
                 enabled: albumsProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -82,7 +82,7 @@ Page {
 
         header: ArtistPageHeader { }
         delegate: AlbumDelegate {
-            description: qsTr("%n track(s)", String(), tracksCount)
+            description: qsTranslate("unplayer", "%n track(s)", String(), tracksCount)
         }
         model: Unplayer.FilterProxyModel {
             id: albumsProxyModel
@@ -97,7 +97,7 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("All tracks")
+                text: qsTranslate("unplayer", "All tracks")
                 onClicked: pageStack.push(tracksPageComponent)
 
                 Component {
@@ -111,14 +111,14 @@ Page {
             }
 
             SelectionMenuItem {
-                text: qsTr("Select albums")
+                text: qsTranslate("unplayer", "Select albums")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No albums")
+            text: qsTranslate("unplayer", "No albums")
         }
 
         VerticalScrollDecorator { }

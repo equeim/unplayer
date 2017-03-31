@@ -32,12 +32,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: playlistsProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(playlistsModel.getTracksForPlaylists(playlistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -47,9 +47,9 @@ Page {
             MenuItem {
                 enabled: playlistsProxyModel.hasSelection
 
-                text: qsTr("Remove")
+                text: qsTranslate("unplayer", "Remove")
                 onClicked: {
-                    remorsePopup.execute(qsTr("Removing %n playlist(s)", String(), playlistsProxyModel.selectedIndexesCount),
+                    remorsePopup.execute(qsTranslate("unplayer", "Removing %n playlist(s)", String(), playlistsProxyModel.selectedIndexesCount),
                                          function() {
                                              playlistsModel.removePlaylists(playlistsProxyModel.selectedSourceIndexes)
                                              selectionPanel.showPanel = false
@@ -70,20 +70,20 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Playlists")
+            title: qsTranslate("unplayer", "Playlists")
         }
         delegate: MediaContainerSelectionDelegate {
             title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
-            description: qsTr("%n track(s)", String(), model.tracksCount)
+            description: qsTranslate("unplayer", "%n track(s)", String(), model.tracksCount)
             menu: ContextMenu {
                 MenuItem {
-                    text: qsTr("Add to queue")
+                    text: qsTranslate("unplayer", "Add to queue")
                     onClicked: player.queue.addTracks(Unplayer.PlaylistUtils.getPlaylistTracks(model.filePath))
                 }
 
                 MenuItem {
-                    text: qsTr("Remove")
-                    onClicked: remorseAction(qsTr("Removing"), function() {
+                    text: qsTranslate("unplayer", "Remove")
+                    onClicked: remorseAction(qsTranslate("unplayer", "Removing"), function() {
                         Unplayer.PlaylistUtils.removePlaylist(model.filePath)
                     })
                 }
@@ -119,19 +119,19 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("New playlist...")
+                text: qsTranslate("unplayer", "New playlist...")
                 onClicked: pageStack.push("NewPlaylistDialog.qml")
             }
 
             SelectionMenuItem {
-                text: qsTr("Select playlists")
+                text: qsTranslate("unplayer", "Select playlists")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No playlists")
+            text: qsTranslate("unplayer", "No playlists")
         }
 
         VerticalScrollDecorator { }

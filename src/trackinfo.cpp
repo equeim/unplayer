@@ -18,6 +18,7 @@
 
 #include "trackinfo.h"
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QMimeDatabase>
 
@@ -100,7 +101,7 @@ namespace unplayer
 
     QString TrackInfo::bitrate() const
     {
-        return tr("%1 kB/s").arg(mBitrate);
+        return qApp->translate("unplayer", "%1 kB/s").arg(mBitrate);
     }
 
     bool TrackInfo::hasAudioProperties() const

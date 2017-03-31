@@ -28,12 +28,12 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Reset Library")
+                text: qsTranslate("unplayer", "Reset Library")
                 onClicked: Unplayer.LibraryUtils.resetDatabase()
             }
 
             MenuItem {
-                text: qsTr("Update Library")
+                text: qsTranslate("unplayer", "Update Library")
                 onClicked: Unplayer.LibraryUtils.updateDatabase()
             }
         }
@@ -43,12 +43,12 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Library")
+                title: qsTranslate("unplayer", "Library")
             }
 
             MainPageListItem {
-                title: qsTr("Artists")
-                description: qsTr("%n artist(s)", String(), Unplayer.LibraryUtils.artistsCount)
+                title: qsTranslate("unplayer", "Artists")
+                description: qsTranslate("unplayer", "%n artist(s)", String(), Unplayer.LibraryUtils.artistsCount)
                 mediaArt: Unplayer.LibraryUtils.randomMediaArt
                 onClicked: pageStack.push(artistsPageComponent)
 
@@ -59,8 +59,8 @@ Page {
             }
 
             MainPageListItem {
-                title: qsTr("Albums")
-                description: qsTr("%n albums(s)", String(), Unplayer.LibraryUtils.albumsCount)
+                title: qsTranslate("unplayer", "Albums")
+                description: qsTranslate("unplayer", "%n albums(s)", String(), Unplayer.LibraryUtils.albumsCount)
                 mediaArt: Unplayer.LibraryUtils.randomMediaArt
                 onClicked: pageStack.push(allAlbumsPageComponent)
 
@@ -71,14 +71,14 @@ Page {
             }
 
             MainPageListItem {
-                title: qsTr("Tracks")
+                title: qsTranslate("unplayer", "Tracks")
                 description: {
                     var tracksCount = Unplayer.LibraryUtils.tracksCount
                     if (!tracksCount === 0) {
-                        return qsTr("%n tracks(s)", String(), 0)
+                        return qsTranslate("unplayer", "%n tracks(s)", String(), 0)
                     }
-                    return qsTr("%1, %2")
-                    .arg(qsTr("%n tracks(s)", String(), tracksCount))
+                    return qsTranslate("unplayer", "%1, %2")
+                    .arg(qsTranslate("unplayer", "%n tracks(s)", String(), tracksCount))
                     .arg(Unplayer.Utils.formatDuration(Unplayer.LibraryUtils.tracksDuration))
                 }
                 mediaArt: Unplayer.LibraryUtils.randomMediaArt
@@ -88,14 +88,14 @@ Page {
                 Component {
                     id: tracksPageComponent
                     TracksPage {
-                        pageTitle: qsTr("Tracks")
+                        pageTitle: qsTranslate("unplayer", "Tracks")
                         allArtists: true
                     }
                 }
             }
 
             MainPageListItem {
-                title: qsTr("Genres")
+                title: qsTranslate("unplayer", "Genres")
                 onClicked: pageStack.push("GenresPage.qml")
             }
         }
@@ -129,7 +129,7 @@ Page {
                 id: updatingPlaceholder
                 verticalOffset: (busyIndicator.height + Theme.paddingLarge) / 2
                 enabled: Unplayer.LibraryUtils.updating
-                text: qsTr("Updating library...")
+                text: qsTranslate("unplayer", "Updating library...")
             }
         }
     }

@@ -18,6 +18,7 @@
 
 #include "artistsmodel.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 
 namespace unplayer
@@ -52,7 +53,7 @@ namespace unplayer
         {
             const QString artist(mQuery->value(ArtistField).toString());
             if (artist.isEmpty()) {
-                return tr("Unknown artist");
+                return qApp->translate("unplayer", "Unknown artist");
             }
             return artist;
         }

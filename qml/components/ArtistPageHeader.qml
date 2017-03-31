@@ -81,14 +81,14 @@ Item {
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: qsTr("%n album(s)", String(), albumsCount)
+                text: qsTranslate("unplayer", "%n album(s)", String(), albumsCount)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
-                text: qsTr("%n track(s)", String(), tracksCount)
+                text: qsTranslate("unplayer", "%n track(s)", String(), tracksCount)
                 width: parent.width
                 truncationMode: TruncationMode.Fade
             }
