@@ -266,7 +266,6 @@ namespace unplayer
                     int duration;
                     QString mediaArt;
 
-                    bool inDb = false;
                     bool getTags = true;
 
                     if (db.isOpen()) {
@@ -276,7 +275,6 @@ namespace unplayer
                         query.addBindValue(filePath);
                         if (query.exec()) {
                             if (query.next()) {
-                                inDb = true;
                                 if (query.value(0).toLongLong() == fileInfo.lastModified().toMSecsSinceEpoch()) {
                                     getTags = false;
                                     title = query.value(1).toString();
