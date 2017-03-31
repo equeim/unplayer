@@ -18,18 +18,76 @@
 
 #include "utils.h"
 
-#include <QDateTime>
 #include <QFile>
 #include <QImageReader>
+#include <QItemSelection>
 #include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <qqml.h>
+
+#include "albumsmodel.h"
+#include "artistsmodel.h"
+#include "directorycontentmodel.h"
+#include "directorycontentproxymodel.h"
+#include "directorytracksmodel.h"
+#include "filterproxymodel.h"
+#include "genresmodel.h"
+#include "librarydirectoriesmodel.h"
+#include "libraryutils.h"
+#include "player.h"
+#include "playlistmodel.h"
+#include "playlistsmodel.h"
+#include "playlistutils.h"
+#include "queue.h"
+#include "queuemodel.h"
+#include "settings.h"
+#include "trackinfo.h"
+#include "tracksmodel.h"
 
 namespace unplayer
 {
     Utils::Utils()
     {
 
+    }
+
+    void Utils::registerTypes()
+    {
+        const char* url = "harbour.unplayer";
+        const int major = 0;
+        const int minor = 1;
+
+        qmlRegisterSingletonType<Settings>(url, major, minor, "Settings", [](QQmlEngine*, QJSEngine*) -> QObject* { return Settings::instance(); });
+        qmlRegisterSingletonType<LibraryUtils>(url, major, minor, "LibraryUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return LibraryUtils::instance(); });
+
+        qmlRegisterType<Player>(url, major, minor, "Player");
+
+        qmlRegisterUncreatableType<Queue>(url, major, minor, "Queue", QString());
+        qmlRegisterType<QueueModel>(url, major, minor, "QueueModel");
+
+        qmlRegisterType<ArtistsModel>(url, major, minor, "ArtistsModel");
+        qmlRegisterType<AlbumsModel>(url, major, minor, "AlbumsModel");
+        qmlRegisterType<TracksModel>(url, major, minor, "TracksModel");
+        qmlRegisterType<GenresModel>(url, major, minor, "GenresModel");
+
+        qmlRegisterSingletonType<PlaylistUtils>(url, major, minor, "PlaylistUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return PlaylistUtils::instance(); });
+        qmlRegisterType<PlaylistsModel>(url, major, minor, "PlaylistsModel");
+        qmlRegisterType<PlaylistModel>(url, major, minor, "PlaylistModel");
+
+        qmlRegisterType<DirectoryTracksModel>(url, major, minor, "DirectoryTracksModel");
+        qmlRegisterType<DirectoryTracksProxyModel>(url, major, minor, "DirectoryTracksProxyModel");
+
+        qmlRegisterType<DirectoryContentModel>(url, major, minor, "DirectoryContentModel");
+        qmlRegisterType<DirectoryContentProxyModel>(url, major, minor, "DirectoryContentProxyModel");
+
+        qmlRegisterType<FilterProxyModel>(url, major, minor, "FilterProxyModel");
+        qmlRegisterType<QItemSelectionModel>();
+        qmlRegisterType<QAbstractItemModel>();
+
+        qmlRegisterSingletonType<Utils>(url, major, minor, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils(); });
+        qmlRegisterType<TrackInfo>(url, major, minor, "TrackInfo");
+        qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
     }
 
     QString Utils::formatDuration(uint seconds)

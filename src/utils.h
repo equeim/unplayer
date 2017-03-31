@@ -36,6 +36,8 @@ namespace unplayer
     public:
         Utils();
 
+        static void registerTypes();
+
         Q_INVOKABLE static QString formatDuration(uint seconds);
         Q_INVOKABLE static QString formatByteSize(double size);
 
