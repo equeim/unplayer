@@ -37,58 +37,58 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Track information")
+                title: qsTranslate("unplayer", "Track information")
             }
 
             DetailItem {
-                label: qsTr("Title")
+                label: qsTranslate("unplayer", "Title")
                 value: trackInfo.title
             }
 
             DetailItem {
-                label: qsTr("Artist")
+                label: qsTranslate("unplayer", "Artist")
                 value: trackInfo.artist
             }
 
             DetailItem {
-                label: qsTr("Album")
+                label: qsTranslate("unplayer", "Album")
                 value: trackInfo.album
             }
 
             DetailItem {
-                label: qsTr("Track number")
+                label: qsTranslate("unplayer", "Track number")
                 value: trackInfo.trackNumber ? trackInfo.trackNumber : String()
             }
 
             DetailItem {
-                label: qsTr("Genre")
+                label: qsTranslate("unplayer", "Genre")
                 value: trackInfo.genre
             }
 
             DetailItem {
-                label: qsTr("File path")
+                label: qsTranslate("unplayer", "File path")
                 value: filePath
             }
 
             DetailItem {
-                label: qsTr("File size")
+                label: qsTranslate("unplayer", "File size")
                 value: Unplayer.Utils.formatByteSize(trackInfo.fileSize)
             }
 
             DetailItem {
-                label: qsTr("MIME type")
+                label: qsTranslate("unplayer", "MIME type")
                 value: trackInfo.mimeType
             }
 
             DetailItem {
-                label: qsTr("Duration")
+                label: qsTranslate("unplayer", "Duration")
                 value: trackInfo.hasAudioProperties ? Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong :
                                                                                                                              Format.DurationShort) :
                                                       String()
             }
 
             DetailItem {
-                label: qsTr("Bitrate")
+                label: qsTranslate("unplayer", "Bitrate")
                 value: trackInfo.hasAudioProperties ? trackInfo.bitrate : String()
             }
         }

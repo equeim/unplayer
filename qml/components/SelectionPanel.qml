@@ -103,7 +103,7 @@ DockedPanel {
                         right: parent.horizontalCenter
                         rightMargin: Theme.paddingSmall
                     }
-                    text: qsTr("All")
+                    text: qsTranslate("unplayer", "All")
                     onClicked: listView.model.selectAll()
                 }
 
@@ -113,7 +113,7 @@ DockedPanel {
                         leftMargin: Theme.paddingSmall
                         right: parent.right
                     }
-                    text: qsTr("None")
+                    text: qsTranslate("unplayer", "None")
                     onClicked: listView.model.selectionModel.clear()
                 }
             }

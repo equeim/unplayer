@@ -18,8 +18,7 @@
 
 #include "tracksmodel.h"
 
-#include "utils.h"
-
+#include <QCoreApplication>
 #include <QDebug>
 #include <QSqlDriver>
 #include <QSqlError>
@@ -95,7 +94,7 @@ namespace unplayer
         {
             const QString artist(mQuery->value(ArtistField).toString());
             if (artist.isEmpty()) {
-                return tr("Unknown artist");
+                return qApp->translate("unplayer", "Unknown artist");
             }
             return artist;
         }
@@ -103,7 +102,7 @@ namespace unplayer
         {
             const QString album(mQuery->value(AlbumField).toString());
             if (album.isEmpty()) {
-                return tr("Unknown album");
+                return qApp->translate("unplayer", "Unknown album");
             }
             return album;
         }

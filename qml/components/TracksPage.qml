@@ -34,12 +34,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -48,7 +48,7 @@ Page {
 
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -101,14 +101,14 @@ Page {
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select tracks")
+                text: qsTranslate("unplayer", "Select tracks")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No tracks")
+            text: qsTranslate("unplayer", "No tracks")
         }
 
         VerticalScrollDecorator { }

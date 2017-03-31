@@ -1,19 +1,29 @@
+APP_VERSION = "0.3.3"
+
+
 def options(context):
     context.load("compiler_cxx gnu_dirs qt5")
+
+    context.add_option("--taglib-includepath", action="store")
+    context.add_option("--taglib-libpath", action="store")
+
+    context.add_option("--qtmpris-includepath", action="store")
+    context.add_option("--qtmpris-libpath", action="store")
 
 
 def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
-    context.check_cfg(package="mpris-qt5", args="--libs --cflags")
-
     context.check_cfg(package="sailfishapp", args="--libs --cflags")
     context.env.LINKFLAGS_SAILFISHAPP = ["-pie", "-rdynamic"]
 
-    context.env.INCLUDES_TAGLIB = ["{}/taglib/install/include/taglib".format(context.path.get_bld())]
-    context.env.LIBPATH_TAGLIB = ["{}/taglib/install/lib".format(context.path.get_bld())]
+    context.env.INCLUDES_TAGLIB = [context.options.taglib_includepath]
+    context.env.LIBPATH_TAGLIB = [context.options.taglib_libpath]
     context.env.LIB_TAGLIB = ["tag"]
-    context.env.RPATH_TAGLIB = "{}/harbour-unplayer/lib".format(context.env.DATADIR)
+
+    context.env.INCLUDES_QTMPRIS = [context.options.qtmpris_includepath]
+    context.env.LIBPATH_QTMPRIS = [context.options.qtmpris_libpath]
+    context.env.LIB_QTMPRIS = ["mpris-qt5"]
 
 
 def build(context):
@@ -21,7 +31,6 @@ def build(context):
         target="harbour-unplayer",
         features="qt5",
         uselib=[
-            "MPRIS-QT5",
             "QT5CONCURRENT",
             "QT5CORE",
             "QT5DBUS",
@@ -30,6 +39,7 @@ def build(context):
             "QT5QML",
             "QT5QUICK",
             "QT5SQL",
+            "QTMPRIS",
             "SAILFISHAPP",
             "TAGLIB"
         ],
@@ -78,17 +88,10 @@ def build(context):
             "src/tracksmodel.h",
             "src/utils.h"
         ],
-        cxxflags="-std=c++11",
-        lang=[
-            "translations/harbour-unplayer-en",
-            "translations/harbour-unplayer-es",
-            "translations/harbour-unplayer-fr",
-            "translations/harbour-unplayer-it",
-            "translations/harbour-unplayer-nb",
-            "translations/harbour-unplayer-nl",
-            "translations/harbour-unplayer-ru",
-            "translations/harbour-unplayer-sv"
-        ]
+        cxxflags=["-std=c++11", "-Wall", "-Wextra", "-pedantic"],
+        defines=["UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
+        rpath="{}/harbour-unplayer/lib".format(context.env.DATADIR),
+        lang=context.path.ant_glob("translations/*.ts")
     )
 
     context.install_files("${DATADIR}/harbour-unplayer",
@@ -96,7 +99,7 @@ def build(context):
                           relative_trick=True)
 
     context.install_files("${DATADIR}/harbour-unplayer/translations",
-                          context.path.get_bld().ant_glob("translations/*.qm"))
+                          context.path.get_bld().ant_glob("translations/*.qm", quiet=True))
 
     context.install_files("${DATADIR}",
                           context.path.ant_glob("icons/**/*.png"),

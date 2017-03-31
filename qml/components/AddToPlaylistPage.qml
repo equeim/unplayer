@@ -41,11 +41,11 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Add to playlist")
+            title: qsTranslate("unplayer", "Add to playlist")
         }
         delegate: MediaContainerListItem {
             title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
-            description: qsTr("%n track(s)", String(), model.tracksCount)
+            description: qsTranslate("unplayer", "%n track(s)", String(), model.tracksCount)
             onClicked: {
                 Unplayer.PlaylistUtils.addTracksToPlaylist(model.filePath, tracks)
                 added = true
@@ -59,7 +59,7 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("New playlist...")
+                text: qsTranslate("unplayer", "New playlist...")
                 onClicked: pageStack.push(newPlaylistDialog, { acceptDestination: pageStack.previousPage() })
 
                 Component {
@@ -80,7 +80,7 @@ Page {
         }
 
         ListViewPlaceholder {
-            text: qsTr("No playlists")
+            text: qsTranslate("unplayer", "No playlists")
         }
 
         VerticalScrollDecorator { }

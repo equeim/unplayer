@@ -18,6 +18,7 @@
 
 #include "utils.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
 #include <QImageReader>
@@ -119,14 +120,14 @@ namespace unplayer
         const QLocale locale;
 
         if (hours > 0) {
-            return tr("%1 h %2 m").arg(locale.toString(hours)).arg(locale.toString(minutes));
+            return qApp->translate("unplayer", "%1 h %2 m").arg(locale.toString(hours)).arg(locale.toString(minutes));
         }
 
         if (minutes > 0) {
-            return tr("%1 m %2 s").arg(locale.toString(minutes)).arg(locale.toString(seconds));
+            return qApp->translate("unplayer", "%1 m %2 s").arg(locale.toString(minutes)).arg(locale.toString(seconds));
         }
 
-        return tr("%1 s").arg(locale.toString(seconds));
+        return qApp->translate("unplayer", "%1 s").arg(locale.toString(seconds));
     }
 
     QString Utils::formatByteSize(double size)
@@ -146,23 +147,23 @@ namespace unplayer
 
         switch (unit) {
         case 0:
-            return tr("%1 B").arg(string);
+            return qApp->translate("unplayer", "%1 B").arg(string);
         case 1:
-            return tr("%1 KiB").arg(string);
+            return qApp->translate("unplayer", "%1 KiB").arg(string);
         case 2:
-            return tr("%1 MiB").arg(string);
+            return qApp->translate("unplayer", "%1 MiB").arg(string);
         case 3:
-            return tr("%1 GiB").arg(string);
+            return qApp->translate("unplayer", "%1 GiB").arg(string);
         case 4:
-            return tr("%1 TiB").arg(string);
+            return qApp->translate("unplayer", "%1 TiB").arg(string);
         case 5:
-            return tr("%1 PiB").arg(string);
+            return qApp->translate("unplayer", "%1 PiB").arg(string);
         case 6:
-            return tr("%1 EiB").arg(string);
+            return qApp->translate("unplayer", "%1 EiB").arg(string);
         case 7:
-            return tr("%1 ZiB").arg(string);
+            return qApp->translate("unplayer", "%1 ZiB").arg(string);
         case 8:
-            return tr("%1 YiB").arg(string);
+            return qApp->translate("unplayer", "%1 YiB").arg(string);
         }
 
         return QString();

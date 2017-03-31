@@ -64,7 +64,7 @@ ListItem {
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {
                 if (showArtistAndAlbum) {
-                    return qsTr("%1 - %2").arg(model.artist).arg(model.album)
+                    return qsTranslate("unplayer", "%1 - %2").arg(model.artist).arg(model.album)
                 }
 
                 if (showAlbum) {

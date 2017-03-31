@@ -106,12 +106,12 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentFilePath })
             }
 
             MenuItem {
-                text: qsTr("Track information")
+                text: qsTranslate("unplayer", "Track information")
                 onClicked: pageStack.push("TrackInfoPage.qml", { filePath: player.queue.currentFilePath })
             }
         }

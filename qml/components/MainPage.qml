@@ -28,12 +28,12 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("About")
+                text: qsTranslate("unplayer", "About")
                 onClicked: pageStack.push("AboutPage.qml")
             }
 
             MenuItem {
-                text: qsTr("Settings")
+                text: qsTranslate("unplayer", "Settings")
                 onClicked: pageStack.push("SettingsPage.qml")
             }
         }
@@ -48,23 +48,23 @@ Page {
 
             MainPageListItem {
                 enabled: Unplayer.LibraryUtils.databaseInitialized
-                title: qsTr("Library")
+                title: qsTranslate("unplayer", "Library")
                 description: {
                     if (!Unplayer.LibraryUtils.databaseInitialized) {
-                        return qsTr("Error initializing database")
+                        return qsTranslate("unplayer", "Error initializing database")
                     }
                     if (!Unplayer.Settings.hasLibraryDirectories) {
-                        return qsTr("No selected directories")
+                        return qsTranslate("unplayer", "No selected directories")
                     }
                     if (Unplayer.LibraryUtils.updating) {
-                        return qsTr("Updating...")
+                        return qsTranslate("unplayer", "Updating...")
                     }
                     var tracksCount = Unplayer.LibraryUtils.tracksCount
                     if (tracksCount === 0) {
-                        return qsTr("%n tracks(s)", String(), 0)
+                        return qsTranslate("unplayer", "%n tracks(s)", String(), 0)
                     }
-                    return qsTr("%1, %2")
-                    .arg(qsTr("%n tracks(s)", String(), tracksCount))
+                    return qsTranslate("unplayer", "%1, %2")
+                    .arg(qsTranslate("unplayer", "%n tracks(s)", String(), tracksCount))
                     .arg(Unplayer.Utils.formatDuration(Unplayer.LibraryUtils.tracksDuration))
                 }
                 mediaArt: Unplayer.LibraryUtils.randomMediaArt
@@ -73,12 +73,12 @@ Page {
                     ContextMenu {
                         MenuItem {
                             enabled: Unplayer.Settings.hasLibraryDirectories
-                            text: qsTr("Update Library")
+                            text: qsTranslate("unplayer", "Update Library")
                             onClicked: Unplayer.LibraryUtils.updateDatabase()
                         }
 
                         MenuItem {
-                            text: qsTr("Reset Library")
+                            text: qsTranslate("unplayer", "Reset Library")
                             onClicked: Unplayer.LibraryUtils.resetDatabase()
                         }
                     }
@@ -100,8 +100,8 @@ Page {
             }
 
             MainPageListItem {
-                title: qsTr("Playlists")
-                description: qsTr("%n playlist(s)", String(), Unplayer.PlaylistUtils.playlistsCount)
+                title: qsTranslate("unplayer", "Playlists")
+                description: qsTranslate("unplayer", "%n playlist(s)", String(), Unplayer.PlaylistUtils.playlistsCount)
                 fallbackIcon: "image://theme/icon-m-document"
                 onClicked: pageStack.push(playlistsPageComponent)
 
@@ -112,7 +112,7 @@ Page {
             }
 
             MainPageListItem {
-                title: qsTr("Directories")
+                title: qsTranslate("unplayer", "Directories")
                 fallbackIcon: "image://theme/icon-m-folder"
                 onClicked: pageStack.push(directoriesPageComponent)
 

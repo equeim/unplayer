@@ -25,17 +25,17 @@ BaseTrackDelegate {
     menu: Component {
         ContextMenu {
             MenuItem {
-                text: qsTr("Track information")
+                text: qsTranslate("unplayer", "Track information")
                 onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
             }
 
             MenuItem {
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: player.queue.addTrack(model.filePath)
             }
 
             MenuItem {
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
             }
         }

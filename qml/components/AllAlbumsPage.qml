@@ -28,12 +28,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: albumsProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     player.queue.addTracks(albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -42,7 +42,7 @@ Page {
 
             MenuItem {
                 enabled: albumsProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -72,7 +72,7 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Albums")
+            title: qsTranslate("unplayer", "Albums")
         }
         delegate: AlbumDelegate {
             description: model.displayedArtist
@@ -95,14 +95,14 @@ Page {
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select albums")
+                text: qsTranslate("unplayer", "Select albums")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No albums")
+            text: qsTranslate("unplayer", "No albums")
         }
 
         VerticalScrollDecorator { }

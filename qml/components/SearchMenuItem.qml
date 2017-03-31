@@ -20,7 +20,7 @@ import Sailfish.Silica 1.0
 
 MenuItem {
     enabled: listView.count || searchPanel.searchText
-    text: qsTr("Search")
+    text: qsTranslate("unplayer", "Search")
 
     onClicked: {
         if (searchPanel.open)

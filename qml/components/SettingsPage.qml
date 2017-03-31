@@ -31,15 +31,15 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Settings")
+                title: qsTranslate("unplayer", "Settings")
             }
 
             SectionHeader {
-                text: qsTr("Library")
+                text: qsTranslate("unplayer", "Library")
             }
 
             TextSwitch {
-                text: qsTr("Open library on startup")
+                text: qsTranslate("unplayer", "Open library on startup")
                 onCheckedChanged: Unplayer.Settings.openLibraryOnStartup = checked
                 Component.onCompleted: checked = Unplayer.Settings.openLibraryOnStartup
             }
@@ -57,7 +57,7 @@ Page {
                         rightMargin: Theme.horizontalPageMargin
                         verticalCenter: parent.verticalCenter
                     }
-                    text: qsTr("Library Directories")
+                    text: qsTranslate("unplayer", "Library Directories")
                     color: libraryDirectoriesItem.highlighted ? Theme.highlightColor : Theme.primaryColor
                     truncationMode: TruncationMode.Fade
                 }

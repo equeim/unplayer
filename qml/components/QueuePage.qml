@@ -54,12 +54,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), queueProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n track(s) selected", String(), queueProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: queueProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -78,7 +78,7 @@ Page {
 
             MenuItem {
                 enabled: queueProxyModel.hasSelection
-                text: qsTr("Remove")
+                text: qsTranslate("unplayer", "Remove")
                 onClicked: {
                     player.queue.removeTracks(queueProxyModel.selectedSourceIndexes)
                     selectionPanel.showPanel = false
@@ -101,7 +101,7 @@ Page {
         highlightFollowsCurrentItem: !player.queue.shuffle
 
         header: PageHeader {
-            title: qsTr("Queue")
+            title: qsTranslate("unplayer", "Queue")
         }
         delegate: BaseTrackDelegate {
             id: trackDelegate
@@ -112,12 +112,12 @@ Page {
             current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
-                    text: qsTr("Track information")
+                    text: qsTranslate("unplayer", "Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }
 
                 MenuItem {
-                    text: qsTr("Add to playlist")
+                    text: qsTranslate("unplayer", "Add to playlist")
                     onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                 }
 
@@ -127,7 +127,7 @@ Page {
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 
-                    text: qsTr("Remove")
+                    text: qsTranslate("unplayer", "Remove")
                     onClicked: trackDelegate.menuOpenChanged.connect(remove)
                 }
             }
@@ -161,14 +161,14 @@ Page {
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select tracks")
+                text: qsTranslate("unplayer", "Select tracks")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No tracks")
+            text: qsTranslate("unplayer", "No tracks")
         }
 
         VerticalScrollDecorator { }

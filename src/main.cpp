@@ -39,6 +39,7 @@ using namespace unplayer;
 int main(int argc, char* argv[])
 {
     std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
+    app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
     QCommandLineParser parser;
     parser.addPositionalArgument(QLatin1String("files"), QLatin1String("Music files"));

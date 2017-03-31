@@ -35,7 +35,7 @@ Page {
             }
 
             PageHeader {
-                title: qsTr("About")
+                title: qsTranslate("unplayer", "About")
             }
 
             Image {
@@ -69,7 +69,7 @@ Page {
 
             Label {
                 horizontalAlignment: Text.AlignHCenter
-                text: qsTr("Simple music player for Sailfish OS")
+                text: qsTranslate("unplayer", "Simple music player for Sailfish OS")
                 width: parent.width
                 wrapMode: Text.WordWrap
             }
@@ -97,35 +97,35 @@ Page {
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
-                    text: qsTr("Source Code")
+                    text: qsTranslate("unplayer", "Source Code")
                     onClicked: Qt.openUrlExternally("https://github.com/equeim/unplayer")
                 }
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
-                    text: qsTr("Translations")
+                    text: qsTranslate("unplayer", "Translations")
                     onClicked: Qt.openUrlExternally("https://hosted.weblate.org/projects/unplayer/translations")
                 }
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
-                    text: qsTr("Authors")
+                    text: qsTranslate("unplayer", "Authors")
                     onClicked: pageStack.push("AuthorsPage.qml")
                 }
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
-                    text: qsTr("Translators")
+                    text: qsTranslate("unplayer", "Translators")
                     onClicked: pageStack.push("TranslatorsPage.qml")
                 }
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
-                    text: qsTr("License")
+                    text: qsTranslate("unplayer", "License")
                     onClicked: pageStack.push("LicensePage.qml")
                 }
             }

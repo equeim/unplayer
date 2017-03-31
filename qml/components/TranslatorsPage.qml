@@ -31,7 +31,7 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Translators")
+                title: qsTranslate("unplayer", "Translators")
             }
 
             Label {

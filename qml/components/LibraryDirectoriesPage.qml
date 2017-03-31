@@ -32,12 +32,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n directories selected", String(), proxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n directories selected", String(), proxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: proxyModel.hasSelection
-                text: qsTr("Remove")
+                text: qsTranslate("unplayer", "Remove")
                 onClicked: {
                     libraryDirectoriesModel.removeDirectories(proxyModel.selectedSourceIndexes)
                     changed = true
@@ -57,7 +57,7 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTr("Library Directories")
+            title: qsTranslate("unplayer", "Library Directories")
         }
         delegate: ListItem {
             id: delegate
@@ -69,7 +69,7 @@ Page {
                         changed = true
                         delegate.menuOpenChanged.disconnect(remove)
                     }
-                    text: qsTr("Remove")
+                    text: qsTranslate("unplayer", "Remove")
                     onClicked: delegate.menuOpenChanged.connect(remove)
                 }
             }
@@ -116,18 +116,18 @@ Page {
 
         PullDownMenu {
             SelectionMenuItem {
-                text: qsTr("Select")
+                text: qsTranslate("unplayer", "Select")
             }
 
             MenuItem {
-                text: qsTr("Add directory...")
+                text: qsTranslate("unplayer", "Add directory...")
                 onClicked: pageStack.push(filePickerDialogComponent)
 
                 Component {
                     id: filePickerDialogComponent
 
                     FilePickerDialog {
-                        title: qsTr("Select directory")
+                        title: qsTranslate("unplayer", "Select directory")
                         showFiles: false
                         onAccepted: {
                             libraryDirectoriesModel.addDirectory(filePath)
@@ -140,7 +140,7 @@ Page {
 
         ViewPlaceholder {
             enabled: !listView.count
-            text: qsTr("No directories")
+            text: qsTranslate("unplayer", "No directories")
         }
 
         VerticalScrollDecorator { }

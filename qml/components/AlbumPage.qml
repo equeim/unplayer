@@ -38,12 +38,12 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
+        selectionText: qsTranslate("unplayer", "%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
-                text: qsTr("Add to queue")
+                text: qsTranslate("unplayer", "Add to queue")
 
                 onClicked: {
                     player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
@@ -53,7 +53,7 @@ Page {
 
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
-                text: qsTr("Add to playlist")
+                text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -101,13 +101,13 @@ Page {
         PullDownMenu {
             MenuItem {
                 visible: !unknownArtist && !unknownAlbum
-                text: qsTr("Set cover image")
+                text: qsTranslate("unplayer", "Set cover image")
                 onClicked: pageStack.push(filePickerDialogComponent)
 
                 Component {
                     id: filePickerDialogComponent
                     FilePickerDialog {
-                        title: qsTr("Select Image")
+                        title: qsTranslate("unplayer", "Select Image")
                         fileIcon: "image://theme/icon-m-image"
                         nameFilters: Unplayer.Utils.imageNameFilters
                         onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
@@ -116,14 +116,14 @@ Page {
             }
 
             SelectionMenuItem {
-                text: qsTr("Select tracks")
+                text: qsTranslate("unplayer", "Select tracks")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            text: qsTr("No tracks")
+            text: qsTranslate("unplayer", "No tracks")
         }
 
         VerticalScrollDecorator { }
