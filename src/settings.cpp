@@ -30,6 +30,7 @@ namespace unplayer
     {
         const QString libraryDirectoriesKey(QLatin1String("libraryDirectories"));
         const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
+        const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
 
         Settings* instancePointer = nullptr;
     }
@@ -66,6 +67,16 @@ namespace unplayer
     void Settings::setOpenLibraryOnStartup(bool open)
     {
         mSettings->setValue(openLibraryOnStartupKey, open);
+    }
+
+    QString Settings::defaultDirectory() const
+    {
+        return mSettings->value(defaultDirectoryKey, QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    }
+
+    void Settings::setDefaultDirectory(const QString& directory)
+    {
+        mSettings->setValue(defaultDirectoryKey, directory);
     }
 
     Settings::Settings(QObject* parent)

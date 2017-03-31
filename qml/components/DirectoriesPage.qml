@@ -64,9 +64,6 @@ Page {
     SilicaListView {
         id: listView
 
-        property bool goingUp
-        property int previousPosition
-
         anchors {
             fill: parent
             bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
@@ -111,22 +108,31 @@ Page {
             menu: Component {
                 ContextMenu {
                     MenuItem {
+                        visible: model.isDirectory
+                        text: qsTr("Set as default directory")
+                        onClicked: Unplayer.Settings.defaultDirectory = model.filePath
+                    }
+
+                    MenuItem {
+                        visible: !model.isDirectory
                         text: qsTr("Track information")
                         onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                     }
 
                     MenuItem {
+                        visible: !model.isDirectory
                         text: qsTr("Add to queue")
                         onClicked: player.queue.addTrack(model.filePath)
                     }
 
                     MenuItem {
+                        visible: !model.isDirectory
                         text: qsTr("Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                     }
                 }
             }
-            showMenuOnPressAndHold: !model.isDirectory && !selectionPanel.showPanel
+            showMenuOnPressAndHold: !selectionPanel.showPanel
 
             onClicked: {
                 if (selectionPanel.showPanel) {
@@ -136,8 +142,6 @@ Page {
                 } else {
                     if (model.isDirectory) {
                         searchPanel.open = false
-                        listView.goingUp = false
-                        listView.previousPosition = listView.contentY + listView.headerItem.height
                         directoryTracksModel.directory = model.filePath
                     } else {
                         if (current) {
@@ -203,11 +207,7 @@ Page {
 
                 onLoadedChanged: {
                     if (loaded) {
-                        if (listView.goingUp) {
-                            listView.contentY = listView.previousPosition - listView.headerItem.height
-                        } else {
-                            listView.positionViewAtBeginning()
-                        }
+                        listView.positionViewAtBeginning()
                     }
                 }
             }
@@ -216,24 +216,36 @@ Page {
         PullDownMenu {
             id: pullDownMenu
 
-            MenuItem {
-                function goToScard() {
-                    directoryTracksModel.directory = Unplayer.Utils.sdcardPath()
-                    pullDownMenu.activeChanged.disconnect(goToScard)
-                }
+            property string directory
 
-                text: qsTr("SD card")
-                onClicked: pullDownMenu.activeChanged.connect(goToScard)
+            function goBegin(directory) {
+                pullDownMenu.directory = directory
+                pullDownMenu.activeChanged.connect(goEnd)
+            }
+
+            function goEnd() {
+                directoryTracksModel.directory = directory
+                pullDownMenu.activeChanged.disconnect(goEnd)
             }
 
             MenuItem {
-                function goToHome() {
-                    directoryTracksModel.directory = Unplayer.Utils.homeDirectory()
-                    pullDownMenu.activeChanged.disconnect(goToHome)
-                }
+                text: qsTr("Set as default directory")
+                onClicked: Unplayer.Settings.defaultDirectory = directoryTracksModel.directory
+            }
 
+            MenuItem {
+                text: qsTr("Default directory")
+                onClicked: pullDownMenu.goBegin(Unplayer.Settings.defaultDirectory)
+            }
+
+            MenuItem {
+                text: qsTr("SD card")
+                onClicked: pullDownMenu.goBegin(Unplayer.Utils.sdcardPath)
+            }
+
+            MenuItem {
                 text: qsTr("Home directory")
-                onClicked: pullDownMenu.activeChanged.connect(goToHome)
+                onClicked: pullDownMenu.goBegin(Unplayer.Utils.homeDirectory)
             }
 
             SelectionMenuItem {

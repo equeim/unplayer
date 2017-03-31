@@ -23,10 +23,11 @@
 #include <QFutureWatcher>
 #include <QItemSelectionModel>
 #include <QMimeDatabase>
+#include <QStandardPaths>
 #include <QtConcurrentRun>
 
-#include "utils.h"
 #include "libraryutils.h"
+#include "settings.h"
 
 namespace unplayer
 {
@@ -41,7 +42,7 @@ namespace unplayer
 
     void DirectoryTracksModel::componentComplete()
     {
-        setDirectory(Utils::homeDirectory());
+        setDirectory(Settings::instance()->defaultDirectory());
     }
 
     QVariant DirectoryTracksModel::data(const QModelIndex& index, int role) const
@@ -69,7 +70,7 @@ namespace unplayer
         return mFiles.size();
     }
 
-    const QVector<DirectoryTrackFile>&DirectoryTracksModel::files() const
+    const QVector<DirectoryTrackFile>& DirectoryTracksModel::files() const
     {
         return mFiles;
     }
@@ -81,7 +82,13 @@ namespace unplayer
 
     void DirectoryTracksModel::setDirectory(QString newDirectory)
     {
-        newDirectory = QDir(newDirectory).absolutePath();
+        QDir dir(newDirectory);
+        if (!dir.isReadable()) {
+            qWarning() << "directory is not readable:" << newDirectory;
+            newDirectory = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+        } else {
+            newDirectory = dir.absolutePath();
+        }
         if (newDirectory != mDirectory) {
             mDirectory = newDirectory;
             emit directoryChanged();

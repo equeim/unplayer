@@ -30,6 +30,7 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(bool hasLibraryDirectories READ hasLibraryDirectories NOTIFY libraryDirectoriesChanged)
         Q_PROPERTY(bool openLibraryOnStartup READ openLibraryOnStartup WRITE setOpenLibraryOnStartup)
+        Q_PROPERTY(QString defaultDirectory READ defaultDirectory WRITE setDefaultDirectory)
     public:
         static Settings* instance();
 
@@ -40,6 +41,9 @@ namespace unplayer
 
         bool openLibraryOnStartup() const;
         void setOpenLibraryOnStartup(bool open);
+
+        QString defaultDirectory() const;
+        void setDefaultDirectory(const QString& directory);
     private:
         explicit Settings(QObject* parent);
 
