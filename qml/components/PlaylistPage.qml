@@ -21,13 +21,11 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
     property string pageTitle
-    property alias playlistUrl: playlistModel.url
+    property alias filePath: playlistModel.filePath
 
     RemorsePopup {
         id: remorsePopup
@@ -46,8 +44,7 @@ Page {
                 enabled: playlistProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getSelectedTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -57,12 +54,10 @@ Page {
 
                 text: qsTr("Remove from playlist")
                 onClicked: {
-                    var selectedIndexes = playlistProxyModel.selectedSourceIndexes()
+                    var selectedIndexes = playlistProxyModel.selectedSourceIndexes
                     remorsePopup.execute(qsTr("Removing %n track(s)", String(), playlistProxyModel.selectedIndexesCount),
                                          function() {
-                                             playlistModel.removeAtIndexes(selectedIndexes)
-                                             Unplayer.PlaylistUtils.removeTracksFromPlaylist(playlistUrl, selectedIndexes)
-                                             selectionPanel.showPanel = false
+                                             playlistModel.removeTracks(playlistProxyModel.selectedSourceIndexes)
                                          })
                 }
             }
@@ -74,7 +69,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -83,27 +78,23 @@ Page {
             title: pageTitle
         }
         delegate: BaseTrackDelegate {
-            showArtistAndAlbum: true
-            current: model.url === player.queue.currentUrl
+            showArtistAndAlbum: model.inLibrary
+            showDuration: model.hasDuration
+            current: model.filePath === player.queue.currentFilePath
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Track information")
-                    onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
+                    onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }
 
                 AddToQueueMenuItem {
-                    onClicked: {
-                        player.queue.add([playlistModel.get(playlistProxyModel.sourceIndex(model.index))])
-                        player.queue.setCurrentToFirstIfNeeded()
-                    }
+                    onClicked: player.queue.addTrack(model.filePath)
                 }
 
                 MenuItem {
                     text: qsTr("Remove from playlist")
                     onClicked: remorseAction(qsTr("Removing"), function() {
-                        var trackIndex = playlistProxyModel.sourceIndex(model.index)
-                        playlistModel.removeAtIndexes([trackIndex])
-                        Unplayer.PlaylistUtils.removeTracksFromPlaylist(playlistUrl, [trackIndex])
+                        playlistModel.removeTrack(playlistProxyModel.sourceIndex(model.index))
                     })
                 }
             }
@@ -113,22 +104,22 @@ Page {
                     playlistProxyModel.select(model.index)
                 } else {
                     if (current) {
-                        if (!player.playing)
+                        if (!player.playing) {
                             player.play()
-                        return
+                        }
+                    } else {
+                        player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
+                                               true,
+                                               model.index)
                     }
-
-                    player.queue.clear()
-                    player.queue.add(playlistProxyModel.getTracks())
-
-                    player.queue.currentIndex = model.index
-                    player.queue.currentTrackChanged()
                 }
             }
             ListView.onRemove: animateRemoval()
         }
-        model: TracksProxyModel {
+        model: Unplayer.FilterProxyModel {
             id: playlistProxyModel
+
+            filterRole: Unplayer.PlaylistModel.TitleRole
             sourceModel: Unplayer.PlaylistModel {
                 id: playlistModel
             }
@@ -150,13 +141,8 @@ Page {
             SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: !playlistModel.loaded
-            text: qsTr("Loading")
-        }
-
         ListViewPlaceholder {
-            enabled: playlistModel.loaded && listView.count === 0
+            enabled: listView.count === 0
             text: qsTr("No tracks")
         }
 

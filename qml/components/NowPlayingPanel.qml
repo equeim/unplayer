@@ -34,7 +34,7 @@ DockedPanel {
     Binding {
         target: panel
         property: "open"
-        value: player.queue.currentIndex !== -1 &&
+        value: (player.queue.currentIndex !== -1 || player.queue.addingTracks) &&
                !Qt.inputMethod.visible &&
                pageStack.currentPage !== nowPlayingPage &&
                (typeof pageStack.currentPage.bottomPanelOpen === "boolean" ? !pageStack.currentPage.bottomPanelOpen :
@@ -45,10 +45,21 @@ DockedPanel {
         id: nowPlayingPage
     }
 
+    BusyIndicator {
+        anchors.centerIn: parent
+        running: player.queue.addingTracks
+        size: BusyIndicatorSize.Medium
+    }
+
     BackgroundItem {
         id: pressItem
 
         anchors.fill: parent
+
+        enabled: !player.queue.addingTracks
+        opacity: enabled ? 1 : 0
+        Behavior on opacity { FadeAnimation { } }
+
         onClicked: {
             if (pageStack.currentPage.objectName === "queuePage") {
                 pageStack.currentPage.goToCurrent()
@@ -57,8 +68,9 @@ DockedPanel {
                     if (page === nowPlayingPage)
                         return true
                     return false
-                }))
+                })) {
                     pageStack.push(nowPlayingPage)
+                }
             }
         }
 
@@ -101,20 +113,7 @@ DockedPanel {
                 id: mediaArt
                 highlighted: pressItem.highlighted
                 size: parent.height
-
-                Binding {
-                    target: mediaArt
-                    property: "source"
-                    value: player.queue.currentMediaArt
-                }
-
-                Connections {
-                    target: rootWindow
-                    onMediaArtReloadNeeded: {
-                        mediaArt.source = String()
-                        mediaArt.source = player.queue.currentMediaArt
-                    }
-                }
+                source: player.queue.currentMediaArt
             }
 
             Column {

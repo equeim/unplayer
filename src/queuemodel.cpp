@@ -20,18 +20,6 @@
 
 namespace unplayer
 {
-    namespace
-    {
-        enum QueueModelRole
-        {
-            UrlRole = Qt::UserRole,
-            TitleRole,
-            ArtistRole,
-            AlbumRole,
-            DurationRole
-        };
-    }
-
     QVariant QueueModel::data(const QModelIndex& index, int role) const
     {
         if (!index.isValid()) {
@@ -41,13 +29,17 @@ namespace unplayer
         const QueueTrack* track = mTracks.at(index.row()).get();
 
         switch (role) {
-        case UrlRole:
-            return track->url;
+        case FilePathRole:
+            return track->filePath;
         case TitleRole:
             return track->title;
         case ArtistRole:
             return track->artist;
+        case DisplayedArtistRole:
+            return track->artist;
         case AlbumRole:
+            return track->album;
+        case DisplayedAlbumRole:
             return track->album;
         case DurationRole:
             return track->duration;
@@ -86,7 +78,7 @@ namespace unplayer
             endRemoveRows();
         });
 
-        QObject::connect(mQueue, &Queue::tracksRemoved, this, [=](const QList<int>& indexes) {
+        QObject::connect(mQueue, &Queue::tracksRemoved, this, [=](const QVector<int>& indexes) {
             for (int index : indexes) {
                 beginRemoveRows(QModelIndex(), index, index);
                 mTracks.removeAt(index);
@@ -101,17 +93,24 @@ namespace unplayer
         });
     }
 
-    QVariantMap QueueModel::get(int index) const
+    QStringList QueueModel::getTracks(const QVector<int>& indexes)
     {
-        return {{QStringLiteral("url"), mTracks.at(index)->url}};
+        QStringList tracks;
+        tracks.reserve(indexes.size());
+        for (int index : indexes) {
+            tracks.append(mTracks.at(index)->filePath);
+        }
+        return tracks;
     }
 
     QHash<int, QByteArray> QueueModel::roleNames() const
     {
-        return {{UrlRole, QByteArrayLiteral("url")},
-                {TitleRole, QByteArrayLiteral("title")},
-                {ArtistRole, QByteArrayLiteral("artist")},
-                {AlbumRole, QByteArrayLiteral("album")},
-                {DurationRole, QByteArrayLiteral("duration")}};
+        return {{FilePathRole, "filePath"},
+                {TitleRole, "title"},
+                {ArtistRole, "artist"},
+                {DisplayedArtistRole, "displayedArtist"},
+                {AlbumRole, "album"},
+                {DisplayedAlbumRole, "displayedAlbum"},
+                {DurationRole, "duration"}};
     }
 }

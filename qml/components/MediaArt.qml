@@ -27,6 +27,7 @@ Item {
 
     width: size
     height: size
+    opacity: enabled ? 1.0 : 0.4
 
     Rectangle {
         anchors.fill: parent
@@ -55,7 +56,6 @@ Item {
 
         anchors.fill: parent
         asynchronous: true
-        cache: false
         fillMode: Image.PreserveAspectCrop
         sourceSize.height: size
         visible: status === Image.Ready

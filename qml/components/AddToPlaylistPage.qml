@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     id: page
 
@@ -46,18 +44,17 @@ Page {
             title: qsTr("Add to playlist")
         }
         delegate: MediaContainerListItem {
-            title: Theme.highlightText(model.title, searchPanel.searchText, Theme.highlightColor)
-            description: model.tracksCount === undefined ? String() :
-                                                           qsTr("%n track(s)", String(), model.tracksCount)
+            title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
+            description: qsTr("%n track(s)", String(), model.tracksCount)
             onClicked: {
-                Unplayer.PlaylistUtils.addTracksToPlaylist(model.url, tracks)
+                Unplayer.PlaylistUtils.addTracksToPlaylist(model.filePath, tracks)
                 added = true
                 pageStack.pop()
             }
         }
         model: Unplayer.FilterProxyModel {
-            filterRoleName: "title"
-            sourceModel: PlaylistsModel { }
+            filterRole: Unplayer.PlaylistsModel.NameRole
+            sourceModel: Unplayer.PlaylistsModel { }
         }
 
         PullDownMenu {
@@ -71,7 +68,10 @@ Page {
                     NewPlaylistDialog {
                         acceptDestinationAction: PageStackAction.Pop
                         tracks: page.tracks
-                        onAccepted: added = true
+                        onAccepted: {
+                            console.log(acceptDestination)
+                            added = true
+                        }
                     }
                 }
             }

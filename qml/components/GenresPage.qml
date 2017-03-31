@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -39,24 +37,24 @@ Page {
                 enabled: genresProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getTracksForSelectedGenres())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(genresModel.getTracksForGenres(genresProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
             AddToPlaylistMenuItem {
                 enabled: genresProxyModel.selectedIndexesCount !== 0
-                onClicked: pageStack.push(addToPlaylistPage)
+                onClicked: pageStack.push(addToPlaylistPageComponent)
 
                 Component {
-                    id: addToPlaylistPage
+                    id: addToPlaylistPageComponent
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getTracksForSelectedGenres()
+                        tracks: genresModel.getTracksForGenres(genresProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -69,7 +67,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -78,45 +76,37 @@ Page {
             title: qsTr("Genres")
         }
         delegate: MediaContainerSelectionDelegate {
-            function getTracks() {
-                return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(true,
-                                                                         true,
-                                                                         String(),
-                                                                         String(),
-                                                                         model.genre))
-            }
-
             title: Theme.highlightText(model.genre, searchPanel.searchText, Theme.highlightColor)
             description: qsTr("%n track(s), %1", String(), model.tracksCount).arg(Unplayer.Utils.formatDuration(model.duration))
             menu: Component {
                 ContextMenu {
                     AddToQueueMenuItem {
-                        onClicked: {
-                            player.queue.add(getTracks())
-                            player.queue.setCurrentToFirstIfNeeded()
-                        }
+                        onClicked: player.queue.addTracks(genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)))
                     }
 
                     AddToPlaylistMenuItem {
-                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)) })
                     }
                 }
             }
 
             onClicked: {
-                if (selectionPanel.showPanel)
+                if (selectionPanel.showPanel) {
                     genresProxyModel.select(model.index)
-                else
+                } else {
                     pageStack.push("TracksPage.qml", {
                                        pageTitle: model.genre,
                                        allArtists: true,
                                        genre: model.genre
                                    })
+                }
             }
         }
         model: Unplayer.FilterProxyModel {
             id: genresProxyModel
-            sourceModel: GenresModel { }
+            sourceModel: Unplayer.GenresModel {
+                id: genresModel
+            }
         }
 
         PullDownMenu {

@@ -19,8 +19,9 @@
 #ifndef UNPLAYER_FILTERPROXYMODEL_H
 #define UNPLAYER_FILTERPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QCollator>
 #include <QQmlParserStatus>
+#include <QSortFilterProxyModel>
 
 class QItemSelectionModel;
 
@@ -30,30 +31,37 @@ namespace unplayer
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
-        Q_PROPERTY(QByteArray filterRoleName READ filterRoleName WRITE setFilterRoleName)
+        Q_PROPERTY(bool sortEnabled READ isSortEnabled WRITE setSortEnabled)
+        Q_PROPERTY(QVector<int> sourceIndexes READ sourceIndexes)
         Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
         Q_PROPERTY(int selectedIndexesCount READ selectedIndexesCount NOTIFY selectionChanged)
+        Q_PROPERTY(QVector<int> selectedSourceIndexes READ selectedSourceIndexes)
     public:
         FilterProxyModel();
         void classBegin() override;
         void componentComplete() override;
 
-        QByteArray filterRoleName() const;
-        void setFilterRoleName(const QByteArray& filterRoleName);
+        QVector<int> sourceIndexes() const;
 
-        Q_INVOKABLE int count() const;
+        bool isSortEnabled() const;
+        void setSortEnabled(bool sortEnabled);
+
         Q_INVOKABLE int proxyIndex(int sourceIndex) const;
         Q_INVOKABLE int sourceIndex(int proxyIndex) const;
 
         QItemSelectionModel* selectionModel() const;
         int selectedIndexesCount() const;
-        Q_INVOKABLE QList<int> selectedSourceIndexes() const;
+        QVector<int> selectedSourceIndexes() const;
         Q_INVOKABLE bool isSelected(int row) const;
         Q_INVOKABLE void select(int row);
         Q_INVOKABLE void selectAll();
 
+    protected:
+        bool lessThan(const QModelIndex& left, const QModelIndex& right) const override;
+
     private:
-        QByteArray mFilterRoleName;
+        QCollator mCollator;
+        bool mSortEnabled;
         QItemSelectionModel* mSelectionModel;
     signals:
         void selectionChanged();

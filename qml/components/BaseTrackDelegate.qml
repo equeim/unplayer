@@ -26,6 +26,7 @@ ListItem {
 
     property bool showArtistAndAlbum: false
     property bool showAlbum: false
+    property bool showDuration: false
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
 
@@ -58,21 +59,24 @@ ListItem {
         }
 
         Label {
+            visible: showArtistAndAlbum || showAlbum
             color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {
-                if (showArtistAndAlbum)
-                    return model.artist + " - " + model.album
+                if (showArtistAndAlbum) {
+                    return qsTr("%1 - %2").arg(model.artist).arg(model.album)
+                }
 
-                if (showAlbum)
+                if (showAlbum) {
                     return model.album
+                }
 
                 return String()
             }
+
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             width: parent.width
-            visible: showArtistAndAlbum || showAlbum
         }
     }
 
@@ -88,7 +92,12 @@ ListItem {
 
         color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
         font.pixelSize: Theme.fontSizeExtraSmall
-        text: Format.formatDuration(model.duration, model.duration >= 3600? Format.DurationLong :
-                                                                            Format.DurationShort)
+        text: {
+            if (showDuration) {
+                return Format.formatDuration(model.duration, model.duration >= 3600? Format.DurationLong :
+                                                                                     Format.DurationShort)
+            }
+            return String()
+        }
     }
 }

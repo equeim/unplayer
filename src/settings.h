@@ -16,20 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtSparql 1.0
+#ifndef UNPLAYER_SETTINGS_H
+#define UNPLAYER_SETTINGS_H
 
-SparqlListModel {
-    connection: SparqlConnection {
-        driver: "QTRACKER_DIRECT"
-    }
-    query: "SELECT tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"" + qsTr("Unknown artist") + "\") AS ?artist\n" +
-           "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n" +
-           "       COUNT(DISTINCT(tracker:coalesce(nmm:musicAlbum(?track), 0))) AS ?albumsCount\n" +
-           "       COUNT(?track) AS ?tracksCount\n" +
-           "       SUM(nfo:duration(?track)) AS ?duration\n" +
-           "WHERE {\n" +
-           "    ?track a nmm:MusicPiece.\n" +
-           "}\n" +
-           "GROUP BY ?rawArtist\n" +
-           "ORDER BY !bound(?rawArtist) ?rawArtist"
+#include <QObject>
+
+class QSettings;
+
+namespace unplayer
+{
+    class Settings : public QObject
+    {
+        Q_OBJECT
+        Q_PROPERTY(bool hasLibraryDirectories READ hasLibraryDirectories NOTIFY libraryDirectoriesChanged)
+    public:
+        static Settings* instance();
+
+        bool hasLibraryDirectories() const;
+
+        QStringList libraryDirectories() const;
+        void setLibraryDirectories(const QStringList& directories);
+    private:
+        explicit Settings(QObject* parent);
+
+        QSettings* mSettings;
+    signals:
+        void libraryDirectoriesChanged();
+    };
 }
+
+#endif // UNPLAYER_SETTINGS_H

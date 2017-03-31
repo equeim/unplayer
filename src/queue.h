@@ -28,38 +28,47 @@ namespace unplayer
 {
     struct QueueTrack
     {
-        explicit QueueTrack(const QString& url,
+        explicit QueueTrack(const QString& filePath,
                             const QString& title,
-                            long long duration,
+                            int duration,
                             const QString& artist,
                             const QString& album,
-                            const QString& rawArtist,
-                            const QString& rawAlbum);
+                            const QString& mediaArt);
 
-        QString url;
+        QString filePath;
         QString title;
-        long long duration;
+        int duration;
         QString artist;
         QString album;
-        QString rawArtist;
-        QString rawAlbum;
+        QString mediaArt;
     };
 
     class Queue : public QObject
     {
         Q_OBJECT
 
+        Q_ENUMS(RepeatMode)
+
         Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
-        Q_PROPERTY(QString currentUrl READ currentUrl NOTIFY currentTrackChanged)
+        Q_PROPERTY(QString currentFilePath READ currentFilePath NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentTitle READ currentTitle NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentArtist READ currentArtist NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentAlbum READ currentAlbum NOTIFY currentTrackChanged)
-        Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY currentTrackChanged)
+        Q_PROPERTY(QUrl currentMediaArt READ currentMediaArt NOTIFY mediaArtChanged)
 
         Q_PROPERTY(bool shuffle READ isShuffle WRITE setShuffle NOTIFY shuffleChanged)
-        Q_PROPERTY(bool repeat READ isRepeat WRITE setRepeat NOTIFY repeatChanged)
+        Q_PROPERTY(RepeatMode repeatMode READ repeatMode NOTIFY repeatModeChanged)
+
+        Q_PROPERTY(bool addingTracks READ isAddingTracks NOTIFY addingTracksChanged)
     public:
+        enum RepeatMode
+        {
+            NoRepeat,
+            RepeatAll,
+            RepeatOne
+        };
+
         explicit Queue(QObject* parent);
 
         const QList<std::shared_ptr<QueueTrack>>& tracks() const;
@@ -67,24 +76,25 @@ namespace unplayer
         int currentIndex() const;
         void setCurrentIndex(int index);
 
-        QString currentUrl() const;
+        QString currentFilePath() const;
         QString currentTitle() const;
         QString currentArtist() const;
         QString currentAlbum() const;
-        QUrl currentMediaArt() const;
+        QString currentMediaArt() const;
 
         bool isShuffle() const;
         void setShuffle(bool shuffle);
 
-        bool isRepeat() const;
-        void setRepeat(bool repeat);
+        RepeatMode repeatMode() const;
+        Q_INVOKABLE void changeRepeatMode();
 
-        Q_INVOKABLE void addTracks(const QVariantList& tracks);
+        bool isAddingTracks() const;
+
+        Q_INVOKABLE void addTrack(const QString& track);
+        Q_INVOKABLE void addTracks(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void removeTrack(int index);
-        Q_INVOKABLE void removeTracks(QList<int> indexes);
+        Q_INVOKABLE void removeTracks(QVector<int> indexes);
         Q_INVOKABLE void clear();
-
-        Q_INVOKABLE bool hasUrl(const QString& url);
 
         Q_INVOKABLE void next();
         void nextOnEos();
@@ -102,18 +112,24 @@ namespace unplayer
 
         int mCurrentIndex;
         bool mShuffle;
-        bool mRepeat;
+        RepeatMode mRepeatMode;
+
+        bool mAddingTracks;
     signals:
         void currentTrackChanged();
 
+        void mediaArtChanged();
+
         void currentIndexChanged();
         void shuffleChanged();
-        void repeatChanged();
+        void repeatModeChanged();
 
         void tracksAdded(int start);
         void trackRemoved(int index);
-        void tracksRemoved(const QList<int>& indexes);
+        void tracksRemoved(const QVector<int>& indexes);
         void cleared();
+
+        void addingTracksChanged();
     };
 }
 

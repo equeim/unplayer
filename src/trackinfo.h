@@ -1,0 +1,73 @@
+/*
+ * Unplayer
+ * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef UNPLAYER_TRACKINFO_H
+#define UNPLAYER_TRACKINFO_H
+
+#include <QObject>
+
+namespace unplayer
+{
+    class TrackInfo : public QObject
+    {
+        Q_OBJECT
+
+        Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
+
+        Q_PROPERTY(QString title READ title CONSTANT)
+        Q_PROPERTY(QString artist READ artist CONSTANT)
+        Q_PROPERTY(QString album READ album CONSTANT)
+        Q_PROPERTY(int trackNumber READ trackNumber CONSTANT)
+        Q_PROPERTY(QString genre READ genre CONSTANT)
+        Q_PROPERTY(int fileSize READ fileSize CONSTANT)
+        Q_PROPERTY(QString mimeType READ mimeType CONSTANT)
+        Q_PROPERTY(int duration READ duration CONSTANT)
+        Q_PROPERTY(QString bitrate READ bitrate CONSTANT)
+        Q_PROPERTY(bool hasAudioProperties READ hasAudioProperties CONSTANT)
+    public:
+        const QString& filePath() const;
+        void setFilePath(const QString& filePath);
+
+        const QString& title() const;
+        const QString& artist() const;
+        const QString& album() const;
+        int trackNumber() const;
+        const QString& genre() const;
+        int fileSize() const;
+        const QString& mimeType() const;
+        int duration() const;
+        QString bitrate() const;
+        bool hasAudioProperties() const;
+
+    private:
+        QString mFilePath;
+
+        QString mTitle;
+        QString mArtist;
+        QString mAlbum;
+        int mTrackNumber;
+        QString mGenre;
+        int mFileSize;
+        QString mMimeType;
+        int mDuration;
+        int mBitrate;
+        bool mHasAudioProperties = false;
+    };
+}
+
+#endif // UNPLAYER_TRACKINFO_H

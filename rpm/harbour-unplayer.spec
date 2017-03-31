@@ -6,7 +6,6 @@ Group: Applications/Music
 License: GPLv3
 URL: https://github.com/equeim/unplayer
 Source0: %{name}-%{version}.tar.xz
-Requires: libqt5sparql-tracker-direct
 Requires: sailfishsilica-qt5
 BuildRequires: pkgconfig(mpris-qt5)
 BuildRequires: pkgconfig(Qt5Concurrent)
@@ -16,13 +15,18 @@ BuildRequires: pkgconfig(Qt5Gui)
 BuildRequires: pkgconfig(Qt5Multimedia)
 BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
-BuildRequires: pkgconfig(Qt5Sparql)
+BuildRequires: pkgconfig(Qt5Sql)
 BuildRequires: pkgconfig(sailfishapp)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: boost-devel
 BuildRequires: cmake
 BuildRequires: desktop-file-utils
 BuildRequires: python
+
+# >> macros
+%define __provides_exclude_from ^%{_datadir}/.*$
+%define __requires_exclude ^libtag.*$
+# << macros
 
 %description
 %{summary}
@@ -38,21 +42,21 @@ cd build-%{_arch}/taglib/build
 cmake "%{_builddir}/3rdparty/taglib" \
     -DCMAKE_INSTALL_PREFIX=../install \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_FLAGS="-fPIC" \
-    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_SHARED_LIBS=ON \
     -DWITH_MP4=ON
-%{__make} %{?_smp_mflags}
+VERBOSE=1 %{__make} %{?_smp_mflags}
 %{__make} install
 cd -
 
-./waf configure --prefix=/usr \
-    --out=build-%{_arch} \
-    --taglib-includes="%{_builddir}/build-%{_arch}/taglib/install/include/taglib" \
-    --taglib-libpath="%{_builddir}/build-%{_arch}/taglib/install/lib"
-./waf build -v
+python waf configure --prefix=/usr --out=build-%{_arch}
+python waf build -v
 
 %install
 rm -rf %{buildroot}
+
+mkdir -p %{buildroot}%{_datadir}/%{name}/lib
+cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_datadir}/%{name}/lib
+
 python waf install --destdir=%{buildroot}
 desktop-file-install --delete-original \
     --dir %{buildroot}%{_datadir}/applications \

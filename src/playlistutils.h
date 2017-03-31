@@ -20,42 +20,50 @@
 #define UNPLAYER_PLAYLISTUTILS_H
 
 #include <QObject>
-#include <QVariant>
-
-class QSparqlConnection;
+#include <QStringList>
 
 namespace unplayer
 {
+    struct PlaylistTrack
+    {
+        QString filePath;
+        QString title;
+        int duration;
+        bool hasDuration;
+        QString artist;
+        QString album;
+        bool inLibrary;
+    };
+
     class PlaylistUtils : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
-        PlaylistUtils();
+        static PlaylistUtils* instance();
 
-        Q_INVOKABLE void newPlaylist(const QString& name, const QVariant& tracksVariant);
-        Q_INVOKABLE void addTracksToPlaylist(const QString& playlistUrl, const QVariant& newTracksVariant);
-        Q_INVOKABLE void removeTracksFromPlaylist(const QString& playlistUrl, const QList<int>& trackIndexes);
-        Q_INVOKABLE static void removePlaylist(const QString& url);
-        Q_INVOKABLE QVariantList syncParsePlaylist(const QString& playlistUrl);
-        static QStringList parsePlaylist(const QString& playlistUrl);
-        static QString trackSparqlQuery(const QString& trackUrl);
+        static QString playlistsDirectoryPath();
+        static int playlistsCount();
 
+        void savePlaylist(const QString& filePath, const QList<PlaylistTrack>& tracks);
+        Q_INVOKABLE void newPlaylist(const QString& name, const QStringList& trackPaths);
+        Q_INVOKABLE void addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths);
+        Q_INVOKABLE void removePlaylist(const QString& filePath);
+        void removePlaylists(const QStringList& playlists);
+
+        static QList<PlaylistTrack> parsePlaylist(const QString& filePath);
+        static int getPlaylistTracksCount(const QString& filePath);
+        Q_INVOKABLE static QStringList getPlaylistTracks(const QString& filePath);
     private:
-        QStringList unboxTracks(const QVariant& tracksVariant);
-        void setPlaylistTracksCount(QString playlistUrl, int tracksCount);
-        static void savePlaylist(const QString& playlistUrl, const QStringList& tracks);
-    private slots:
-        void onTrackerGraphUpdated(const QString& className);
+        explicit PlaylistUtils(QObject* parent);
 
-    private:
-        QSparqlConnection* mSparqlConnection;
-
-        bool mNewPlaylist;
-        QString mNewPlaylistUrl;
-        int mNewPlaylistTracksCount;
+        static QList<PlaylistTrack> tracksFromPaths(const QStringList& trackPaths);
+        static PlaylistTrack trackFromFilePath(const QString& filePath);
     signals:
         void playlistsChanged();
     };
 }
+
+Q_DECLARE_TYPEINFO(unplayer::PlaylistTrack, Q_MOVABLE_TYPE);
 
 #endif // UNPLAYER_PLAYLISTUTILS_H

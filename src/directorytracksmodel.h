@@ -20,51 +20,51 @@
 #define UNPLAYER_DIRECTORYTRACKSMODEL_H
 
 #include <QAbstractListModel>
-#include <QMimeDatabase>
-#include <QQmlParserStatus>
 
-#include "filterproxymodel.h"
+#include "directorycontentproxymodel.h"
 
 namespace unplayer
 {
     struct DirectoryTrackFile
     {
-        QString url;
+        QString filePath;
         QString fileName;
         bool isDirectory;
-
-        QString title;
-        QString artist;
-        bool unknownArtist;
-        QString album;
-        bool unknownAlbum;
-        int duration;
     };
 
     class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
+        Q_ENUMS(Role)
         Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
         Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
-        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY loadedChanged)
     public:
+        enum Role
+        {
+            FilePathRole = Qt::UserRole,
+            FileNameRole,
+            IsDirectoryRole
+        };
+
         DirectoryTracksModel();
         void classBegin() override;
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex& parent) const override;
+
+        const QVector<DirectoryTrackFile>& files() const;
 
         QString directory() const;
         void setDirectory(QString newDirectory);
 
         QString parentDirectory() const;
         bool isLoaded() const;
-        int tracksCount() const;
 
-        Q_INVOKABLE QVariantMap get(int fileIndex) const;
+        Q_INVOKABLE QString getTrack(int index) const;
+        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes) const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -74,30 +74,38 @@ namespace unplayer
         void onQueryFinished();
 
     private:
-        QList<DirectoryTrackFile> mFiles;
+        QVector<DirectoryTrackFile> mFiles;
 
         QString mDirectory;
         bool mLoaded;
-        int mTracksCount;
     signals:
         void directoryChanged();
         void loadedChanged();
     };
 
-    class DirectoryTracksProxyModel : public FilterProxyModel
+    class DirectoryTracksProxyModel : public DirectoryContentProxyModel
     {
         Q_OBJECT
-        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY tracksCountChanged)
+        Q_PROPERTY(int directoriesCount READ directoriesCount NOTIFY countChanged)
+        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY countChanged)
     public:
+        DirectoryTracksProxyModel();
         void componentComplete() override;
 
+        int directoriesCount() const;
         int tracksCount() const;
-        Q_INVOKABLE QVariantList getTracks() const;
+
         Q_INVOKABLE QVariantList getSelectedTracks() const;
         Q_INVOKABLE void selectAll();
+
+    private:
+        int mDirectoriesCount;
+        int mTracksCount;
     signals:
-        void tracksCountChanged();
+        void countChanged();
     };
 }
+
+Q_DECLARE_TYPEINFO(unplayer::DirectoryTrackFile, Q_MOVABLE_TYPE);
 
 #endif // UNPLAYER_DIRECTORYTRACKSMODEL_H

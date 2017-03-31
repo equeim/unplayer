@@ -31,6 +31,8 @@ ListItem {
 
     MediaArt {
         id: mediaArt
+
+        enabled: listItem.enabled
         highlighted: listItem.highlighted
         size: contentHeight
         x: Theme.horizontalPageMargin
@@ -47,11 +49,13 @@ ListItem {
 
         Label {
             id: titleLabel
+
+            width: parent.width
+            opacity: listItem.enabled ? 1.0 : 0.4
             color: highlighted ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeLarge
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
-            width: parent.width
         }
 
         Label {

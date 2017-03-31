@@ -24,61 +24,51 @@ import harbour.unplayer 0.1 as Unplayer
 MediaContainerSelectionDelegate {
     id: albumDelegate
 
-    property bool unknownAlbum: model.rawAlbum === undefined
-    property bool unknownArtist: model.rawArtist === undefined
-
-    function getTracks() {
-        return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
-                                                                        false,
-                                                                        model.rawArtist,
-                                                                        model.rawAlbum))
-    }
-
-    function reloadMediaArt() {
-        mediaArt = String()
-        mediaArt = Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
-        if (typeof artistDelegate !== "undefined")
-            artistDelegate.reloadMediaArt()
-        rootWindow.mediaArtReloadNeeded()
-    }
-
-    title: Theme.highlightText(model.album, searchPanel.searchText, Theme.highlightColor)
-    mediaArt: Unplayer.Utils.mediaArt(model.rawArtist, model.rawAlbum)
+    title: Theme.highlightText(model.displayedAlbum, searchPanel.searchText, Theme.highlightColor)
+    mediaArt: Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
     menu: Component {
         ContextMenu {
             AddToQueueMenuItem {
-                onClicked: {
-                    player.queue.add(getTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
-                }
+                onClicked: player.queue.addTracks(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
             }
 
             AddToPlaylistMenuItem {
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)) })
             }
 
             MenuItem {
-                visible: !unknownArtist && !unknownAlbum
+                visible: !model.unknownArtist && !model.unknownAlbum
                 text: qsTr("Set cover image")
-                onClicked: pageStack.push(setCoverPage)
+                onClicked: pageStack.push(filePickerDialogComponent)
             }
         }
     }
 
     onClicked: {
-        if (selectionPanel.showPanel)
+        if (selectionPanel.showPanel) {
             listView.model.select(model.index)
-        else
-            pageStack.push(albumPage)
+        } else {
+            pageStack.push("AlbumPage.qml", {artist: model.artist,
+                                             displayedArtist: model.displayedArtist,
+                                             album: model.album,
+                                             displayedAlbum: model.displayedAlbum,
+                                             tracksCount: model.tracksCount,
+                                             duration: model.duration})
+        }
+    }
+
+    Connections {
+        target: Unplayer.LibraryUtils
+        onMediaArtChanged: mediaArt = Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
     }
 
     Component {
-        id: setCoverPage
-        SetCoverPage { }
-    }
-
-    Component {
-        id: albumPage
-        AlbumPage { }
+        id: filePickerDialogComponent
+        FilePickerDialog {
+            title: qsTr("Select Image")
+            fileIcon: "image://theme/icon-m-image"
+            nameFilters: Unplayer.Utils.imageNameFilters
+            onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
+        }
     }
 }

@@ -16,15 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import harbour.unplayer 0.1 as Unplayer
+#include "databasemodel.h"
 
-Unplayer.FilterProxyModel {
-    function getTracks() {
-        var tracks = []
-        for (var i = 0, tracksCount = count(); i < tracksCount; i++)
-            tracks.push(sourceModel.get(sourceIndex(i)))
-        return tracks
+#include <QDebug>
+#include <QSqlError>
+
+namespace unplayer
+{
+    DatabaseModel::DatabaseModel()
+        : mQuery(new QSqlQuery()),
+          mRowCount(0)
+    {
+
     }
 
-    filterRoleName: "title"
+    int DatabaseModel::rowCount(const QModelIndex&) const
+    {
+        return mRowCount;
+    }
+
+    void DatabaseModel::execQuery()
+    {
+        if (mQuery->exec()) {
+            mQuery->last();
+            mRowCount = mQuery->at() + 1;
+        } else {
+            qWarning() << mQuery->lastError();
+        }
+    }
 }

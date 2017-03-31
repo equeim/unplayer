@@ -22,33 +22,16 @@
 #include <QDir>
 #include <QFutureWatcher>
 #include <QItemSelectionModel>
-#include <QUrl>
+#include <QMimeDatabase>
 #include <QtConcurrentRun>
 
-#include <fileref.h>
-#include <tag.h>
-
 #include "utils.h"
+#include "libraryutils.h"
 
 namespace unplayer
 {
-    namespace
-    {
-        enum DirectoryTracksModelRole
-        {
-            UrlRole = Qt::UserRole,
-            FileNameRole,
-            IsDirectoryRole,
-            TitleRole,
-            ArtistRole,
-            AlbumRole,
-            DurationRole
-        };
-    }
-
     DirectoryTracksModel::DirectoryTracksModel()
-        : mLoaded(false),
-          mTracksCount(0)
+        : mLoaded(false)
     {
     }
 
@@ -70,8 +53,8 @@ namespace unplayer
         const DirectoryTrackFile& file = mFiles.at(index.row());
 
         switch (role) {
-        case UrlRole:
-            return file.url;
+        case FilePathRole:
+            return file.filePath;
         case FileNameRole:
             return file.fileName;
         case IsDirectoryRole:
@@ -84,6 +67,11 @@ namespace unplayer
     int DirectoryTracksModel::rowCount(const QModelIndex&) const
     {
         return mFiles.size();
+    }
+
+    const QVector<DirectoryTrackFile>&DirectoryTracksModel::files() const
+    {
+        return mFiles;
     }
 
     QString DirectoryTracksModel::directory() const
@@ -111,166 +99,128 @@ namespace unplayer
         return mLoaded;
     }
 
-    int DirectoryTracksModel::tracksCount() const
+    QString DirectoryTracksModel::getTrack(int index) const
     {
-        return mTracksCount;
+        return mFiles.at(index).filePath;
     }
 
-    QVariantMap DirectoryTracksModel::get(int fileIndex) const
+    QStringList DirectoryTracksModel::getTracks(const QVector<int>& indexes) const
     {
-        const DirectoryTrackFile& track = mFiles.at(fileIndex);
-
-        QVariantMap map{{QStringLiteral("title"), track.title},
-                        {QStringLiteral("url"), track.url},
-                        {QStringLiteral("artist"), track.artist},
-                        {QStringLiteral("album"), track.album},
-                        {QStringLiteral("duration"), track.duration}};
-
-        if (!track.unknownArtist) {
-            map.insert(QStringLiteral("rawArtist"), track.artist);
+        QStringList list;
+        for (int index : indexes) {
+            if (!mFiles.at(index).isDirectory) {
+                list.append(getTrack(index));
+            }
         }
-
-        if (!track.unknownAlbum) {
-            map.insert(QStringLiteral("rawAlbum"), track.album);
-        }
-
-        return map;
+        return list;
     }
 
     QHash<int, QByteArray> DirectoryTracksModel::roleNames() const
     {
-        return {{UrlRole, QByteArrayLiteral("url")},
-                {FileNameRole, QByteArrayLiteral("fileName")},
-                {IsDirectoryRole, QByteArrayLiteral("isDirectory")}};
+        return {{FilePathRole, "filePath"},
+                {FileNameRole, "fileName"},
+                {IsDirectoryRole, "isDirectory"}};
     }
 
     void DirectoryTracksModel::loadDirectory()
     {
         mLoaded = false;
-        mTracksCount = 0;
         emit loadedChanged();
 
-        beginResetModel();
+        beginRemoveRows(QModelIndex(), 0, mFiles.size() - 1);
         mFiles.clear();
+        endRemoveRows();
 
-        const QString directory = mDirectory;
-        const auto future = QtConcurrent::run([directory]() {
-            QList<DirectoryTrackFile> files;
-            int tracksCount = 0;
-
-            const QDir dir(directory);
-
-            for (const QFileInfo& info : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-                files.append(DirectoryTrackFile{QUrl::fromLocalFile(info.filePath()).toString(),
-                                                 info.fileName(),
-                                                 true});
-            }
-
+        const QString directory(mDirectory);
+        auto future = QtConcurrent::run([directory]() {
+            QVector<DirectoryTrackFile> files;
             const QMimeDatabase mimeDb;
-            for (const QFileInfo& info : dir.entryInfoList(QDir::Files)) {
-                if (mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name().startsWith(QLatin1String("audio/"))) {
-                    DirectoryTrackFile file{QUrl::fromLocalFile(info.filePath()).toString(),
-                                            info.fileName(),
-                                            false};
-
-                    TagLib::FileRef tagFile(info.filePath().toUtf8().constData());
-
-                    if (tagFile.tag()) {
-                        const TagLib::Tag* tag = tagFile.tag();
-                        file.title = tag->title().toCString();
-                        file.artist = tag->artist().toCString();
-                        file.album = tag->album().toCString();
-                    }
-
-                    if (file.title.isEmpty()) {
-                        file.title = file.fileName;
-                    }
-
-                    file.unknownArtist = (file.artist.isEmpty());
-                    if (file.unknownArtist) {
-                        file.artist = tr("Unknown artist");
-                    }
-
-                    file.unknownAlbum = (file.album.isEmpty());
-                    if (file.unknownAlbum) {
-                        file.album = tr("Unknown album");
-                    }
-
-                    if (tagFile.audioProperties()) {
-                        file.duration = tagFile.audioProperties()->length();
-                    }
-
-                    files.append(file);
-
-                    tracksCount++;
+            for (const QFileInfo& info : QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable)) {
+                if (info.isFile() &&
+                        !LibraryUtils::supportedMimeTypes.contains(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name())) {
+                    continue;
                 }
+                files.append({info.filePath(),
+                              info.fileName(),
+                              info.isDir()});
             }
-
-            return std::pair<QList<DirectoryTrackFile>, int>(files, tracksCount);
+            return files;
         });
 
-        using FutureWatcher = QFutureWatcher<std::pair<QList<DirectoryTrackFile>, int>>;
+        using FutureWatcher = QFutureWatcher<QVector<DirectoryTrackFile>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const auto result = watcher->result();
-            mFiles = result.first;
-            endResetModel();
-            mTracksCount = result.second;
+            const auto files = watcher->result();
+            beginInsertRows(QModelIndex(), 0, files.size() - 1);
+            mFiles = files;
+            endInsertRows();
             mLoaded = true;
             emit loadedChanged();
         });
         watcher->setFuture(future);
     }
 
+    DirectoryTracksProxyModel::DirectoryTracksProxyModel()
+    {
+        setFilterRole(DirectoryTracksModel::FileNameRole);
+        setSortEnabled(true);
+        setSortRole(DirectoryTracksModel::FileNameRole);
+        setIsDirectoryRole(DirectoryTracksModel::IsDirectoryRole);
+    }
+
     void DirectoryTracksProxyModel::componentComplete()
     {
-        QObject::connect(this, &QAbstractItemModel::modelReset, this, &DirectoryTracksProxyModel::tracksCountChanged);
-        QObject::connect(this, &QAbstractItemModel::rowsInserted, this, &DirectoryTracksProxyModel::tracksCountChanged);
-        QObject::connect(this, &QAbstractItemModel::rowsRemoved, this, &DirectoryTracksProxyModel::tracksCountChanged);
-        FilterProxyModel::componentComplete();
+        auto updateCount = [=]() {
+            mDirectoriesCount = 0;
+            mTracksCount = 0;
+            const QVector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
+            for (int i = 0, max = rowCount(); i < max; ++i) {
+                if (files.at(sourceIndex(i)).isDirectory) {
+                    mDirectoriesCount++;
+                } else {
+                    mTracksCount++;
+                }
+            }
+            emit countChanged();
+        };
+
+        QObject::connect(this, &QAbstractItemModel::modelReset, this, updateCount);
+        QObject::connect(this, &QAbstractItemModel::rowsInserted, this, updateCount);
+        QObject::connect(this, &QAbstractItemModel::rowsRemoved, this, updateCount);
+
+        updateCount();
+
+        DirectoryContentProxyModel::componentComplete();
+    }
+
+    int DirectoryTracksProxyModel::directoriesCount() const
+    {
+        return mDirectoriesCount;
     }
 
     int DirectoryTracksProxyModel::tracksCount() const
     {
-        int count = 0;
-        for (int i = 0, max = rowCount(); i < max; i++) {
-            if (!index(i, 0).data(IsDirectoryRole).toBool()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    QVariantList DirectoryTracksProxyModel::getTracks() const
-    {
-        QVariantList tracks;
-        DirectoryTracksModel* model = static_cast<DirectoryTracksModel*>(sourceModel());
-        for (int i = 0, max = rowCount(); i < max; i++) {
-            if (!index(i, 0).data(IsDirectoryRole).toBool()) {
-                tracks.append(model->get(sourceIndex(i)));
-            }
-        }
-        return tracks;
+        return mTracksCount;
     }
 
     QVariantList DirectoryTracksProxyModel::getSelectedTracks() const
     {
+        const QVector<int> indexes(selectedSourceIndexes());
         QVariantList tracks;
-        DirectoryTracksModel* model = static_cast<DirectoryTracksModel*>(sourceModel());
-
-        for (int index : selectedSourceIndexes()) {
-            tracks.append(model->get(index));
+        tracks.reserve(indexes.size());
+        auto model = static_cast<const DirectoryTracksModel*>(sourceModel());
+        for (int index : indexes) {
+            tracks.append(model->getTrack(index));
         }
-
         return tracks;
     }
 
     void DirectoryTracksProxyModel::selectAll()
     {
-        for (int i = 0, max = rowCount(); i < max; i++) {
-            QModelIndex modelIndex(index(i, 0));
-            if (!modelIndex.data(IsDirectoryRole).toBool()) {
-                selectionModel()->select(modelIndex, QItemSelectionModel::Select);
+        const QVector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
+        for (int i = 0, max = rowCount(); i < max; ++i) {
+            if (!files.at(sourceIndex(i)).isDirectory) {
+                selectionModel()->select(index(i, 0), QItemSelectionModel::Select);
             }
         }
     }

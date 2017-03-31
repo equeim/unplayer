@@ -16,19 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtSparql 1.0
+#ifndef UNPLAYER_DATABASEMODEL_H
+#define UNPLAYER_DATABASEMODEL_H
 
-SparqlListModel {
-    connection: SparqlConnection {
-        driver: "QTRACKER_DIRECT"
-    }
-    query: "SELECT tracker:coalesce(nie:title(?playlist), tracker:string-from-filename(nfo:fileName(?playlist))) AS ?title\n" +
-           "       nie:url(?playlist) AS ?url\n" +
-           "       nfo:entryCounter(?playlist) AS ?tracksCount\n" +
-           "WHERE {\n" +
-           "    ?playlist a nmm:Playlist;\n" +
-           "              nie:mimeType ?mimeType.\n" +
-           "    FILTER(?mimeType = \"audio/x-scpls\")" +
-           "}\n" +
-           "ORDER BY ?title"
+#include <memory>
+
+#include <QAbstractListModel>
+#include <QSqlQuery>
+
+namespace unplayer
+{
+    class DatabaseModel : public QAbstractListModel
+    {
+    public:
+        DatabaseModel();
+        int rowCount(const QModelIndex& parent) const;
+    protected:
+        void execQuery();
+
+        std::unique_ptr<QSqlQuery> mQuery;
+        int mRowCount;
+    };
 }
+
+#endif // UNPLAYER_DATABASEMODEL_H

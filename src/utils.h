@@ -28,37 +28,24 @@ namespace unplayer
     class Utils : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(QString homeDirectory READ homeDirectory)
+        Q_PROPERTY(QString sdcardPath READ sdcardPath)
+        Q_PROPERTY(QStringList imageNameFilters READ imageNameFilters CONSTANT)
     public:
         Utils();
-
-        Q_INVOKABLE static QUrl mediaArt(const QString& artist, const QString& album, const QString& trackUrl = QString());
-        Q_INVOKABLE static QUrl mediaArtForArtist(const QString& artist);
-        Q_INVOKABLE static QUrl randomMediaArt();
-        Q_INVOKABLE static void setMediaArt(const QString& filePath, const QString& artist, const QString& album);
 
         Q_INVOKABLE static QString formatDuration(uint seconds);
         Q_INVOKABLE static QString formatByteSize(double size);
 
         Q_INVOKABLE static QString escapeRegExp(const QString& string);
-        Q_INVOKABLE static QString escapeSparql(QString string);
 
-        Q_INVOKABLE static QString tracksSparqlQuery(bool allArtists,
-                                                     bool allAlbums,
-                                                     const QString& artist = QString(),
-                                                     const QString& album = QString(),
-                                                     const QString& genre = QString());
+        static QString homeDirectory();
+        static QString sdcardPath(bool emptyIfNotMounted = false);
 
-        Q_INVOKABLE static QString homeDirectory();
-        Q_INVOKABLE static QString sdcard();
-
-        Q_INVOKABLE static QStringList imageNameFilters();
+        static QStringList imageNameFilters();
 
         Q_INVOKABLE static QString urlToPath(const QUrl& url);
         static QString encodeUrl(const QUrl& url);
-
-    private:
-        static QString mediaArtPath(const QString& artist, const QString& album);
-        static QString mediaArtMd5(QString string);
     };
 }
 

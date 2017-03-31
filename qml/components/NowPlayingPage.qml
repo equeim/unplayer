@@ -19,6 +19,8 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 Page {
     property bool landscapeLayout: isLandscape && !largeScreen
 
@@ -105,12 +107,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentUrl })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentFilePath })
             }
 
             MenuItem {
                 text: qsTr("Track information")
-                onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: player.queue.currentUrl })
+                onClicked: pageStack.push("TrackInfoPage.qml", { filePath: player.queue.currentFilePath })
             }
         }
 
@@ -150,23 +152,9 @@ Page {
                 id: mediaArtImage
                 anchors.fill: parent
                 asynchronous: true
-                cache: false
                 fillMode: Image.PreserveAspectCrop
                 visible: status === Image.Ready
-
-                Binding {
-                    target: mediaArtImage
-                    property: "source"
-                    value: player.queue.currentMediaArt
-                }
-
-                Connections {
-                    target: rootWindow
-                    onMediaArtReloadNeeded: {
-                        mediaArtImage.source = String()
-                        mediaArtImage.source = player.queue.currentMediaArt
-                    }
-                }
+                source: player.queue.currentMediaArt
 
                 Rectangle {
                     anchors.fill: parent
@@ -277,10 +265,26 @@ Page {
                 }
 
                 Switch {
+                    id: repeatSwitch
+
                     anchors.verticalCenter: parent.verticalCenter
-                    checked: player.queue.repeat
                     icon.source: "image://theme/icon-m-repeat"
-                    onCheckedChanged: player.queue.repeat = checked
+                    checked: player.queue.repeatMode !== Unplayer.Queue.NoRepeat
+                    automaticCheck: false
+
+                    onClicked: player.queue.changeRepeatMode()
+
+                    Label {
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            bottom: parent.bottom
+                            bottomMargin: Theme.paddingMedium
+                        }
+                        visible: player.queue.repeatMode === Unplayer.Queue.RepeatOne
+                        color: repeatSwitch.pressed ? Theme.highlightColor : Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeExtraSmall
+                        text: "1"
+                    }
                 }
             }
         }

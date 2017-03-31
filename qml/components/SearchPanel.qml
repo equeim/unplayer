@@ -67,13 +67,7 @@ DockedPanel {
             }
             enabled: open
 
-            onTextChanged: {
-                var regExpText = Unplayer.Utils.escapeRegExp(text.trim())
-                if (regExpText.toLowerCase() === regExpText)
-                    listView.model.filterRegExp = new RegExp(regExpText, "i")
-                else
-                    listView.model.filterRegExp = new RegExp(regExpText)
-            }
+            onTextChanged: listView.model.filterRegExp = new RegExp(Unplayer.Utils.escapeRegExp(text.trim()), "i")
         }
 
         IconButton {

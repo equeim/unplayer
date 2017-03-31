@@ -16,38 +16,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UNPLAYER_FILEPICKERMODEL_H
-#define UNPLAYER_FILEPICKERMODEL_H
+#ifndef UNPLAYER_DIRECTORYCONTENTMODEL_H
+#define UNPLAYER_DIRECTORYCONTENTMODEL_H
 
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
 namespace unplayer
 {
-    struct FilePickerFile;
+    struct DirectoryContentFile
+    {
+        QString filePath;
+        QString name;
+        bool isDirectory;
+    };
 
-    class FilePickerModel : public QAbstractListModel, public QQmlParserStatus
+    class DirectoryContentModel : public QAbstractListModel, public QQmlParserStatus
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
+        Q_ENUMS(Role)
         Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
+        Q_PROPERTY(bool showFiles READ showFiles WRITE setShowFiles)
         Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters)
+        Q_PROPERTY(bool loading READ isLoading NOTIFY loadingChanged)
     public:
-        ~FilePickerModel() override;
+        enum Role
+        {
+            FilePathRole,
+            NameRole,
+            IsDirectoryRole
+        };
+
+        DirectoryContentModel();
         void classBegin() override;
         void componentComplete() override;
 
-        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
+        int rowCount(const QModelIndex&) const;
 
-        QString directory() const;
-        void setDirectory(QString newDirectory);
+        const QString& directory() const;
+        void setDirectory(const QString& directory);
 
-        QString parentDirectory() const;
+        const QString& parentDirectory() const;
 
-        QStringList nameFilters() const;
+        bool showFiles() const;
+        void setShowFiles(bool show);
+
+        const QStringList& nameFilters() const;
         void setNameFilters(const QStringList& filters);
+
+        bool isLoading() const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -55,13 +75,20 @@ namespace unplayer
     private:
         void loadDirectory();
 
-    private:
-        QList<FilePickerFile*> mFiles;
+        bool mComponentCompleted;
+        QVector<DirectoryContentFile> mFiles;
         QString mDirectory;
+        QString mParentDirectory;
+        bool mShowFiles;
         QStringList mNameFilters;
+
+        bool mLoading;
     signals:
         void directoryChanged();
+        void loadingChanged();
     };
 }
 
-#endif // UNPLAYER_FILEPICKERMODEL_H
+Q_DECLARE_TYPEINFO(unplayer::DirectoryContentFile, Q_MOVABLE_TYPE);
+
+#endif // UNPLAYER_DIRECTORYCONTENTMODEL_H

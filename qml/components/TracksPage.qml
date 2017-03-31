@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -45,8 +43,7 @@ Page {
                 enabled: tracksProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getSelectedTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -59,10 +56,11 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getSelectedTracks()
+                        tracks: tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -75,7 +73,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -87,10 +85,10 @@ Page {
             showArtistAndAlbum: allArtists
             showAlbum: !allArtists
         }
-        model: TracksProxyModel {
+        model: Unplayer.FilterProxyModel {
             id: tracksProxyModel
 
-            sourceModel: TracksModel {
+            sourceModel: Unplayer.TracksModel {
                 id: tracksModel
                 allAlbums: true
             }
