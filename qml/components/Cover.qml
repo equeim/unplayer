@@ -34,11 +34,11 @@ CoverBackground {
 
         Image {
             id: mediaArtImage
-
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
             source: player.queue.currentMediaArt
             sourceSize.height: parent.height
+            asynchronous: true
         }
 
         OpacityRampEffect {
