@@ -19,6 +19,8 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 Page {
     SilicaFlickable {
         anchors.fill: parent
@@ -34,6 +36,12 @@ Page {
 
             SectionHeader {
                 text: qsTr("Library")
+            }
+
+            TextSwitch {
+                text: qsTr("Open library on startup")
+                onCheckedChanged: Unplayer.Settings.openLibraryOnStartup = checked
+                Component.onCompleted: checked = Unplayer.Settings.openLibraryOnStartup
             }
 
             BackgroundItem {

@@ -36,6 +36,10 @@ namespace unplayer
     public:
         Utils();
 
+        static void registerTypes();
+
+        static QVariantList parseArguments(const QStringList& arguments);
+
         Q_INVOKABLE static QString formatDuration(uint seconds);
         Q_INVOKABLE static QString formatByteSize(double size);
 
@@ -45,9 +49,6 @@ namespace unplayer
         static QString sdcardPath(bool emptyIfNotMounted = false);
 
         static QStringList imageNameFilters();
-
-        Q_INVOKABLE static QString urlToPath(const QUrl& url);
-        static QString encodeUrl(const QUrl& url);
 
         static QString translators();
         static QString license();
