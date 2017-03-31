@@ -100,7 +100,7 @@ def build(context):
                           relative_trick=True)
 
     context.install_files("${DATADIR}/harbour-unplayer/translations",
-                          context.path.get_bld().ant_glob("translations/*.qm"))
+                          context.path.get_bld().ant_glob("translations/*.qm", quiet=True))
 
     context.install_files("${DATADIR}",
                           context.path.ant_glob("icons/**/*.png"),
