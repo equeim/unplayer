@@ -18,8 +18,13 @@
 
 #include <memory>
 
+#include <QCommandLineParser>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusMessage>
 #include <QGuiApplication>
 #include <QQuickView>
+#include <QQmlContext>
 #include <QQmlEngine>
 #include <qqml.h>
 
@@ -29,17 +34,35 @@
 #include "settings.h"
 #include "utils.h"
 
+using namespace unplayer;
+
 int main(int argc, char* argv[])
 {
-    using namespace unplayer;
-
     std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
+
+    QCommandLineParser parser;
+    parser.addPositionalArgument(QLatin1String("files"), QLatin1String("Music files"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(app->arguments());
+
+    QDBusConnection connection(QDBusConnection::sessionBus());
+    if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
+        QDBusMessage message(QDBusMessage::createMethodCall(QLatin1String("org.equeim.unplayer"),
+                                                            QLatin1String("/org/equeim/unplayer"),
+                                                            QLatin1String("org.equeim.unplayer"),
+                                                            QLatin1String("addTracksToQueue")));
+        message.setArguments(Utils::parseArguments(parser.positionalArguments()));
+        connection.call(message);
+        return 0;
+    }
 
     std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
+    view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::parseArguments(parser.positionalArguments()));
+
     Settings::instance();
     LibraryUtils::instance();
-
     Utils::registerTypes();
 
     view->setSource(SailfishApp::pathTo(QLatin1String("qml/main.qml")));

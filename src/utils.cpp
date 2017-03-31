@@ -19,11 +19,13 @@
 #include "utils.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QImageReader>
 #include <QItemSelection>
 #include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <QUrl>
 #include <qqml.h>
 
 #include "albumsmodel.h"
@@ -88,6 +90,23 @@ namespace unplayer
         qmlRegisterSingletonType<Utils>(url, major, minor, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils(); });
         qmlRegisterType<TrackInfo>(url, major, minor, "TrackInfo");
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
+    }
+
+    QVariantList Utils::parseArguments(const QStringList& arguments)
+    {
+        QVariantList parsed;
+        for (const QString& argument : arguments) {
+            const QFileInfo info(argument);
+            if (info.isFile()) {
+                parsed.append(info.absoluteFilePath());
+            } else {
+                const QUrl url(QUrl::fromUserInput(argument));
+                if (url.isLocalFile()) {
+                    parsed.append(url.path());
+                }
+            }
+        }
+        return parsed;
     }
 
     QString Utils::formatDuration(uint seconds)

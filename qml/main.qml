@@ -19,6 +19,7 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 import Sailfish.Media 1.0
+import org.nemomobile.dbus 2.0
 
 import harbour.unplayer 0.1 as Unplayer
 
@@ -42,6 +43,9 @@ ApplicationWindow
     Component.onCompleted: {
         if (Unplayer.Settings.openLibraryOnStartup && Unplayer.LibraryUtils.databaseInitialized && Unplayer.Settings.hasLibraryDirectories) {
             pageStack.push("components/LibraryPage.qml", null, PageStackAction.Immediate)
+        }
+        if (commandLineArguments.length) {
+            player.queue.addTracks(commandLineArguments, true)
         }
     }
 
@@ -93,5 +97,17 @@ ApplicationWindow
 
     NowPlayingPanel {
         id: nowPlayingPanel
+    }
+
+    DBusAdaptor {
+        service: "org.equeim.unplayer"
+        iface: "org.equeim.unplayer"
+        path: "/org/equeim/unplayer"
+
+        function addTracksToQueue(tracks) {
+            if (tracks.length) {
+                player.queue.addTracks(tracks, true)
+            }
+        }
     }
 }
