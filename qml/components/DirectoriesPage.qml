@@ -28,14 +28,14 @@ Page {
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
+        selectionText: qsTr("%n file(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
             MenuItem {
                 enabled: directoryTracksProxyModel.hasSelection
                 text: qsTr("Add to queue")
                 onClicked: {
-                    player.queue.addTracks(directoryTracksModel.getSelectedTracks())
+                    player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
                 }
             }
@@ -238,7 +238,7 @@ Page {
 
             SelectionMenuItem {
                 enabled: directoryTracksProxyModel.tracksCount || (searchPanel.searchText.length && directoryTracksModel.tracksCount)
-                text: qsTr("Select tracks")
+                text: qsTr("Select files")
             }
 
             SearchMenuItem { }
