@@ -124,7 +124,12 @@ Page {
                 top: parent.top
             }
 
-            onClicked: pageStack.push(queuePageComponent).positionViewAtCurrentIndex()
+            onClicked: {
+                var page = pageStack.push(queuePageComponent)
+                if (page) {
+                    page.positionViewAtCurrentIndex()
+                }
+            }
 
             Rectangle {
                 anchors.fill: parent
