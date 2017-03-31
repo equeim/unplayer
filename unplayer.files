@@ -49,9 +49,7 @@ src/utils.h
 qml/main.qml
 
 qml/components/AboutPage.qml
-qml/components/AddToPlaylistMenuItem.qml
 qml/components/AddToPlaylistPage.qml
-qml/components/AddToQueueMenuItem.qml
 qml/components/AlbumDelegate.qml
 qml/components/AlbumPageHeader.qml
 qml/components/AlbumPage.qml

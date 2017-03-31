@@ -95,12 +95,13 @@ CoverBackground {
 
         CoverAction {
             iconSource: player.playing ? "image://theme/icon-cover-pause" :
-                                  "image://theme/icon-cover-play"
+                                         "image://theme/icon-cover-play"
             onTriggered: {
-                if (player.playing)
+                if (player.playing) {
                     player.pause()
-                else
+                } else {
                     player.play()
+                }
             }
         }
 

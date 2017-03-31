@@ -24,7 +24,7 @@ import harbour.unplayer 0.1 as Unplayer
 Dialog {
     property var tracks
 
-    canAccept: playlistNameField.text.trim().length !== 0
+    canAccept: playlistNameField.text.trim()
 
     onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text.trim(), tracks)
 

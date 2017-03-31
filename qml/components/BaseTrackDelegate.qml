@@ -24,9 +24,9 @@ ListItem {
 
     property bool current
 
-    property bool showArtistAndAlbum: false
-    property bool showAlbum: false
-    property bool showDuration: false
+    property bool showArtistAndAlbum
+    property bool showAlbum
+    property bool showDuration
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
 

@@ -19,7 +19,7 @@
 import Sailfish.Silica 1.0
 
 ViewPlaceholder {
-    enabled: listView.count === 0
+    enabled: !listView.count
     verticalOffset: {
         var windowHeight = isLandscape ? rootWindow.width :
                                          rootWindow.height

@@ -124,7 +124,7 @@ Page {
                 top: parent.top
             }
 
-            onClicked: pageStack.push("QueuePage.qml").positionViewAtCurrentIndex()
+            onClicked: pageStack.push(queuePageComponent).positionViewAtCurrentIndex()
 
             Rectangle {
                 anchors.fill: parent
@@ -162,6 +162,11 @@ Page {
                     opacity: Theme.highlightBackgroundOpacity
                     visible: pressItem.highlighted
                 }
+            }
+
+            Component {
+                id: queuePageComponent
+                QueuePage { }
             }
         }
 
@@ -205,20 +210,20 @@ Page {
                 property int duration: player.duration
                 property int position: player.position
 
-                enabled: duration !== 0
                 handleVisible: false
                 label: Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
                                                                                     Format.DurationShort)
                 minimumValue: 0
-                maximumValue: duration === 0 ? 1 : duration
+                maximumValue: duration ? duration : 1
 
                 valueText: Format.formatDuration(value / 1000, value >= 3600000 ? Format.DurationLong :
                                                                                   Format.DurationShort)
                 width: parent.width
 
                 onPositionChanged: {
-                    if (!pressed)
+                    if (!pressed) {
                         value = position
+                    }
                 }
                 onReleased: player.position = value
             }
@@ -251,10 +256,11 @@ Page {
                                            "image://theme/icon-l-play"
 
                     onClicked: {
-                        if (playing)
+                        if (playing) {
                             player.pause()
-                        else
+                        } else {
                             player.play()
+                        }
                     }
                 }
 

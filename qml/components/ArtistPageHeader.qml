@@ -28,9 +28,7 @@ Item {
     height: listView.showSearchField ? pageHeader.height + listView.searchFieldHeight :
                                        childrenRect.height
 
-    Behavior on height {
-        PropertyAnimation { }
-    }
+    Behavior on height { PropertyAnimation { } }
 
     PageHeader {
         id: pageHeader
@@ -68,7 +66,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             x: Theme.horizontalPageMargin
 
-            //source: artistDelegate.mediaArt
+            source: artistPage.mediaArt
             size: Theme.itemSizeExtraLarge
         }
 

@@ -25,7 +25,7 @@ Page {
     id: page
 
     property var tracks
-    property bool added: false
+    property bool added
 
     SearchPanel {
         id: searchPanel

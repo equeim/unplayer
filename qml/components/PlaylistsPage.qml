@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     RemorsePopup {
         id: remorsePopup
     }
@@ -37,9 +35,9 @@ Page {
         selectionText: qsTr("%n playlist(s) selected", String(), playlistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: playlistsProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: playlistsProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
                     player.queue.addTracks(playlistsModel.getTracksForPlaylists(playlistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
@@ -47,7 +45,7 @@ Page {
             }
 
             MenuItem {
-                enabled: playlistsProxyModel.selectedIndexesCount !== 0
+                enabled: playlistsProxyModel.hasSelection
 
                 text: qsTr("Remove")
                 onClicked: {
@@ -78,7 +76,8 @@ Page {
             title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
             description: qsTr("%n track(s)", String(), model.tracksCount)
             menu: ContextMenu {
-                AddToQueueMenuItem {
+                MenuItem {
+                    text: qsTr("Add to queue")
                     onClicked: player.queue.addTracks(Unplayer.PlaylistUtils.getPlaylistTracks(model.filePath))
                 }
 
@@ -94,10 +93,15 @@ Page {
                 if (selectionPanel.showPanel) {
                     playlistsProxyModel.select(model.index)
                 } else {
-                    pageStack.push("PlaylistPage.qml", {
-                                       pageTitle: model.name,
-                                       filePath: model.filePath
-                                   })
+                    pageStack.push(playlistPageComponent)
+                }
+            }
+
+            Component {
+                id: playlistPageComponent
+                PlaylistPage {
+                    pageTitle: model.name
+                    filePath: model.filePath
                 }
             }
         }

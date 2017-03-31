@@ -63,7 +63,7 @@ ListItem {
             color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeSmall
             truncationMode: TruncationMode.Fade
-            visible: text.length !== 0
+            visible: text
             width: parent.width
         }
     }

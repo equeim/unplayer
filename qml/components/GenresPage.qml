@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     SearchPanel {
         id: searchPanel
     }
@@ -33,17 +31,18 @@ Page {
         selectionText: qsTr("%n genre(s) selected", String(), genresProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: genresProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: genresProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
                     player.queue.addTracks(genresModel.getTracksForGenres(genresProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: genresProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: genresProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPageComponent)
 
                 Component {
@@ -80,11 +79,13 @@ Page {
             description: qsTr("%n track(s), %1", String(), model.tracksCount).arg(Unplayer.Utils.formatDuration(model.duration))
             menu: Component {
                 ContextMenu {
-                    AddToQueueMenuItem {
+                    MenuItem {
+                        text: qsTr("Add to queue")
                         onClicked: player.queue.addTracks(genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)))
                     }
 
-                    AddToPlaylistMenuItem {
+                    MenuItem {
+                        text: qsTr("Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)) })
                     }
                 }
@@ -94,11 +95,16 @@ Page {
                 if (selectionPanel.showPanel) {
                     genresProxyModel.select(model.index)
                 } else {
-                    pageStack.push("TracksPage.qml", {
-                                       pageTitle: model.genre,
-                                       allArtists: true,
-                                       genre: model.genre
-                                   })
+                    pageStack.push(tracksPageComponent)
+                }
+            }
+
+            Component {
+                id: tracksPageComponent
+                TracksPage {
+                    pageTitle: model.genre
+                    allArtists: true
+                    genre: model.genre
                 }
             }
         }
