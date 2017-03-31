@@ -136,13 +136,18 @@ namespace unplayer
             QVector<DirectoryTrackFile> files;
             const QMimeDatabase mimeDb;
             for (const QFileInfo& info : QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable)) {
-                if (info.isFile() &&
-                        !LibraryUtils::supportedMimeTypes.contains(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name())) {
-                    continue;
+                if (info.isDir()) {
+                    files.append({info.filePath(),
+                                  info.fileName(),
+                                  true});
+                } else {
+                    const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
+                    if (LibraryUtils::supportedMimeTypes.contains(mimeType) || mimeType == QLatin1String("audio/x-scpls")) {
+                        files.append({info.filePath(),
+                                      info.fileName(),
+                                      false});
+                    }
                 }
-                files.append({info.filePath(),
-                              info.fileName(),
-                              info.isDir()});
             }
             return files;
         });

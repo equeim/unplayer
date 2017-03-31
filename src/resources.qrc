@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>license.html</file>
+        <file>translators.html</file>
+    </qresource>
+</RCC>

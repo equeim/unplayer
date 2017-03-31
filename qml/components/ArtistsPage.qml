@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     SearchPanel {
         id: searchPanel
     }
@@ -33,17 +31,18 @@ Page {
         selectionText: qsTr("%n artist(s) selected", String(), artistsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: artistsProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: artistsProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
                     player.queue.addTracks(artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: artistsProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: artistsProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -52,8 +51,9 @@ Page {
                     AddToPlaylistPage {
                         tracks: artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -84,18 +84,25 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTr("All tracks")
-                        onClicked: pageStack.push("TracksPage.qml", {
-                                                      pageTitle: model.artist,
-                                                      allArtists: false,
-                                                      artist: model.artist
-                                                  })
+                        onClicked: pageStack.push(tracksPageComponent)
+
+                        Component {
+                            id: tracksPageComponent
+                            TracksPage {
+                                pageTitle: model.displayedArtist
+                                allArtists: false
+                                artist: model.artist
+                            }
+                        }
                     }
 
-                    AddToQueueMenuItem {
+                    MenuItem {
+                        text: qsTr("Add to queue")
                         onClicked: player.queue.addTracks(artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)))
                     }
 
-                    AddToPlaylistMenuItem {
+                    MenuItem {
+                        text: qsTr("Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)) })
                     }
                 }
@@ -105,11 +112,19 @@ Page {
                 if (selectionPanel.showPanel) {
                     artistsProxyModel.select(model.index)
                 } else {
-                    pageStack.push("ArtistPage.qml", {displayedArtist: model.displayedArtist,
-                                                      artist: model.artist,
-                                                      albumsCount: model.albumsCount,
-                                                      tracksCount: model.tracksCount,
-                                                      duration: model.duration})
+                    pageStack.push(artistPageComponent)
+                }
+            }
+
+            Component {
+                id: artistPageComponent
+                ArtistPage {
+                    displayedArtist: model.displayedArtist
+                    artist: model.artist
+                    albumsCount: model.albumsCount
+                    tracksCount: model.tracksCount
+                    duration: model.duration
+                    mediaArt: artistDelegate.mediaArt
                 }
             }
 

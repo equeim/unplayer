@@ -22,29 +22,27 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     SearchPanel {
         id: searchPanel
     }
 
     SelectionPanel {
         id: selectionPanel
-        selectionText: qsTr("%n track(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
+        selectionText: qsTr("%n file(s) selected", String(), directoryTracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: directoryTracksProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: directoryTracksProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
-                    player.queue.add(directoryTracksProxyModel.getSelectedTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: directoryTracksProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: directoryTracksProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -53,8 +51,9 @@ Page {
                     AddToPlaylistPage {
                         tracks: directoryTracksProxyModel.getSelectedTracks()
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -116,13 +115,13 @@ Page {
                         onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                     }
 
-                    AddToQueueMenuItem {
-                        onClicked: {
-                            player.queue.addTrack(model.filePath)
-                        }
+                    MenuItem {
+                        text: qsTr("Add to queue")
+                        onClicked: player.queue.addTrack(model.filePath)
                     }
 
-                    AddToPlaylistMenuItem {
+                    MenuItem {
+                        text: qsTr("Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                     }
                 }
@@ -238,15 +237,15 @@ Page {
             }
 
             SelectionMenuItem {
-                enabled: directoryTracksProxyModel.tracksCount !== 0 || (searchPanel.searchText.length !== 0 && directoryTracksModel.tracksCount !== 0)
-                text: qsTr("Select tracks")
+                enabled: directoryTracksProxyModel.tracksCount || (searchPanel.searchText.length && directoryTracksModel.tracksCount)
+                text: qsTr("Select files")
             }
 
             SearchMenuItem { }
         }
 
         ListViewPlaceholder {
-            enabled: directoryTracksModel.loaded && (listView.count === 0)
+            enabled: directoryTracksModel.loaded && !listView.count
             text: qsTr("No files")
         }
 

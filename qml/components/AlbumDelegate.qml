@@ -28,11 +28,13 @@ MediaContainerSelectionDelegate {
     mediaArt: Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
     menu: Component {
         ContextMenu {
-            AddToQueueMenuItem {
+            MenuItem {
+                text: qsTr("Add to queue")
                 onClicked: player.queue.addTracks(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
             }
 
-            AddToPlaylistMenuItem {
+            MenuItem {
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)) })
             }
 
@@ -48,18 +50,26 @@ MediaContainerSelectionDelegate {
         if (selectionPanel.showPanel) {
             listView.model.select(model.index)
         } else {
-            pageStack.push("AlbumPage.qml", {artist: model.artist,
-                                             displayedArtist: model.displayedArtist,
-                                             album: model.album,
-                                             displayedAlbum: model.displayedAlbum,
-                                             tracksCount: model.tracksCount,
-                                             duration: model.duration})
+            pageStack.push(albumPageComponent)
         }
     }
 
     Connections {
         target: Unplayer.LibraryUtils
         onMediaArtChanged: mediaArt = Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
+    }
+
+    Component {
+        id: albumPageComponent
+        AlbumPage {
+            artist: model.artist
+            displayedArtist: model.displayedArtist
+            album: model.album
+            displayedAlbum: model.displayedAlbum
+            tracksCount: model.tracksCount
+            duration: model.duration
+            mediaArt: model.mediaArt
+        }
     }
 
     Component {

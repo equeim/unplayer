@@ -30,8 +30,7 @@ Page {
     property string displayedAlbum
     property int tracksCount
     property int duration
-
-    property alias bottomPanelOpen: selectionPanel.open
+    property string mediaArt
 
     SearchPanel {
         id: searchPanel
@@ -42,28 +41,30 @@ Page {
         selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
+                text: qsTr("Add to queue")
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getSelectedTracks())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getSelectedTracks()
+                        tracks: tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -98,16 +99,21 @@ Page {
         }
 
         PullDownMenu {
-            /*MenuItem {
+            MenuItem {
                 visible: !unknownArtist && !unknownAlbum
                 text: qsTr("Set cover image")
-                onClicked: pageStack.push(setCoverPage)
+                onClicked: pageStack.push(filePickerDialogComponent)
 
                 Component {
-                    id: setCoverPage
-                    SetCoverPage { }
+                    id: filePickerDialogComponent
+                    FilePickerDialog {
+                        title: qsTr("Select Image")
+                        fileIcon: "image://theme/icon-m-image"
+                        nameFilters: Unplayer.Utils.imageNameFilters
+                        onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
+                    }
                 }
-            }*/
+            }
 
             SelectionMenuItem {
                 text: qsTr("Select tracks")

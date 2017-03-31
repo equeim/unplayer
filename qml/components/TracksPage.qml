@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     property string pageTitle
 
     property alias allArtists: tracksModel.allArtists
@@ -39,17 +37,18 @@ Page {
         selectionText: qsTr("%n track(s) selected", String(), tracksProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
                     player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: tracksProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {

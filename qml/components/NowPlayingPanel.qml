@@ -22,10 +22,12 @@ import Sailfish.Silica 1.0
 DockedPanel {
     id: panel
 
+    property bool shouldBeClosed
+
     width: parent.width
     height: largeScreen ? Theme.itemSizeExtraLarge : Theme.itemSizeMedium
 
-    opacity: open ? 1 : 0
+    opacity: open ? 1.0 : 0.0
 
     Behavior on opacity {
         FadeAnimation { }
@@ -37,8 +39,7 @@ DockedPanel {
         value: (player.queue.currentIndex !== -1 || player.queue.addingTracks) &&
                !Qt.inputMethod.visible &&
                pageStack.currentPage !== nowPlayingPage &&
-               (typeof pageStack.currentPage.bottomPanelOpen === "boolean" ? !pageStack.currentPage.bottomPanelOpen :
-                                                                             true)
+               !shouldBeClosed
     }
 
     NowPlayingPage {
@@ -65,8 +66,9 @@ DockedPanel {
                 pageStack.currentPage.goToCurrent()
             } else {
                 if (!pageStack.find(function(page) {
-                    if (page === nowPlayingPage)
+                    if (page === nowPlayingPage) {
                         return true
+                    }
                     return false
                 })) {
                     pageStack.push(nowPlayingPage)
@@ -86,7 +88,7 @@ DockedPanel {
                 property int duration: player.duration
 
                 height: parent.height
-                width: duration === 0 ? 0 : parent.width * (player.position / duration)
+                width: duration ? parent.width * (player.position / duration) : 0
                 color: Theme.highlightColor
                 opacity: 0.5
             }
@@ -162,13 +164,15 @@ DockedPanel {
                     height: parent.height
                     icon.source: {
                         if (playing) {
-                            if (largeScreen)
+                            if (largeScreen) {
                                 return "image://theme/icon-l-pause"
+                            }
                             return "image://theme/icon-m-pause"
                         }
 
-                        if (largeScreen)
+                        if (largeScreen) {
                             return "image://theme/icon-l-play"
+                        }
                         return "image://theme/icon-m-play"
                     }
 

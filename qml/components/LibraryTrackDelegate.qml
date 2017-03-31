@@ -29,11 +29,13 @@ BaseTrackDelegate {
                 onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
             }
 
-            AddToQueueMenuItem {
+            MenuItem {
+                text: qsTr("Add to queue")
                 onClicked: player.queue.addTrack(model.filePath)
             }
 
-            AddToPlaylistMenuItem {
+            MenuItem {
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
             }
         }

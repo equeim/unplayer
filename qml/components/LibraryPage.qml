@@ -74,7 +74,7 @@ Page {
                 title: qsTr("Tracks")
                 description: {
                     var tracksCount = Unplayer.LibraryUtils.tracksCount
-                    if (tracksCount === 0) {
+                    if (!tracksCount === 0) {
                         return qsTr("%n tracks(s)", String(), 0)
                     }
                     return qsTr("%1, %2")
@@ -131,11 +131,6 @@ Page {
                 enabled: Unplayer.LibraryUtils.updating
                 text: qsTr("Updating library...")
             }
-
-            /*MouseArea {
-                anchors.fill: parent
-                enabled: Unplayer.LibraryUtils.updating
-            }*/
         }
     }
 }

@@ -36,7 +36,7 @@ Page {
 
         PushUpMenu {
             MenuItem {
-                enabled: proxyModel.selectedIndexesCount !== 0
+                enabled: proxyModel.hasSelection
                 text: qsTr("Remove")
                 onClicked: {
                     libraryDirectoriesModel.removeDirectories(proxyModel.selectedSourceIndexes)

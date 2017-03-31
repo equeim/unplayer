@@ -45,13 +45,14 @@ src/tracksmodel.h
 src/utils.cpp
 src/utils.h
 
+src/translators.html
+src/resources.qrc
+
 
 qml/main.qml
 
 qml/components/AboutPage.qml
-qml/components/AddToPlaylistMenuItem.qml
 qml/components/AddToPlaylistPage.qml
-qml/components/AddToQueueMenuItem.qml
 qml/components/AlbumDelegate.qml
 qml/components/AlbumPageHeader.qml
 qml/components/AlbumPage.qml
@@ -59,6 +60,7 @@ qml/components/AllAlbumsPage.qml
 qml/components/ArtistPageHeader.qml
 qml/components/ArtistPage.qml
 qml/components/ArtistsPage.qml
+qml/components/AuthorsPage.qml
 qml/components/BaseTrackDelegate.qml
 qml/components/Cover.qml
 qml/components/DirectoriesPage.qml
@@ -88,5 +90,6 @@ qml/components/SelectionPanel.qml
 qml/components/SettingsPage.qml
 qml/components/TrackInfoPage.qml
 qml/components/TracksPage.qml
+qml/components/TranslatorsPage.qml
 
 translations/update.sh

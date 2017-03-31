@@ -21,13 +21,7 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-Dialog {
-    property var tracks
-
-    canAccept: playlistNameField.text.trim()
-
-    onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text.trim(), tracks)
-
+Page {
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
@@ -36,21 +30,26 @@ Dialog {
             id: column
             width: parent.width
 
-            DialogHeader {
-                title: qsTr("Add playlist")
+            PageHeader {
+                title: qsTr("Translators")
             }
 
-            TextField {
-                id: playlistNameField
-                label: qsTr("Playlist name")
-                placeholderText: label
-                width: parent.width
+            Label {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.horizontalPageMargin
+                    right: parent.right
+                    rightMargin: Theme.horizontalPageMargin
+                }
+                font.pixelSize: Theme.fontSizeExtraSmall
+                wrapMode: Text.WordWrap
+                text: Unplayer.Utils.translators.arg(Theme.highlightColor)
+                textFormat: Text.RichText
 
-                EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-                EnterKey.onClicked: accept()
-
-                Component.onCompleted: forceActiveFocus()
+                onLinkActivated: Qt.openUrlExternally(link)
             }
         }
+
+        VerticalScrollDecorator { }
     }
 }

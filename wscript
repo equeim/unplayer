@@ -54,7 +54,8 @@ def build(context):
             "src/settings.cpp",
             "src/trackinfo.cpp",
             "src/tracksmodel.cpp",
-            "src/utils.cpp"
+            "src/utils.cpp",
+            "src/resources.qrc"
         ],
         moc=[
             "src/albumsmodel.h",

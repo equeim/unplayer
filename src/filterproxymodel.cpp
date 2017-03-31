@@ -78,6 +78,11 @@ namespace unplayer
         return mSelectionModel;
     }
 
+    bool FilterProxyModel::hasSelection() const
+    {
+        return mSelectionModel->hasSelection();
+    }
+
     int FilterProxyModel::selectedIndexesCount() const
     {
         return mSelectionModel->selectedIndexes().size();

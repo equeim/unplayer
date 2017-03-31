@@ -28,9 +28,7 @@ Item {
     height: listView.showSearchField ? pageHeader.height + listView.searchFieldHeight :
                                        childrenRect.height
 
-    Behavior on height {
-        PropertyAnimation { }
-    }
+    Behavior on height { PropertyAnimation { } }
 
     PageHeader {
         id: pageHeader
@@ -56,7 +54,7 @@ Item {
             }
         }
 
-        opacity: listView.showSearchField ? 0 : 1
+        opacity: listView.showSearchField ? 0.0 : 1.0
 
         Behavior on opacity {
             FadeAnimation { }
@@ -68,7 +66,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             x: Theme.horizontalPageMargin
 
-            //source: albumDelegate.mediaArt
+            source: albumPage.mediaArt
             size: Theme.itemSizeExtraLarge
         }
 

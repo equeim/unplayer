@@ -31,11 +31,8 @@ DockedPanel {
     height: column.height + Theme.paddingLarge
     contentHeight: height
 
-    opacity: open ? 1 : 0
-
-    Behavior on opacity {
-        FadeAnimation { }
-    }
+    opacity: open ? 1.0 : 0.0
+    Behavior on opacity { FadeAnimation { } }
 
     Binding {
         target: selectionPanel
@@ -56,9 +53,15 @@ DockedPanel {
     }
 
     onVisibleSizeChanged: {
-        if (visibleSize === 0 && !showPanel) {
+        if (!visibleSize && !showPanel) {
             visible = false
         }
+    }
+
+    Binding {
+        target: nowPlayingPanel
+        property: "shouldBeClosed"
+        value: open
     }
 
     Column {
@@ -81,15 +84,11 @@ DockedPanel {
         }
 
         Item {
-            anchors.horizontalCenter: parent.horizontalCenter
-            implicitWidth: Theme.itemSizeHuge * 3 - Theme.horizontalPageMargin * 2
-            width: implicitWidth > parent.width ? parent.width : implicitWidth
+            width: parent.width
             height: Math.max(selectionButtons.height, closeButton.height)
 
-            Row {
+            Item {
                 id: selectionButtons
-
-                property int buttonWidth: (width - spacing) / 2
 
                 anchors {
                     left: parent.left
@@ -98,16 +97,22 @@ DockedPanel {
                 }
                 height: childrenRect.height
 
-                spacing: Theme.paddingMedium
-
                 Button {
+                    anchors {
+                        left: parent.left
+                        right: parent.horizontalCenter
+                        rightMargin: Theme.paddingSmall
+                    }
                     text: qsTr("All")
-                    width: selectionButtons.buttonWidth
                     onClicked: listView.model.selectAll()
                 }
 
                 Button {
-                    width: selectionButtons.buttonWidth
+                    anchors {
+                        left: parent.horizontalCenter
+                        leftMargin: Theme.paddingSmall
+                        right: parent.right
+                    }
                     text: qsTr("None")
                     onClicked: listView.model.selectionModel.clear()
                 }

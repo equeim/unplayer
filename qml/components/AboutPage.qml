@@ -26,140 +26,108 @@ Page {
 
         Column {
             id: column
-            width: parent.width
+
+            anchors {
+                left: parent.left
+                leftMargin: Theme.horizontalPageMargin
+                right: parent.right
+                rightMargin: Theme.horizontalPageMargin
+            }
 
             PageHeader {
                 title: qsTr("About")
             }
 
-            Item {
-                width: parent.width
-                height: childrenRect.height
-
-                Image {
-                    id: icon
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    asynchronous: true
-                    source: {
-                        var iconSize = Theme.iconSizeExtraLarge
-                        if (iconSize < 108)
-                            iconSize = 86
-                        else if (iconSize < 128)
-                            iconSize = 108
-                        else if (iconSize < 256)
-                            iconSize = 128
-                        else iconSize = 256
-
-                        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/harbour-unplayer.png"
+            Image {
+                anchors.horizontalCenter: parent.horizontalCenter
+                asynchronous: true
+                source: {
+                    var iconSize = Theme.iconSizeExtraLarge
+                    if (iconSize < 108) {
+                        iconSize = 86
+                    } else if (iconSize < 128) {
+                        iconSize = 108
+                    } else if (iconSize < 256) {
+                        iconSize = 128
+                    } else {
+                        iconSize = 256
                     }
-                }
-
-                Column {
-                    id: appTitleColumn
-
-                    anchors {
-                        left: parent.left
-                        leftMargin: Theme.horizontalPageMargin
-                        right: parent.right
-                        rightMargin: Theme.horizontalPageMargin
-                        top: icon.bottom
-                        topMargin: Theme.paddingMedium
-                    }
-
-                    Label {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        font.pixelSize: Theme.fontSizeLarge
-                        text: "Unplayer 0.3.3"
-                    }
-
-                    Label {
-                        horizontalAlignment: Text.AlignHCenter
-                        text: qsTr("Simple music player for Sailfish OS")
-                        width: parent.width
-                        wrapMode: Text.WordWrap
-                    }
-
-                    Label {
-                        horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        font.pixelSize: Theme.fontSizeExtraSmall
-                        text: "Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>"
-                        truncationMode: TruncationMode.Fade
-                        width: parent.width
-                    }
-                }
-
-                Column {
-                    anchors {
-                        top: appTitleColumn.bottom
-                        topMargin: Theme.paddingLarge
-                    }
-                    width: parent.width
-                    spacing: Theme.paddingMedium
-
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Show license")
-                        onClicked: pageStack.push("LicensePage.qml")
-                    }
-
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "GitHub"
-                        onClicked: Qt.openUrlExternally("https://github.com/equeim/unplayer")
-                    }
-
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr("Translations")
-                        onClicked: Qt.openUrlExternally("https://hosted.weblate.org/projects/unplayer/translations")
-                    }
+                    return "/usr/share/icons/hicolor/%1x%2/apps/harbour-unplayer.png".arg(iconSize).arg(iconSize)
                 }
             }
 
-            SectionHeader {
-                text: qsTr("Translators")
+            Item {
+                width: parent.width
+                height: Theme.paddingMedium
             }
 
             Label {
-                anchors {
-                    left: parent.left
-                    leftMargin: Theme.horizontalPageMargin
-                    right: parent.right
-                    rightMargin: Theme.horizontalPageMargin
-                }
-                font.pixelSize: Theme.fontSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: Theme.fontSizeLarge
+                text: "Unplayer %1".arg(Qt.application.version)
+            }
+
+            Label {
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Simple music player for Sailfish OS")
+                width: parent.width
                 wrapMode: Text.WordWrap
-                text: "Nederlands
-    Nathan Follens <nathan@email.is>
+            }
 
-English
-    Alexey Rochev <equeim@gmail.com>
-    Nathan Follens <nathan@email.is>
+            Label {
+                horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
+                width: parent.width
+                font.pixelSize: Theme.fontSizeExtraSmall
+                text: "<style type=\"text/css\">A { color: %1; }</style>".arg(Theme.highlightColor) +
+                      "\u00a9 2015-2017 Alexey Rochev &lt;<a href=\"mailto:equeim@gmail.com\">equeim@gmail.com</a>&gt;"
+                textFormat: Text.RichText
+                truncationMode: TruncationMode.Fade
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
 
-Français
-    Nathan Follens <nathan@email.is>
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
 
-Deutsch
-    velox <jngibbon@gmail.com>
-    Nathan Follens <nathan@email.is>
+            Column {
+                width: parent.width
+                spacing: Theme.paddingMedium
 
-Italiano
-    Tichy <tichy@cryptolab.net>
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
+                    text: qsTr("Source Code")
+                    onClicked: Qt.openUrlExternally("https://github.com/equeim/unplayer")
+                }
 
-Norsk bokmål
-    Nathan Follens <nathan@email.is>
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
+                    text: qsTr("Translations")
+                    onClicked: Qt.openUrlExternally("https://hosted.weblate.org/projects/unplayer/translations")
+                }
 
-Русский
-    Alexey Rochev <equeim@gmail.com>
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
+                    text: qsTr("Authors")
+                    onClicked: pageStack.push("AuthorsPage.qml")
+                }
 
-Español
-    Nathan Follens <nathan@email.is>
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
+                    text: qsTr("Translators")
+                    onClicked: pageStack.push("TranslatorsPage.qml")
+                }
 
-Svenska
-    Åke Engelbrektson <eson57@users.noreply.github.com>
-"
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
+                    text: qsTr("License")
+                    onClicked: pageStack.push("LicensePage.qml")
+                }
             }
         }
 

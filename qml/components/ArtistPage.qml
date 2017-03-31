@@ -29,8 +29,7 @@ Page {
     property int albumsCount
     property int tracksCount
     property int duration
-
-    property alias bottomPanelOpen: selectionPanel.open
+    property string mediaArt
 
     SearchPanel {
         id: searchPanel
@@ -41,17 +40,18 @@ Page {
         selectionText: qsTr("%n album(s) selected", String(), albumsProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: albumsProxyModel.selectedIndexesCount !== 0
-
+            MenuItem {
+                enabled: albumsProxyModel.hasSelection
+                text: qsTr("Add to queue")
                 onClicked: {
                     player.queue.addTracks(albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
 
-            AddToPlaylistMenuItem {
-                enabled: albumsProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: albumsProxyModel.hasSelection
+                text: qsTr("Add to playlist")
                 onClicked: pageStack.push(addToPlaylistPage)
 
                 Component {
@@ -60,8 +60,9 @@ Page {
                     AddToPlaylistPage {
                         tracks: albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -97,11 +98,16 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("All tracks")
-                onClicked: pageStack.push("TracksPage.qml", {
-                                              pageTitle: displayedArtist,
-                                              allArtists: false,
-                                              artist: artistPage.displayedArtist
-                                          })
+                onClicked: pageStack.push(tracksPageComponent)
+
+                Component {
+                    id: tracksPageComponent
+                    TracksPage {
+                        pageTitle: displayedArtist
+                        allArtists: false
+                        artist: artistPage.artist
+                    }
+                }
             }
 
             SelectionMenuItem {

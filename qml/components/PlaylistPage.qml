@@ -22,8 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property alias bottomPanelOpen: selectionPanel.open
-
     property string pageTitle
     property alias filePath: playlistModel.filePath
 
@@ -40,8 +38,9 @@ Page {
         selectionText: qsTr("%n track(s) selected", String(), playlistProxyModel.selectedIndexesCount)
 
         PushUpMenu {
-            AddToQueueMenuItem {
-                enabled: playlistProxyModel.selectedIndexesCount !== 0
+            MenuItem {
+                enabled: playlistProxyModel.hasSelection
+                text: qsTr("Add to queue")
 
                 onClicked: {
                     player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
@@ -50,7 +49,7 @@ Page {
             }
 
             MenuItem {
-                enabled: playlistProxyModel.selectedIndexesCount !== 0
+                enabled: playlistProxyModel.hasSelection
 
                 text: qsTr("Remove from playlist")
                 onClicked: {
@@ -87,7 +86,8 @@ Page {
                     onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }
 
-                AddToQueueMenuItem {
+                MenuItem {
+                    text: qsTr("Add to queue")
                     onClicked: player.queue.addTrack(model.filePath)
                 }
 
@@ -142,7 +142,7 @@ Page {
         }
 
         ListViewPlaceholder {
-            enabled: listView.count === 0
+            enabled: !listView.count
             text: qsTr("No tracks")
         }
 

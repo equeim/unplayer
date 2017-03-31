@@ -39,6 +39,7 @@
 #include <tag.h>
 
 #include "libraryutils.h"
+#include "playlistutils.h"
 
 namespace unplayer
 {
@@ -196,7 +197,7 @@ namespace unplayer
         addTracks({track});
     }
 
-    void Queue::addTracks(const QStringList& trackPaths, bool clearQueue, int setAsCurrent)
+    void Queue::addTracks(QStringList trackPaths, bool clearQueue, int setAsCurrent)
     {
         if (mAddingTracks) {
             return;
@@ -211,8 +212,24 @@ namespace unplayer
             clear();
         }
 
-        auto future = QtConcurrent::run([trackPaths, oldTracks]() {
+        auto future = QtConcurrent::run([trackPaths, oldTracks]() mutable {
             QList<std::shared_ptr<QueueTrack>> tracks;
+
+            for (int i = 0, max = trackPaths.size(); i < max; ++i) {
+                const QString& filePath = trackPaths.at(i);
+                if (filePath.endsWith(QLatin1String(".pls"))) {
+                    trackPaths.removeAt(i);
+                    const QStringList playlistTracks(PlaylistUtils::getPlaylistTracks(filePath));
+                    int trackIndex = i;
+                    for (const QString& playlistTrack : playlistTracks) {
+                        trackPaths.insert(trackIndex, playlistTrack);
+                        ++trackIndex;
+                    }
+                    i += playlistTracks.size() - 1;
+                    max += playlistTracks.size() - 1;
+                }
+            }
+
             {
                 auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), dbConnectionName);
                 db.setDatabaseName(LibraryUtils::databaseFilePath());
