@@ -1,3 +1,6 @@
+APP_VERSION = "0.3.3"
+
+
 def options(context):
     context.load("compiler_cxx gnu_dirs qt5")
 
@@ -79,6 +82,7 @@ def build(context):
             "src/utils.h"
         ],
         cxxflags="-std=c++11",
+        defines=["UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
         lang=[
             "translations/harbour-unplayer-en",
             "translations/harbour-unplayer-es",
