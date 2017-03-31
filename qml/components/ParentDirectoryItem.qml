@@ -16,19 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtSparql 1.0
+import QtQuick 2.2
+import Sailfish.Silica 1.0
 
-SparqlListModel {
-    connection: SparqlConnection {
-        driver: "QTRACKER_DIRECT"
+BackgroundItem {
+    Row {
+        anchors {
+            left: parent.left
+            leftMargin: Theme.horizontalPageMargin
+            verticalCenter: parent.verticalCenter
+        }
+        spacing: Theme.paddingMedium
+
+        Image {
+            anchors.verticalCenter: parent.verticalCenter
+            asynchronous: true
+            source: highlighted ? "image://theme/icon-m-folder?" + Theme.highlightColor :
+                                  "image://theme/icon-m-folder"
+        }
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            text: ".."
+            color: highlighted ? Theme.highlightColor : Theme.primaryColor
+        }
     }
-    query: "SELECT ?genre\n" +
-           "       COUNT(?track) AS ?tracksCount\n" +
-           "       SUM(nfo:duration(?track)) AS ?duration\n" +
-           "WHERE {\n" +
-           "    ?track a nmm:MusicPiece;\n" +
-           "           nfo:genre ?genre.\n" +
-           "}\n" +
-           "GROUP BY ?genre\n" +
-           "ORDER BY ?genre"
 }

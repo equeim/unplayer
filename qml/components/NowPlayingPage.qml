@@ -107,12 +107,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentUrl })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentFilePath })
             }
 
             MenuItem {
                 text: qsTr("Track information")
-                onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: player.queue.currentUrl })
+                onClicked: pageStack.push("TrackInfoPage.qml", { filePath: player.queue.currentFilePath })
             }
         }
 
@@ -152,23 +152,9 @@ Page {
                 id: mediaArtImage
                 anchors.fill: parent
                 asynchronous: true
-                cache: false
                 fillMode: Image.PreserveAspectCrop
                 visible: status === Image.Ready
-
-                Binding {
-                    target: mediaArtImage
-                    property: "source"
-                    value: player.queue.currentMediaArt
-                }
-
-                Connections {
-                    target: rootWindow
-                    onMediaArtReloadNeeded: {
-                        mediaArtImage.source = String()
-                        mediaArtImage.source = player.queue.currentMediaArt
-                    }
-                }
+                source: player.queue.currentMediaArt
 
                 Rectangle {
                     anchors.fill: parent

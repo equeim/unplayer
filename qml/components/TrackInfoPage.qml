@@ -22,19 +22,11 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    property string trackUrl
-    property var track: sparqlConnection.select("SELECT tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n" +
-                                                "       nmm:artistName(nmm:performer(?track)) AS ?artist\n" +
-                                                "       nie:title(nmm:musicAlbum(?track)) AS ?album\n" +
-                                                "       nmm:trackNumber(?track) AS ?trackNumber\n" +
-                                                "       nfo:genre(?track) AS ?genre\n" +
-                                                "       nfo:fileSize(?track) AS ?fileSize\n" +
-                                                "       nie:mimeType(?track) AS ?mimeType\n" +
-                                                "       nfo:duration(?track) AS ?duration\n" +
-                                                "       nfo:averageBitrate(?track) AS ?averageBitrate\n" +
-                                                "WHERE {\n" +
-                                                "    ?track nie:url \"" + trackUrl + "\".\n" +
-                                                "}")[0]
+    property alias filePath: trackInfo.filePath
+
+    Unplayer.TrackInfo {
+        id: trackInfo
+    }
 
     SilicaFlickable {
         anchors.fill: parent
@@ -50,60 +42,54 @@ Page {
 
             DetailItem {
                 label: qsTr("Title")
-                value: track.title
+                value: trackInfo.title
             }
 
             DetailItem {
                 label: qsTr("Artist")
-                value: track.artist ? track.artist :
-                                      qsTr("Unknown artist")
+                value: trackInfo.artist
             }
 
             DetailItem {
                 label: qsTr("Album")
-                value: track.album ? track.album :
-                                     qsTr("Unknown album")
+                value: trackInfo.album
             }
 
             DetailItem {
                 label: qsTr("Track number")
-                value: track.trackNumber ? track.trackNumber : String()
-                visible: track.trackNumber !== undefined
+                value: trackInfo.trackNumber ? trackInfo.trackNumber : String()
             }
 
             DetailItem {
                 label: qsTr("Genre")
-                value: track.genre ? track.genre : String()
-                visible: track.genre !== undefined
+                value: trackInfo.genre
             }
 
             DetailItem {
                 label: qsTr("File path")
-                value: Unplayer.Utils.urlToPath(trackUrl)
+                value: filePath
             }
 
             DetailItem {
                 label: qsTr("File size")
-                value: Unplayer.Utils.formatByteSize(track.fileSize)
+                value: Unplayer.Utils.formatByteSize(trackInfo.fileSize)
             }
 
             DetailItem {
                 label: qsTr("MIME type")
-                value: track.mimeType
+                value: trackInfo.mimeType
             }
 
             DetailItem {
-                visible: track.duration !== undefined
                 label: qsTr("Duration")
-                value: track.duration ? Format.formatDuration(track.duration, track.duration >= 3600 ? Format.DurationLong :
-                                                                                                       Format.DurationShort) :
-                                        String()
+                value: trackInfo.hasAudioProperties ? Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong :
+                                                                                                                             Format.DurationShort) :
+                                                      String()
             }
 
             DetailItem {
                 label: qsTr("Bitrate")
-                value: track.averageBitrate ? track.averageBitrate : String()
-                visible: track.averageBitrate !== undefined
+                value: trackInfo.hasAudioProperties ? trackInfo.bitrate : String()
             }
         }
 

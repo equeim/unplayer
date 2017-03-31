@@ -21,9 +21,15 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
+    id: artistPage
+
+    property string displayedArtist
+    property string artist
+    property int albumsCount
+    property int tracksCount
+    property int duration
+
     property alias bottomPanelOpen: selectionPanel.open
 
     SearchPanel {
@@ -39,8 +45,7 @@ Page {
                 enabled: albumsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getTracksForSelectedAlbums())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -53,7 +58,7 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getTracksForSelectedAlbums()
+                        tracks: albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
                             if (added)
                                 selectionPanel.showPanel = false
@@ -69,23 +74,23 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
 
         header: ArtistPageHeader { }
         delegate: AlbumDelegate {
-            description: qsTr("%n track(s)", String(), model.tracksCount)
+            description: qsTr("%n track(s)", String(), tracksCount)
         }
         model: Unplayer.FilterProxyModel {
             id: albumsProxyModel
 
-            filterRoleName: "album"
-            sourceModel: AlbumsModel {
+            filterRole: Unplayer.AlbumsModel.ArtistRole
+            sourceModel: Unplayer.AlbumsModel {
                 id: albumsModel
                 allArtists: false
-                artist: model.rawArtist ? model.rawArtist : String()
+                artist: artistPage.artist
             }
         }
 
@@ -93,9 +98,9 @@ Page {
             MenuItem {
                 text: qsTr("All tracks")
                 onClicked: pageStack.push("TracksPage.qml", {
-                                              pageTitle: model.artist,
+                                              pageTitle: displayedArtist,
                                               allArtists: false,
-                                              artist: model.rawArtist ? model.rawArtist : String()
+                                              artist: artistPage.displayedArtist
                                           })
             }
 

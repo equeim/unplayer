@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -36,8 +34,9 @@ Page {
         var currentItemY = listView.currentItem.y
 
         if ((currentItemY + listView.currentItem.height) < visibleY ||
-                currentItemY > (visibleY + visibleHeight))
+                currentItemY > (visibleY + visibleHeight)) {
             positionViewAtCurrentIndex()
+        }
     }
 
     objectName: "queuePage"
@@ -45,8 +44,9 @@ Page {
     Connections {
         target: player.queue
         onCurrentTrackChanged: {
-            if (player.queue.currentIndex === -1)
+            if (player.queue.currentIndex === -1) {
                 pageStack.pop(pageStack.previousPage(pageStack.previousPage()))
+            }
         }
     }
 
@@ -67,10 +67,11 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getSelectedTracks()
+                        tracks: queueModel.getTracks(queueProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
-                            if (added)
+                            if (added) {
                                 selectionPanel.showPanel = false
+                            }
                         }
                     }
                 }
@@ -80,7 +81,7 @@ Page {
                 enabled: queueProxyModel.selectedIndexesCount !== 0
                 text: qsTr("Remove")
                 onClicked: {
-                    player.queue.removeTracks(queueProxyModel.selectedSourceIndexes())
+                    player.queue.removeTracks(queueProxyModel.selectedSourceIndexes)
                     selectionPanel.showPanel = false
                 }
             }
@@ -92,12 +93,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: {
-                if (selectionPanel.expanded)
-                    return selectionPanel.visibleSize
-                if (nowPlayingPanel.expanded)
-                    return nowPlayingPanel.height - nowPlayingPanel.visibleSize
-            }
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -112,17 +108,18 @@ Page {
             id: trackDelegate
 
             showArtistAndAlbum: true
+            showDuration: true
 
             current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Track information")
-                    onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
+                    onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }
 
                 MenuItem {
                     text: qsTr("Add to playlist")
-                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.url })
+                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                 }
 
                 MenuItem {
@@ -140,22 +137,24 @@ Page {
                     queueProxyModel.select(model.index)
                 } else {
                     if (current) {
-                        if (!player.playing)
+                        if (!player.playing) {
                             player.play()
+                        }
                     } else {
                         player.queue.currentIndex = queueProxyModel.sourceIndex(model.index)
                         player.queue.currentTrackChanged()
-                        if (player.queue.shuffle)
+                        if (player.queue.shuffle) {
                             player.queue.resetNotPlayedTracks()
+                        }
                     }
                 }
             }
             ListView.onRemove: animateRemoval()
         }
-        model: TracksProxyModel {
+        model: Unplayer.FilterProxyModel {
             id: queueProxyModel
 
-            filterRoleName: "title"
+            filterRole: Unplayer.QueueModel.TitleRole
             sourceModel: Unplayer.QueueModel {
                 queue: player.queue
             }

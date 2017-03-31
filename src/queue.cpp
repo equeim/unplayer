@@ -24,22 +24,41 @@
 
 #include "utils.h"
 
+#include <QtConcurrentRun>
+#include <QFutureWatcher>
+
+#include <QDateTime>
+#include <QDebug>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QSqlRecord>
+#include <QFileInfo>
+
+#include <fileref.h>
+#include <tag.h>
+
+#include "libraryutils.h"
+
 namespace unplayer
 {
-    QueueTrack::QueueTrack(const QString& url,
+    namespace
+    {
+        const QString dbConnectionName(QLatin1String("unplayer_queue"));
+    }
+
+    QueueTrack::QueueTrack(const QString& filePath,
                            const QString& title,
-                           long long duration,
+                           int duration,
                            const QString& artist,
                            const QString& album,
-                           const QString& rawArtist,
-                           const QString& rawAlbum)
-        : url(url),
+                           const QString& mediaArt)
+        : filePath(filePath),
           title(title),
           duration(duration),
           artist(artist),
           album(album),
-          rawArtist(rawArtist),
-          rawAlbum(rawAlbum)
+          mediaArt(mediaArt)
     {
     }
 
@@ -47,8 +66,27 @@ namespace unplayer
         : QObject(parent),
           mCurrentIndex(-1),
           mShuffle(false),
-          mRepeatMode(NoRepeat)
+          mRepeatMode(NoRepeat),
+          mAddingTracks(false)
     {
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
+            QSqlDatabase::database().transaction();
+            for (const std::shared_ptr<QueueTrack>& track : mTracks) {
+                QSqlQuery query;
+                query.prepare(QStringLiteral("SELECT mediaArt FROM tracks WHERE filePath = ?"));
+                query.addBindValue(track->filePath);
+                if (query.exec()) {
+                    if (query.next()) {
+                        track->mediaArt = query.value(0).toString();
+                    }
+                } else {
+                    qWarning() << "failed to get media art from database for track:" << track->filePath;
+                }
+            }
+            QSqlDatabase::database().commit();
+            emit mediaArtChanged();
+        });
+        QObject::connect(this, &Queue::currentTrackChanged, this, &Queue::mediaArtChanged);
     }
 
     const QList<std::shared_ptr<QueueTrack>>& Queue::tracks() const
@@ -69,10 +107,10 @@ namespace unplayer
         }
     }
 
-    QString Queue::currentUrl() const
+    QString Queue::currentFilePath() const
     {
         if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->url;
+            return mTracks.at(mCurrentIndex)->filePath;
         }
         return QString();
     }
@@ -101,13 +139,12 @@ namespace unplayer
         return QString();
     }
 
-    QUrl Queue::currentMediaArt() const
+    QString Queue::currentMediaArt() const
     {
         if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            const QueueTrack* track = mTracks.at(mCurrentIndex).get();
-            return Utils::mediaArt(track->rawArtist, track->rawAlbum, track->url);
+            return mTracks.at(mCurrentIndex)->mediaArt;
         }
-        return QUrl();
+        return QString();
     }
 
     bool Queue::isShuffle() const
@@ -149,24 +186,151 @@ namespace unplayer
         emit repeatModeChanged();
     }
 
-    void Queue::addTracks(const QVariantList& tracks)
+    bool Queue::isAddingTracks() const
     {
-        const int start = mTracks.size();
+        return mAddingTracks;
+    }
 
-        for (const QVariant& trackVariant : tracks) {
-            const QVariantMap trackMap(trackVariant.toMap());
-            const auto track(std::make_shared<QueueTrack>(trackMap.value(QStringLiteral("url")).toString(),
-                                                          trackMap.value(QStringLiteral("title")).toString(),
-                                                          trackMap.value(QStringLiteral("duration")).toLongLong(),
-                                                          trackMap.value(QStringLiteral("artist")).toString(),
-                                                          trackMap.value(QStringLiteral("album")).toString(),
-                                                          trackMap.value(QStringLiteral("rawArtist")).toString(),
-                                                          trackMap.value(QStringLiteral("rawAlbum")).toString()));
-            mTracks.append(track);
-            mNotPlayedTracks.append(track);
+    void Queue::addTrack(const QString& track)
+    {
+        addTracks({track});
+    }
+
+    void Queue::addTracks(const QStringList& trackPaths, bool clearQueue, int setAsCurrent)
+    {
+        if (mAddingTracks) {
+            return;
         }
 
-        emit tracksAdded(start);
+        mAddingTracks = true;
+        emit addingTracksChanged();
+
+        const QList<std::shared_ptr<QueueTrack>> oldTracks(mTracks);
+
+        if (clearQueue) {
+            clear();
+        }
+
+        auto future = QtConcurrent::run([trackPaths, oldTracks]() {
+            QList<std::shared_ptr<QueueTrack>> tracks;
+            {
+                auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), dbConnectionName);
+                db.setDatabaseName(LibraryUtils::databaseFilePath());
+                if (!db.open()) {
+                    qWarning() << "failed to open database" << db.lastError();
+                }
+
+                db.transaction();
+
+                QHash<QString, QString> mediaArtDirectoriesHash;
+
+                for (const QString& filePath : trackPaths) {
+                    bool found = false;
+                    for (const std::shared_ptr<QueueTrack>& track : oldTracks) {
+                        if (track->filePath == filePath) {
+                            tracks.append(track);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        continue;
+                    }
+
+                    const QFileInfo fileInfo(filePath);
+                    if (!fileInfo.exists()) {
+                        qWarning() << "file does not exists:" << filePath;
+                        continue;
+                    }
+
+                    QString title;
+                    QString artist;
+                    QString album;
+                    int duration;
+                    QString mediaArt;
+
+                    bool inDb = false;
+                    bool getTags = true;
+
+                    if (db.isOpen()) {
+                        QSqlQuery query(db);
+                        query.prepare(QStringLiteral("SELECT modificationTime, title, artist, album, duration, mediaArt FROM tracks WHERE filePath = ?"));
+                        query.lastError();
+                        query.addBindValue(filePath);
+                        if (query.exec()) {
+                            if (query.next()) {
+                                inDb = true;
+                                if (query.value(0).toLongLong() == fileInfo.lastModified().toMSecsSinceEpoch()) {
+                                    getTags = false;
+                                    title = query.value(1).toString();
+                                    artist = query.value(2).toString();
+                                    album = query.value(3).toString();
+                                    duration = query.value(4).toInt();
+                                    mediaArt = query.value(5).toString();
+                                }
+                            }
+                        } else {
+                            qWarning() << "failed to get track from database" << query.lastError();
+                        }
+                    }
+
+                    if (getTags) {
+                        const LibraryTrackInfo info(LibraryUtils::getTrackInfo(fileInfo));
+                        title = info.title;
+                        artist = info.artist;
+                        album = info.album;
+                        duration = info.duration;
+                        mediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
+                    }
+
+                    if (artist.isEmpty()) {
+                        artist = tr("Unknown artist");
+                    }
+
+                    if (album.isEmpty()) {
+                        album = tr("Unknown artist");
+                    }
+
+                    tracks.append(std::make_shared<QueueTrack>(filePath,
+                                                               title,
+                                                               duration,
+                                                               artist,
+                                                               album,
+                                                               mediaArt));
+                }
+
+                db.commit();
+            }
+            QSqlDatabase::removeDatabase(dbConnectionName);
+
+            return tracks;
+        });
+
+        using FutureWatcher = QFutureWatcher<QList<std::shared_ptr<QueueTrack>>>;
+        auto watcher = new FutureWatcher(this);
+        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+            const int start = mTracks.size();
+            const auto tracks = watcher->result();
+
+            for (const auto track : tracks) {
+                mTracks.append(track);
+                mNotPlayedTracks.append(track);
+            }
+            emit tracksAdded(start);
+
+            if (mCurrentIndex == -1 && !mTracks.isEmpty()) {
+                if (setAsCurrent < 0 || setAsCurrent >= mTracks.size()) {
+                    setCurrentIndex(0);
+                } else {
+                    setCurrentIndex(setAsCurrent);
+                }
+                emit currentTrackChanged();
+            }
+
+            mAddingTracks = false;
+            emit addingTracksChanged();
+        });
+        watcher->setFuture(future);
     }
 
     void Queue::removeTrack(int index)
@@ -188,7 +352,7 @@ namespace unplayer
         }
     }
 
-    void Queue::removeTracks(QList<int> indexes)
+    void Queue::removeTracks(QVector<int> indexes)
     {
         const std::shared_ptr<QueueTrack> currentTrack(mTracks.at(mCurrentIndex));
 
@@ -214,16 +378,8 @@ namespace unplayer
         mTracks.clear();
         mNotPlayedTracks.clear();
         emit cleared();
-    }
-
-    bool Queue::hasUrl(const QString& url)
-    {
-        for (const std::shared_ptr<QueueTrack>& track : mTracks) {
-            if (track->url == url) {
-                return true;
-            }
-        }
-        return false;
+        setCurrentIndex(-1);
+        emit currentTrackChanged();
     }
 
     void Queue::next()

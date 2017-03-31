@@ -31,6 +31,11 @@ Page {
                 text: qsTr("About")
                 onClicked: pageStack.push("AboutPage.qml")
             }
+
+            MenuItem {
+                text: qsTr("Settings")
+                onClicked: pageStack.push("SettingsPage.qml")
+            }
         }
 
         Column {
@@ -42,109 +47,79 @@ Page {
             }
 
             MainPageListItem {
-                property int artistsCount: {
-                    if (sparqlConnection.ready)
-                        return sparqlConnection.select("SELECT nmm:artistName(nmm:performer(?track)) AS ?artist\n" +
-                                                       "WHERE {\n" +
-                                                       "    ?track a nmm:MusicPiece.\n" +
-                                                       "}\n" +
-                                                       "GROUP BY ?artist").length
-                    return 0
+                enabled: Unplayer.LibraryUtils.databaseInitialized
+                title: qsTr("Library")
+                description: {
+                    if (!Unplayer.LibraryUtils.databaseInitialized) {
+                        return qsTr("Error initializing database")
+                    }
+                    if (!Unplayer.Settings.hasLibraryDirectories) {
+                        return qsTr("No selected directories")
+                    }
+                    if (Unplayer.LibraryUtils.updating) {
+                        return qsTr("Updating...")
+                    }
+                    var tracksCount = Unplayer.LibraryUtils.tracksCount
+                    if (tracksCount === 0) {
+                        return qsTr("%n tracks(s)", String(), 0)
+                    }
+                    return qsTr("%1, %2")
+                    .arg(qsTr("%n tracks(s)", String(), tracksCount))
+                    .arg(Unplayer.Utils.formatDuration(Unplayer.LibraryUtils.tracksDuration))
+                }
+                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+
+                menu: Component {
+                    ContextMenu {
+                        MenuItem {
+                            enabled: Unplayer.Settings.hasLibraryDirectories
+                            text: qsTr("Update Library")
+                            onClicked: Unplayer.LibraryUtils.updateDatabase()
+                        }
+
+                        MenuItem {
+                            text: qsTr("Reset Library")
+                            onClicked: Unplayer.LibraryUtils.resetDatabase()
+                        }
+                    }
+                }
+                showMenuOnPressAndHold: !Unplayer.LibraryUtils.updating
+
+                onClicked: {
+                    if (Unplayer.Settings.hasLibraryDirectories) {
+                        pageStack.push(libraryPageComponent)
+                    } else {
+                        pageStack.push("LibraryDirectoriesPage.qml")
+                    }
                 }
 
-                title: qsTr("Artists")
-                description: qsTr("%n artist(s)", String(), artistsCount)
-                mediaArt: Unplayer.Utils.randomMediaArt()
-
-                onClicked: pageStack.push("ArtistsPage.qml")
+                Component {
+                    id: libraryPageComponent
+                    LibraryPage { }
+                }
             }
 
             MainPageListItem {
-                property int albumsCount: {
-                    if (sparqlConnection.ready)
-                        return sparqlConnection.select("SELECT nie:title(nmm:musicAlbum(?track)) AS ?album\n" +
-                                                       "       nmm:artistName(nmm:performer(?track)) AS ?artist\n" +
-                                                       "WHERE {\n" +
-                                                       "    ?track a nmm:MusicPiece.\n" +
-                                                       "}\n" +
-                                                       "GROUP BY ?album ?artist").length
-                    return 0
-                }
-
-                title: qsTr("Albums")
-                description: qsTr("%n albums(s)", String(), albumsCount)
-                mediaArt: Unplayer.Utils.randomMediaArt()
-
-                onClicked: pageStack.push("AllAlbumsPage.qml")
-            }
-
-            MainPageListItem {
-                property int duration: {
-                    if (sparqlConnection.ready)
-                        return sparqlConnection.select("SELECT SUM(nfo:duration(?track)) AS ?duration\n" +
-                                                       "WHERE {\n" +
-                                                       "    ?track a nmm:MusicPiece.\n" +
-                                                       "}")[0].duration
-                    return 0
-                }
-
-                property int tracksCount: {
-                    if (sparqlConnection.ready)
-                        return sparqlConnection.select("SELECT ?track\n" +
-                                                       "WHERE {\n" +
-                                                       "    ?track a nmm:MusicPiece.\n" +
-                                                       "}").length
-                    return 0
-                }
-
-                title: qsTr("Tracks")
-                description: qsTr("%n tracks(s)", String(), tracksCount) + ", " + Unplayer.Utils.formatDuration(duration)
-                mediaArt: Unplayer.Utils.randomMediaArt()
-
-                onClicked: pageStack.push("TracksPage.qml", {
-                                              pageTitle: qsTr("Tracks"),
-                                              allArtists: true
-                                          })
-            }
-
-            MainPageListItem {
-                title: qsTr("Genres")
-                onClicked: pageStack.push("GenresPage.qml")
-            }
-
-            MainPageListItem {
-                id: playlistsListItem
-
-                property int playlistsCount: {
-                    if (sparqlConnection.ready)
-                        return getPlaylistsCount()
-                    return 0
-                }
-
-                function getPlaylistsCount() {
-                    return sparqlConnection.select("SELECT ?playlist\n" +
-                                                   "WHERE {\n" +
-                                                   "    ?playlist a nmm:Playlist;\n" +
-                                                   "              nie:mimeType ?mimeType.\n" +
-                                                   "    FILTER(?mimeType = \"audio/x-scpls\")" +
-                                                   "}").length
-                }
-
                 title: qsTr("Playlists")
-                description: qsTr("%n playlist(s)", String(), playlistsCount)
+                description: qsTr("%n playlist(s)", String(), Unplayer.PlaylistUtils.playlistsCount)
                 fallbackIcon: "image://theme/icon-m-document"
-                onClicked: pageStack.push("PlaylistsPage.qml")
+                onClicked: pageStack.push(playlistsPageComponent)
 
-                Connections {
-                    target: Unplayer.PlaylistUtils
-                    onPlaylistsChanged: playlistsListItem.playlistsCount = playlistsListItem.getPlaylistsCount()
+                Component {
+                    id: playlistsPageComponent
+                    PlaylistsPage { }
                 }
             }
 
             MainPageListItem {
                 title: qsTr("Directories")
                 fallbackIcon: "image://theme/icon-m-folder"
-                onClicked: pageStack.push("DirectoriesPage.qml")
+                onClicked: pageStack.push(directoriesPageComponent)
+
+                Component {
+                    id: directoriesPageComponent
+                    DirectoriesPage { }
+                }
             }
         }
 

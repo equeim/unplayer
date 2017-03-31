@@ -16,24 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtSparql 1.0
+#ifndef UNPLAYER_DIRECTORYCONTENTPROXYMODEL_H
+#define UNPLAYER_DIRECTORYCONTENTPROXYMODEL_H
 
-import harbour.unplayer 0.1 as Unplayer
+#include "filterproxymodel.h"
 
-SparqlListModel {
-    property bool allArtists
-    property bool allAlbums
+namespace unplayer
+{
+    class DirectoryContentProxyModel : public FilterProxyModel
+    {
+        Q_OBJECT
+        Q_PROPERTY(int isDirectoryRole READ isDirectoryRole WRITE setIsDirectoryRole)
+    public:
+        int isDirectoryRole() const;
+        void setIsDirectoryRole(int isDirectoryRole);
 
-    property string artist
-    property string album
-    property string genre
+    protected:
+        bool lessThan(const QModelIndex& left, const QModelIndex& right) const override;
 
-    connection: SparqlConnection {
-        driver: "QTRACKER_DIRECT"
-    }
-    query: Unplayer.Utils.tracksSparqlQuery(allArtists,
-                                            allAlbums,
-                                            artist,
-                                            album,
-                                            genre)
+    private:
+        int mIsDirectoryRole;
+    };
 }
+
+#endif // UNPLAYER_DIRECTORYCONTENTPROXYMODEL_H

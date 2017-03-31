@@ -29,15 +29,27 @@ namespace unplayer
     class QueueModel : public QAbstractListModel
     {
         Q_OBJECT
+        Q_ENUMS(Role)
         Q_PROPERTY(unplayer::Queue* queue READ queue WRITE setQueue)
     public:
+        enum Role
+        {
+            FilePathRole = Qt::UserRole,
+            TitleRole,
+            ArtistRole,
+            DisplayedArtistRole,
+            AlbumRole,
+            DisplayedAlbumRole,
+            DurationRole
+        };
+
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
         Queue* queue() const;
         void setQueue(Queue* queue);
 
-        Q_INVOKABLE QVariantMap get(int index) const;
+        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

@@ -36,23 +36,9 @@ CoverBackground {
             id: mediaArtImage
 
             anchors.fill: parent
-            cache: false
             fillMode: Image.PreserveAspectCrop
+            source: player.queue.currentMediaArt
             sourceSize.height: parent.height
-
-            Binding {
-                target: mediaArtImage
-                property: "source"
-                value: player.queue.currentMediaArt
-            }
-
-            Connections {
-                target: rootWindow
-                onMediaArtReloadNeeded: {
-                    mediaArtImage.source = String()
-                    mediaArtImage.source = player.queue.currentMediaArt
-                }
-            }
         }
 
         OpacityRampEffect {

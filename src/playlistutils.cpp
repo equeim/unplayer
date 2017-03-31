@@ -18,209 +18,249 @@
 
 #include "playlistutils.h"
 
-#include <QDBusConnection>
-#include <QFile>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDir>
 #include <QStandardPaths>
+#include <QTextStream>
+
+#include <QFileInfo>
 #include <QUrl>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSettings>
 
-#include <QSparqlConnection>
-#include <QSparqlConnectionOptions>
-#include <QSparqlQuery>
-#include <QSparqlResult>
-
-#include "utils.h"
+#include <QFile>
 
 namespace unplayer
 {
-    PlaylistUtils::PlaylistUtils()
-        : mSparqlConnection(new QSparqlConnection(QStringLiteral("QTRACKER_DIRECT"), QSparqlConnectionOptions(), this)),
-          mNewPlaylist(false)
+    namespace
     {
-        QDBusConnection::sessionBus().connect(QStringLiteral("org.freedesktop.Tracker1"),
-                                              QStringLiteral("/org/freedesktop/Tracker1/Resources"),
-                                              QStringLiteral("org.freedesktop.Tracker1.Resources"),
-                                              QStringLiteral("GraphUpdated"),
-                                              this,
-                                              SLOT(onTrackerGraphUpdated(QString)));
+        PlaylistUtils* instancePointer = nullptr;
     }
 
-    void PlaylistUtils::newPlaylist(const QString& name, const QVariant& tracksVariant)
+    PlaylistUtils* PlaylistUtils::instance()
     {
-        mNewPlaylist = true;
-        mNewPlaylistUrl = QUrl::fromLocalFile(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) +
-                                              "/playlists/" +
-                                              name +
-                                              ".pls")
-                              .toEncoded();
-
-        QStringList tracks(unboxTracks(tracksVariant));
-
-        mNewPlaylistTracksCount = tracks.size();
-        savePlaylist(mNewPlaylistUrl, tracks);
+        if (!instancePointer) {
+            instancePointer = new PlaylistUtils(qApp);
+        }
+        return instancePointer;
     }
 
-    void PlaylistUtils::addTracksToPlaylist(const QString& playlistUrl, const QVariant& newTracksVariant)
+    QString PlaylistUtils::playlistsDirectoryPath()
     {
-        QStringList tracks(parsePlaylist(playlistUrl));
-        tracks.append(unboxTracks(newTracksVariant));
-        savePlaylist(playlistUrl, tracks);
-        setPlaylistTracksCount(playlistUrl, tracks.size());
+        return QString::fromLatin1("%1/playlists").arg(QStandardPaths::writableLocation(QStandardPaths::MusicLocation));
     }
 
-    void PlaylistUtils::removeTracksFromPlaylist(const QString& playlistUrl, const QList<int>& trackIndexes)
+    int PlaylistUtils::playlistsCount()
     {
-        QStringList tracks(parsePlaylist(playlistUrl));
-
-        for (int i = 0, max = trackIndexes.size(); i < max; i++)
-            tracks.removeAt(trackIndexes.at(i) - i);
-
-        savePlaylist(playlistUrl, tracks);
-        setPlaylistTracksCount(playlistUrl, tracks.size());
+        return QDir(playlistsDirectoryPath()).entryList({QLatin1String("*.pls")}, QDir::Files).size();
     }
 
-    void PlaylistUtils::removePlaylist(const QString& url)
+    void PlaylistUtils::savePlaylist(const QString& filePath, const QList<PlaylistTrack>& tracks)
     {
-        QFile::remove(QUrl(url).path());
+        {
+            QFile file(filePath);
+            if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
+                qWarning() << "error opening playlist file:" << filePath << file.error() << file.errorString();
+                return;
+            }
+
+            QTextStream stream(&file);
+
+            stream << "[playlist]" << endl;
+
+            for (int i = 0, max = tracks.size(); i < max; ++i) {
+                const PlaylistTrack& track = tracks.at(i);
+                stream << "File" << i + 1 << '=' << track.filePath << endl;
+                stream << "Title" << i + 1 << '=' << track.title << endl;
+                if (track.hasDuration) {
+                    stream << "Length" << i + 1 << '=' << track.duration << endl;
+                }
+            }
+
+            stream << "NumberOfEntries=" << tracks.size() << endl;
+        }
+        emit playlistsChanged();
     }
 
-    QVariantList PlaylistUtils::syncParsePlaylist(const QString& playlistUrl)
+    void PlaylistUtils::newPlaylist(const QString& name, const QStringList& trackPaths)
     {
-        QVariantList trackVariants;
+        savePlaylist(QString::fromLatin1("%1/%2.pls").arg(playlistsDirectoryPath()).arg(name), tracksFromPaths(trackPaths));
+    }
 
-        for (const QString& trackUrl : parsePlaylist(playlistUrl)) {
-            QSparqlResult* result = mSparqlConnection->syncExec(QSparqlQuery(trackSparqlQuery(trackUrl),
-                                                                             QSparqlQuery::SelectStatement));
+    void PlaylistUtils::addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths)
+    {
+        QList<PlaylistTrack> tracks(parsePlaylist(filePath));
+        tracks.append(tracksFromPaths(trackPaths));
+        savePlaylist(filePath, tracks);
+    }
 
-            if (result->next()) {
-                QSparqlResultRow row(result->current());
+    void PlaylistUtils::removePlaylist(const QString& filePath)
+    {
+        if (QFile::remove(filePath)) {
+            emit playlistsChanged();
+        } else {
+            qWarning() << "failed to remove playlist:" << filePath;
+        }
+    }
 
-                trackVariants.append(QVariantMap{{QStringLiteral("title"), row.value(QStringLiteral("title"))},
-                                                 {QStringLiteral("url"), row.value(QStringLiteral("url"))},
-                                                 {QStringLiteral("duration"), row.value(QStringLiteral("duration"))},
-                                                 {QStringLiteral("artist"), row.value(QStringLiteral("artist"))},
-                                                 {QStringLiteral("rawArtist"), row.value(QStringLiteral("rawArtist"))},
-                                                 {QStringLiteral("album"), row.value(QStringLiteral("album"))},
-                                                 {QStringLiteral("rawAlbum"), row.value(QStringLiteral("rawAlbum"))}});
-                result->deleteLater();
+    void PlaylistUtils::removePlaylists(const QStringList& playlists)
+    {
+        bool removed = false;
+        for (const QString& filePath : playlists) {
+            if (QFile::remove(filePath)) {
+                removed = true;
+            } else {
+                qWarning() << "failed to remove playlist:" << filePath;
             }
         }
-
-        return trackVariants;
+        if (removed) {
+            emit playlistsChanged();
+        }
     }
 
-    QStringList PlaylistUtils::parsePlaylist(const QString& playlistUrl)
+    QList<PlaylistTrack> PlaylistUtils::parsePlaylist(const QString& filePath)
     {
-        QFile file(QUrl(playlistUrl).path());
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray line(file.readLine());
-            if (line.trimmed() == "[playlist]") {
-                QStringList tracks;
-                while (!file.atEnd()) {
-                    line = file.readLine();
-                    if (line.startsWith("File")) {
-                        int index = line.indexOf('=');
-                        if (index >= 0) {
-                            QByteArray url(line.mid(index + 1).trimmed());
-                            if (!url.isEmpty()) {
-                                tracks.append(url);
-                            }
-                        }
+        QList<PlaylistTrack> tracks;
+
+        QSettings settings(filePath, QSettings::IniFormat);
+        settings.beginGroup(QLatin1String("playlist"));
+
+        QSqlDatabase::database().transaction();
+        for (int i = 1, max = settings.childKeys().filter(QLatin1String("File")).size() + 1; i < max; ++i) {
+            QString filePath;
+            {
+                QString file;
+                const QVariant fileVariant(settings.value(QStringLiteral("File%1").arg(i)));
+                if (fileVariant.type() == QVariant::StringList) {
+                    file = fileVariant.toStringList().join(',');
+                } else {
+                    file = fileVariant.toString();
+                }
+                const QUrl url(QUrl::fromUserInput(file));
+                if (url.isLocalFile()) {
+                    filePath = url.path();
+                } else {
+                    continue;
+                }
+            }
+
+            PlaylistTrack track(trackFromFilePath(filePath));
+
+            if (!track.inLibrary) {
+                const QString titleKey(QStringLiteral("Title%1").arg(i));
+                if (settings.contains(titleKey)) {
+                    const QVariant titleVariant(settings.value(titleKey));
+                    if (titleVariant.type() == QVariant::StringList) {
+                        track.title = titleVariant.toStringList().join(',');
+                    } else {
+                        track.title = titleVariant.toString();
                     }
                 }
-                return tracks;
+                if (track.title.isEmpty()) {
+                    track.title = QFileInfo(filePath).fileName();
+                }
+
+                const QString lengthKey(QStringLiteral("Length%1").arg(i));
+                if (settings.contains(lengthKey)) {
+                    track.duration = settings.value(lengthKey).toInt();
+                    track.hasDuration = true;
+                }
+            }
+
+            tracks.append(track);
+        }
+        QSqlDatabase::database().commit();
+
+        settings.endGroup();
+
+        return tracks;
+    }
+
+    int PlaylistUtils::getPlaylistTracksCount(const QString& filePath)
+    {
+        QSettings settings(filePath, QSettings::IniFormat);
+        settings.beginGroup(QStringLiteral("playlist"));
+        int tracksCount;
+        if (settings.contains(QStringLiteral("NumberOfEntries"))) {
+            tracksCount = settings.value(QStringLiteral("NumberOfEntries")).toInt();
+        } else {
+            tracksCount = settings.childKeys().filter(QStringLiteral("File")).size();
+        }
+        settings.endGroup();
+        return tracksCount;
+    }
+
+    QStringList PlaylistUtils::getPlaylistTracks(const QString& filePath)
+    {
+        QStringList tracks;
+        QSettings settings(filePath, QSettings::IniFormat);
+        settings.beginGroup(QStringLiteral("playlist"));
+        for (int i = 1, max = settings.childKeys().filter(QStringLiteral("File")).size() + 1; i < max; ++i) {
+            QString file;
+            const QVariant fileVariant(settings.value(QStringLiteral("File%1").arg(i)));
+            if (fileVariant.type() == QVariant::StringList) {
+                file = fileVariant.toStringList().join(',');
+            } else {
+                file = fileVariant.toString();
+            }
+            const QUrl url(QUrl::fromUserInput(file));
+            if (url.isLocalFile()) {
+                tracks.append(url.path());
+            } else {
+                continue;
             }
         }
-
-        return QStringList();
+        return tracks;
     }
 
-    QString PlaylistUtils::trackSparqlQuery(const QString& trackUrl)
+    PlaylistUtils::PlaylistUtils(QObject* parent)
+        : QObject(parent)
     {
-        return QStringLiteral("SELECT nie:url(?track) AS ?url\n"
-                              "       tracker:coalesce(nie:title(?track), nfo:fileName(?track)) AS ?title\n"
-                              "       tracker:coalesce(nmm:artistName(nmm:performer(?track)), \"%1\") AS ?artist\n"
-                              "       nmm:artistName(nmm:performer(?track)) AS ?rawArtist\n"
-                              "       tracker:coalesce(nie:title(nmm:musicAlbum(?track)), \"%2\") AS ?album\n"
-                              "       nie:title(nmm:musicAlbum(?track)) AS ?rawAlbum\n"
-                              "       nfo:duration(?track) AS ?duration\n"
-                              "WHERE {\n"
-                              "    ?track nie:url \"%3\".\n"
-                              "}")
-            .arg(tr("Unknown artist"))
-            .arg(tr("Unknown album"))
-            .arg(Utils::encodeUrl(trackUrl));
+
     }
 
-    QStringList PlaylistUtils::unboxTracks(const QVariant& tracksVariant)
+    QList<PlaylistTrack> PlaylistUtils::tracksFromPaths(const QStringList& trackPaths)
     {
-        if (tracksVariant.type() == QVariant::String) {
-            return QStringList({tracksVariant.toString()});
+        QList<PlaylistTrack> tracks;
+        for (const QString& filePath : trackPaths) {
+            tracks.append(trackFromFilePath(filePath));
         }
+        return tracks;
+    }
 
-        if (tracksVariant.type() == QVariant::List) {
-            QStringList tracks;
-            for (const QVariant& trackVariant : tracksVariant.toList()) {
-                tracks.append(trackVariant.toMap().value(QStringLiteral("url")).toString());
+    PlaylistTrack PlaylistUtils::trackFromFilePath(const QString& filePath)
+    {
+        QString title;
+        int duration = 0;
+        bool hasDuration = false;
+        QString artist;
+        QString album;
+        bool inLibrary = false;
+
+        QSqlQuery query;
+        query.prepare(QLatin1String("SELECT title, duration, artist, album FROM tracks WHERE filePath = ?"));
+        query.addBindValue(filePath);
+        if (query.exec()) {
+            if (query.next()) {
+                title = query.value(0).toString();
+                duration = query.value(1).toInt();
+                hasDuration = true;
+                artist = query.value(2).toString();
+                album = query.value(3).toString();
+                inLibrary = true;
             }
-            return tracks;
+        } else {
+            qWarning() << "failed to get track from database:" << query.lastError();
         }
 
-        return QStringList();
-    }
-
-    void PlaylistUtils::setPlaylistTracksCount(QString playlistUrl, int tracksCount)
-    {
-        playlistUrl = QUrl(playlistUrl).toEncoded();
-
-        QSparqlResult* result = mSparqlConnection->syncExec(QSparqlQuery(QStringLiteral("DELETE {\n"
-                                                                                        "    ?playlist nfo:entryCounter ?tracksCount\n"
-                                                                                        "} WHERE {\n"
-                                                                                        "    ?playlist nie:url \"%1\";\n"
-                                                                                        "              nfo:entryCounter ?tracksCount.\n"
-                                                                                        "}\n")
-                                                                             .arg(playlistUrl),
-                                                                         QSparqlQuery::DeleteStatement));
-        result->deleteLater();
-
-        result = mSparqlConnection->exec(QSparqlQuery(QStringLiteral("INSERT {\n"
-                                                                     "    ?playlist nfo:entryCounter %1\n"
-                                                                     "} WHERE {\n"
-                                                                     "    ?playlist nie:url \"%2\".\n"
-                                                                     "}\n")
-                                                          .arg(tracksCount)
-                                                          .arg(playlistUrl),
-                                                      QSparqlQuery::InsertStatement));
-
-        connect(result, &QSparqlResult::finished, result, &QObject::deleteLater);
-    }
-
-    void PlaylistUtils::savePlaylist(const QString& playlistUrl, const QStringList& tracks)
-    {
-        QFile file(QUrl(playlistUrl).path());
-        if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
-            return;
-        }
-
-        int tracksCount = tracks.size();
-
-        file.write(QByteArrayLiteral("[playlist]\nNumberOfEntries=") + QByteArray::number(tracksCount));
-
-        for (int i = 0; i < tracksCount; i++) {
-            file.write(QStringLiteral("\nFile%1=%2").arg(i + 1).arg(tracks.at(i)).toUtf8());
-        }
-
-        file.close();
-    }
-
-    void PlaylistUtils::onTrackerGraphUpdated(const QString& className)
-    {
-        if (className == "http://www.tracker-project.org/temp/nmm#Playlist") {
-            emit playlistsChanged();
-
-            if (mNewPlaylist) {
-                setPlaylistTracksCount(mNewPlaylistUrl, mNewPlaylistTracksCount);
-                mNewPlaylist = false;
-            }
-        }
+        return PlaylistTrack{filePath,
+                             title,
+                             duration,
+                             hasDuration,
+                             artist,
+                             album,
+                             inLibrary};
     }
 }

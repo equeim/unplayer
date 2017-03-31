@@ -18,7 +18,6 @@
 
 import Sailfish.Silica 1.0
 import Sailfish.Media 1.0
-import QtSparql 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
@@ -83,12 +82,6 @@ ApplicationWindow
         enabled: true
         key: Qt.Key_ToggleCallHangup
         onReleased: player.playing ? player.pause() : player.play()
-    }
-
-    SparqlConnection {
-        id: sparqlConnection
-        property bool ready: status === SparqlConnection.Ready
-        driver: "QTRACKER_DIRECT"
     }
 
     NowPlayingPanel {

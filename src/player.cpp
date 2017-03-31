@@ -32,7 +32,7 @@ namespace unplayer
           mSettingNewTrack(false)
     {
         auto mpris = new MprisPlayer(this);
-        mpris->setServiceName(QStringLiteral("unplayer"));
+        mpris->setServiceName(QLatin1String("unplayer"));
         mpris->setCanControl(true);
 
         QObject::connect(this, &Player::stateChanged, [=](State newState) {
@@ -81,7 +81,7 @@ namespace unplayer
                 const QueueTrack* track = mQueue->tracks().at(mQueue->currentIndex()).get();
 
                 mSettingNewTrack = true;
-                setMedia(QUrl(track->url));
+                setMedia(QUrl::fromLocalFile(track->filePath));
                 mSettingNewTrack = false;
                 play();
 

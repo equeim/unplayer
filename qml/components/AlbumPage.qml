@@ -21,9 +21,16 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
+    id: albumPage
+
+    property string artist
+    property string displayedArtist
+    property string album
+    property string displayedAlbum
+    property int tracksCount
+    property int duration
+
     property alias bottomPanelOpen: selectionPanel.open
 
     SearchPanel {
@@ -69,29 +76,29 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
 
         header: AlbumPageHeader { }
         delegate: LibraryTrackDelegate { }
-        model: TracksProxyModel {
+        model: Unplayer.FilterProxyModel {
             id: tracksProxyModel
 
-            sourceModel: TracksModel {
+            sourceModel: Unplayer.TracksModel {
                 id: tracksModel
 
                 allArtists: false
                 allAlbums: false
 
-                artist: model.rawArtist ? model.rawArtist : String()
-                album: model.rawAlbum ? model.rawAlbum : String()
+                artist: albumPage.artist
+                album: albumPage.album
             }
         }
 
         PullDownMenu {
-            MenuItem {
+            /*MenuItem {
                 visible: !unknownArtist && !unknownAlbum
                 text: qsTr("Set cover image")
                 onClicked: pageStack.push(setCoverPage)
@@ -100,7 +107,7 @@ Page {
                     id: setCoverPage
                     SetCoverPage { }
                 }
-            }
+            }*/
 
             SelectionMenuItem {
                 text: qsTr("Select tracks")

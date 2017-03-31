@@ -20,42 +20,36 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 BaseTrackDelegate {
-    current: model.url === player.queue.currentUrl
+    current: model.filePath === player.queue.currentFilePath
+    showDuration: true
     menu: Component {
         ContextMenu {
             MenuItem {
                 text: qsTr("Track information")
-                onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
+                onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
             }
 
             AddToQueueMenuItem {
-                onClicked: {
-                    player.queue.add([listView.model.sourceModel.get(listView.model.sourceIndex(model.index))])
-                    player.queue.setCurrentToFirstIfNeeded()
-                }
+                onClicked: player.queue.addTrack(model.filePath)
             }
 
             AddToPlaylistMenuItem {
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.url })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
             }
         }
     }
 
     onClicked: {
         if (selectionPanel.showPanel) {
-            listView.model.select(model.index)
+            tracksProxyModel.select(model.index)
         } else {
             if (current) {
-                if (!player.playing)
+                if (!player.playing) {
                     player.play()
-                return
+                }
+            } else {
+                player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
             }
-
-            player.queue.clear()
-            player.queue.addTracks(listView.model.getTracks())
-            player.queue.currentIndex = model.index
-            player.queue.currentTrackChanged()
-            player.play()
         }
     }
 }

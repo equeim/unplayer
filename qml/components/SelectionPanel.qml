@@ -27,51 +27,6 @@ DockedPanel {
     property alias selectionText: selectionLabel.text
     property bool showPanel: false
 
-    function getTracksForSelectedArtists() {
-        var selectedIndexes = listView.model.selectedSourceIndexes()
-        var selectedTracks = []
-        for (var i = 0, artistsCount = selectedIndexes.length; i < artistsCount; i++) {
-            selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
-                                                                                                            true,
-                                                                                                            listView.model.sourceModel.get(selectedIndexes[i]).rawArtist)))
-        }
-        return selectedTracks
-    }
-
-    function getTracksForSelectedAlbums() {
-        var selectedIndexes = listView.model.selectedSourceIndexes()
-        var selectedTracks = []
-        for (var i = 0, albumsCount = selectedIndexes.length; i < albumsCount; i++) {
-            var albumObject = listView.model.sourceModel.get(selectedIndexes[i])
-            selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
-                                                                                                            false,
-                                                                                                            albumObject.rawArtist,
-                                                                                                            albumObject.rawAlbum)))
-        }
-        return selectedTracks
-    }
-
-    function getTracksForSelectedGenres() {
-        var selectedIndexes = listView.model.selectedSourceIndexes()
-        var selectedTracks = []
-        for (var i = 0, albumsCount = selectedIndexes.length; i < albumsCount; i++) {
-            selectedTracks = selectedTracks.concat(sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(true,
-                                                                                                            true,
-                                                                                                            String(),
-                                                                                                            String(),
-                                                                                                            listView.model.sourceModel.get(selectedIndexes[i]).genre)))
-        }
-        return selectedTracks
-    }
-
-    function getSelectedTracks() {
-        var selectedIndexes = listView.model.selectedSourceIndexes()
-        var selectedTracks = []
-        for (var i = 0, tracksCount = selectedIndexes.length; i < tracksCount; i++)
-            selectedTracks.push(listView.model.sourceModel.get(selectedIndexes[i]))
-        return selectedTracks
-    }
-
     width: parent.width
     height: column.height + Theme.paddingLarge
     contentHeight: height
@@ -89,9 +44,20 @@ DockedPanel {
     }
 
     onOpenChanged: {
-        if (!open && !Qt.inputMethod.visible) {
-            showPanel = false
-            listView.model.selectionModel.clear()
+        if (open) {
+            visible = true
+        } else {
+            if (!Qt.inputMethod.visible) {
+                showPanel = false
+                listView.model.selectionModel.clear()
+            }
+        }
+
+    }
+
+    onVisibleSizeChanged: {
+        if (visibleSize === 0 && !showPanel) {
+            visible = false
         }
     }
 

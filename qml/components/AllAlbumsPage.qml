@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -39,8 +37,7 @@ Page {
                 enabled: albumsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getTracksForSelectedAlbums())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -53,7 +50,7 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getTracksForSelectedAlbums()
+                        tracks: albumsModel.getTracksForAlbums(albumsProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
                             if (added)
                                 selectionPanel.showPanel = false
@@ -69,7 +66,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -78,19 +75,19 @@ Page {
             title: qsTr("Albums")
         }
         delegate: AlbumDelegate {
-            description: model.artist
+            description: model.displayedArtist
         }
         model: Unplayer.FilterProxyModel {
             id: albumsProxyModel
 
-            filterRoleName: "album"
-            sourceModel: AlbumsModel {
+            filterRole: Unplayer.AlbumsModel.AlbumRole
+            sourceModel: Unplayer.AlbumsModel {
                 id: albumsModel
                 allArtists: true
             }
         }
         section {
-            property: "artist"
+            property: "displayedArtist"
             delegate: SectionHeader {
                 text: section
             }

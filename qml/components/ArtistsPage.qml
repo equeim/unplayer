@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -39,8 +37,7 @@ Page {
                 enabled: artistsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(selectionPanel.getTracksForSelectedArtists())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -53,7 +50,7 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: selectionPanel.getTracksForSelectedArtists()
+                        tracks: artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
                             if (added)
                                 selectionPanel.showPanel = false
@@ -69,7 +66,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -80,22 +77,9 @@ Page {
         delegate: MediaContainerSelectionDelegate {
             id: artistDelegate
 
-            property bool unknownArtist: model.rawArtist === undefined
-
-            function getTracks() {
-                return sparqlConnection.select(Unplayer.Utils.tracksSparqlQuery(false,
-                                                                                true,
-                                                                                model.rawArtist))
-            }
-
-            function reloadMediaArt() {
-                mediaArt = String()
-                mediaArt = Unplayer.Utils.mediaArtForArtist(model.rawArtist)
-            }
-
-            title: Theme.highlightText(model.artist, searchPanel.searchText, Theme.highlightColor)
+            title: Theme.highlightText(model.displayedArtist, searchPanel.searchText, Theme.highlightColor)
             description: qsTr("%n album(s)", String(), model.albumsCount)
-            mediaArt: Unplayer.Utils.mediaArtForArtist(model.rawArtist)
+            mediaArt: Unplayer.LibraryUtils.randomMediaArtForArtist(model.artist)
             menu: Component {
                 ContextMenu {
                     MenuItem {
@@ -103,40 +87,42 @@ Page {
                         onClicked: pageStack.push("TracksPage.qml", {
                                                       pageTitle: model.artist,
                                                       allArtists: false,
-                                                      artist: model.rawArtist ? model.rawArtist : String()
+                                                      artist: model.artist
                                                   })
                     }
 
                     AddToQueueMenuItem {
-                        onClicked: {
-                            player.queue.add(getTracks())
-                            player.queue.setCurrentToFirstIfNeeded()
-                        }
+                        onClicked: player.queue.addTracks(artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)))
                     }
 
                     AddToPlaylistMenuItem {
-                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: getTracks() })
+                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)) })
                     }
                 }
             }
 
             onClicked: {
-                if (selectionPanel.showPanel)
+                if (selectionPanel.showPanel) {
                     artistsProxyModel.select(model.index)
-                else
-                    pageStack.push(artistPage)
+                } else {
+                    pageStack.push("ArtistPage.qml", {displayedArtist: model.displayedArtist,
+                                                      artist: model.artist,
+                                                      albumsCount: model.albumsCount,
+                                                      tracksCount: model.tracksCount,
+                                                      duration: model.duration})
+                }
             }
 
-            Component {
-                id: artistPage
-                ArtistPage { }
+            Connections {
+                target: Unplayer.LibraryUtils
+                onMediaArtChanged: mediaArt = Unplayer.LibraryUtils.randomMediaArtForArtist(model.artist)
             }
         }
         model: Unplayer.FilterProxyModel {
             id: artistsProxyModel
 
-            filterRoleName: "artist"
-            sourceModel: ArtistsModel {
+            filterRole: Unplayer.ArtistsModel.DisplayedArtistRole
+            sourceModel: Unplayer.ArtistsModel {
                 id: artistsModel
             }
         }

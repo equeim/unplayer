@@ -20,54 +20,44 @@
 #define UNPLAYER_PLAYLISTMODEL_H
 
 #include <QAbstractListModel>
-#include <QQmlParserStatus>
-
-class QSparqlResult;
+#include "playlistutils.h"
 
 namespace unplayer
 {
-    struct PlaylistTrack;
-
-    class PlaylistModel : public QAbstractListModel, public QQmlParserStatus
+    class PlaylistModel : public QAbstractListModel
     {
         Q_OBJECT
-        Q_INTERFACES(QQmlParserStatus)
-        Q_PROPERTY(QString url READ url WRITE setUrl)
-        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
+        Q_ENUMS(Role)
+        Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
     public:
+        enum Role
+        {
+            FilePathRole = Qt::UserRole,
+            TitleRole,
+            DurationRole,
+            HasDurationRole,
+            ArtistRole,
+            AlbumRole,
+            InLibraryRole
+        };
+
         PlaylistModel();
-        ~PlaylistModel() override;
-        void classBegin() override;
-        void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        int rowCount(const QModelIndex& parent) const override;
 
-        QString url() const;
-        void setUrl(const QString& newUrl);
+        const QString& filePath() const;
+        void setFilePath(const QString& filePath);
 
-        bool isLoaded() const;
-
-        Q_INVOKABLE QVariantMap get(int trackIndex) const;
-        Q_INVOKABLE void removeAtIndexes(const QList<int>& trackIndexes);
-
+        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
+        Q_INVOKABLE void removeTrack(int index);
+        Q_INVOKABLE void removeTracks(QVector<int> indexes);
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        void onQueryFinished();
-
-    private:
-        QList<PlaylistTrack*> mTracks;
-        int mRowCount;
-
-        QList<QSparqlResult*> mQueries;
-        int mLoadedTracks;
-
-        QString mUrl;
-        bool mLoaded;
-    signals:
-        void loadedChanged();
+        QList<PlaylistTrack> mTracks;
+        QString mFilePath;
     };
 }
 

@@ -6,7 +6,6 @@ Group: Applications/Music
 License: GPLv3
 URL: https://github.com/equeim/unplayer
 Source0: %{name}-%{version}.tar.xz
-Requires: libqt5sparql-tracker-direct
 Requires: sailfishsilica-qt5
 BuildRequires: pkgconfig(mpris-qt5)
 BuildRequires: pkgconfig(Qt5Concurrent)
@@ -16,7 +15,7 @@ BuildRequires: pkgconfig(Qt5Gui)
 BuildRequires: pkgconfig(Qt5Multimedia)
 BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
-BuildRequires: pkgconfig(Qt5Sparql)
+BuildRequires: pkgconfig(Qt5Sql)
 BuildRequires: pkgconfig(sailfishapp)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: boost-devel
@@ -58,7 +57,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/%{name}/lib
 cp -d build-%{_arch}/taglib/install/lib/libtag.so* %{buildroot}%{_datadir}/%{name}/lib
 
-python waf install --destdir=%{buildroot} -v
+python waf install --destdir=%{buildroot}
 desktop-file-install --delete-original \
     --dir %{buildroot}%{_datadir}/applications \
     %{buildroot}%{_datadir}/applications/*.desktop

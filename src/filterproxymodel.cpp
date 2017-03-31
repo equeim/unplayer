@@ -19,39 +19,48 @@
 #include "filterproxymodel.h"
 
 #include <algorithm>
-
 #include <QItemSelectionModel>
 
 namespace unplayer
 {
     FilterProxyModel::FilterProxyModel()
-        : mSelectionModel(new QItemSelectionModel(this))
+        : mSortEnabled(false),
+          mSelectionModel(new QItemSelectionModel(this))
     {
+        mCollator.setNumericMode(true);
         QObject::connect(mSelectionModel, &QItemSelectionModel::selectionChanged, this, &FilterProxyModel::selectionChanged);
     }
 
     void FilterProxyModel::classBegin()
     {
+
     }
 
     void FilterProxyModel::componentComplete()
     {
-        setFilterRole(sourceModel()->roleNames().key(mFilterRoleName));
+        if (mSortEnabled) {
+            sort(0);
+        }
     }
 
-    QByteArray FilterProxyModel::filterRoleName() const
+    QVector<int> FilterProxyModel::sourceIndexes() const
     {
-        return mFilterRoleName;
+        QVector<int> indexes;
+        indexes.reserve(rowCount());
+        for (int i = 0, max = rowCount(); i < max; ++i) {
+            indexes.append(sourceIndex(i));
+        }
+        return indexes;
     }
 
-    void FilterProxyModel::setFilterRoleName(const QByteArray& filterRoleName)
+    bool FilterProxyModel::isSortEnabled() const
     {
-        mFilterRoleName = filterRoleName;
+        return mSortEnabled;
     }
 
-    int FilterProxyModel::count() const
+    void FilterProxyModel::setSortEnabled(bool sortEnabled)
     {
-        return rowCount();
+        mSortEnabled = sortEnabled;
     }
 
     int FilterProxyModel::proxyIndex(int sourceIndex) const
@@ -74,17 +83,16 @@ namespace unplayer
         return mSelectionModel->selectedIndexes().size();
     }
 
-    QList<int> FilterProxyModel::selectedSourceIndexes() const
+    QVector<int> FilterProxyModel::selectedSourceIndexes() const
     {
-        QList<int> indexes;
-
         QModelIndexList modelIndexes(mSelectionModel->selectedIndexes());
         std::sort(modelIndexes.begin(), modelIndexes.end());
 
+        QVector<int> indexes;
+        indexes.reserve(modelIndexes.size());
         for (const QModelIndex& index : modelIndexes) {
             indexes.append(index.row());
         }
-
         return indexes;
     }
 
@@ -101,5 +109,14 @@ namespace unplayer
     void FilterProxyModel::selectAll()
     {
         mSelectionModel->select(QItemSelection(index(0, 0), index(rowCount() - 1, 0)), QItemSelectionModel::Select);
+    }
+
+    bool FilterProxyModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
+    {
+        const QVariant leftVariant(left.data(sortRole()));
+        if (leftVariant.type() == QVariant::String) {
+            return (mCollator.compare(leftVariant.toString(), right.data(sortRole()).toString()) < 0);
+        }
+        return QSortFilterProxyModel::lessThan(left, right);
     }
 }

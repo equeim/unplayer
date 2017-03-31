@@ -21,8 +21,6 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
 
@@ -67,24 +65,36 @@ Page {
     SilicaListView {
         id: listView
 
+        property bool goingUp
+        property int previousPosition
+
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
 
         header: Column {
+            property int oldHeight
+
             width: listView.width
+
+            onHeightChanged: {
+                if (height > oldHeight) {
+                    listView.contentY -= (height - oldHeight)
+                }
+                oldHeight = height
+            }
+
+            Component.onCompleted: oldHeight = height
 
             PageHeader {
                 title: qsTr("Directories")
                 description: directoryTracksModel.directory
             }
 
-            BackgroundItem {
-                id: parentDirectoryItem
-
+            ParentDirectoryItem {
                 visible: directoryTracksModel.loaded && directoryTracksModel.directory !== "/"
                 onClicked: {
                     if (!selectionPanel.showPanel) {
@@ -92,51 +102,28 @@ Page {
                         directoryTracksModel.directory = directoryTracksModel.parentDirectory
                     }
                 }
-
-                Row {
-                    anchors {
-                        left: parent.left
-                        leftMargin: Theme.horizontalPageMargin
-                        verticalCenter: parent.verticalCenter
-                    }
-                    spacing: Theme.paddingMedium
-
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        asynchronous: true
-                        source: parentDirectoryItem.highlighted ? "image://theme/icon-m-folder?" + Theme.highlightColor :
-                                                                  "image://theme/icon-m-folder"
-                    }
-
-                    Label {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: ".."
-                        color: parentDirectoryItem.highlighted ? Theme.highlightColor : Theme.primaryColor
-                    }
-                }
             }
         }
         delegate: ListItem {
             id: fileDelegate
 
-            property bool current: model.url === player.queue.currentUrl
+            property bool current: model.filePath === player.queue.currentFilePath
 
             menu: Component {
                 ContextMenu {
                     MenuItem {
                         text: qsTr("Track information")
-                        onClicked: pageStack.push("TrackInfoPage.qml", { trackUrl: model.url })
+                        onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                     }
 
                     AddToQueueMenuItem {
                         onClicked: {
-                            player.queue.add([directoryTracksModel.get(directoryTracksProxyModel.sourceIndex(model.index))])
-                            player.queue.setCurrentToFirstIfNeeded()
+                            player.queue.addTrack(model.filePath)
                         }
                     }
 
                     AddToPlaylistMenuItem {
-                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.url })
+                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
                     }
                 }
             }
@@ -144,30 +131,24 @@ Page {
 
             onClicked: {
                 if (selectionPanel.showPanel) {
-                    if (!model.isDirectory)
+                    if (!model.isDirectory) {
                         directoryTracksProxyModel.select(model.index)
+                    }
                 } else {
                     if (model.isDirectory) {
                         searchPanel.open = false
-                        directoryTracksModel.directory = Unplayer.Utils.urlToPath(model.url)
+                        listView.goingUp = false
+                        listView.previousPosition = listView.contentY + listView.headerItem.height
+                        directoryTracksModel.directory = model.filePath
                     } else {
                         if (current) {
                             if (!player.playing) {
                                 player.play()
                             }
                         } else {
-                            player.queue.clear()
-                            var tracks = directoryTracksProxyModel.getTracks()
-                            player.queue.addTracks(tracks)
-                            var trackUrl = model.url
-                            for (var i = 0, tracksCount = tracks.length; i < tracksCount; i++) {
-                                if (tracks[i].url === model.url) {
-                                    player.queue.currentIndex = i
-                                    break
-                                }
-                            }
-                            player.queue.currentTrackChanged()
-                            player.play()
+                            player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes),
+                                                   true,
+                                                   model.index - directoryTracksProxyModel.directoriesCount)
                         }
                     }
                 }
@@ -196,8 +177,9 @@ Page {
                 source: {
                     var iconSource = model.isDirectory ? "image://theme/icon-m-folder"
                                                        : "image://theme/icon-m-music"
-                    if (highlighted || current)
+                    if (highlighted || current) {
                         iconSource += "?" + Theme.highlightColor
+                    }
                     return iconSource
                 }
             }
@@ -217,10 +199,18 @@ Page {
         }
         model: Unplayer.DirectoryTracksProxyModel {
             id: directoryTracksProxyModel
-
-            filterRoleName: "fileName"
             sourceModel: Unplayer.DirectoryTracksModel {
                 id: directoryTracksModel
+
+                onLoadedChanged: {
+                    if (loaded) {
+                        if (listView.goingUp) {
+                            listView.contentY = listView.previousPosition - listView.headerItem.height
+                        } else {
+                            listView.positionViewAtBeginning()
+                        }
+                    }
+                }
             }
         }
 
@@ -229,7 +219,7 @@ Page {
 
             MenuItem {
                 function goToScard() {
-                    directoryTracksModel.directory = Unplayer.Utils.sdcard()
+                    directoryTracksModel.directory = Unplayer.Utils.sdcardPath()
                     pullDownMenu.activeChanged.disconnect(goToScard)
                 }
 
@@ -255,14 +245,15 @@ Page {
             SearchMenuItem { }
         }
 
-        ViewPlaceholder {
-            enabled: !directoryTracksModel.loaded
-            text: qsTr("Loading")
-        }
-
         ListViewPlaceholder {
             enabled: directoryTracksModel.loaded && (listView.count === 0)
             text: qsTr("No files")
+        }
+
+        BusyIndicator {
+            anchors.centerIn: parent
+            size: BusyIndicatorSize.Large
+            running: !directoryTracksModel.loaded
         }
 
         VerticalScrollDecorator { }

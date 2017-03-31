@@ -21,23 +21,8 @@ import Sailfish.Silica 1.0
 
 import harbour.unplayer 0.1 as Unplayer
 
-import "models"
-
 Page {
     property alias bottomPanelOpen: selectionPanel.open
-
-    function getTracksForSelectedPlaylists() {
-        var selectedIndexes = playlistsProxyModel.selectedSourceIndexes()
-        var selectedTracks = []
-        for (var i = 0, playlistsCount = selectedIndexes.length; i < playlistsCount; i++)
-            selectedTracks = selectedTracks.concat(Unplayer.PlaylistUtils.syncParsePlaylist(playlistsModel.get(selectedIndexes[i]).url))
-        return selectedTracks
-    }
-
-    Connections {
-        target: Unplayer.PlaylistUtils
-        onPlaylistsChanged: playlistsModel.reload()
-    }
 
     RemorsePopup {
         id: remorsePopup
@@ -56,8 +41,7 @@ Page {
                 enabled: playlistsProxyModel.selectedIndexesCount !== 0
 
                 onClicked: {
-                    player.queue.add(getTracksForSelectedPlaylists())
-                    player.queue.setCurrentToFirstIfNeeded()
+                    player.queue.addTracks(playlistsModel.getTracksForPlaylists(playlistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -69,11 +53,7 @@ Page {
                 onClicked: {
                     remorsePopup.execute(qsTr("Removing %n playlist(s)", String(), playlistsProxyModel.selectedIndexesCount),
                                          function() {
-                                             var selectedIndexes = playlistsProxyModel.selectedSourceIndexes()
-
-                                             for (var i = 0, playlistsCount = selectedIndexes.length; i < playlistsCount; i++)
-                                                 Unplayer.PlaylistUtils.removePlaylist(playlistsModel.get(selectedIndexes[i]).url)
-
+                                             playlistsModel.removePlaylists(playlistsProxyModel.selectedSourceIndexes)
                                              selectionPanel.showPanel = false
                                          })
                 }
@@ -86,7 +66,7 @@ Page {
 
         anchors {
             fill: parent
-            bottomMargin: selectionPanel.visibleSize
+            bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
             topMargin: searchPanel.visibleSize
         }
         clip: true
@@ -95,24 +75,18 @@ Page {
             title: qsTr("Playlists")
         }
         delegate: MediaContainerSelectionDelegate {
-            title: Theme.highlightText(model.title, selectionPanel.searchText, Theme.highlightColor)
-            description: model.tracksCount === undefined ? String() :
-                                                           qsTr("%n track(s)", String(), model.tracksCount)
-            menu: Component {
-                ContextMenu {
-                    AddToQueueMenuItem {
-                        onClicked: {
-                            player.queue.add(Unplayer.PlaylistUtils.syncParsePlaylist(model.url))
-                            player.queue.setCurrentToFirstIfNeeded()
-                        }
-                    }
+            title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
+            description: qsTr("%n track(s)", String(), model.tracksCount)
+            menu: ContextMenu {
+                AddToQueueMenuItem {
+                    onClicked: player.queue.addTracks(Unplayer.PlaylistUtils.getPlaylistTracks(model.filePath))
+                }
 
-                    MenuItem {
-                        text: qsTr("Remove")
-                        onClicked: remorseAction(qsTr("Removing"), function() {
-                            Unplayer.PlaylistUtils.removePlaylist(model.url)
-                        })
-                    }
+                MenuItem {
+                    text: qsTr("Remove")
+                    onClicked: remorseAction(qsTr("Removing"), function() {
+                        Unplayer.PlaylistUtils.removePlaylist(model.filePath)
+                    })
                 }
             }
 
@@ -121,8 +95,8 @@ Page {
                     playlistsProxyModel.select(model.index)
                 } else {
                     pageStack.push("PlaylistPage.qml", {
-                                       pageTitle: model.title,
-                                       playlistUrl: model.url
+                                       pageTitle: model.name,
+                                       filePath: model.filePath
                                    })
                 }
             }
@@ -130,8 +104,11 @@ Page {
         model: Unplayer.FilterProxyModel {
             id: playlistsProxyModel
 
-            filterRoleName: "title"
-            sourceModel: PlaylistsModel {
+            filterRole: Unplayer.PlaylistsModel.NameRole
+            sortEnabled: true
+            sortRole: Unplayer.PlaylistsModel.NameRole
+
+            sourceModel: Unplayer.PlaylistsModel {
                 id: playlistsModel
             }
         }
