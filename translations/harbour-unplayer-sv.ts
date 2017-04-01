@@ -363,7 +363,7 @@
     </message>
     <message>
         <source>Authors</source>
-        <translation type="unfinished"></translation>
+        <translation>Utvecklare</translation>
     </message>
     <message>
         <source>Select Image</source>
@@ -413,67 +413,67 @@
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Välj mapp</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga mappar</translation>
     </message>
     <message>
         <source>Reset Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Återställ biblioteket</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Uppdatera biblioteket</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Bibliotek</translation>
     </message>
     <message>
         <source>%1, %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1, %2</translation>
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="unfinished"></translation>
+        <translation>Uppdaterar bibliotek...</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation type="unfinished"></translation>
+        <translation>Kunde inte initiera databasen</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga valda mappar</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Uppdaterar...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Rensa kön</translation>
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Öppna biblioteket vid programstart</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kB/s</translation>
     </message>
     <message>
         <source>%1 h %2 m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 t %2 m</translation>
     </message>
     <message>
         <source>%1 m %2 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 m %2 s</translation>
     </message>
 </context>
 </TS>
