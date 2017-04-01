@@ -47,6 +47,7 @@ namespace unplayer
 
         LibraryUtils* instancePointer = nullptr;
         bool databaseInitialized = false;
+        bool createdTable = false;
         bool updating = false;
 
         QString mediaArtDirectory()
@@ -229,22 +230,25 @@ namespace unplayer
             return;
         }
 
-        QSqlQuery query(QLatin1String("CREATE TABLE IF NOT EXISTS tracks ("
-                                      "    filePath TEXT,"
-                                      "    modificationTime INTEGER,"
-                                      "    title TEXT COLLATE NOCASE,"
-                                      "    artist TEXT COLLATE NOCASE,"
-                                      "    album TEXT COLLATE NOCASE,"
-                                      "    year INTEGER,"
-                                      "    trackNumber INTEGER,"
-                                      "    genre TEXT,"
-                                      "    duration INTEGER,"
-                                      "    mediaArt TEXT"
-                                      ")"));
+        if (db.tables().isEmpty()) {
+            QSqlQuery query(QLatin1String("CREATE TABLE tracks ("
+                                          "    filePath TEXT,"
+                                          "    modificationTime INTEGER,"
+                                          "    title TEXT COLLATE NOCASE,"
+                                          "    artist TEXT COLLATE NOCASE,"
+                                          "    album TEXT COLLATE NOCASE,"
+                                          "    year INTEGER,"
+                                          "    trackNumber INTEGER,"
+                                          "    genre TEXT,"
+                                          "    duration INTEGER,"
+                                          "    mediaArt TEXT"
+                                          ")"));
+            if (query.lastError().type() != QSqlError::NoError) {
+                qWarning() << "failed to create table" << query.lastError();
+                return;
+            }
 
-        if (query.lastError().type() != QSqlError::NoError) {
-            qWarning() << "failed to create table" << query.lastError();
-            return;
+            createdTable = true;
         }
 
         databaseInitialized = true;
@@ -443,6 +447,11 @@ namespace unplayer
     bool LibraryUtils::isDatabaseInitialized()
     {
         return databaseInitialized;
+    }
+
+    bool LibraryUtils::isCreatedTable()
+    {
+        return createdTable;
     }
 
     bool LibraryUtils::isUpdating()

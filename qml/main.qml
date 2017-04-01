@@ -40,8 +40,13 @@ ApplicationWindow
     initialPage: Qt.resolvedUrl("components/MainPage.qml")
 
     Component.onCompleted: {
-        if (Unplayer.Settings.openLibraryOnStartup && Unplayer.LibraryUtils.databaseInitialized && Unplayer.Settings.hasLibraryDirectories) {
-            pageStack.push("components/LibraryPage.qml", null, PageStackAction.Immediate)
+        if (Unplayer.LibraryUtils.databaseInitialized) {
+            if (Unplayer.LibraryUtils.createdTable && Unplayer.Settings.hasLibraryDirectories) {
+                Unplayer.LibraryUtils.updateDatabase()
+            }
+            if (Unplayer.Settings.openLibraryOnStartup && Unplayer.Settings.hasLibraryDirectories) {
+                pageStack.push("components/LibraryPage.qml", null, PageStackAction.Immediate)
+            }
         }
         player.queue.addTracks(commandLineArguments, true)
     }

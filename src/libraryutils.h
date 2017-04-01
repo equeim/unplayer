@@ -42,6 +42,7 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)
+        Q_PROPERTY(bool createdTable READ isCreatedTable CONSTANT)
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
         Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
@@ -62,6 +63,7 @@ namespace unplayer
         Q_INVOKABLE void resetDatabase();
 
         static bool isDatabaseInitialized();
+        static bool isCreatedTable();
         static bool isUpdating();
 
         static int artistsCount();
