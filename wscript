@@ -9,6 +9,7 @@ def options(context):
 
     context.add_option("--qtmpris-includepath", action="store")
     context.add_option("--qtmpris-libpath", action="store")
+    context.add_option("--qtmpris-rpath-link", action="store")
 
     context.add_option("--harbour", action="store_true", default=False)
 
@@ -26,6 +27,7 @@ def configure(context):
     context.env.INCLUDES_QTMPRIS = [context.options.qtmpris_includepath]
     context.env.LIBPATH_QTMPRIS = [context.options.qtmpris_libpath]
     context.env.LIB_QTMPRIS = ["mpris-qt5"]
+    context.env.LINKFLAGS_QTMPRIS = ["-Wl,-rpath-link={}".format(context.options.qtmpris_rpath_link)]
 
     context.env.HARBOUR = context.options.harbour
 

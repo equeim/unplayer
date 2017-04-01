@@ -62,7 +62,6 @@ make %{?_smp_mflags}
 make INSTALL_ROOT="${qtmpris_install}" install
 cd -
 
-
 taglib_build="${build_directory}/3rdparty/taglib/build"
 taglib_install="${build_directory}/3rdparty/taglib/install"
 mkdir -p "${taglib_build}"
@@ -84,6 +83,7 @@ python waf configure --prefix="%{_prefix}" \
     --taglib-libpath="${taglib_install}/lib" \
     --qtmpris-includepath="${qtmpris_install}/usr/include/qt5/MprisQt" \
     --qtmpris-libpath="${qtmpris_install}/usr/lib" \
+    --qtmpris-rpath-link="${qtdbusextended_install}/usr/lib" \
     --harbour
 python waf build -v
 
