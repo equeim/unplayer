@@ -199,6 +199,10 @@ namespace unplayer
             return;
         }
 
+        if (trackPaths.isEmpty()) {
+            return;
+        }
+
         mAddingTracks = true;
         emit addingTracksChanged();
 
