@@ -50,6 +50,7 @@ src/resources.qrc
 
 
 qml/main.qml
+qml/MediaKeysEmpty.qml
 qml/MediaKeysPrivate.qml
 
 qml/components/AboutPage.qml
@@ -77,7 +78,6 @@ qml/components/MainPage.qml
 qml/components/MediaArt.qml
 qml/components/MediaContainerListItem.qml
 qml/components/MediaContainerSelectionDelegate.qml
-qml/components/MediaKeys.qml
 qml/components/NewPlaylistDialog.qml
 qml/components/NowPlayingPage.qml
 qml/components/NowPlayingPanel.qml

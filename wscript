@@ -105,7 +105,9 @@ def build(context):
     context.install_files("${DATADIR}/harbour-unplayer/qml/components",
                           context.path.ant_glob("qml/components/*.qml"))
 
-    if not context.env.HARBOUR:
+    if context.env.HARBOUR:
+        context.install_as("${DATADIR}/harbour-unplayer/qml/components/MediaKeys.qml", "qml/MediaKeysEmpty.qml")
+    else:
         context.install_as("${DATADIR}/harbour-unplayer/qml/components/MediaKeys.qml", "qml/MediaKeysPrivate.qml")
 
     context.install_files("${DATADIR}/harbour-unplayer/translations",
