@@ -160,6 +160,11 @@ Page {
         }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTranslate("unplayer", "Clear")
+                onClicked: player.queue.clear()
+            }
+
             SelectionMenuItem {
                 text: qsTranslate("unplayer", "Select tracks")
             }

@@ -106,6 +106,14 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTranslate("unplayer", "Clear Queue")
+                onClicked: {
+                    player.queue.clear()
+                    pageStack.pop()
+                }
+            }
+
+            MenuItem {
                 text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentFilePath })
             }
