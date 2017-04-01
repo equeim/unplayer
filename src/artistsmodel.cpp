@@ -20,6 +20,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QSqlError>
 
 namespace unplayer
 {
@@ -84,7 +85,7 @@ namespace unplayer
             return tracks;
         }
 
-        qWarning() << "failed to get tracks from database";
+        qWarning() << "failed to get tracks from database" << query.lastError();
         return QStringList();
     }
 

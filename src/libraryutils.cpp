@@ -261,8 +261,6 @@ namespace unplayer
 
         auto future = QtConcurrent::run([]() {
             qDebug() << "start scanning files";
-            const auto date(QDateTime::currentDateTime());
-
             {
                 auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), rescanConnectionName);
                 db.setDatabaseName(databaseFilePath());
@@ -291,8 +289,6 @@ namespace unplayer
                         mediaArtHash.insert(filePath, query.value(2).toString());
                     }
                 }
-
-                qDebug() << "database contains" << files.size() << "files";
 
                 QStringList libraryDirectories(Settings::instance()->libraryDirectories());
                 libraryDirectories.removeDuplicates();
@@ -420,7 +416,7 @@ namespace unplayer
                 db.commit();
             }
             QSqlDatabase::removeDatabase(rescanConnectionName);
-            qDebug() << "end scanning files" << date.msecsTo(QDateTime::currentDateTime());
+            qDebug() << "end scanning files";
         });
 
         auto watcher = new QFutureWatcher<void>(this);

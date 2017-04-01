@@ -21,7 +21,6 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>
-#include <QSettings>
 #include <QtConcurrentRun>
 
 #include "playlistutils.h"
@@ -89,7 +88,7 @@ namespace unplayer
     {
         auto future = QtConcurrent::run([]() {
             QList<PlaylistsModelItem> playlists;
-            QDir dir(PlaylistUtils::playlistsDirectoryPath());
+            const QDir dir(PlaylistUtils::playlistsDirectoryPath());
             for (const QFileInfo& fileInfo : dir.entryInfoList({QLatin1String("*.pls")}, QDir::Files)) {
                 playlists.append(PlaylistsModelItem{fileInfo.filePath(),
                                                     fileInfo.completeBaseName(),

@@ -142,7 +142,7 @@ namespace unplayer
             return tracks;
         }
 
-        qWarning() << "failed to get tracks from database";
+        qWarning() << "failed to get tracks from database" << query.lastError();
         return QStringList();
     }
 
