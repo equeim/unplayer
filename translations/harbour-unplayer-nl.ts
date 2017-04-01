@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Verkies albumhoezen als apart bestand in muziekmap in plaats van geëxtraheerd uit muziekbestand</translation>
     </message>
 </context>
 </TS>
