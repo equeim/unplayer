@@ -249,7 +249,7 @@ Page {
             }
 
             SelectionMenuItem {
-                enabled: directoryTracksProxyModel.tracksCount || (searchPanel.searchText.length && directoryTracksModel.tracksCount)
+                enabled: directoryTracksProxyModel.tracksCount || (searchPanel.searchText && directoryTracksProxyModel.tracksCount)
                 text: qsTranslate("unplayer", "Select files")
             }
 
