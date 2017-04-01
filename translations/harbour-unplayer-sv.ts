@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Föredra omslag som separat bildfil i musikfilsmappen, istället för extraherad från låtfilen</translation>
     </message>
 </context>
 </TS>
