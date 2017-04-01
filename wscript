@@ -10,6 +10,8 @@ def options(context):
     context.add_option("--qtmpris-includepath", action="store")
     context.add_option("--qtmpris-libpath", action="store")
 
+    context.add_option("--harbour", action="store_true", default=False)
+
 
 def configure(context):
     context.load("compiler_cxx gnu_dirs qt5")
@@ -24,6 +26,8 @@ def configure(context):
     context.env.INCLUDES_QTMPRIS = [context.options.qtmpris_includepath]
     context.env.LIBPATH_QTMPRIS = [context.options.qtmpris_libpath]
     context.env.LIB_QTMPRIS = ["mpris-qt5"]
+
+    context.env.HARBOUR = context.options.harbour
 
 
 def build(context):
@@ -94,12 +98,17 @@ def build(context):
         lang=context.path.ant_glob("translations/*.ts")
     )
 
-    context.install_files("${DATADIR}/harbour-unplayer",
-                          context.path.ant_glob("qml/**/*.qml"),
-                          relative_trick=True)
+    context.install_files("${DATADIR}/harbour-unplayer/qml", "qml/main.qml")
+
+    context.install_files("${DATADIR}/harbour-unplayer/qml/components",
+                          context.path.ant_glob("qml/components/*.qml"))
+
+    if not context.env.HARBOUR:
+        context.install_as("${DATADIR}/harbour-unplayer/qml/components/MediaKeys.qml", "qml/MediaKeysPrivate.qml")
 
     context.install_files("${DATADIR}/harbour-unplayer/translations",
-                          context.path.get_bld().ant_glob("translations/*.qm", quiet=True))
+                          context.path.get_bld().ant_glob("translations/*.qm",
+                          quiet=True))
 
     context.install_files("${DATADIR}",
                           context.path.ant_glob("icons/**/*.png"),

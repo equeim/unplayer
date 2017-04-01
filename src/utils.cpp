@@ -57,6 +57,8 @@ namespace unplayer
 
     void Utils::registerTypes()
     {
+        qRegisterMetaType<QVector<int>>();
+
         const char* url = "harbour.unplayer";
         const int major = 0;
         const int minor = 1;
