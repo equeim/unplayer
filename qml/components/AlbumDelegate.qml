@@ -68,7 +68,7 @@ MediaContainerSelectionDelegate {
             displayedAlbum: model.displayedAlbum
             tracksCount: model.tracksCount
             duration: model.duration
-            mediaArt: model.mediaArt
+            mediaArt: albumDelegate.mediaArt
         }
     }
 
