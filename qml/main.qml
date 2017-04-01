@@ -43,9 +43,7 @@ ApplicationWindow
         if (Unplayer.Settings.openLibraryOnStartup && Unplayer.LibraryUtils.databaseInitialized && Unplayer.Settings.hasLibraryDirectories) {
             pageStack.push("components/LibraryPage.qml", null, PageStackAction.Immediate)
         }
-        if (commandLineArguments.length) {
-            player.queue.addTracks(commandLineArguments, true)
-        }
+        player.queue.addTracks(commandLineArguments, true)
     }
 
     Unplayer.Player {

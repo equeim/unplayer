@@ -38,7 +38,7 @@ using namespace unplayer;
 
 int main(int argc, char* argv[])
 {
-    std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
+    const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
     QCommandLineParser parser;
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
     parser.addVersionOption();
     parser.process(app->arguments());
 
-    QDBusConnection connection(QDBusConnection::sessionBus());
+    const QDBusConnection connection(QDBusConnection::sessionBus());
     if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
         QDBusMessage message(QDBusMessage::createMethodCall(QLatin1String("org.equeim.unplayer"),
                                                             QLatin1String("/org/equeim/unplayer"),
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    std::unique_ptr<QQuickView> view(SailfishApp::createView());
+    const std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
     view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::parseArguments(parser.positionalArguments()));
 

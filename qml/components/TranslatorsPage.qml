@@ -24,7 +24,7 @@ import harbour.unplayer 0.1 as Unplayer
 Page {
     SilicaFlickable {
         anchors.fill: parent
-        contentHeight: column.height
+        contentHeight: column.height + Theme.paddingLarge
 
         Column {
             id: column

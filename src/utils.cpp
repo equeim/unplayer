@@ -24,6 +24,7 @@
 #include <QImageReader>
 #include <QItemSelection>
 #include <QLocale>
+#include <QMimeDatabase>
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QUrl>
@@ -98,15 +99,22 @@ namespace unplayer
     QVariantList Utils::parseArguments(const QStringList& arguments)
     {
         QVariantList parsed;
+        const QMimeDatabase mimeDb;
         for (const QString& argument : arguments) {
+            QString filePath;
             const QFileInfo info(argument);
             if (info.isFile()) {
-                parsed.append(info.absoluteFilePath());
+                filePath = info.absoluteFilePath();
             } else {
                 const QUrl url(QUrl::fromUserInput(argument));
                 if (url.isLocalFile()) {
-                    parsed.append(url.path());
+                    filePath = url.path();
+                } else {
+                    continue;
                 }
+            }
+            if (LibraryUtils::supportedMimeTypes.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
+                parsed.append(filePath);
             }
         }
         return parsed;
