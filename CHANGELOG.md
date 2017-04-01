@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.0.0] - 2017-04-01
 ### Added
 - Opening files from command line or file manager (you will need to set Unplayer as default by using xdg-mime command)
 - "Loop one track" mode
