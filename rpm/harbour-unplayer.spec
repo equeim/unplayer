@@ -44,8 +44,8 @@ mkdir -p "${qtdbusextended_install}"
 cd "${qtdbusextended_build}"
 %qmake5 "%{_builddir}/3rdparty/qtdbusextended-0.0.3" \
     CONFIG+=release
-%{__make} %{?_smp_mflags}
-%{__make} INSTALL_ROOT="${qtdbusextended_install}" install
+make %{?_smp_mflags}
+make INSTALL_ROOT="${qtdbusextended_install}" install
 cd -
 
 qtmpris_build="${build_directory}/3rdparty/qtmpris/build"
@@ -58,8 +58,8 @@ cd "${qtmpris_build}"
     CONFIG+=release \
     DBUSEXTENDED_INCLUDEPATH="${qtdbusextended_install}/usr/include/qt5/DBusExtended" \
     DBUSEXTENDED_LIBPATH="${qtdbusextended_install}/usr/lib"
-%{__make} %{?_smp_mflags}
-%{__make} INSTALL_ROOT="${qtmpris_install}" install
+make %{?_smp_mflags}
+make INSTALL_ROOT="${qtmpris_install}" install
 cd -
 
 
@@ -74,8 +74,8 @@ cmake "%{_builddir}/3rdparty/taglib-1.11.1" \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON \
     -DWITH_MP4=ON
-VERBOSE=1 %{__make} %{?_smp_mflags}
-%{__make} install
+VERBOSE=1 make %{?_smp_mflags}
+make install
 cd -
 
 python waf configure --prefix="%{_prefix}" \
@@ -83,7 +83,8 @@ python waf configure --prefix="%{_prefix}" \
     --taglib-includepath="${taglib_install}/include/taglib" \
     --taglib-libpath="${taglib_install}/lib" \
     --qtmpris-includepath="${qtmpris_install}/usr/include/qt5/MprisQt" \
-    --qtmpris-libpath="${qtmpris_install}/usr/lib"
+    --qtmpris-libpath="${qtmpris_install}/usr/lib" \
+    --harbour
 python waf build -v
 
 %install
