@@ -1,6 +1,9 @@
 # Change Log
 
 ## [1.0.1] - 2017-04-02
+### Changed
+- Updated Dutch translation
+
 ### Fixed
 - Detection of cover images
 - Crash when removing deleted cover images from database
