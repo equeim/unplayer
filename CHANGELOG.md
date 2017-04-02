@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.1] - 2017-04-02
+### Fixed
+- Detection of cover images
+- Crash when removing deleted cover images from database
+
 ## [1.0.0] - 2017-04-01
 ### Added
 - Opening files from command line or file manager (you will need to set Unplayer as default by using xdg-mime command)
