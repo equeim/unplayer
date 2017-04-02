@@ -206,7 +206,7 @@ namespace unplayer
                                 .filter(QRegularExpression(QStringLiteral("^(albumart.*|cover|folder|front)\\.(jpeg|jpg|png)$"),
                                                            QRegularExpression::CaseInsensitiveOption)));
         if (!found.isEmpty()) {
-            const QString& mediaArt = found.first();
+            const QString& mediaArt = dir.filePath(found.first());
             directoriesHash.insert(directoryPath, mediaArt);
             return mediaArt;
         }
