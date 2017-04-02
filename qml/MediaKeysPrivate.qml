@@ -23,11 +23,7 @@ Item {
     MediaKey {
         enabled: true
         key: Qt.Key_MediaTogglePlayPause
-        onReleased: {
-            console.log("playpause")
-            player.playing ? player.pause() : player.play()
-        }
-        Component.onCompleted: console.log(666)
+        onReleased: player.playing ? player.pause() : player.play()
     }
     MediaKey {
         enabled: true
