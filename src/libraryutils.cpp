@@ -327,13 +327,11 @@ namespace unplayer
 
                 {
                     auto i = mediaArtHash.cbegin();
-                    auto end = mediaArtHash.cend();
+                    const auto end = mediaArtHash.cend();
                     while (i != end) {
                         const QString& mediaArt = i.value();
                         if (!mediaArt.isEmpty() && !QFile::exists(mediaArt)) {
-                            ++i;
-                            mediaArtHash.remove(i.key());
-                            end = mediaArtHash.cend();
+                            i = mediaArtHash.erase(i);
                         } else {
                             ++i;
                         }
