@@ -22,8 +22,7 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 
-#include <fileref.h>
-#include <tag.h>
+#include "tagutils.h"
 
 namespace unplayer
 {
@@ -36,27 +35,20 @@ namespace unplayer
     {
         mFilePath = filePath;
 
-        TagLib::FileRef file(mFilePath.toUtf8().constData());
+        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath).name();
 
-        const TagLib::Tag* tag = file.tag();
-        if (tag) {
-            mTitle = tag->title().toCString(true);
-            mArtist = tag->artist().toCString(true);
-            mAlbum = tag->album().toCString(true);
-            mTrackNumber = tag->track();
-            mGenre = tag->genre().toCString(true);
-        }
+        const QFileInfo fileInfo(mFilePath);
 
-        mFileSize = QFileInfo(mFilePath).size();
+        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mMimeType));
 
-        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchExtension).name();
-
-        const TagLib::AudioProperties* audioProperties = file.audioProperties();
-        if (audioProperties) {
-            mDuration = audioProperties->length();
-            mBitrate = audioProperties->bitrate();
-            mHasAudioProperties = true;
-        }
+        mTitle = info.title;
+        mArtist = info.artists.join(QLatin1String(", "));
+        mAlbum = info.albums.join(QLatin1String(", "));
+        mTrackNumber = info.trackNumber;
+        mGenre = info.genres.join(QLatin1String(", "));
+        mFileSize = fileInfo.size();
+        mDuration = info.duration;
+        mBitrate = info.bitrate;
     }
 
     const QString& TrackInfo::title() const
@@ -102,10 +94,5 @@ namespace unplayer
     QString TrackInfo::bitrate() const
     {
         return qApp->translate("unplayer", "%1 kB/s").arg(mBitrate);
-    }
-
-    bool TrackInfo::hasAudioProperties() const
-    {
-        return mHasAudioProperties;
     }
 }

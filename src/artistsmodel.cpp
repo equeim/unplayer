@@ -37,7 +37,8 @@ namespace unplayer
 
     ArtistsModel::ArtistsModel()
     {
-        mQuery->prepare(QLatin1String("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM tracks "
+        mQuery->prepare(QLatin1String("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
+                                      "(SELECT artist, album, duration FROM tracks GROUP BY filePath, artist) "
                                       "GROUP BY artist "
                                       "ORDER BY artist = '', artist"));
         execQuery();

@@ -38,7 +38,6 @@ namespace unplayer
         Q_PROPERTY(QString mimeType READ mimeType CONSTANT)
         Q_PROPERTY(int duration READ duration CONSTANT)
         Q_PROPERTY(QString bitrate READ bitrate CONSTANT)
-        Q_PROPERTY(bool hasAudioProperties READ hasAudioProperties CONSTANT)
     public:
         const QString& filePath() const;
         void setFilePath(const QString& filePath);
@@ -52,7 +51,6 @@ namespace unplayer
         const QString& mimeType() const;
         int duration() const;
         QString bitrate() const;
-        bool hasAudioProperties() const;
 
     private:
         QString mFilePath;
@@ -66,7 +64,6 @@ namespace unplayer
         QString mMimeType;
         int mDuration;
         int mBitrate;
-        bool mHasAudioProperties = false;
     };
 }
 

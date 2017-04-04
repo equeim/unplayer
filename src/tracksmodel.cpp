@@ -53,7 +53,8 @@ namespace unplayer
             if (!mGenre.isEmpty()) {
                 query += QLatin1String("WHERE genre = ? ");
             }
-            query += QLatin1String("ORDER BY artist = '', artist, album = '', year, album, trackNumber, title");
+            query += QLatin1String("GROUP BY filePath, artist, album "
+                                   "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title");
             mQuery->prepare(query);
             if (!mGenre.isEmpty()) {
                 mQuery->addBindValue(mGenre);
@@ -61,11 +62,13 @@ namespace unplayer
         } else {
             query += QLatin1String("WHERE artist = ? ");
             if (mAllAlbums) {
-                query += QLatin1String("ORDER BY album = '', year, album, trackNumber, title ");
+                query += QLatin1String("GROUP BY filePath, album "
+                                       "ORDER BY album = '', year, album, trackNumber, title ");
                 mQuery->prepare(query);
                 mQuery->addBindValue(mArtist);
             } else {
                 query += QLatin1String("AND album = ? "
+                                       "GROUP BY filePath "
                                        "ORDER BY trackNumber, title");
                 mQuery->prepare(query);
                 mQuery->addBindValue(mArtist);

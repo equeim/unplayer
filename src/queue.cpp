@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFutureWatcher>
+#include <QMimeDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlDatabase>
@@ -36,6 +37,7 @@
 
 #include "libraryutils.h"
 #include "playlistutils.h"
+#include "tagutils.h"
 
 namespace unplayer
 {
@@ -241,6 +243,8 @@ namespace unplayer
 
                 QHash<QString, QString> mediaArtDirectoriesHash;
 
+                const QMimeDatabase mimeDb;
+
                 for (const QString& filePath : trackPaths) {
                     bool found = false;
                     for (const std::shared_ptr<QueueTrack>& track : oldTracks) {
@@ -261,8 +265,8 @@ namespace unplayer
                     }
 
                     QString title;
-                    QString artist;
-                    QString album;
+                    QStringList artists;
+                    QStringList albums;
                     int duration;
                     QString mediaArt;
 
@@ -277,11 +281,20 @@ namespace unplayer
                             if (query.next()) {
                                 if (query.value(0).toLongLong() == fileInfo.lastModified().toMSecsSinceEpoch()) {
                                     getTags = false;
+
                                     title = query.value(1).toString();
-                                    artist = query.value(2).toString();
-                                    album = query.value(3).toString();
                                     duration = query.value(4).toInt();
                                     mediaArt = query.value(5).toString();
+
+                                    query.previous();
+                                    while (query.next()) {
+                                        artists.append(query.value(2).toString());
+                                        albums.append(query.value(3).toString());
+                                    }
+                                    artists.removeDuplicates();
+                                    artists.removeAll(QString());
+                                    albums.removeDuplicates();
+                                    albums.removeAll(QString());
                                 }
                             }
                         } else {
@@ -290,20 +303,26 @@ namespace unplayer
                     }
 
                     if (getTags) {
-                        const LibraryTrackInfo info(LibraryUtils::getTrackInfo(fileInfo));
+                        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath).name()));
                         title = info.title;
-                        artist = info.artist;
-                        album = info.album;
+                        artists = info.artists;
+                        albums = info.albums;
                         duration = info.duration;
                         mediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
                     }
 
-                    if (artist.isEmpty()) {
+                    QString artist;
+                    if (artists.isEmpty()) {
                         artist = qApp->translate("unplayer", "Unknown artist");
+                    } else {
+                        artist = artists.join(QLatin1String(", "));
                     }
 
-                    if (album.isEmpty()) {
+                    QString album;
+                    if (albums.isEmpty()) {
                         album = qApp->translate("unplayer", "Unknown artist");
+                    } else {
+                        album = albums.join(QLatin1String(", "));
                     }
 
                     tracks.append(std::make_shared<QueueTrack>(filePath,

@@ -82,14 +82,13 @@ Page {
 
             DetailItem {
                 label: qsTranslate("unplayer", "Duration")
-                value: trackInfo.hasAudioProperties ? Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong :
-                                                                                                                             Format.DurationShort) :
-                                                      String()
+                value: Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong :
+                                                                                              Format.DurationShort)
             }
 
             DetailItem {
                 label: qsTranslate("unplayer", "Bitrate")
-                value: trackInfo.hasAudioProperties ? trackInfo.bitrate : String()
+                value: trackInfo.bitrate
             }
         }
 

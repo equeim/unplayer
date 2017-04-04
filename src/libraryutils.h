@@ -26,17 +26,24 @@ class QSqlDatabase;
 
 namespace unplayer
 {
-    struct LibraryTrackInfo
+    enum class MimeType
     {
-        long long modificationTime;
-        QString title;
-        QString artist;
-        QString album;
-        int year;
-        int trackNumber;
-        QString genre;
-        int duration;
+        Flac,
+        Mp4,
+        Mp4b,
+        Mpeg,
+        Ogg,
+        VorbisOgg,
+        FlacOgg,
+        OpusOgg,
+        Ape,
+        Matroska,
+        Wav,
+        Wavpack,
+        Other
     };
+
+    MimeType mimeTypeFromString(const QString& string);
 
     class LibraryUtils : public QObject
     {
@@ -55,7 +62,6 @@ namespace unplayer
 
         static QString databaseFilePath();
 
-        static LibraryTrackInfo getTrackInfo(const QFileInfo& fileInfo);
         static QString findMediaArtForDirectory(QHash<QString, QString>& directoriesHash, const QString& directoryPath);
 
         static void initDatabase();

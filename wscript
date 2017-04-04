@@ -71,6 +71,7 @@ def build(context):
             "src/trackinfo.cpp",
             "src/tracksmodel.cpp",
             "src/utils.cpp",
+            "src/tagutils.cpp",
             "src/resources.qrc"
         ],
         moc=[

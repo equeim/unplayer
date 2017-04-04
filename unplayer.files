@@ -38,6 +38,8 @@ src/queuemodel.cpp
 src/queuemodel.h
 src/settings.cpp
 src/settings.h
+src/tagutils.cpp
+src/tagutils.h
 src/trackinfo.cpp
 src/trackinfo.h
 src/tracksmodel.cpp

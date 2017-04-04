@@ -18,6 +18,8 @@
 
 #include "libraryutils.h"
 
+#include <functional>
+
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDebug>
@@ -35,15 +37,27 @@
 #include <QUuid>
 #include <QtConcurrentRun>
 
-#include "fileref.h"
-
 #include "settings.h"
+#include "tagutils.h"
 
 namespace unplayer
 {
     namespace
     {
         const QString rescanConnectionName(QLatin1String("unplayer_rescan"));
+
+        const QLatin1String flacMimeType("audio/flac");
+        const QLatin1String mp4MimeType("audio/mp4");
+        const QLatin1String mp4bMimeType("audio/x-m4b");
+        const QLatin1String mpegMimeType("audio/mpeg");
+        const QLatin1String oggMimeType("audio/ogg");
+        const QLatin1String vorbisOggMimeType("audio/x-vorbis+ogg");
+        const QLatin1String flacOggMimeType("audio/x-flac+ogg");
+        const QLatin1String opusOggMimeType("audio/x-opus+ogg");
+        const QLatin1String apeMimeType("audio/x-ape");
+        const QLatin1String matroskaMimeType("audio/x-matroska");
+        const QLatin1String wavMimeType("audio/x-wav");
+        const QLatin1String wavpackMimeType("audio/x-wavpack");
 
         LibraryUtils* instancePointer = nullptr;
         bool databaseInitialized = false;
@@ -65,87 +79,127 @@ namespace unplayer
             }
         }
 
-        void updateTrackInDatabase(const QSqlDatabase& db, bool update, const QString& filePath, const LibraryTrackInfo& info, const QString& mediaArt)
+        void updateTrackInDatabase(const QSqlDatabase& db, bool inDb, const QFileInfo& fileInfo, const tagutils::Info& info, const QString& mediaArt)
         {
-            QSqlQuery query(db);
-
-            if (update) {
-                query.prepare(QStringLiteral("UPDATE tracks "
-                                             "SET modificationTime = ?,"
-                                             "    title = ?,"
-                                             "    artist = ?,"
-                                             "    album = ?,"
-                                             "    year = ?,"
-                                             "    trackNumber = ?,"
-                                             "    genre = ?,"
-                                             "    duration = ?,"
-                                             "    mediaArt = ? "
-                                             "WHERE filePath = ?"));
-            } else {
-                query.prepare(QStringLiteral("INSERT INTO tracks (modificationTime, title, artist, album, year, trackNumber, genre, duration, mediaArt, filePath) "
-                                                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+            if (inDb) {
+                removeTrackFromDatabase(db, fileInfo.filePath());
             }
 
-            query.addBindValue(info.modificationTime);
-            query.addBindValue(info.title);
-
-            if (info.artist.isNull()) {
-                // Empty string instead of NULL
-                query.addBindValue(QString(""));
-            } else {
-                query.addBindValue(info.artist);
-            }
-
-            if (info.album.isEmpty()) {
-                // Empty string instead of NULL
-                query.addBindValue(QString(""));
-            } else {
-                query.addBindValue(info.album);
-            }
-
-            query.addBindValue(info.year);
-            query.addBindValue(info.trackNumber);
-
-            if (info.genre.isEmpty()) {
-                // Empty string instead of NULL
-                query.addBindValue(QString(""));
-            } else {
-                query.addBindValue(info.genre);
-            }
-
-            query.addBindValue(info.duration);
-
-            if (mediaArt.isEmpty()) {
-                // Empty string instead of NULL
-                query.addBindValue(QString(""));
-            } else {
-                query.addBindValue(mediaArt);
-            }
-
-            query.addBindValue(filePath);
-
-            if (!query.exec()) {
-                if (update) {
-                    qWarning() << "failed to update file in the database" << query.lastError();
+            const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
+                if (strings.isEmpty()) {
+                    exec(QString());
                 } else {
-                    qWarning() << "failed to insert file in the database" << query.lastError();
+                    for (const QString& string : strings) {
+                        exec(string);
+                    }
                 }
-            }
+            };
+
+            forEachOrOnce(info.artists, [&](const QString& artist) {
+                forEachOrOnce(info.albums, [&](const QString& album) {
+                    forEachOrOnce(info.genres, [&](const QString& genre) {
+                        QSqlQuery query(db);
+                        query.prepare(QStringLiteral("INSERT INTO tracks (filePath, modificationTime, title, artist, album, year, trackNumber, genre, duration, mediaArt) "
+                                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+                        query.addBindValue(fileInfo.filePath());
+                        query.addBindValue(fileInfo.lastModified().toMSecsSinceEpoch());
+                        query.addBindValue(info.title);
+
+                        if (artist.isNull()) {
+                            // Empty string instead of NULL
+                            query.addBindValue(QString(""));
+                        } else {
+                            query.addBindValue(artist);
+                        }
+
+                        if (album.isNull()) {
+                            // Empty string instead of NULL
+                            query.addBindValue(QString(""));
+                        } else {
+                            query.addBindValue(album);
+                        }
+
+                        query.addBindValue(info.year);
+                        query.addBindValue(info.trackNumber);
+
+                        if (genre.isNull()) {
+                            // Empty string instead of NULL
+                            query.addBindValue(QString(""));
+                        } else {
+                            query.addBindValue(genre);
+                        }
+
+                        query.addBindValue(info.duration);
+
+                        if (mediaArt.isEmpty()) {
+                            // Empty string instead of NULL
+                            query.addBindValue(QString(""));
+                        } else {
+                            query.addBindValue(mediaArt);
+                        }
+
+                        if (!query.exec()) {
+                            qWarning() << "failed to insert file in the database" << query.lastError();
+                        }
+                    });
+                });
+            });
         }
     }
 
-    const QVector<QString> LibraryUtils::supportedMimeTypes{QLatin1String("audio/flac"),
-                                                            QLatin1String("audio/mp4"),
-                                                            QLatin1String("audio/x-m4b"),
-                                                            QLatin1String("audio/mpeg"),
-                                                            QLatin1String("audio/ogg"),
-                                                            QLatin1String("audio/x-vorbis+ogg"),
-                                                            QLatin1String("audio/x-flac+ogg"),
-                                                            QLatin1String("audio/x-opus+ogg"),
-                                                            QLatin1String("audio/x-ape"),
-                                                            QLatin1String("audio/x-matroska"),
-                                                            QLatin1String("audio/x-wav"),
-                                                            QLatin1String("audio/x-wavpack")};
+    MimeType mimeTypeFromString(const QString& string)
+    {
+        if (string == flacMimeType) {
+            return MimeType::Flac;
+        }
+        if (string == mp4MimeType) {
+            return MimeType::Mp4;
+        }
+        if (string == mp4bMimeType) {
+            return MimeType::Mp4b;
+        }
+        if (string == mpegMimeType) {
+            return MimeType::Mpeg;
+        }
+        if (string == oggMimeType) {
+            return MimeType::Ogg;
+        }
+        if (string == vorbisOggMimeType) {
+            return MimeType::VorbisOgg;
+        }
+        if (string == flacOggMimeType) {
+            return MimeType::FlacOgg;
+        }
+        if (string == opusOggMimeType) {
+            return MimeType::OpusOgg;
+        }
+        if (string == apeMimeType) {
+            return MimeType::Ape;
+        }
+        if (string == matroskaMimeType) {
+            return MimeType::Matroska;
+        }
+        if (string == wavMimeType) {
+            return MimeType::Wav;
+        }
+        if (string == wavpackMimeType) {
+            return MimeType::Wavpack;
+        }
+        return MimeType::Other;
+    }
+
+    const QVector<QString> LibraryUtils::supportedMimeTypes{flacMimeType,
+                                                            mp4MimeType,
+                                                            mp4bMimeType,
+                                                            mpegMimeType,
+                                                            oggMimeType,
+                                                            vorbisOggMimeType,
+                                                            flacOggMimeType,
+                                                            opusOggMimeType,
+                                                            apeMimeType,
+                                                            matroskaMimeType,
+                                                            wavMimeType,
+                                                            wavpackMimeType};
 
     LibraryUtils* LibraryUtils::instance()
     {
@@ -158,41 +212,6 @@ namespace unplayer
     QString LibraryUtils::databaseFilePath()
     {
         return QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-    }
-
-    LibraryTrackInfo LibraryUtils::getTrackInfo(const QFileInfo& fileInfo)
-    {
-        TagLib::FileRef file(fileInfo.filePath().toUtf8().constData());
-        QString title;
-        QString artist;
-        QString album;
-        int year = 0;
-        int trackNumber = 0;
-        QString genre;
-        if (file.tag()) {
-            const TagLib::Tag* tag = file.tag();
-            title = tag->title().toCString(true);
-            artist = tag->artist().toCString(true);
-            album = tag->album().toCString(true);
-            year = tag->year();
-            trackNumber = tag->track();
-            genre = tag->genre().toCString(true);
-        }
-        if (title.isEmpty()) {
-            title = fileInfo.fileName();
-        }
-        int duration = 0;
-        if (file.audioProperties()) {
-            duration = file.audioProperties()->length();
-        }
-        return LibraryTrackInfo{fileInfo.lastModified().toMSecsSinceEpoch(),
-                                title,
-                                artist,
-                                album,
-                                year,
-                                trackNumber,
-                                genre,
-                    duration};
     }
 
     QString LibraryUtils::findMediaArtForDirectory(QHash<QString, QString>& directoriesHash, const QString& directoryPath)
@@ -378,9 +397,13 @@ namespace unplayer
                                     }
                                 }
                             } else {
-                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
+                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name());
                                 if (supportedMimeTypes.contains(mimeType)) {
-                                    updateTrackInDatabase(db, true, filePath, getTrackInfo(fileInfo), findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path()));
+                                    updateTrackInDatabase(db,
+                                                          true,
+                                                          fileInfo,
+                                                          tagutils::getTrackInfo(fileInfo, mimeType),
+                                                          findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path()));
                                 } else {
                                     removeTrackFromDatabase(db, filePath);
                                 }
@@ -388,9 +411,13 @@ namespace unplayer
                         } else {
                             QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
                             if (supportedMimeTypes.contains(mimeType)) {
-                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name();
+                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name();
                                 if (supportedMimeTypes.contains(mimeType)) {
-                                    updateTrackInDatabase(db, false, filePath, getTrackInfo(fileInfo), findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path()));
+                                    updateTrackInDatabase(db,
+                                                          false,
+                                                          fileInfo,
+                                                          tagutils::getTrackInfo(fileInfo, mimeType),
+                                                          findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path()));
                                 }
                             }
                         }
@@ -463,7 +490,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(artist)) from tracks"));
+        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(artist)) FROM tracks"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -476,7 +503,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(album)) from tracks"));
+        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(album)) FROM tracks"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -489,7 +516,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT COUNT(*) from tracks"));
+        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(filePath)) FROM tracks"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -502,7 +529,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT SUM(duration) from tracks"));
+        QSqlQuery query(QLatin1String("SELECT SUM(duration) FROM (SELECT duration from tracks GROUP BY filePath)"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -515,7 +542,7 @@ namespace unplayer
             return QString();
         }
 
-        QSqlQuery query(QLatin1String("SELECT mediaArt FROM tracks WHERE mediaArt != '' ORDER BY RANDOM() LIMIT 1"));
+        QSqlQuery query(QLatin1String("SELECT mediaArt FROM tracks WHERE mediaArt != '' GROUP BY mediaArt ORDER BY RANDOM() LIMIT 1"));
         if (query.next()) {
             return query.value(0).toString();
         }
@@ -531,6 +558,7 @@ namespace unplayer
         QSqlQuery query;
         query.prepare(QLatin1String("SELECT mediaArt FROM tracks "
                                     "WHERE mediaArt != '' AND artist = ? "
+                                    "GROUP BY mediaArt "
                                     "ORDER BY RANDOM() LIMIT 1"));
         query.addBindValue(artist);
         query.exec();
@@ -549,6 +577,7 @@ namespace unplayer
         QSqlQuery query;
         query.prepare(QLatin1String("SELECT mediaArt FROM tracks "
                                     "WHERE mediaArt != '' AND artist = ? AND album = ? "
+                                    "GROUP BY mediaArt "
                                     "ORDER BY RANDOM() LIMIT 1"));
         query.addBindValue(artist);
         query.addBindValue(album);
