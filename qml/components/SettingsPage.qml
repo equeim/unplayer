@@ -34,6 +34,12 @@ Page {
                 title: qsTranslate("unplayer", "Settings")
             }
 
+            TextSwitch {
+                text: qsTranslate("unplayer", "Prefer cover art located as separate file in music file directory instead of extracted from music file")
+                onCheckedChanged: Unplayer.Settings.useDirectoryMediaArt = checked
+                Component.onCompleted: checked = Unplayer.Settings.useDirectoryMediaArt
+            }
+
             SectionHeader {
                 text: qsTranslate("unplayer", "Library")
             }

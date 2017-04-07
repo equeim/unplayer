@@ -31,6 +31,7 @@ namespace unplayer
         const QString libraryDirectoriesKey(QLatin1String("libraryDirectories"));
         const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
         const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
+        const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
 
         Settings* instancePointer = nullptr;
     }
@@ -77,6 +78,16 @@ namespace unplayer
     void Settings::setDefaultDirectory(const QString& directory)
     {
         mSettings->setValue(defaultDirectoryKey, directory);
+    }
+
+    bool Settings::useDirectoryMediaArt() const
+    {
+        return mSettings->value(useDirectoryMediaArtKey, false).toBool();
+    }
+
+    void Settings::setUseDirectoryMediaArt(bool use)
+    {
+        mSettings->setValue(useDirectoryMediaArtKey, use);
     }
 
     Settings::Settings(QObject* parent)

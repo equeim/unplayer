@@ -19,8 +19,10 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 BaseTrackDelegate {
-    current: model.filePath === player.queue.currentFilePath
+    current: model.filePath === Unplayer.Player.queue.currentFilePath
     showDuration: true
     menu: Component {
         ContextMenu {
@@ -31,7 +33,7 @@ BaseTrackDelegate {
 
             MenuItem {
                 text: qsTranslate("unplayer", "Add to queue")
-                onClicked: player.queue.addTrack(model.filePath)
+                onClicked: Unplayer.Player.queue.addTrack(model.filePath)
             }
 
             MenuItem {
@@ -46,11 +48,11 @@ BaseTrackDelegate {
             tracksProxyModel.select(model.index)
         } else {
             if (current) {
-                if (!player.playing) {
-                    player.play()
+                if (!Unplayer.Player.playing) {
+                    Unplayer.Player.play()
                 }
             } else {
-                player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
+                Unplayer.Player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
             }
         }
     }

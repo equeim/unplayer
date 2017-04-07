@@ -30,7 +30,7 @@ MediaContainerSelectionDelegate {
         ContextMenu {
             MenuItem {
                 text: qsTranslate("unplayer", "Add to queue")
-                onClicked: player.queue.addTracks(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
+                onClicked: Unplayer.Player.queue.addTracks(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
             }
 
             MenuItem {

@@ -19,6 +19,8 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 DockedPanel {
     id: panel
 
@@ -36,7 +38,7 @@ DockedPanel {
     Binding {
         target: panel
         property: "open"
-        value: (player.queue.currentIndex !== -1 || player.queue.addingTracks) &&
+        value: (Unplayer.Player.queue.currentIndex !== -1 || Unplayer.Player.queue.addingTracks) &&
                !Qt.inputMethod.visible &&
                pageStack.currentPage !== nowPlayingPage &&
                !shouldBeClosed
@@ -48,7 +50,7 @@ DockedPanel {
 
     BusyIndicator {
         anchors.centerIn: parent
-        running: player.queue.addingTracks
+        running: Unplayer.Player.queue.addingTracks
         size: BusyIndicatorSize.Medium
     }
 
@@ -57,7 +59,7 @@ DockedPanel {
 
         anchors.fill: parent
 
-        enabled: !player.queue.addingTracks
+        enabled: !Unplayer.Player.queue.addingTracks
         opacity: enabled ? 1 : 0
         Behavior on opacity { FadeAnimation { } }
 
@@ -85,10 +87,10 @@ DockedPanel {
             Rectangle {
                 id: progressBar
 
-                property int duration: player.duration
+                property int duration: Unplayer.Player.duration
 
                 height: parent.height
-                width: duration ? parent.width * (player.position / duration) : 0
+                width: duration ? parent.width * (Unplayer.Player.position / duration) : 0
                 color: Theme.highlightColor
                 opacity: 0.5
             }
@@ -115,7 +117,7 @@ DockedPanel {
                 id: mediaArt
                 highlighted: pressItem.highlighted
                 size: parent.height
-                source: player.queue.currentMediaArt
+                source: Unplayer.Player.queue.currentMediaArt
             }
 
             Column {
@@ -129,14 +131,14 @@ DockedPanel {
                 Label {
                     color: Theme.highlightColor
                     font.pixelSize: largeScreen ? Theme.fontSizeMedium : Theme.fontSizeSmall
-                    text: player.queue.currentArtist
+                    text: Unplayer.Player.queue.currentArtist
                     truncationMode: TruncationMode.Fade
                     width: parent.width
                 }
 
                 Label {
                     font.pixelSize: largeScreen ? Theme.fontSizeMedium : Theme.fontSizeSmall
-                    text: player.queue.currentTitle
+                    text: Unplayer.Player.queue.currentTitle
                     truncationMode: TruncationMode.Fade
                     width: parent.width
                 }
@@ -155,11 +157,11 @@ DockedPanel {
                     id: icon
                     height: parent.height
                     icon.source: "image://theme/icon-m-previous"
-                    onClicked: player.queue.previous()
+                    onClicked: Unplayer.Player.queue.previous()
                 }
 
                 IconButton {
-                    property bool playing: player.playing
+                    property bool playing: Unplayer.Player.playing
 
                     height: parent.height
                     icon.source: {
@@ -178,9 +180,9 @@ DockedPanel {
 
                     onClicked: {
                         if (playing) {
-                            player.pause()
+                            Unplayer.Player.pause()
                         } else {
-                            player.play()
+                            Unplayer.Player.play()
                         }
                     }
                 }
@@ -188,7 +190,7 @@ DockedPanel {
                 IconButton {
                     height: parent.height
                     icon.source: "image://theme/icon-m-next"
-                    onClicked: player.queue.next()
+                    onClicked: Unplayer.Player.queue.next()
                 }
             }
         }

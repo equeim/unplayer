@@ -31,12 +31,14 @@ namespace unplayer
         Q_PROPERTY(bool playing READ isPlaying NOTIFY playingChanged)
         Q_PROPERTY(unplayer::Queue* queue READ queue CONSTANT)
     public:
-        Player();
+        static Player* instance();
 
         bool isPlaying() const;
         Queue* queue() const;
 
     private:
+        Player(QObject* parent);
+
         Queue* mQueue;
         bool mSettingNewTrack;
 

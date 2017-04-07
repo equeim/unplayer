@@ -40,9 +40,9 @@ Page {
     objectName: "queuePage"
 
     Connections {
-        target: player.queue
+        target: Unplayer.Player.queue
         onCurrentTrackChanged: {
-            if (player.queue.currentIndex === -1) {
+            if (Unplayer.Player.queue.currentIndex === -1) {
                 pageStack.pop(pageStack.previousPage(pageStack.previousPage()))
             }
         }
@@ -80,7 +80,7 @@ Page {
                 enabled: queueProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: {
-                    player.queue.removeTracks(queueProxyModel.selectedSourceIndexes)
+                    Unplayer.Player.queue.removeTracks(queueProxyModel.selectedSourceIndexes)
                     selectionPanel.showPanel = false
                 }
             }
@@ -97,8 +97,8 @@ Page {
         }
         clip: true
 
-        currentIndex: player.queue.currentIndex
-        highlightFollowsCurrentItem: !player.queue.shuffle
+        currentIndex: Unplayer.Player.queue.currentIndex
+        highlightFollowsCurrentItem: !Unplayer.Player.queue.shuffle
 
         header: PageHeader {
             title: qsTranslate("unplayer", "Queue")
@@ -109,7 +109,7 @@ Page {
             showArtistAndAlbum: true
             showDuration: true
 
-            current: model.index === queueProxyModel.proxyIndex(player.queue.currentIndex)
+            current: model.index === queueProxyModel.proxyIndex(Unplayer.Player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
                     text: qsTranslate("unplayer", "Track information")
@@ -123,7 +123,7 @@ Page {
 
                 MenuItem {
                     function remove() {
-                        player.queue.removeTrack(queueProxyModel.sourceIndex(model.index))
+                        Unplayer.Player.queue.removeTrack(queueProxyModel.sourceIndex(model.index))
                         trackDelegate.menuOpenChanged.disconnect(remove)
                     }
 
@@ -136,14 +136,14 @@ Page {
                     queueProxyModel.select(model.index)
                 } else {
                     if (current) {
-                        if (!player.playing) {
-                            player.play()
+                        if (!Unplayer.Player.playing) {
+                            Unplayer.Player.play()
                         }
                     } else {
-                        player.queue.currentIndex = queueProxyModel.sourceIndex(model.index)
-                        player.queue.currentTrackChanged()
-                        if (player.queue.shuffle) {
-                            player.queue.resetNotPlayedTracks()
+                        Unplayer.Player.queue.currentIndex = queueProxyModel.sourceIndex(model.index)
+                        Unplayer.Player.queue.currentTrackChanged()
+                        if (Unplayer.Player.queue.shuffle) {
+                            Unplayer.Player.queue.resetNotPlayedTracks()
                         }
                     }
                 }
@@ -155,14 +155,14 @@ Page {
 
             filterRole: Unplayer.QueueModel.TitleRole
             sourceModel: Unplayer.QueueModel {
-                queue: player.queue
+                queue: Unplayer.Player.queue
             }
         }
 
         PullDownMenu {
             MenuItem {
                 text: qsTranslate("unplayer", "Clear")
-                onClicked: player.queue.clear()
+                onClicked: Unplayer.Player.queue.clear()
             }
 
             SelectionMenuItem {

@@ -31,6 +31,7 @@ namespace unplayer
         Q_PROPERTY(bool hasLibraryDirectories READ hasLibraryDirectories NOTIFY libraryDirectoriesChanged)
         Q_PROPERTY(bool openLibraryOnStartup READ openLibraryOnStartup WRITE setOpenLibraryOnStartup)
         Q_PROPERTY(QString defaultDirectory READ defaultDirectory WRITE setDefaultDirectory)
+        Q_PROPERTY(bool useDirectoryMediaArt READ useDirectoryMediaArt WRITE setUseDirectoryMediaArt)
     public:
         static Settings* instance();
 
@@ -44,6 +45,9 @@ namespace unplayer
 
         QString defaultDirectory() const;
         void setDefaultDirectory(const QString& directory);
+
+        bool useDirectoryMediaArt() const;
+        void setUseDirectoryMediaArt(bool use);
     private:
         explicit Settings(QObject* parent);
 

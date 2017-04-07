@@ -43,7 +43,7 @@ Page {
                 text: qsTranslate("unplayer", "Add to queue")
 
                 onClicked: {
-                    player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -79,7 +79,7 @@ Page {
         delegate: BaseTrackDelegate {
             showArtistAndAlbum: model.inLibrary
             showDuration: model.hasDuration
-            current: model.filePath === player.queue.currentFilePath
+            current: model.filePath === Unplayer.Player.queue.currentFilePath
             menu: ContextMenu {
                 MenuItem {
                     text: qsTranslate("unplayer", "Track information")
@@ -88,7 +88,7 @@ Page {
 
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to queue")
-                    onClicked: player.queue.addTrack(model.filePath)
+                    onClicked: Unplayer.Player.queue.addTrack(model.filePath)
                 }
 
                 MenuItem {
@@ -104,11 +104,11 @@ Page {
                     playlistProxyModel.select(model.index)
                 } else {
                     if (current) {
-                        if (!player.playing) {
-                            player.play()
+                        if (!Unplayer.Player.playing) {
+                            Unplayer.Player.play()
                         }
                     } else {
-                        player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
+                        Unplayer.Player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
                                                true,
                                                model.index)
                     }

@@ -22,6 +22,7 @@
 #include <memory>
 
 #include <QObject>
+#include <QQuickImageProvider>
 #include <QStringList>
 #include <QUrl>
 
@@ -34,14 +35,17 @@ namespace unplayer
                             int duration,
                             const QString& artist,
                             const QString& album,
-                            const QString& mediaArt);
+                            const QString& mediaArtFilePath,
+                            const QByteArray& mediaArtData);
 
         QString filePath;
         QString title;
         int duration;
         QString artist;
         QString album;
-        QString mediaArt;
+
+        QString mediaArtFilePath;
+        QPixmap mediaArtPixmap;
     };
 
     class Queue : public QObject
@@ -131,6 +135,16 @@ namespace unplayer
         void cleared();
 
         void addingTracksChanged();
+    };
+
+    class QueueImageProvider : public QQuickImageProvider
+    {
+    public:
+        static const QString providerId;
+        explicit QueueImageProvider(const Queue* queue);
+        QPixmap requestPixmap(const QString& id, QSize*, const QSize& requestedSize) override;
+    private:
+        const Queue* mQueue;
     };
 }
 

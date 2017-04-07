@@ -77,7 +77,7 @@ namespace unplayer
 
             void setMediaArt(const TagLib::ByteVector& data, Info& info)
             {
-                info.mediaArt.loadFromData(reinterpret_cast<const uchar*>(data.data()), data.size());
+                info.mediaArtData = QByteArray(data.data(), data.size());
             }
 
             void getFlacMediaArt(TagLib::FLAC::File& file, Info& info)

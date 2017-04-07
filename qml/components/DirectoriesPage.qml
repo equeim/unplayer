@@ -35,7 +35,7 @@ Page {
                 enabled: directoryTracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
+                    Unplayer.Player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
                 }
             }
@@ -103,7 +103,7 @@ Page {
         delegate: ListItem {
             id: fileDelegate
 
-            property bool current: model.filePath === player.queue.currentFilePath
+            property bool current: model.filePath === Unplayer.Player.queue.currentFilePath
 
             menu: Component {
                 ContextMenu {
@@ -122,7 +122,7 @@ Page {
                     MenuItem {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to queue")
-                        onClicked: player.queue.addTrack(model.filePath)
+                        onClicked: Unplayer.Player.queue.addTrack(model.filePath)
                     }
 
                     MenuItem {
@@ -145,11 +145,11 @@ Page {
                         directoryTracksModel.directory = model.filePath
                     } else {
                         if (current) {
-                            if (!player.playing) {
-                                player.play()
+                            if (!Unplayer.Player.playing) {
+                                Unplayer.Player.play()
                             }
                         } else {
-                            player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes),
+                            Unplayer.Player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes),
                                                    true,
                                                    model.index - directoryTracksProxyModel.directoriesCount)
                         }

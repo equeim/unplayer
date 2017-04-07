@@ -108,19 +108,19 @@ Page {
             MenuItem {
                 text: qsTranslate("unplayer", "Clear Queue")
                 onClicked: {
-                    player.queue.clear()
+                    Unplayer.Player.queue.clear()
                     pageStack.pop()
                 }
             }
 
             MenuItem {
                 text: qsTranslate("unplayer", "Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: player.queue.currentFilePath })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: Unplayer.Player.queue.currentFilePath })
             }
 
             MenuItem {
                 text: qsTranslate("unplayer", "Track information")
-                onClicked: pageStack.push("TrackInfoPage.qml", { filePath: player.queue.currentFilePath })
+                onClicked: pageStack.push("TrackInfoPage.qml", { filePath: Unplayer.Player.queue.currentFilePath })
             }
         }
 
@@ -167,7 +167,7 @@ Page {
                 asynchronous: true
                 fillMode: Image.PreserveAspectCrop
                 visible: status === Image.Ready
-                source: player.queue.currentMediaArt
+                source: Unplayer.Player.queue.currentMediaArt
 
                 Rectangle {
                     anchors.fill: parent
@@ -197,21 +197,21 @@ Page {
 
                 Label {
                     color: Theme.highlightColor
-                    text: player.queue.currentTitle
+                    text: Unplayer.Player.queue.currentTitle
                     truncationMode: TruncationMode.Fade
                     width: parent.width
                 }
 
                 Label {
                     font.pixelSize: Theme.fontSizeSmall
-                    text: player.queue.currentArtist
+                    text: Unplayer.Player.queue.currentArtist
                     truncationMode: TruncationMode.Fade
                     width: parent.width
                 }
 
                 Label {
                     font.pixelSize: Theme.fontSizeSmall
-                    text: player.queue.currentAlbum
+                    text: Unplayer.Player.queue.currentAlbum
                     truncationMode: TruncationMode.Fade
                     width: parent.width
                 }
@@ -220,8 +220,8 @@ Page {
             Slider {
                 id: progressBar
 
-                property int duration: player.duration
-                property int position: player.position
+                property int duration: Unplayer.Player.duration
+                property int position: Unplayer.Player.position
 
                 handleVisible: false
                 label: Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
@@ -238,7 +238,7 @@ Page {
                         value = position
                     }
                 }
-                onReleased: player.position = value
+                onReleased: Unplayer.Player.position = value
             }
 
             Row {
@@ -248,21 +248,21 @@ Page {
 
                 Switch {
                     anchors.verticalCenter: parent.verticalCenter
-                    checked: player.queue.shuffle
+                    checked: Unplayer.Player.queue.shuffle
                     icon.source: "image://theme/icon-m-shuffle"
-                    onCheckedChanged: player.queue.shuffle = checked
+                    onCheckedChanged: Unplayer.Player.queue.shuffle = checked
                 }
 
                 IconButton {
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-previous"
-                    onClicked: player.queue.previous()
+                    onClicked: Unplayer.Player.queue.previous()
                 }
 
                 IconButton {
                     id: playPauseButton
 
-                    property bool playing: player.playing
+                    property bool playing: Unplayer.Player.playing
 
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: playing ? "image://theme/icon-l-pause" :
@@ -270,9 +270,9 @@ Page {
 
                     onClicked: {
                         if (playing) {
-                            player.pause()
+                            Unplayer.Player.pause()
                         } else {
-                            player.play()
+                            Unplayer.Player.play()
                         }
                     }
                 }
@@ -280,7 +280,7 @@ Page {
                 IconButton {
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-next"
-                    onClicked: player.queue.next()
+                    onClicked: Unplayer.Player.queue.next()
                 }
 
                 Switch {
@@ -288,10 +288,10 @@ Page {
 
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-repeat"
-                    checked: player.queue.repeatMode !== Unplayer.Queue.NoRepeat
+                    checked: Unplayer.Player.queue.repeatMode !== Unplayer.Queue.NoRepeat
                     automaticCheck: false
 
-                    onClicked: player.queue.changeRepeatMode()
+                    onClicked: Unplayer.Player.queue.changeRepeatMode()
 
                     Label {
                         anchors {
@@ -299,7 +299,7 @@ Page {
                             bottom: parent.bottom
                             bottomMargin: Theme.paddingMedium
                         }
-                        visible: player.queue.repeatMode === Unplayer.Queue.RepeatOne
+                        visible: Unplayer.Player.queue.repeatMode === Unplayer.Queue.RepeatOne
                         color: repeatSwitch.pressed ? Theme.highlightColor : Theme.primaryColor
                         font.pixelSize: Theme.fontSizeExtraSmall
                         text: "1"

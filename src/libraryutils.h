@@ -19,6 +19,7 @@
 #ifndef UNPLAYER_LIBRARYUTILS_H
 #define UNPLAYER_LIBRARYUTILS_H
 
+#include <QMimeDatabase>
 #include <QObject>
 
 class QFileInfo;
@@ -26,6 +27,11 @@ class QSqlDatabase;
 
 namespace unplayer
 {
+    namespace tagutils
+    {
+        class Info;
+    }
+
     enum class MimeType
     {
         Flac,
@@ -60,29 +66,44 @@ namespace unplayer
         static const QVector<QString> supportedMimeTypes;
         static LibraryUtils* instance();
 
-        static QString databaseFilePath();
+        const QString& databaseFilePath();
 
         static QString findMediaArtForDirectory(QHash<QString, QString>& directoriesHash, const QString& directoryPath);
 
-        static void initDatabase();
+        void initDatabase();
         Q_INVOKABLE void updateDatabase();
         Q_INVOKABLE void resetDatabase();
 
-        static bool isDatabaseInitialized();
-        static bool isCreatedTable();
-        static bool isUpdating();
+        bool isDatabaseInitialized();
+        bool isCreatedTable();
+        bool isUpdating();
 
-        static int artistsCount();
-        static int albumsCount();
-        static int tracksCount();
-        static int tracksDuration();
-        static QString randomMediaArt();
-        Q_INVOKABLE static QString randomMediaArtForArtist(const QString& artist);
-        Q_INVOKABLE static QString randomMediaArtForAlbum(const QString& artist, const QString& album);
+        int artistsCount();
+        int albumsCount();
+        int tracksCount();
+        int tracksDuration();
+        QString randomMediaArt();
+        Q_INVOKABLE QString randomMediaArtForArtist(const QString& artist);
+        Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album);
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
     private:
-        explicit LibraryUtils(QObject* parent);
+        LibraryUtils();
+
+        QString getTrackMediaArt(const tagutils::Info& info,
+                                 QHash<QByteArray, QString>& embeddedMediaArtHash,
+                                 const QFileInfo& fileInfo,
+                                 QHash<QString, QString>& directoriesHash,
+                                 bool useDirectoriesMediaArt);
+        QString saveEmbeddedMediaArt(const QByteArray& data, QHash<QByteArray, QString>& embeddedMediaArtHash);
+
+        bool mDatabaseInitialized;
+        bool mCreatedTable;
+        bool mUpdating;
+
+        QString mDatabaseFilePath;
+        QString mMediaArtDirectory;
+        QMimeDatabase mMimeDb;
     signals:
         void updatingChanged();
         void databaseChanged();

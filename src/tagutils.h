@@ -40,7 +40,7 @@ namespace unplayer
             QStringList genres;
             int duration = 0;
             int bitrate = 0;
-            QPixmap mediaArt;
+            QByteArray mediaArtData;
         };
 
         Info getTrackInfo(const QFileInfo& fileInfo, const QString& mimeType);

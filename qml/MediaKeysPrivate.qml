@@ -19,40 +19,42 @@
 import QtQuick 2.2
 import Sailfish.Media 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 Item {
     MediaKey {
         enabled: true
         key: Qt.Key_MediaTogglePlayPause
-        onReleased: player.playing ? player.pause() : player.play()
+        onReleased: Unplayer.Player.playing ? Unplayer.Player.pause() : Unplayer.Player.play()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_MediaPlay
-        onReleased: player.play()
+        onReleased: Unplayer.Player.play()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_MediaPause
-        onReleased: player.pause()
+        onReleased: Unplayer.Player.pause()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_MediaStop
-        onReleased: player.stop()
+        onReleased: Unplayer.Player.stop()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_MediaNext
-        onReleased: player.queue.next()
+        onReleased: Unplayer.Player.queue.next()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_MediaPrevious
-        onReleased: player.queue.previous()
+        onReleased: Unplayer.Player.queue.previous()
     }
     MediaKey {
         enabled: true
         key: Qt.Key_ToggleCallHangup
-        onReleased: player.playing ? player.pause() : player.play()
+        onReleased: Unplayer.Player.playing ? Unplayer.Player.pause() : Unplayer.Player.play()
     }
 }

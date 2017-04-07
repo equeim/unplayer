@@ -35,7 +35,7 @@ Page {
                 enabled: artistsProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    player.queue.addTracks(artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracks(artistsModel.getTracksForArtists(artistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -98,7 +98,7 @@ Page {
 
                     MenuItem {
                         text: qsTranslate("unplayer", "Add to queue")
-                        onClicked: player.queue.addTracks(artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)))
+                        onClicked: Unplayer.Player.queue.addTracks(artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)))
                     }
 
                     MenuItem {

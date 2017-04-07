@@ -37,6 +37,7 @@
 
 #include "libraryutils.h"
 #include "playlistutils.h"
+#include "settings.h"
 #include "tagutils.h"
 
 namespace unplayer
@@ -51,14 +52,16 @@ namespace unplayer
                            int duration,
                            const QString& artist,
                            const QString& album,
-                           const QString& mediaArt)
+                           const QString& mediaArt,
+                           const QByteArray& mediaArtData)
         : filePath(filePath),
           title(title),
           duration(duration),
           artist(artist),
           album(album),
-          mediaArt(mediaArt)
+          mediaArtFilePath(mediaArt)
     {
+        mediaArtPixmap.loadFromData(mediaArtData);
     }
 
     Queue::Queue(QObject* parent)
@@ -76,7 +79,7 @@ namespace unplayer
                 query.addBindValue(track->filePath);
                 if (query.exec()) {
                     if (query.next()) {
-                        track->mediaArt = query.value(0).toString();
+                        track->mediaArtFilePath = query.value(0).toString();
                     }
                 } else {
                     qWarning() << "failed to get media art from database for track:" << track->filePath;
@@ -141,7 +144,13 @@ namespace unplayer
     QString Queue::currentMediaArt() const
     {
         if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->mediaArt;
+            const QueueTrack* track = mTracks.at(mCurrentIndex).get();
+            if (!track->mediaArtFilePath.isEmpty()) {
+                return track->mediaArtFilePath;
+            }
+            if (!track->mediaArtPixmap.isNull()) {
+                return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId).arg(track->filePath);
+            }
         }
         return QString();
     }
@@ -234,7 +243,7 @@ namespace unplayer
 
             {
                 auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), dbConnectionName);
-                db.setDatabaseName(LibraryUtils::databaseFilePath());
+                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
                 if (!db.open()) {
                     qWarning() << "failed to open database" << db.lastError();
                 }
@@ -244,6 +253,7 @@ namespace unplayer
                 QHash<QString, QString> mediaArtDirectoriesHash;
 
                 const QMimeDatabase mimeDb;
+                const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
                 for (const QString& filePath : trackPaths) {
                     bool found = false;
@@ -268,7 +278,8 @@ namespace unplayer
                     QStringList artists;
                     QStringList albums;
                     int duration;
-                    QString mediaArt;
+                    QString mediaArtFilePath;
+                    QByteArray mediaArtData;
 
                     bool getTags = true;
 
@@ -284,7 +295,7 @@ namespace unplayer
 
                                     title = query.value(1).toString();
                                     duration = query.value(4).toInt();
-                                    mediaArt = query.value(5).toString();
+                                    mediaArtFilePath = query.value(5).toString();
 
                                     query.previous();
                                     while (query.next()) {
@@ -308,7 +319,18 @@ namespace unplayer
                         artists = info.artists;
                         albums = info.albums;
                         duration = info.duration;
-                        mediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
+                        if (useDirectoryMediaArt) {
+                            mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
+                            if (mediaArtFilePath.isEmpty()) {
+                                mediaArtData = info.mediaArtData;
+                            }
+                        } else {
+                            if (info.mediaArtData.isEmpty()) {
+                                mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
+                            } else {
+                                mediaArtData = info.mediaArtData;
+                            }
+                        }
                     }
 
                     QString artist;
@@ -330,7 +352,8 @@ namespace unplayer
                                                                duration,
                                                                artist,
                                                                album,
-                                                               mediaArt));
+                                                               mediaArtFilePath,
+                                                               mediaArtData));
                 }
 
                 db.commit();
@@ -346,7 +369,7 @@ namespace unplayer
             const int start = mTracks.size();
             const auto tracks = watcher->result();
 
-            for (const auto track : tracks) {
+            for (const auto& track : tracks) {
                 mTracks.append(track);
                 mNotPlayedTracks.append(track);
             }
@@ -502,5 +525,38 @@ namespace unplayer
         clear();
         setCurrentIndex(-1);
         emit currentTrackChanged();
+    }
+
+    const QString QueueImageProvider::providerId(QLatin1String("queue"));
+
+    QueueImageProvider::QueueImageProvider(const Queue* queue)
+        : QQuickImageProvider(QQuickImageProvider::Pixmap),
+          mQueue(queue)
+    {
+
+    }
+
+    QPixmap QueueImageProvider::requestPixmap(const QString& id, QSize*, const QSize& requestedSize)
+    {
+        qDebug() << "requestPixmap" << id;
+        for (const auto& track : mQueue->tracks()) {
+            if (track->filePath == id) {
+                /*QPixmap pixmap;
+                pixmap.loadFromData(track->mediaArtData);*/
+                const QPixmap& pixmap = track->mediaArtPixmap;
+                if (requestedSize.isValid()) {
+                    QSize newSize(requestedSize);
+                    if (newSize.width() == 0) {
+                        newSize.setWidth(pixmap.width());
+                    }
+                    if (newSize.height() == 0) {
+                        newSize.setHeight(pixmap.height());
+                    }
+                    return pixmap.scaled(newSize, Qt::KeepAspectRatio);
+                }
+                return pixmap;
+            }
+        }
+        return QPixmap();
     }
 }

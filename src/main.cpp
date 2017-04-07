@@ -31,6 +31,8 @@
 #include <sailfishapp.h>
 
 #include "libraryutils.h"
+#include "player.h"
+#include "queue.h"
 #include "settings.h"
 #include "utils.h"
 
@@ -65,6 +67,8 @@ int main(int argc, char* argv[])
     Settings::instance();
     LibraryUtils::instance();
     Utils::registerTypes();
+
+    view->engine()->addImageProvider(QueueImageProvider::providerId, new QueueImageProvider(Player::instance()->queue()));
 
     view->setSource(SailfishApp::pathTo(QLatin1String("qml/main.qml")));
     view->show();

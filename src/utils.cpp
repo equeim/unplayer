@@ -67,7 +67,7 @@ namespace unplayer
         qmlRegisterSingletonType<Settings>(url, major, minor, "Settings", [](QQmlEngine*, QJSEngine*) -> QObject* { return Settings::instance(); });
         qmlRegisterSingletonType<LibraryUtils>(url, major, minor, "LibraryUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return LibraryUtils::instance(); });
 
-        qmlRegisterType<Player>(url, major, minor, "Player");
+        qmlRegisterSingletonType<Player>(url, major, minor, "Player", [](QQmlEngine*, QJSEngine*) -> QObject* { return Player::instance(); });
 
         qmlRegisterUncreatableType<Queue>(url, major, minor, "Queue", QString());
         qmlRegisterType<QueueModel>(url, major, minor, "QueueModel");

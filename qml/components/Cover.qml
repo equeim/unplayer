@@ -19,13 +19,15 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 CoverBackground {
     CoverPlaceholder {
         id: placeholder
 
         icon.source: "image://theme/harbour-unplayer"
         text: "Unplayer"
-        visible: player.queue.currentIndex === -1
+        visible: Unplayer.Player.queue.currentIndex === -1
     }
 
     Item {
@@ -36,7 +38,7 @@ CoverBackground {
             id: mediaArtImage
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            source: player.queue.currentMediaArt
+            source: Unplayer.Player.queue.currentMediaArt
             sourceSize.height: parent.height
             asynchronous: true
         }
@@ -60,12 +62,12 @@ CoverBackground {
             spacing: Theme.paddingSmall
 
             Label {
-                property int position: player.position
+                property int position: Unplayer.Player.position
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: Theme.highlightColor
                 font.pixelSize: position >= 3600000 ? Theme.fontSizeExtraLarge : Theme.fontSizeHuge
-                opacity: player.playing ? 1.0 : 0.4
+                opacity: Unplayer.Player.playing ? 1.0 : 0.4
                 text: Format.formatDuration(position / 1000, position >= 3600000? Format.DurationLong :
                                                                                   Format.DurationShort)
             }
@@ -73,7 +75,7 @@ CoverBackground {
             Label {
                 horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
                 color: Theme.highlightColor
-                text: player.queue.currentArtist
+                text: Unplayer.Player.queue.currentArtist
                 truncationMode: TruncationMode.Fade
                 width: parent.width
             }
@@ -81,7 +83,7 @@ CoverBackground {
             Label {
                 horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
                 maximumLineCount: 3
-                text: player.queue.currentTitle
+                text: Unplayer.Player.queue.currentTitle
                 truncationMode: TruncationMode.Elide
                 width: parent.width
                 wrapMode: Text.WordWrap
@@ -94,20 +96,20 @@ CoverBackground {
         iconBackground: true
 
         CoverAction {
-            iconSource: player.playing ? "image://theme/icon-cover-pause" :
+            iconSource: Unplayer.Player.playing ? "image://theme/icon-cover-pause" :
                                          "image://theme/icon-cover-play"
             onTriggered: {
-                if (player.playing) {
-                    player.pause()
+                if (Unplayer.Player.playing) {
+                    Unplayer.Player.pause()
                 } else {
-                    player.play()
+                    Unplayer.Player.play()
                 }
             }
         }
 
         CoverAction {
             iconSource: "image://theme/icon-cover-next-song"
-            onTriggered: player.queue.next()
+            onTriggered: Unplayer.Player.queue.next()
         }
     }
 }

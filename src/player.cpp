@@ -18,6 +18,7 @@
 
 #include "player.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QUrl>
 
@@ -27,8 +28,32 @@
 
 namespace unplayer
 {
-    Player::Player()
-        : mQueue(new Queue(this)),
+    namespace
+    {
+        Player* instancePointer = nullptr;
+    }
+
+    Player* Player::instance()
+    {
+        if (!instancePointer) {
+            instancePointer = new Player(qApp);
+        }
+        return instancePointer;
+    }
+
+    bool Player::isPlaying() const
+    {
+        return (state() == PlayingState);
+    }
+
+    Queue* Player::queue() const
+    {
+        return mQueue;
+    }
+
+    Player::Player(QObject* parent)
+        : QMediaPlayer(parent),
+          mQueue(new Queue(this)),
           mSettingNewTrack(false)
     {
         auto mpris = new MprisPlayer(this);
@@ -99,15 +124,5 @@ namespace unplayer
         QObject::connect(mpris, &MprisPlayer::pauseRequested, this, &Player::pause);
         QObject::connect(mpris, &MprisPlayer::nextRequested, mQueue, &Queue::next);
         QObject::connect(mpris, &MprisPlayer::previousRequested, mQueue, &Queue::previous);
-    }
-
-    bool Player::isPlaying() const
-    {
-        return (state() == PlayingState);
-    }
-
-    Queue* Player::queue() const
-    {
-        return mQueue;
     }
 }

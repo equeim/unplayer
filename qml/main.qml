@@ -48,11 +48,7 @@ ApplicationWindow
                 pageStack.push("components/LibraryPage.qml", null, PageStackAction.Immediate)
             }
         }
-        player.queue.addTracks(commandLineArguments, true)
-    }
-
-    Unplayer.Player {
-        id: player
+        Unplayer.Player.queue.addTracks(commandLineArguments, true)
     }
 
     MediaKeys { }
@@ -68,7 +64,7 @@ ApplicationWindow
 
         function addTracksToQueue(tracks) {
             if (tracks.length) {
-                player.queue.addTracks(tracks, true)
+                Unplayer.Player.queue.addTracks(tracks, true)
             }
         }
     }
