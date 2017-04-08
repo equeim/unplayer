@@ -479,5 +479,9 @@
         <source>%1 YiB</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

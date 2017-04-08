@@ -48,7 +48,7 @@
         <location filename="../qml/components/DirectoriesPage.qml" line="130"/>
         <location filename="../qml/components/GenresPage.qml" line="45"/>
         <location filename="../qml/components/GenresPage.qml" line="88"/>
-        <location filename="../qml/components/LibraryTrackDelegate.qml" line="38"/>
+        <location filename="../qml/components/LibraryTrackDelegate.qml" line="40"/>
         <location filename="../qml/components/NowPlayingPage.qml" line="117"/>
         <location filename="../qml/components/QueuePage.qml" line="62"/>
         <location filename="../qml/components/QueuePage.qml" line="120"/>
@@ -97,9 +97,9 @@
         <location filename="../qml/components/DirectoriesPage.qml" line="124"/>
         <location filename="../qml/components/GenresPage.qml" line="36"/>
         <location filename="../qml/components/GenresPage.qml" line="83"/>
-        <location filename="../qml/components/LibraryTrackDelegate.qml" line="33"/>
+        <location filename="../qml/components/LibraryTrackDelegate.qml" line="35"/>
         <location filename="../qml/components/PlaylistPage.qml" line="43"/>
-        <location filename="../qml/components/PlaylistPage.qml" line="90"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="91"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="40"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="80"/>
         <location filename="../qml/components/TracksPage.qml" line="42"/>
@@ -132,7 +132,7 @@
     </message>
     <message>
         <location filename="../qml/components/AlbumPage.qml" line="119"/>
-        <location filename="../qml/components/PlaylistPage.qml" line="138"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="139"/>
         <location filename="../qml/components/QueuePage.qml" line="169"/>
         <location filename="../qml/components/TracksPage.qml" line="104"/>
         <source>Select tracks</source>
@@ -140,24 +140,24 @@
     </message>
     <message>
         <location filename="../qml/components/AlbumPage.qml" line="126"/>
-        <location filename="../qml/components/PlaylistPage.qml" line="146"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="147"/>
         <location filename="../qml/components/QueuePage.qml" line="176"/>
         <location filename="../qml/components/TracksPage.qml" line="111"/>
         <source>No tracks</source>
         <translation>Нет треков</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="93"/>
-        <location filename="../src/tracksmodel.cpp" line="105"/>
+        <location filename="../src/albumsmodel.cpp" line="94"/>
+        <location filename="../src/tracksmodel.cpp" line="108"/>
         <source>Unknown album</source>
         <translation>Неизвестный альбом</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="81"/>
-        <location filename="../src/artistsmodel.cpp" line="57"/>
-        <location filename="../src/queue.cpp" line="302"/>
-        <location filename="../src/queue.cpp" line="306"/>
-        <location filename="../src/tracksmodel.cpp" line="97"/>
+        <location filename="../src/albumsmodel.cpp" line="82"/>
+        <location filename="../src/artistsmodel.cpp" line="58"/>
+        <location filename="../src/queue.cpp" line="336"/>
+        <location filename="../src/queue.cpp" line="343"/>
+        <location filename="../src/tracksmodel.cpp" line="100"/>
         <source>Unknown artist</source>
         <translation>Неизвестный исполнитель</translation>
     </message>
@@ -247,44 +247,44 @@
     </message>
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="112"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="232"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="237"/>
         <source>Set as default directory</source>
         <translation>Установить по умолчанию</translation>
     </message>
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="118"/>
-        <location filename="../qml/components/LibraryTrackDelegate.qml" line="28"/>
+        <location filename="../qml/components/LibraryTrackDelegate.qml" line="30"/>
         <location filename="../qml/components/NowPlayingPage.qml" line="122"/>
-        <location filename="../qml/components/PlaylistPage.qml" line="85"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="86"/>
         <location filename="../qml/components/QueuePage.qml" line="115"/>
         <location filename="../qml/components/TrackInfoPage.qml" line="40"/>
         <source>Track information</source>
         <translation>Информация о треке</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="237"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="242"/>
         <source>Default directory</source>
         <translation>Каталог по умолчанию</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="242"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="247"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="173"/>
         <source>SD card</source>
         <translation>Карта памяти</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="247"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="252"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="183"/>
         <source>Home directory</source>
         <translation>Домашний каталог</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="253"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="258"/>
         <source>Select files</source>
         <translation>Выбрать файлы</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="261"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="266"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="192"/>
         <source>No files</source>
         <translation>Нет файлов</translation>
@@ -344,7 +344,7 @@
     <message>
         <location filename="../qml/components/LibraryPage.qml" line="46"/>
         <location filename="../qml/components/MainPage.qml" line="51"/>
-        <location filename="../qml/components/SettingsPage.qml" line="38"/>
+        <location filename="../qml/components/SettingsPage.qml" line="44"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
@@ -443,7 +443,7 @@
     </message>
     <message>
         <location filename="../qml/components/PlaylistPage.qml" line="54"/>
-        <location filename="../qml/components/PlaylistPage.qml" line="95"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="96"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка</translation>
     </message>
@@ -457,18 +457,18 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/PlaylistPage.qml" line="96"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="97"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="86"/>
         <source>Removing</source>
         <translation>Удаление</translation>
     </message>
     <message>
-        <location filename="../qml/components/PlaylistPage.qml" line="130"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="131"/>
         <source>Remove playlist</source>
         <translation>Удалить список</translation>
     </message>
     <message>
-        <location filename="../qml/components/PlaylistPage.qml" line="131"/>
+        <location filename="../qml/components/PlaylistPage.qml" line="132"/>
         <source>Removing playlist</source>
         <translation>Удаление списка</translation>
     </message>
@@ -493,7 +493,7 @@
     </message>
     <message>
         <location filename="../qml/components/LibraryDirectoriesPage.qml" line="60"/>
-        <location filename="../qml/components/SettingsPage.qml" line="60"/>
+        <location filename="../qml/components/SettingsPage.qml" line="66"/>
         <source>Library Directories</source>
         <translation>Каталоги библиотеки</translation>
     </message>
@@ -606,7 +606,7 @@
         <translation>Длительность</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="91"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="90"/>
         <source>Bitrate</source>
         <translation>Битрейт</translation>
     </message>
@@ -676,7 +676,7 @@
         <translation>Сопровождающий</translation>
     </message>
     <message>
-        <location filename="../qml/components/BaseTrackDelegate.qml" line="67"/>
+        <location filename="../qml/components/BaseTrackDelegate.qml" line="68"/>
         <source>%1 - %2</source>
         <translation></translation>
     </message>
@@ -686,12 +686,17 @@
         <translation>Очистить очередь</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="42"/>
+        <location filename="../qml/components/SettingsPage.qml" line="38"/>
+        <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/SettingsPage.qml" line="48"/>
         <source>Open library on startup</source>
         <translation>Открывать библиотеку при запуске</translation>
     </message>
     <message>
-        <location filename="../src/trackinfo.cpp" line="104"/>
+        <location filename="../src/trackinfo.cpp" line="96"/>
         <source>%1 kB/s</source>
         <translation>%1 кБ/с</translation>
     </message>

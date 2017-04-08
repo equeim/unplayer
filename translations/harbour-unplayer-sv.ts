@@ -379,9 +379,11 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>%n fil vald</numerusform>
-        <numerusform>%n filer valda</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n fil vald</numerusform>
+            <numerusform>%n filer valda</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>Ange som standardmapp</translation>
@@ -396,9 +398,11 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform>%n mapp vald</numerusform>
-        <numerusform>%n mappar valda</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n mapp vald</numerusform>
+            <numerusform>%n mappar valda</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Library Directories</source>
         <translation>Biblioteksmappar</translation>
@@ -474,6 +478,10 @@
     <message>
         <source>%1 m %2 s</source>
         <translation>%1 m %2 s</translation>
+    </message>
+    <message>
+        <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

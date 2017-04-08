@@ -479,5 +479,9 @@
         <source>%1 m %2 s</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
