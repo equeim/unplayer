@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Prefer cover art located as separate file in music file directory instead of extracted from music file</translation>
     </message>
 </context>
 </TS>
