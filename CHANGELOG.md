@@ -1,5 +1,19 @@
 # Change Log
 
+## [Unreleased]
+### Added
+- Support of tracks with multiple artists/albums/genres
+- Support of extracting cover art that is embedded in music files
+- M3U playlists support
+
+### Changed
+- Changed behaviour of Directories view with playlists:
+    - When clicking on music file, all music files in the directory are added to queue, playlists are ignored
+    - When clicking on playlist, only this playlist is added to queue, other playlists and music files in the directory are ignored
+
+### Fixed
+- Playlists with relative paths
+
 ## [1.0.1] - 2017-04-02
 ### Changed
 - Updated Dutch translation
