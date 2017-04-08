@@ -688,7 +688,7 @@
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="38"/>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Предпочитать обложку, расположенную в виде отдельного файла в каталоге музыкального файла, вместо извлеченной из музыкального файла</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="48"/>
