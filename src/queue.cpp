@@ -536,11 +536,8 @@ namespace unplayer
 
     QPixmap QueueImageProvider::requestPixmap(const QString& id, QSize*, const QSize& requestedSize)
     {
-        qDebug() << "requestPixmap" << id;
         for (const auto& track : mQueue->tracks()) {
             if (track->filePath == id) {
-                /*QPixmap pixmap;
-                pixmap.loadFromData(track->mediaArtData);*/
                 const QPixmap& pixmap = track->mediaArtPixmap;
                 if (requestedSize.isValid()) {
                     QSize newSize(requestedSize);

@@ -326,8 +326,11 @@ namespace unplayer
                 // Remove deleted files and files that are not in selected library directories
                 for (int i = 0, max = files.size(); i < max; ++i) {
                     const QString filePath(files.at(i));
+                    const QFileInfo fileInfo(filePath);
                     bool remove = false;
-                    if (QFile::exists(filePath)) {
+                    if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
+                        remove = true;
+                    } else {
                         remove = true;
                         for (const QString& directory : libraryDirectories) {
                             if (filePath.startsWith(directory)) {
@@ -335,8 +338,6 @@ namespace unplayer
                                 break;
                             }
                         }
-                    } else {
-                        remove = true;
                     }
 
                     if (remove) {
