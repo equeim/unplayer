@@ -27,6 +27,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "playlistutils.h"
 #include "settings.h"
 
 namespace unplayer
@@ -149,7 +150,7 @@ namespace unplayer
                                   true});
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
-                    if (LibraryUtils::supportedMimeTypes.contains(mimeType) || mimeType == QLatin1String("audio/x-scpls")) {
+                    if (LibraryUtils::supportedMimeTypes.contains(mimeType) || PlaylistUtils::playlistsMimeTypes.contains(mimeType)) {
                         files.append({info.filePath(),
                                       info.fileName(),
                                       false});

@@ -24,8 +24,9 @@ ListItem {
 
     property bool current
 
-    property bool showArtistAndAlbum
+    property bool showArtist
     property bool showAlbum
+    property bool showArtistAndAlbum
     property bool showDuration
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
@@ -59,12 +60,16 @@ ListItem {
         }
 
         Label {
-            visible: showArtistAndAlbum || showAlbum
+            visible: model.artist || model.album
             color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {
                 if (showArtistAndAlbum) {
                     return qsTranslate("unplayer", "%1 - %2").arg(model.artist).arg(model.album)
+                }
+
+                if (showArtist) {
+                    return model.artist
                 }
 
                 if (showAlbum) {

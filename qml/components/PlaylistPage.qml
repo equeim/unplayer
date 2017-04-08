@@ -77,6 +77,7 @@ Page {
             title: pageTitle
         }
         delegate: BaseTrackDelegate {
+            showArtist: !model.inLibrary
             showArtistAndAlbum: model.inLibrary
             showDuration: model.hasDuration
             current: model.filePath === Unplayer.Player.queue.currentFilePath
@@ -109,8 +110,8 @@ Page {
                         }
                     } else {
                         Unplayer.Player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
-                                               true,
-                                               model.index)
+                                                        true,
+                                                        model.index)
                     }
                 }
             }

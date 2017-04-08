@@ -32,9 +32,6 @@
 #include <QSqlRecord>
 #include <QtConcurrentRun>
 
-#include <fileref.h>
-#include <tag.h>
-
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
@@ -226,9 +223,11 @@ namespace unplayer
         auto future = QtConcurrent::run([trackPaths, oldTracks]() mutable {
             QList<std::shared_ptr<QueueTrack>> tracks;
 
+            const QMimeDatabase mimeDb;
+
             for (int i = 0, max = trackPaths.size(); i < max; ++i) {
-                const QString& filePath = trackPaths.at(i);
-                if (filePath.endsWith(QLatin1String(".pls"))) {
+                const QString filePath(trackPaths.at(i));
+                if (PlaylistUtils::playlistsMimeTypes.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
                     trackPaths.removeAt(i);
                     const QStringList playlistTracks(PlaylistUtils::getPlaylistTracks(filePath));
                     int trackIndex = i;
@@ -252,7 +251,6 @@ namespace unplayer
 
                 QHash<QString, QString> mediaArtDirectoriesHash;
 
-                const QMimeDatabase mimeDb;
                 const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
                 for (const QString& filePath : trackPaths) {
@@ -270,7 +268,7 @@ namespace unplayer
 
                     const QFileInfo fileInfo(filePath);
                     if (!fileInfo.exists()) {
-                        qWarning() << "file does not exists:" << filePath;
+                        qWarning() << "file does not exist:" << filePath;
                         continue;
                     }
 

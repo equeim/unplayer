@@ -40,10 +40,13 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
+        static const QStringList playlistsNameFilters;
+        static const QVector<QString> playlistsMimeTypes;
+
         static PlaylistUtils* instance();
 
-        static QString playlistsDirectoryPath();
-        static int playlistsCount();
+        const QString& playlistsDirectoryPath();
+        int playlistsCount();
 
         void savePlaylist(const QString& filePath, const QList<PlaylistTrack>& tracks);
         Q_INVOKABLE void newPlaylist(const QString& name, const QStringList& trackPaths);
@@ -57,8 +60,7 @@ namespace unplayer
     private:
         explicit PlaylistUtils(QObject* parent);
 
-        static QList<PlaylistTrack> tracksFromPaths(const QStringList& trackPaths);
-        static PlaylistTrack trackFromFilePath(const QString& filePath);
+        QString mPlaylistsDirectoryPath;
     signals:
         void playlistsChanged();
     };
