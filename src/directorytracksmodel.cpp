@@ -61,6 +61,8 @@ namespace unplayer
             return file.fileName;
         case IsDirectoryRole:
             return file.isDirectory;
+        case IsPlaylistRole:
+            return file.isPlaylist;
         default:
             return QVariant();
         }
@@ -112,11 +114,12 @@ namespace unplayer
         return mFiles.at(index).filePath;
     }
 
-    QStringList DirectoryTracksModel::getTracks(const QVector<int>& indexes) const
+    QStringList DirectoryTracksModel::getTracks(const QVector<int>& indexes, bool includePlaylists) const
     {
         QStringList list;
         for (int index : indexes) {
-            if (!mFiles.at(index).isDirectory) {
+            const DirectoryTrackFile& file = mFiles.at(index);
+            if (!file.isDirectory && (!file.isPlaylist || includePlaylists)) {
                 list.append(getTrack(index));
             }
         }
@@ -127,7 +130,8 @@ namespace unplayer
     {
         return {{FilePathRole, "filePath"},
                 {FileNameRole, "fileName"},
-                {IsDirectoryRole, "isDirectory"}};
+                {IsDirectoryRole, "isDirectory"},
+                {IsPlaylistRole, "isPlaylist"}};
     }
 
     void DirectoryTracksModel::loadDirectory()
@@ -147,13 +151,16 @@ namespace unplayer
                 if (info.isDir()) {
                     files.append({info.filePath(),
                                   info.fileName(),
-                                  true});
+                                  true,
+                                  false});
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
-                    if (LibraryUtils::supportedMimeTypes.contains(mimeType) || PlaylistUtils::playlistsMimeTypes.contains(mimeType)) {
+                    const bool isPlaylist = PlaylistUtils::playlistsMimeTypes.contains(mimeType);
+                    if (isPlaylist || LibraryUtils::supportedMimeTypes.contains(mimeType)) {
                         files.append({info.filePath(),
                                       info.fileName(),
-                                      false});
+                                      false,
+                                      isPlaylist});
                     }
                 }
             }

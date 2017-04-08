@@ -30,6 +30,7 @@ namespace unplayer
         QString filePath;
         QString fileName;
         bool isDirectory;
+        bool isPlaylist;
     };
 
     class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
@@ -45,7 +46,8 @@ namespace unplayer
         {
             FilePathRole = Qt::UserRole,
             FileNameRole,
-            IsDirectoryRole
+            IsDirectoryRole,
+            IsPlaylistRole,
         };
 
         DirectoryTracksModel();
@@ -64,7 +66,7 @@ namespace unplayer
         bool isLoaded() const;
 
         Q_INVOKABLE QString getTrack(int index) const;
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes, bool includePlaylists = true) const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

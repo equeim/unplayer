@@ -149,9 +149,14 @@ Page {
                                 Unplayer.Player.play()
                             }
                         } else {
-                            Unplayer.Player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes),
-                                                   true,
-                                                   model.index - directoryTracksProxyModel.directoriesCount)
+                            if (model.isPlaylist) {
+                                Unplayer.Player.queue.addTracks(directoryTracksModel.getTrack(directoryTracksProxyModel.sourceIndex(model.index)),
+                                                                true)
+                            } else {
+                                Unplayer.Player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes, false),
+                                                                true,
+                                                                model.index - directoryTracksProxyModel.directoriesCount)
+                            }
                         }
                     }
                 }
