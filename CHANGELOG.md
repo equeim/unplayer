@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.1.0] - 2017-04-09
 ### Added
 - Support of tracks with multiple artists/albums/genres
 - Support of extracting cover art that is embedded in music files
