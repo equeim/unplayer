@@ -87,6 +87,7 @@ Page {
         model: Unplayer.FilterProxyModel {
             id: tracksProxyModel
 
+            filterRole: Unplayer.TracksModel.TitleRole
             sourceModel: Unplayer.TracksModel {
                 id: tracksModel
                 allAlbums: true
