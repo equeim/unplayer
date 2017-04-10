@@ -23,9 +23,10 @@ MenuItem {
     text: qsTranslate("unplayer", "Search")
 
     onClicked: {
-        if (searchPanel.open)
+        if (searchPanel.open) {
             searchPanel.focusSearchField()
-        else
+        } else {
             searchPanel.open = true
+        }
     }
 }

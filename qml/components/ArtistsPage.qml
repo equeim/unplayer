@@ -84,16 +84,9 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTranslate("unplayer", "All tracks")
-                        onClicked: pageStack.push(tracksPageComponent)
-
-                        Component {
-                            id: tracksPageComponent
-                            TracksPage {
-                                pageTitle: model.displayedArtist
-                                allArtists: false
-                                artist: model.artist
-                            }
-                        }
+                        onClicked: pageStack.push("TracksPage.qml", {pageTitle: model.displayedArtist,
+                                                                     allArtists: false,
+                                                                     artist: model.artist})
                     }
 
                     MenuItem {
