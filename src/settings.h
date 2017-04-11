@@ -53,6 +53,9 @@ namespace unplayer
         bool restorePlayerState() const;
         void setRestorePlayerState(bool restore);
 
+        bool artistsSortDescending() const;
+        void setArtistsSortDescending(bool descending);
+
         QStringList queueTracks() const;
         int queuePosition() const;
         long long playerPosition() const;

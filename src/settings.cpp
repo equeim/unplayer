@@ -34,6 +34,8 @@ namespace unplayer
         const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
         const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
 
+        const QString artistsSortDescendingKey(QLatin1String("artistsSortDescending"));
+
         const QString queueTracksKey(QLatin1String("state/queueTracks"));
         const QString queuePositionKey(QLatin1String("state/queuePosition"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
@@ -103,6 +105,16 @@ namespace unplayer
     void Settings::setRestorePlayerState(bool restore)
     {
         mSettings->setValue(restorePlayerStateKey, restore);
+    }
+
+    bool Settings::artistsSortDescending() const
+    {
+        return mSettings->value(artistsSortDescendingKey, false).toBool();
+    }
+
+    void Settings::setArtistsSortDescending(bool descending)
+    {
+        mSettings->setValue(artistsSortDescendingKey, descending);
     }
 
     QStringList Settings::queueTracks() const
