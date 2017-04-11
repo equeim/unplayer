@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Herstel speelstatus bij opstarten van applicatie</translation>
+        <translation>Herstel afspeelstatus bij opstarten van applicatie</translation>
     </message>
 </context>
 </TS>
