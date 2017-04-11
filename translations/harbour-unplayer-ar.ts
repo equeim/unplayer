@@ -547,5 +547,13 @@
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore player state on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
