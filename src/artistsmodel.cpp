@@ -125,7 +125,7 @@ namespace unplayer
     void ArtistsModel::setQuery()
     {
         QString query(QLatin1String("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
-                                    "(SELECT artist, album, duration FROM tracks GROUP BY id, artist) "
+                                    "(SELECT artist, album, duration FROM tracks GROUP BY id, artist, album) "
                                     "GROUP BY artist "
                                     "ORDER BY artist = '', artist"));
         if (mSortDescending) {
