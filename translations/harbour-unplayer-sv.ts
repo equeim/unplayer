@@ -485,11 +485,11 @@
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Spelare</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Återställ spelarstatus vid uppstart</translation>
     </message>
 </context>
 </TS>
