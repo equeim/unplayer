@@ -485,11 +485,11 @@
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Speler</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Herstel speelstatus bij opstarten van applicatie</translation>
     </message>
 </context>
 </TS>
