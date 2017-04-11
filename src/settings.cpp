@@ -32,6 +32,11 @@ namespace unplayer
         const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
         const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
         const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
+        const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
+
+        const QString queueTracksKey(QLatin1String("state/queueTracks"));
+        const QString queuePositionKey(QLatin1String("state/queuePosition"));
+        const QString playerPositionKey(QLatin1String("state/playerPosition"));
 
         Settings* instancePointer = nullptr;
     }
@@ -88,6 +93,38 @@ namespace unplayer
     void Settings::setUseDirectoryMediaArt(bool use)
     {
         mSettings->setValue(useDirectoryMediaArtKey, use);
+    }
+
+    bool Settings::restorePlayerState() const
+    {
+        return mSettings->value(restorePlayerStateKey, true).toBool();
+    }
+
+    void Settings::setRestorePlayerState(bool restore)
+    {
+        mSettings->setValue(restorePlayerStateKey, restore);
+    }
+
+    QStringList Settings::queueTracks() const
+    {
+        return mSettings->value(queueTracksKey).toStringList();
+    }
+
+    int Settings::queuePosition() const
+    {
+        return mSettings->value(queuePositionKey).toInt();
+    }
+
+    long long Settings::playerPosition() const
+    {
+        return mSettings->value(playerPositionKey).toLongLong();
+    }
+
+    void Settings::savePlayerState(const QStringList& tracks, int queuePosition, long long playerPosition)
+    {
+        mSettings->setValue(queueTracksKey, tracks);
+        mSettings->setValue(queuePositionKey, queuePosition);
+        mSettings->setValue(playerPositionKey, playerPosition);
     }
 
     Settings::Settings(QObject* parent)

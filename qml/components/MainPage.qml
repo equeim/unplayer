@@ -89,13 +89,25 @@ Page {
                     if (Unplayer.Settings.hasLibraryDirectories) {
                         pageStack.push(libraryPageComponent)
                     } else {
-                        pageStack.push("LibraryDirectoriesPage.qml")
+                        pageStack.push(libraryDirectoriesPageComponent)
                     }
                 }
 
                 Component {
                     id: libraryPageComponent
                     LibraryPage { }
+                }
+
+                Component {
+                    id: libraryDirectoriesPageComponent
+
+                    LibraryDirectoriesPage {
+                        Component.onDestruction: {
+                            if (changed) {
+                                Unplayer.LibraryUtils.updateDatabase()
+                            }
+                        }
+                    }
                 }
             }
 

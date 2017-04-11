@@ -22,6 +22,14 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    property bool libraryChanged
+
+    Component.onDestruction: {
+        if (libraryChanged || mediaArtSwitch.checked !== mediaArtSwitch.useDirectoryMediaArt) {
+            Unplayer.LibraryUtils.updateDatabase()
+        }
+    }
+
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
@@ -34,10 +42,26 @@ Page {
                 title: qsTranslate("unplayer", "Settings")
             }
 
+            SectionHeader {
+                text: qsTranslate("unplayer", "Player")
+            }
+
             TextSwitch {
+                text: qsTranslate("unplayer", "Restore player state on startup")
+                onCheckedChanged: Unplayer.Settings.restorePlayerState = checked
+                Component.onCompleted: checked = Unplayer.Settings.restorePlayerState
+            }
+
+            TextSwitch {
+                id: mediaArtSwitch
+
+                property bool useDirectoryMediaArt
+
+                checked: useDirectoryMediaArt
                 text: qsTranslate("unplayer", "Prefer cover art located as separate file in music file directory instead of extracted from music file")
+
                 onCheckedChanged: Unplayer.Settings.useDirectoryMediaArt = checked
-                Component.onCompleted: checked = Unplayer.Settings.useDirectoryMediaArt
+                Component.onCompleted: useDirectoryMediaArt = Unplayer.Settings.useDirectoryMediaArt
             }
 
             SectionHeader {
@@ -53,7 +77,7 @@ Page {
             BackgroundItem {
                 id: libraryDirectoriesItem
 
-                onClicked: pageStack.push("LibraryDirectoriesPage.qml")
+                onClicked: pageStack.push(libraryDirectoriesPageComponent)
 
                 Label {
                     anchors {
@@ -66,6 +90,13 @@ Page {
                     text: qsTranslate("unplayer", "Library Directories")
                     color: libraryDirectoriesItem.highlighted ? Theme.highlightColor : Theme.primaryColor
                     truncationMode: TruncationMode.Fade
+                }
+
+                Component {
+                    id: libraryDirectoriesPageComponent
+                    LibraryDirectoriesPage {
+                        Component.onDestruction: libraryChanged = changed
+                    }
                 }
             }
         }

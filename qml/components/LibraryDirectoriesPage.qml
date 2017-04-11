@@ -24,12 +24,6 @@ import harbour.unplayer 0.1 as Unplayer
 Page {
     property bool changed: false
 
-    Component.onDestruction: {
-        if (changed) {
-            Unplayer.LibraryUtils.updateDatabase()
-        }
-    }
-
     SelectionPanel {
         id: selectionPanel
         selectionText: qsTranslate("unplayer", "%n directories selected", String(), proxyModel.selectedIndexesCount)
