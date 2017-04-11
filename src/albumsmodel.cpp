@@ -47,7 +47,7 @@ namespace unplayer
     void AlbumsModel::componentComplete()
     {
         QString query(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
-                                    "(SELECT artist, album, year, duration FROM tracks GROUP BY filePath, artist, album) "));
+                                    "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
         if (mAllArtists) {
             query += QLatin1String("GROUP BY album, artist ");
         } else {

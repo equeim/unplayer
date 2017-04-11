@@ -36,6 +36,7 @@
 #include <QQmlEngine>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QSqlQuery>
 #include <QStandardPaths>
 #include <QUuid>
@@ -66,11 +67,11 @@ namespace unplayer
         //LibraryUtils* instancePointer = nullptr;
         std::unique_ptr<LibraryUtils> instancePointer;
 
-        void removeTrackFromDatabase(const QSqlDatabase& db, const QString& filePath)
+        void removeTrackFromDatabase(const QSqlDatabase& db, int id)
         {
             QSqlQuery query(db);
-            query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
-            query.addBindValue(filePath);
+            query.prepare(QStringLiteral("DELETE FROM tracks WHERE id = ?"));
+            query.addBindValue(id);
             if (!query.exec()) {
                 qWarning() << "failed to remove file from database" << query.lastQuery();
             }
@@ -78,12 +79,13 @@ namespace unplayer
 
         void updateTrackInDatabase(const QSqlDatabase& db,
                                    bool inDb,
+                                   int id,
                                    const QFileInfo& fileInfo,
                                    const tagutils::Info& info,
                                    const QString& mediaArt)
         {
             if (inDb) {
-                removeTrackFromDatabase(db, fileInfo.filePath());
+                removeTrackFromDatabase(db, id);
             }
 
             const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
@@ -100,8 +102,9 @@ namespace unplayer
                 forEachOrOnce(info.albums, [&](const QString& album) {
                     forEachOrOnce(info.genres, [&](const QString& genre) {
                         QSqlQuery query(db);
-                        query.prepare(QStringLiteral("INSERT INTO tracks (filePath, modificationTime, title, artist, album, year, trackNumber, genre, duration, mediaArt) "
-                                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+                        query.prepare(QStringLiteral("INSERT INTO tracks (id, filePath, modificationTime, title, artist, album, year, trackNumber, genre, duration, mediaArt) "
+                                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+                        query.addBindValue(id);
                         query.addBindValue(fileInfo.filePath());
                         query.addBindValue(fileInfo.lastModified().toMSecsSinceEpoch());
                         query.addBindValue(info.title);
@@ -245,14 +248,48 @@ namespace unplayer
         }
 
         auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
-        db.setDatabaseName(databaseFilePath());
+        db.setDatabaseName(mDatabaseFilePath);
         if (!db.open()) {
-            qWarning() << "failed to open database" << db.lastError();
+            qWarning() << "failed to open database:" << db.lastError();
             return;
         }
 
-        if (db.tables().isEmpty()) {
+        bool createTable = !db.tables().contains(QLatin1String("tracks"));
+        if (!createTable) {
+            static const QVector<QString> fields{QLatin1String("id"),
+                                                 QLatin1String("filePath"),
+                                                 QLatin1String("modificationTime"),
+                                                 QLatin1String("title"),
+                                                 QLatin1String("artist"),
+                                                 QLatin1String("album"),
+                                                 QLatin1String("year"),
+                                                 QLatin1String("trackNumber"),
+                                                 QLatin1String("genre"),
+                                                 QLatin1String("duration"),
+                                                 QLatin1String("mediaArt")};
+
+            const QSqlRecord record(db.record(QLatin1String("tracks")));
+            if (record.count() == fields.size()) {
+                for (int i = 0, max = record.count(); i < max; ++i) {
+                    if (!fields.contains(record.fieldName(i))) {
+                        createTable = true;
+                    }
+                }
+            } else {
+                createTable = true;
+            }
+
+            if (createTable) {
+                QSqlQuery query(QLatin1String("DROP TABLE tracks"));
+                if (query.lastError().type() != QSqlError::NoError) {
+                    qWarning() << "failed to remove table:" << query.lastError();
+                }
+            }
+        }
+
+        if (createTable) {
             QSqlQuery query(QLatin1String("CREATE TABLE tracks ("
+                                          "    id INTEGER,"
                                           "    filePath TEXT,"
                                           "    modificationTime INTEGER,"
                                           "    title TEXT COLLATE NOCASE,"
@@ -265,7 +302,7 @@ namespace unplayer
                                           "    mediaArt TEXT"
                                           ")"));
             if (query.lastError().type() != QSqlError::NoError) {
-                qWarning() << "failed to create table" << query.lastError();
+                qWarning() << "failed to create table:" << query.lastError();
                 return;
             }
 
@@ -300,19 +337,21 @@ namespace unplayer
 
                 // Get all files from database
                 QStringList files;
-                QHash<QString, long long> modificationTimeHash;
-                QHash<QString, QString> mediaArtHash;
+                QList<int> ids;
+                QHash<int, long long> modificationTimeHash;
+                QHash<int, QString> mediaArtHash;
                 {
-                    QSqlQuery query(QLatin1String("SELECT filePath, modificationTime, mediaArt FROM tracks GROUP BY filePath"), db);
+                    QSqlQuery query(QLatin1String("SELECT id, filePath, modificationTime, mediaArt FROM tracks GROUP BY id ORDER BY id"), db);
                     if (query.lastError().type() != QSqlError::NoError) {
                         qWarning() << "failed to get files from database" << query.lastError();
                         return;
                     }
                     while (query.next()) {
-                        const QString filePath(query.value(0).toString());
-                        files.append(filePath);
-                        modificationTimeHash.insert(filePath, query.value(1).toLongLong());
-                        mediaArtHash.insert(filePath, query.value(2).toString());
+                        const int id(query.value(0).toInt());
+                        files.append(query.value(1).toString());
+                        ids.append(id);
+                        modificationTimeHash.insert(id, query.value(2).toLongLong());
+                        mediaArtHash.insert(id, query.value(3).toString());
                     }
                 }
 
@@ -325,7 +364,9 @@ namespace unplayer
 
                 // Remove deleted files and files that are not in selected library directories
                 for (int i = 0, max = files.size(); i < max; ++i) {
-                    const QString filePath(files.at(i));
+                    const QString& filePath = files.at(i);
+                    const int id = ids.at(i);
+
                     const QFileInfo fileInfo(filePath);
                     bool remove = false;
                     if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
@@ -341,13 +382,15 @@ namespace unplayer
                     }
 
                     if (remove) {
-                        removeTrackFromDatabase(db, filePath);
+                        removeTrackFromDatabase(db, id);
 
                         files.removeAt(i);
                         --i;
                         --max;
-                        modificationTimeHash.remove(filePath);
-                        mediaArtHash.remove(filePath);
+
+                        ids.removeAt(i);
+                        modificationTimeHash.remove(id);
+                        mediaArtHash.remove(id);
                     }
                 }
 
@@ -359,7 +402,7 @@ namespace unplayer
                         const QString& mediaArt = i.value();
                         if (!mediaArt.isEmpty() && !QFile::exists(mediaArt)) {
                             QSqlQuery query(db);
-                            query.prepare(QStringLiteral("UPDATE tracks SET mediaArt = '' WHERE filePath = ?"));
+                            query.prepare(QStringLiteral("UPDATE tracks SET mediaArt = '' WHERE id = ?"));
                             query.addBindValue(i.key());
                             query.exec();
 
@@ -405,12 +448,38 @@ namespace unplayer
                             continue;
                         }
 
-                        const bool inDb = files.contains(filePath);
+                        const int fileIndex = files.indexOf(filePath);
 
-                        if (inDb) {
+                        if (fileIndex == -1) {
+                            QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
+                            if (supportedMimeTypes.contains(mimeType)) {
+                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name();
+                                if (supportedMimeTypes.contains(mimeType)) {
+                                    int id;
+                                    if (ids.isEmpty()) {
+                                        id = 0;
+                                    } else {
+                                        id = ids.last() + 1;
+                                    }
+                                    ids.append(id);
+                                    updateTrackInDatabase(db,
+                                                          false,
+                                                          id,
+                                                          fileInfo,
+                                                          tagutils::getTrackInfo(fileInfo, mimeType),
+                                                          getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeType),
+                                                                           embeddedMediaArtHash,
+                                                                           fileInfo,
+                                                                           mediaArtDirectoriesHash,
+                                                                           useDirectoryMediaArt));
+                                }
+                            }
+                        } else {
+                            const int id = ids.at(files.indexOf(filePath));
+
                             const long long modificationTime = fileInfo.lastModified().toMSecsSinceEpoch();
-                            if (modificationTime == modificationTimeHash.value(filePath)) {
-                                const QString mediaArt(mediaArtHash.value(filePath));
+                            if (modificationTime == modificationTimeHash.value(id)) {
+                                const QString mediaArt(mediaArtHash.value(id));
                                 if (!mediaArt.startsWith(mMediaArtDirectory) ||
                                         (QFileInfo(mediaArt).fileName().contains(QLatin1String("-embedded")) && useDirectoryMediaArt)) {
                                     const QString newMediaArt(getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name()),
@@ -420,17 +489,19 @@ namespace unplayer
                                                                                useDirectoryMediaArt));
                                     if (!newMediaArt.isEmpty() && newMediaArt != mediaArt) {
                                         QSqlQuery query(db);
-                                        query.prepare(QStringLiteral("UPDATE tracks SET mediaArt = ? WHERE filePath = ?"));
+                                        query.prepare(QStringLiteral("UPDATE tracks SET mediaArt = ? WHERE id = ?"));
                                         query.addBindValue(newMediaArt);
-                                        query.addBindValue(filePath);
+                                        query.addBindValue(id);
                                         query.exec();
                                     }
                                 }
                             } else {
                                 const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name());
                                 if (supportedMimeTypes.contains(mimeType)) {
+                                    ids.append(ids.last() + 1);
                                     updateTrackInDatabase(db,
                                                           true,
+                                                          ids.last(),
                                                           fileInfo,
                                                           tagutils::getTrackInfo(fileInfo, mimeType),
                                                           getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeType),
@@ -439,23 +510,7 @@ namespace unplayer
                                                                            mediaArtDirectoriesHash,
                                                                            useDirectoryMediaArt));
                                 } else {
-                                    removeTrackFromDatabase(db, filePath);
-                                }
-                            }
-                        } else {
-                            QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                            if (supportedMimeTypes.contains(mimeType)) {
-                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name();
-                                if (supportedMimeTypes.contains(mimeType)) {
-                                    updateTrackInDatabase(db,
-                                                          false,
-                                                          fileInfo,
-                                                          tagutils::getTrackInfo(fileInfo, mimeType),
-                                                          getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeType),
-                                                                           embeddedMediaArtHash,
-                                                                           fileInfo,
-                                                                           mediaArtDirectoriesHash,
-                                                                           useDirectoryMediaArt));
+                                    removeTrackFromDatabase(db, id);
                                 }
                             }
                         }
@@ -554,7 +609,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(filePath)) FROM tracks"));
+        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(id)) FROM tracks"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -567,7 +622,7 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT SUM(duration) FROM (SELECT duration from tracks GROUP BY filePath)"));
+        QSqlQuery query(QLatin1String("SELECT SUM(duration) FROM (SELECT duration from tracks GROUP BY id)"));
         if (query.next()) {
             return query.value(0).toInt();
         }
