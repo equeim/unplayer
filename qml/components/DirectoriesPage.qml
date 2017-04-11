@@ -64,6 +64,9 @@ Page {
     SilicaListView {
         id: listView
 
+        property var savedPositions: []
+        property bool goingUp
+
         anchors {
             fill: parent
             bottomMargin: selectionPanel.visible ? selectionPanel.visibleSize : 0
@@ -95,6 +98,7 @@ Page {
                 onClicked: {
                     if (!selectionPanel.showPanel) {
                         searchPanel.open = false
+                        listView.goingUp = true
                         directoryTracksModel.directory = directoryTracksModel.parentDirectory
                     }
                 }
@@ -142,6 +146,8 @@ Page {
                 } else {
                     if (model.isDirectory) {
                         searchPanel.open = false
+                        listView.savedPositions.push(listView.contentY + listView.headerItem.height)
+                        listView.goingUp = false
                         directoryTracksModel.directory = model.filePath
                     } else {
                         if (current) {
@@ -212,7 +218,15 @@ Page {
 
                 onLoadedChanged: {
                     if (loaded) {
-                        listView.positionViewAtBeginning()
+                        if (listView.goingUp) {
+                            if (listView.savedPositions.length) {
+                                listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
+                            } else {
+                                listView.positionViewAtBeginning()
+                            }
+                        } else {
+                            listView.positionViewAtBeginning()
+                        }
                     }
                 }
             }
@@ -224,6 +238,8 @@ Page {
             property string directory
 
             function goBegin(directory) {
+                listView.savedPositions = []
+                listView.goingUp = false
                 pullDownMenu.directory = directory
                 pullDownMenu.activeChanged.connect(goEnd)
             }

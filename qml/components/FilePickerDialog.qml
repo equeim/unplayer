@@ -47,6 +47,9 @@ Dialog {
     SilicaListView {
         id: listView
 
+        property var savedPositions: []
+        property bool goingUp
+
         anchors {
             fill: parent
             topMargin: searchPanel.visibleSize
@@ -95,6 +98,7 @@ Dialog {
                     if (!showFiles) {
                         filePath = directoryContentModel.parentDirectory
                     }
+                    listView.goingUp = true
                     directoryContentModel.directory = directoryContentModel.parentDirectory
                 }
             }
@@ -109,8 +113,10 @@ Dialog {
                         filePickerDialog.filePath = model.filePath
                     }
 
+                    listView.savedPositions.push(listView.contentY + listView.headerItem.height)
+                    listView.goingUp = false
+
                     directoryContentModel.directory = model.filePath
-                    listView.positionViewAtBeginning()
                 } else {
                     filePickerDialog.filePath = model.filePath
                     accept()
@@ -158,6 +164,20 @@ Dialog {
 
             sourceModel: Unplayer.DirectoryContentModel {
                 id: directoryContentModel
+
+                onLoadingChanged: {
+                    if (!loading) {
+                        if (listView.goingUp) {
+                            if (listView.savedPositions.length) {
+                                listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
+                            } else {
+                                listView.positionViewAtBeginning()
+                            }
+                        } else {
+                            listView.positionViewAtBeginning()
+                        }
+                    }
+                }
             }
         }
 
@@ -166,6 +186,8 @@ Dialog {
 
             MenuItem {
                 function goToScard() {
+                    listView.savedPositions = []
+                    listView.goingUp = false
                     directoryContentModel.directory = Unplayer.Utils.sdcardPath
                     pullDownMenu.activeChanged.disconnect(goToScard)
                 }
@@ -176,6 +198,8 @@ Dialog {
 
             MenuItem {
                 function goToHome() {
+                    listView.savedPositions = []
+                    listView.goingUp = false
                     directoryContentModel.directory = Unplayer.Utils.homeDirectory
                     pullDownMenu.activeChanged.disconnect(goToHome)
                 }
