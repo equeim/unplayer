@@ -1,5 +1,14 @@
 # Change Log
 
+## [1.1.1] - 2017-04-11
+### Changed
+- Updated Dutch translation
+
+### Fixed
+- Opening artist's tracks page from its context menu
+- Search on album page and all tracks page
+- Opening M3U playlists from file manager
+
 ## [1.1.0] - 2017-04-09
 ### Added
 - Support of tracks with multiple artists/albums/genres
