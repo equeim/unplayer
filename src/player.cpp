@@ -25,6 +25,7 @@
 #include <MprisPlayer>
 
 #include "queue.h"
+#include "settings.h"
 
 namespace unplayer
 {
@@ -41,6 +42,11 @@ namespace unplayer
         return instancePointer;
     }
 
+    Player::~Player()
+    {
+        saveState();
+    }
+
     bool Player::isPlaying() const
     {
         return (state() == PlayingState);
@@ -51,10 +57,27 @@ namespace unplayer
         return mQueue;
     }
 
+    void Player::saveState() const
+    {
+        QStringList tracks;
+        tracks.reserve(mQueue->tracks().size());
+        for (const auto& track : mQueue->tracks()) {
+            tracks.append(track->filePath);
+        }
+        Settings::instance()->savePlayerState(tracks, mQueue->currentIndex(), position());
+    }
+
+    void Player::restoreState()
+    {
+        mRestoringState = true;
+        mQueue->addTracks(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
+    }
+
     Player::Player(QObject* parent)
         : QMediaPlayer(parent),
           mQueue(new Queue(this)),
-          mSettingNewTrack(false)
+          mSettingNewTrack(false),
+          mRestoringState(false)
     {
         auto mpris = new MprisPlayer(this);
         mpris->setServiceName(QLatin1String("unplayer"));
@@ -108,7 +131,13 @@ namespace unplayer
                 mSettingNewTrack = true;
                 setMedia(QUrl::fromLocalFile(track->filePath));
                 mSettingNewTrack = false;
-                play();
+
+                if (mRestoringState) {
+                    setPosition(Settings::instance()->playerPosition());
+                    mRestoringState = false;
+                } else {
+                    play();
+                }
 
                 mpris->setCanPlay(true);
                 mpris->setCanPause(true);

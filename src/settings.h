@@ -32,6 +32,7 @@ namespace unplayer
         Q_PROPERTY(bool openLibraryOnStartup READ openLibraryOnStartup WRITE setOpenLibraryOnStartup)
         Q_PROPERTY(QString defaultDirectory READ defaultDirectory WRITE setDefaultDirectory)
         Q_PROPERTY(bool useDirectoryMediaArt READ useDirectoryMediaArt WRITE setUseDirectoryMediaArt)
+        Q_PROPERTY(bool restorePlayerState READ restorePlayerState WRITE setRestorePlayerState)
     public:
         static Settings* instance();
 
@@ -48,6 +49,14 @@ namespace unplayer
 
         bool useDirectoryMediaArt() const;
         void setUseDirectoryMediaArt(bool use);
+
+        bool restorePlayerState() const;
+        void setRestorePlayerState(bool restore);
+
+        QStringList queueTracks() const;
+        int queuePosition() const;
+        long long playerPosition() const;
+        void savePlayerState(const QStringList& tracks, int queuePosition, long long playerPosition);
     private:
         explicit Settings(QObject* parent);
 
