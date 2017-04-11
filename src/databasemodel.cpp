@@ -30,6 +30,16 @@ namespace unplayer
 
     }
 
+    void DatabaseModel::classBegin()
+    {
+
+    }
+
+    void DatabaseModel::componentComplete()
+    {
+
+    }
+
     int DatabaseModel::rowCount(const QModelIndex&) const
     {
         return mRowCount;

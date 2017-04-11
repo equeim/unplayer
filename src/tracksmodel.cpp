@@ -79,11 +79,6 @@ namespace unplayer
         execQuery();
     }
 
-    void TracksModel::classBegin()
-    {
-
-    }
-
     QVariant TracksModel::data(const QModelIndex& index, int role) const
     {
         mQuery->seek(index.row());

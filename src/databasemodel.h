@@ -22,15 +22,20 @@
 #include <memory>
 
 #include <QAbstractListModel>
+#include <QQmlParserStatus>
 #include <QSqlQuery>
 
 namespace unplayer
 {
-    class DatabaseModel : public QAbstractListModel
+    class DatabaseModel : public QAbstractListModel, public QQmlParserStatus
     {
+        Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
     public:
         DatabaseModel();
-        int rowCount(const QModelIndex& parent) const;
+        void classBegin() override;
+        void componentComplete() override;
+        int rowCount(const QModelIndex& parent) const override;
     protected:
         void execQuery();
 

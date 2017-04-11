@@ -44,11 +44,6 @@ namespace unplayer
 
     }
 
-    void AlbumsModel::classBegin()
-    {
-
-    }
-
     void AlbumsModel::componentComplete()
     {
         QString query(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "

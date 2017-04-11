@@ -24,10 +24,9 @@
 
 namespace unplayer
 {
-    class TracksModel : public DatabaseModel, public QQmlParserStatus
+    class TracksModel : public DatabaseModel
     {
         Q_OBJECT
-        Q_INTERFACES(QQmlParserStatus)
         Q_ENUMS(Role)
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
         Q_PROPERTY(bool allAlbums READ allAlbums WRITE setAllAlbums)
@@ -46,7 +45,6 @@ namespace unplayer
 
         TracksModel();
         void componentComplete() override;
-        void classBegin() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
 
