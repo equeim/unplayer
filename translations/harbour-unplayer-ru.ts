@@ -688,12 +688,12 @@
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="46"/>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Плеер</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="50"/>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Восстанавливать состояние плеера при запуске</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="61"/>
