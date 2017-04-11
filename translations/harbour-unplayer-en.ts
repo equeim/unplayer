@@ -485,11 +485,11 @@
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Player</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Restore player state on startup</translation>
     </message>
 </context>
 </TS>
