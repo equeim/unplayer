@@ -44,6 +44,7 @@ namespace unplayer
         mTitle = info.title;
         mArtist = info.artists.join(QLatin1String(", "));
         mAlbum = info.albums.join(QLatin1String(", "));
+        mYear = info.year;
         mTrackNumber = info.trackNumber;
         mGenre = info.genres.join(QLatin1String(", "));
         mFileSize = fileInfo.size();
@@ -64,6 +65,11 @@ namespace unplayer
     const QString& TrackInfo::album() const
     {
         return mAlbum;
+    }
+
+    int TrackInfo::year() const
+    {
+        return mYear;
     }
 
     int TrackInfo::trackNumber() const
