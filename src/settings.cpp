@@ -57,6 +57,8 @@ namespace unplayer
 
         const QString queueTracksKey(QLatin1String("state/queueTracks"));
         const QString queuePositionKey(QLatin1String("state/queuePosition"));
+        const QString shuffleKey(QLatin1String("state/shuffle"));
+        const QString repeatModeKey(QLatin1String("state/repeatMode"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
 
         Settings* instancePointer = nullptr;
@@ -248,15 +250,27 @@ namespace unplayer
         return mSettings->value(queuePositionKey).toInt();
     }
 
+    bool Settings::shuffle() const
+    {
+        return mSettings->value(shuffleKey).toBool();
+    }
+
+    int Settings::repeatMode() const
+    {
+        return mSettings->value(repeatModeKey).toInt();
+    }
+
     long long Settings::playerPosition() const
     {
         return mSettings->value(playerPositionKey).toLongLong();
     }
 
-    void Settings::savePlayerState(const QStringList& tracks, int queuePosition, long long playerPosition)
+    void Settings::savePlayerState(const QStringList& tracks, int queuePosition, bool shuffle, int repeatMode, long long playerPosition)
     {
         mSettings->setValue(queueTracksKey, tracks);
         mSettings->setValue(queuePositionKey, queuePosition);
+        mSettings->setValue(shuffleKey, shuffle);
+        mSettings->setValue(repeatModeKey, repeatMode);
         mSettings->setValue(playerPositionKey, playerPosition);
     }
 

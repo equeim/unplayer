@@ -491,5 +491,57 @@
         <source>Restore player state on startup</source>
         <translation>Restore player state on startup</translation>
     </message>
+    <message>
+        <source>Sort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ascending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Descending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist - Album title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist - Album year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Added date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inside Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sort Descending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sort Ascending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

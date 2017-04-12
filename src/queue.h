@@ -92,6 +92,7 @@ namespace unplayer
 
         RepeatMode repeatMode() const;
         Q_INVOKABLE void changeRepeatMode();
+        void setRepeatMode(int mode);
 
         bool isAddingTracks() const;
 
