@@ -33,12 +33,10 @@ namespace unplayer
     public:
         static Player* instance();
 
-        ~Player() override;
-
         bool isPlaying() const;
         Queue* queue() const;
 
-        void saveState() const;
+        Q_INVOKABLE void saveState() const;
         Q_INVOKABLE void restoreState();
 
     private:
