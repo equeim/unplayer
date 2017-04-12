@@ -116,6 +116,11 @@ Page {
                 }
             }
 
+            MenuItem {
+                text: qsTranslate("unplayer", "Sort")
+                onClicked: pageStack.push("AlbumTracksSortPage.qml", {tracksModel: tracksModel})
+            }
+
             SelectionMenuItem {
                 text: qsTranslate("unplayer", "Select tracks")
             }

@@ -24,6 +24,8 @@
 #include <QSqlError>
 #include <QUrl>
 
+#include "settings.h"
+
 namespace unplayer
 {
     namespace
@@ -40,43 +42,50 @@ namespace unplayer
 
     TracksModel::TracksModel()
         : mAllArtists(true),
-          mAllAlbums(true)
+          mAllAlbums(true),
+          mSortDescending(false),
+          mSortMode(SortMode::ArtistAlbumYear),
+          mInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber)
     {
 
     }
 
+    TracksModel::~TracksModel()
+    {
+        if (mAllArtists) {
+            Settings::instance()->setAllTracksSortSettings(mSortDescending, mSortMode, mInsideAlbumSortMode);
+        } else {
+            if (mAllAlbums) {
+                Settings::instance()->setArtistTracksSortSettings(mSortDescending, mSortMode, mInsideAlbumSortMode);
+            } else {
+                Settings::instance()->setAlbumTracksSortSettings(mSortDescending, mInsideAlbumSortMode);
+            }
+        }
+    }
+
     void TracksModel::componentComplete()
     {
-        QString query(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks "));
-
         if (mAllArtists) {
-            if (!mGenre.isEmpty()) {
-                query += QLatin1String("WHERE genre = ? ");
-            }
-            query += QLatin1String("GROUP BY id, artist, album "
-                                   "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title");
-            mQuery->prepare(query);
-            if (!mGenre.isEmpty()) {
-                mQuery->addBindValue(mGenre);
-            }
+            mSortDescending = Settings::instance()->allTracksSortDescending();
+            mSortMode = static_cast<SortMode>(Settings::instance()->allTracksSortMode(SortMode::ArtistAlbumYear));
+            qDebug() << mSortMode;
+            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->allTracksInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber));
         } else {
-            query += QLatin1String("WHERE artist = ? ");
             if (mAllAlbums) {
-                query += QLatin1String("GROUP BY id, album "
-                                       "ORDER BY album = '', year, album, trackNumber, title ");
-                mQuery->prepare(query);
-                mQuery->addBindValue(mArtist);
+                mSortDescending = Settings::instance()->artistTracksSortDescending();
+                mSortMode = static_cast<SortMode>(Settings::instance()->artistTracksSortMode(SortMode::ArtistAlbumYear));
+                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->artistTracksInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber));
             } else {
-                query += QLatin1String("AND album = ? "
-                                       "GROUP BY id "
-                                       "ORDER BY trackNumber, title");
-                mQuery->prepare(query);
-                mQuery->addBindValue(mArtist);
-                mQuery->addBindValue(mAlbum);
+                mSortDescending = Settings::instance()->albumTracksSortDescending();
+                mSortMode = SortMode::ArtistAlbumTitle;
+                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->albumTracksSortMode(InsideAlbumSortMode::TrackNumber));
             }
         }
 
-        execQuery();
+        emit sortModeChanged();
+        emit insideAlbumSortModeChanged();
+
+        setQuery();
     }
 
     QVariant TracksModel::data(const QModelIndex& index, int role) const
@@ -161,6 +170,47 @@ namespace unplayer
         mGenre = genre;
     }
 
+    bool TracksModel::sortDescending() const
+    {
+        return mSortDescending;
+    }
+
+    void TracksModel::setSortDescending(bool descending)
+    {
+        if (descending != mSortDescending) {
+            mSortDescending = descending;
+            setQuery();
+        }
+    }
+
+    TracksModel::SortMode TracksModel::sortMode() const
+    {
+        return mSortMode;
+    }
+
+    void TracksModel::setSortMode(TracksModel::SortMode mode)
+    {
+        if (mode != mSortMode) {
+            mSortMode = mode;
+            emit sortModeChanged();
+            setQuery();
+        }
+    }
+
+    TracksModel::InsideAlbumSortMode TracksModel::insideAlbumSortMode() const
+    {
+        return mInsideAlbumSortMode;
+    }
+
+    void TracksModel::setInsideAlbumSortMode(TracksModel::InsideAlbumSortMode mode)
+    {
+        if (mode != mInsideAlbumSortMode) {
+            mInsideAlbumSortMode = mode;
+            emit insideAlbumSortModeChanged();
+            setQuery();
+        }
+    }
+
     QStringList TracksModel::getTracks(const QVector<int>& indexes)
     {
         QStringList tracks;
@@ -179,5 +229,74 @@ namespace unplayer
                 {ArtistRole, "artist"},
                 {AlbumRole, "album"},
                 {DurationRole, "duration"}};
+    }
+
+    void TracksModel::setQuery()
+    {
+        beginResetModel();
+
+        QString query(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks "));
+
+        if (mAllArtists) {
+            if (!mGenre.isEmpty()) {
+                query += QLatin1String("WHERE genre = ? ");
+            }
+            query += QLatin1String("GROUP BY id, artist, album ");
+        } else {
+            query += QLatin1String("WHERE artist = ? ");
+            if (mAllAlbums) {
+                query += QLatin1String("GROUP BY id, album ");
+            } else {
+                query += QLatin1String("AND album = ? "
+                                       "GROUP BY id ");
+            }
+        }
+
+        switch (mSortMode) {
+        case SortMode::Title:
+            query += QLatin1String("ORDER BY title %1");
+            break;
+        case SortMode::AddedDate:
+            query += QLatin1String("ORDER BY id %1");
+            break;
+        case SortMode::ArtistAlbumTitle:
+            query += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1, ");
+            break;
+        case SortMode::ArtistAlbumYear:
+            query += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, year %1, album %1, ");
+            break;
+        }
+
+        if (mSortMode == SortMode::ArtistAlbumTitle ||
+                mSortMode == SortMode::ArtistAlbumYear) {
+            switch (mInsideAlbumSortMode) {
+            case InsideAlbumSortMode::Title:
+                query += QLatin1String("title %1");
+                break;
+            case InsideAlbumSortMode::TrackNumber:
+                query += QLatin1String("trackNumber %1, title %1");
+                break;
+            }
+        }
+
+        query = query.arg(mSortDescending ? QLatin1String("DESC")
+                                          : QLatin1String("ASC"));
+
+        mQuery->prepare(query);
+
+        if (mAllArtists) {
+            if (!mGenre.isEmpty()) {
+                mQuery->addBindValue(mGenre);
+            }
+        } else {
+            mQuery->addBindValue(mArtist);
+            if (!mAllAlbums) {
+                mQuery->addBindValue(mAlbum);
+            }
+        }
+
+        execQuery();
+
+        endResetModel();
     }
 }

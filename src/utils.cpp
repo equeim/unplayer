@@ -74,7 +74,11 @@ namespace unplayer
 
         qmlRegisterType<ArtistsModel>(url, major, minor, "ArtistsModel");
         qmlRegisterType<AlbumsModel>(url, major, minor, "AlbumsModel");
+
         qmlRegisterType<TracksModel>(url, major, minor, "TracksModel");
+        qmlRegisterUncreatableType<TracksModelSortMode>(url, major, minor, "TracksModelSortMode", QString());
+        qmlRegisterUncreatableType<TracksModelInsideAlbumSortMode>(url, major, minor, "TracksModelInsideAlbumSortMode", QString());
+
         qmlRegisterType<GenresModel>(url, major, minor, "GenresModel");
 
         qmlRegisterSingletonType<PlaylistUtils>(url, major, minor, "PlaylistUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return PlaylistUtils::instance(); });
