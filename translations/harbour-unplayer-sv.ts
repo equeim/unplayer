@@ -493,55 +493,55 @@
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortera</translation>
     </message>
     <message>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordning</translation>
     </message>
     <message>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Stigande</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Fallande</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Albumnamn</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Utgivningsår</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Artist - Albumnamn</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Artist - Utgivningsår</translation>
     </message>
     <message>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Tillagd datum</translation>
     </message>
     <message>
         <source>Inside Album</source>
-        <translation type="unfinished"></translation>
+        <translation>I album</translation>
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortera fallande</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortera stigande</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>År</translation>
     </message>
 </context>
 </TS>
