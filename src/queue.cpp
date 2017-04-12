@@ -191,6 +191,12 @@ namespace unplayer
         emit repeatModeChanged();
     }
 
+    void Queue::setRepeatMode(int mode)
+    {
+        mRepeatMode = static_cast<RepeatMode>(mode);
+        emit repeatModeChanged();
+    }
+
     bool Queue::isAddingTracks() const
     {
         return mAddingTracks;

@@ -59,12 +59,18 @@ namespace unplayer
         for (const auto& track : mQueue->tracks()) {
             tracks.append(track->filePath);
         }
-        Settings::instance()->savePlayerState(tracks, mQueue->currentIndex(), position());
+        Settings::instance()->savePlayerState(tracks,
+                                              mQueue->currentIndex(),
+                                              mQueue->isShuffle(),
+                                              mQueue->repeatMode(),
+                                              position());
     }
 
     void Player::restoreState()
     {
         mRestoringState = true;
+        mQueue->setShuffle(Settings::instance()->shuffle());
+        mQueue->setRepeatMode(Settings::instance()->repeatMode());
         mQueue->addTracks(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
     }
 
