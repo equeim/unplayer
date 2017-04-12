@@ -1,5 +1,19 @@
 # Change Log
 
+## [Unreleased]
+### Changed
+- Library is now automatically updated after changing "Prefer cover art..." option
+- Directories view and file file picker dialog now restore list position when returning to parent directory
+
+### Added
+- Restoring player state on startup
+- Albums list shows album's year
+- Track information page now shows track's year
+- Changing artists sort order
+- Changing albums sort order and criterias
+- Changing tracks sort order and criterias
+- Changing genres sort order
+
 ## [1.1.1] - 2017-04-11
 ### Changed
 - Updated Dutch translation
