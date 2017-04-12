@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QSqlError>
 
+#include "settings.h"
 #include "utils.h"
 
 namespace unplayer
@@ -44,23 +45,28 @@ namespace unplayer
 
     }
 
+    AlbumsModel::~AlbumsModel()
+    {
+        if (mAllArtists) {
+            Settings::instance()->setAllAlbumsSortSettings(mSortDescending, mSortMode);
+        } else {
+            Settings::instance()->setAlbumsSortSettings(mSortDescending, mSortMode);
+        }
+    }
+
     void AlbumsModel::componentComplete()
     {
-        QString query(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
-                                    "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
         if (mAllArtists) {
-            query += QLatin1String("GROUP BY album, artist ");
+            mSortDescending = Settings::instance()->allAlbumsSortDescending();
+            mSortMode = static_cast<SortMode>(Settings::instance()->allAlbumsSortMode(SortArtistYear));
         } else {
-            query += QLatin1String("WHERE artist = ? "
-                                   "GROUP BY album ");
-        }
-        query += QLatin1String("ORDER BY artist = '', artist, album = '', year");
-        mQuery->prepare(query);
-        if (!mAllArtists) {
-            mQuery->addBindValue(mArtist);
+            mSortDescending = Settings::instance()->albumsSortDescending();
+            mSortMode = static_cast<SortMode>(Settings::instance()->albumsSortMode(SortYear));
         }
 
-        execQuery();
+        emit sortModeChanged();
+
+        setQuery();
     }
 
     QVariant AlbumsModel::data(const QModelIndex& index, int role) const
@@ -92,6 +98,8 @@ namespace unplayer
         }
         case UnknownAlbumRole:
             return mQuery->value(AlbumField).toString().isEmpty();
+        case YearRole:
+            return mQuery->value(YearField).toInt();
         case TracksCountRole:
             return mQuery->value(TracksCountField);
         case DurationRole:
@@ -109,6 +117,7 @@ namespace unplayer
     void AlbumsModel::setAllArtists(bool allArtists)
     {
         mAllArtists = allArtists;
+        emit allArtistsChanged();
     }
 
     const QString& AlbumsModel::artist() const
@@ -119,6 +128,33 @@ namespace unplayer
     void AlbumsModel::setArtist(const QString& artist)
     {
         mArtist = artist;
+    }
+
+    bool AlbumsModel::sortDescending() const
+    {
+        return mSortDescending;
+    }
+
+    void AlbumsModel::setSortDescending(bool descending)
+    {
+        if (descending != mSortDescending) {
+            mSortDescending = descending;
+            setQuery();
+        }
+    }
+
+    AlbumsModel::SortMode AlbumsModel::sortMode() const
+    {
+        return mSortMode;
+    }
+
+    void AlbumsModel::setSortMode(AlbumsModel::SortMode mode)
+    {
+        if (mode != mSortMode) {
+            mSortMode = mode;
+            emit sortModeChanged();
+            setQuery();
+        }
     }
 
     QStringList AlbumsModel::getTracksForAlbum(int index) const
@@ -161,7 +197,46 @@ namespace unplayer
                 {AlbumRole, "album"},
                 {DisplayedAlbumRole, "displayedAlbum"},
                 {UnknownAlbumRole, "unknownAlbum"},
+                {YearRole, "year"},
                 {TracksCountRole, "tracksCount"},
                 {DurationRole, "duration"}};
+    }
+
+    void AlbumsModel::setQuery()
+    {
+        QString query(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
+                                    "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
+        if (mAllArtists) {
+            query += QLatin1String("GROUP BY album, artist ");
+        } else {
+            query += QLatin1String("WHERE artist = ? "
+                                   "GROUP BY album ");
+        }
+
+        switch (mSortMode) {
+        case SortAlbum:
+            query += QLatin1String("ORDER BY album = '' %1, album %1");
+            break;
+        case SortYear:
+            query += QLatin1String("ORDER BY year %1, album = '' %1, album %1");
+            break;
+        case SortArtistAlbum:
+            query += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1");
+            break;
+        case SortArtistYear:
+            query += QLatin1String("ORDER BY artist = '' %1, artist %1, year %1, album = '' %1, album %1");
+        }
+
+        query = query.arg(mSortDescending ? QLatin1String("DESC")
+                                          : QLatin1String("ASC"));
+
+
+        beginResetModel();
+        mQuery->prepare(query);
+        if (!mAllArtists) {
+            mQuery->addBindValue(mArtist);
+        }
+        execQuery();
+        endResetModel();
     }
 }

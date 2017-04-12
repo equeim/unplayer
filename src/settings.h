@@ -56,6 +56,14 @@ namespace unplayer
         bool artistsSortDescending() const;
         void setArtistsSortDescending(bool descending);
 
+        bool albumsSortDescending() const;
+        int albumsSortMode(int defaultMode) const;
+        void setAlbumsSortSettings(bool descending, int sortMode);
+
+        bool allAlbumsSortDescending() const;
+        int allAlbumsSortMode(int defaultMode) const;
+        void setAllAlbumsSortSettings(bool descending, int sortMode);
+
         QStringList queueTracks() const;
         int queuePosition() const;
         long long playerPosition() const;

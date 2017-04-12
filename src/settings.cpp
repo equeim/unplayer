@@ -36,6 +36,12 @@ namespace unplayer
 
         const QString artistsSortDescendingKey(QLatin1String("artistsSortDescending"));
 
+        const QString albumsSortDescendingKey(QLatin1String("albumsSortDescending"));
+        const QString albumsSortModeKey(QLatin1String("albumsSortMode"));
+
+        const QString allAlbumsSortDescendingKey(QLatin1String("allAlbumsSortDescending"));
+        const QString allAlbumsSortModeKey(QLatin1String("allAlbumsSortMode"));
+
         const QString queueTracksKey(QLatin1String("state/queueTracks"));
         const QString queuePositionKey(QLatin1String("state/queuePosition"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
@@ -115,6 +121,38 @@ namespace unplayer
     void Settings::setArtistsSortDescending(bool descending)
     {
         mSettings->setValue(artistsSortDescendingKey, descending);
+    }
+
+    bool Settings::albumsSortDescending() const
+    {
+        return mSettings->value(albumsSortDescendingKey, false).toBool();
+    }
+
+    int Settings::albumsSortMode(int defaultMode) const
+    {
+        return mSettings->value(albumsSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAlbumsSortSettings(bool descending, int sortMode)
+    {
+        mSettings->setValue(albumsSortDescendingKey, descending);
+        mSettings->setValue(albumsSortModeKey, sortMode);
+    }
+
+    bool Settings::allAlbumsSortDescending() const
+    {
+        return mSettings->value(allAlbumsSortDescendingKey, false).toBool();
+    }
+
+    int Settings::allAlbumsSortMode(int defaultMode) const
+    {
+        return mSettings->value(allAlbumsSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAllAlbumsSortSettings(bool descending, int sortMode)
+    {
+        mSettings->setValue(allAlbumsSortDescendingKey, descending);
+        mSettings->setValue(allAlbumsSortModeKey, sortMode);
     }
 
     QStringList Settings::queueTracks() const
