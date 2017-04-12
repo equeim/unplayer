@@ -139,7 +139,7 @@
         <location filename="../qml/components/ArtistPage.qml" line="114"/>
         <location filename="../qml/components/TracksPage.qml" line="114"/>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировать</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumPage.qml" line="125"/>
@@ -240,13 +240,13 @@
         <location filename="../qml/components/ArtistsPage.qml" line="147"/>
         <location filename="../qml/components/GenresPage.qml" line="127"/>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировать по убыванию</translation>
     </message>
     <message>
         <location filename="../qml/components/ArtistsPage.qml" line="148"/>
         <location filename="../qml/components/GenresPage.qml" line="128"/>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировать по возрастанию</translation>
     </message>
     <message>
         <location filename="../qml/components/ArtistsPage.qml" line="153"/>
@@ -611,7 +611,7 @@
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="59"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Год</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="69"/>
@@ -748,55 +748,55 @@
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="40"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="40"/>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Порядок</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="43"/>
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="43"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="43"/>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>По возрастанию</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="48"/>
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="48"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="48"/>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>По убыванию</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="67"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="80"/>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Название альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="73"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="87"/>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Год альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="80"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="79"/>
         <source>Artist - Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Исполнитель - Название альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="87"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="86"/>
         <source>Artist - Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Исполнитель - Год альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/AllTracksSortPage.qml" line="73"/>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Дата добавления</translation>
     </message>
     <message>
         <location filename="../qml/components/AllTracksSortPage.qml" line="92"/>
         <source>Inside Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Внутри альбома</translation>
     </message>
 </context>
 </TS>
