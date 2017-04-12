@@ -24,13 +24,15 @@
 
 namespace unplayer
 {
-    class AlbumsModel : public DatabaseModel, public QQmlParserStatus
+    class AlbumsModel : public DatabaseModel
     {
         Q_OBJECT
-        Q_INTERFACES(QQmlParserStatus)
         Q_ENUMS(Role)
-        Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
+        Q_ENUMS(SortMode)
+        Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists NOTIFY allArtistsChanged)
         Q_PROPERTY(QString artist READ artist WRITE setArtist)
+        Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
+        Q_PROPERTY(SortMode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
     public:
         enum Role
         {
@@ -40,12 +42,21 @@ namespace unplayer
             AlbumRole,
             DisplayedAlbumRole,
             UnknownAlbumRole,
+            YearRole,
             TracksCountRole,
             DurationRole
         };
 
+        enum SortMode
+        {
+            SortAlbum,
+            SortYear,
+            SortArtistAlbum,
+            SortArtistYear
+        };
+
         AlbumsModel();
-        void classBegin() override;
+        ~AlbumsModel() override;
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
@@ -56,6 +67,13 @@ namespace unplayer
         const QString& artist() const;
         void setArtist(const QString& artist);
 
+        bool sortDescending() const;
+        void setSortDescending(bool descending);
+        SortMode sortMode() const;
+        void setSortMode(SortMode mode);
+
+        //Q_INVOKABLE void setSortSettings(bool sortDescending, SortMode sortMode);
+
         Q_INVOKABLE QStringList getTracksForAlbum(int index) const;
         Q_INVOKABLE QStringList getTracksForAlbums(const QVector<int>& indexes) const;
 
@@ -63,8 +81,17 @@ namespace unplayer
         QHash<int, QByteArray> roleNames() const override;
 
     private:
+        void setQuery();
+
         bool mAllArtists;
         QString mArtist;
+
+        bool mSortDescending;
+        SortMode mSortMode;
+
+    signals:
+        void allArtistsChanged();
+        void sortModeChanged();
     };
 }
 

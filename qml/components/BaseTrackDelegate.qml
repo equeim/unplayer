@@ -60,7 +60,7 @@ ListItem {
         }
 
         Label {
-            visible: model.artist || model.album
+            visible: text
             color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {

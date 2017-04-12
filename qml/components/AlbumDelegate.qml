@@ -25,7 +25,9 @@ MediaContainerSelectionDelegate {
     id: albumDelegate
 
     title: Theme.highlightText(model.displayedAlbum, searchPanel.searchText, Theme.highlightColor)
+    secondDescription: model.year
     mediaArt: Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
+
     menu: Component {
         ContextMenu {
             MenuItem {

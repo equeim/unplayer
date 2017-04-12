@@ -77,6 +77,7 @@ def build(context):
         moc=[
             "src/albumsmodel.h",
             "src/artistsmodel.h",
+            "src/databasemodel.h",
             "src/directorycontentmodel.h",
             "src/directorycontentproxymodel.h",
             "src/directorytracksmodel.h",

@@ -56,6 +56,11 @@ Page {
             }
 
             DetailItem {
+                label: qsTranslate("unplayer", "Year")
+                value: trackInfo.year
+            }
+
+            DetailItem {
                 label: qsTranslate("unplayer", "Track number")
                 value: trackInfo.trackNumber ? trackInfo.trackNumber : String()
             }

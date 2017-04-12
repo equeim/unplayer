@@ -32,6 +32,7 @@ namespace unplayer
         Q_PROPERTY(QString title READ title CONSTANT)
         Q_PROPERTY(QString artist READ artist CONSTANT)
         Q_PROPERTY(QString album READ album CONSTANT)
+        Q_PROPERTY(int year READ year CONSTANT)
         Q_PROPERTY(int trackNumber READ trackNumber CONSTANT)
         Q_PROPERTY(QString genre READ genre CONSTANT)
         Q_PROPERTY(int fileSize READ fileSize CONSTANT)
@@ -45,6 +46,7 @@ namespace unplayer
         const QString& title() const;
         const QString& artist() const;
         const QString& album() const;
+        int year() const;
         int trackNumber() const;
         const QString& genre() const;
         int fileSize() const;
@@ -58,6 +60,7 @@ namespace unplayer
         QString mTitle;
         QString mArtist;
         QString mAlbum;
+        int mYear;
         int mTrackNumber;
         QString mGenre;
         int mFileSize;

@@ -87,13 +87,26 @@ Page {
             }
         }
         section {
-            property: "displayedArtist"
+            property: {
+                switch (albumsModel.sortMode) {
+                case Unplayer.AlbumsModel.SortArtistAlbum:
+                case Unplayer.AlbumsModel.SortArtistYear:
+                    return "displayedArtist"
+                default:
+                    return String()
+                }
+            }
             delegate: SectionHeader {
                 text: section
             }
         }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTranslate("unplayer", "Sort")
+                onClicked: pageStack.push("AlbumsSortPage.qml", {albumsModel: albumsModel})
+            }
+
             SelectionMenuItem {
                 text: qsTranslate("unplayer", "Select albums")
             }

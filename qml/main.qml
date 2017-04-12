@@ -55,6 +55,8 @@ ApplicationWindow
         }
     }
 
+    Component.onDestruction: Unplayer.Player.saveState()
+
     MediaKeys { }
 
     NowPlayingPanel {

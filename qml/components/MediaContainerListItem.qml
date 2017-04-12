@@ -24,18 +24,23 @@ ListItem {
 
     property alias title: titleLabel.text
     property alias description: descriptionLabel.text
+    property alias secondDescription: secondDescriptionLabel.text
     property alias mediaArt: mediaArt.source
 
     contentHeight: Theme.itemSizeLarge
 
     MediaArt {
         id: mediaArt
-        highlighted: listItem.highlighted
+
+        anchors {
+            left: parent.left
+            leftMargin: Theme.horizontalPageMargin
+        }
         size: contentHeight
-        x: Theme.horizontalPageMargin
+        highlighted: listItem.highlighted
     }
 
-    Column {
+    Item {
         anchors {
             left: mediaArt.right
             leftMargin: Theme.paddingLarge
@@ -43,21 +48,39 @@ ListItem {
             rightMargin: Theme.horizontalPageMargin
             verticalCenter: parent.verticalCenter
         }
+        height: childrenRect.height
 
         Label {
             id: titleLabel
+
+            width: parent.width
             color: highlighted ? Theme.highlightColor : Theme.primaryColor
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
-            width: parent.width
         }
 
         Label {
             id: descriptionLabel
+
+            anchors {
+                left: parent.left
+                right: secondDescriptionLabel.left
+                top: titleLabel.bottom
+            }
             color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeSmall
             truncationMode: TruncationMode.Fade
-            width: parent.width
+        }
+
+        Label {
+            id: secondDescriptionLabel
+
+            anchors {
+                right: parent.right
+                bottom: descriptionLabel.bottom
+            }
+            color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            font.pixelSize: Theme.fontSizeSmall
         }
     }
 }

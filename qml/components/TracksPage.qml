@@ -94,13 +94,27 @@ Page {
             }
         }
         section {
-            property: allArtists ? "artist" : String()
+            property: {
+                if (tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumTitle ||
+                        tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumYear) {
+                    if (allArtists) {
+                        return "artist"
+                    }
+                    return "album"
+                }
+                return String()
+            }
             delegate: SectionHeader {
                 text: section
             }
         }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTranslate("unplayer", "Sort")
+                onClicked: pageStack.push("AllTracksSortPage.qml", {tracksModel: tracksModel})
+            }
+
             SelectionMenuItem {
                 text: qsTranslate("unplayer", "Select tracks")
             }

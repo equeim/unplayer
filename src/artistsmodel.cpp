@@ -22,6 +22,8 @@
 #include <QDebug>
 #include <QSqlError>
 
+#include "settings.h"
+
 namespace unplayer
 {
     namespace
@@ -36,12 +38,9 @@ namespace unplayer
     }
 
     ArtistsModel::ArtistsModel()
+        : mSortDescending(Settings::instance()->artistsSortDescending())
     {
-        mQuery->prepare(QLatin1String("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
-                                      "(SELECT artist, album, duration FROM tracks GROUP BY filePath, artist) "
-                                      "GROUP BY artist "
-                                      "ORDER BY artist = '', artist"));
-        execQuery();
+        setQuery();
     }
 
     QVariant ArtistsModel::data(const QModelIndex& index, int role) const
@@ -68,6 +67,19 @@ namespace unplayer
         default:
             return QVariant();
         }
+    }
+
+    bool ArtistsModel::sortDescending() const
+    {
+        return mSortDescending;
+    }
+
+    void ArtistsModel::toggleSortOrder()
+    {
+        mSortDescending = !mSortDescending;
+        Settings::instance()->setArtistsSortDescending(mSortDescending);
+        emit sortDescendingChanged();
+        setQuery();
     }
 
     QStringList ArtistsModel::getTracksForArtist(int index) const
@@ -108,5 +120,17 @@ namespace unplayer
                 {AlbumsCountRole, "albumsCount"},
                 {TracksCountRole, "tracksCount"},
                 {DurationRole, "duration"}};
+    }
+
+    void ArtistsModel::setQuery()
+    {
+        beginResetModel();
+        mQuery->prepare(QString::fromLatin1("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
+                                            "(SELECT artist, album, duration FROM tracks GROUP BY id, artist, album) "
+                                            "GROUP BY artist "
+                                            "ORDER BY artist = '' %1, artist %1").arg(mSortDescending ? QLatin1String("DESC")
+                                                                                                      : QLatin1String("ASC")));
+        execQuery();
+        endResetModel();
     }
 }

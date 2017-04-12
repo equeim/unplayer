@@ -42,11 +42,6 @@ namespace unplayer
         return instancePointer;
     }
 
-    Player::~Player()
-    {
-        saveState();
-    }
-
     bool Player::isPlaying() const
     {
         return (state() == PlayingState);

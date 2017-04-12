@@ -53,6 +53,34 @@ namespace unplayer
         bool restorePlayerState() const;
         void setRestorePlayerState(bool restore);
 
+        bool artistsSortDescending() const;
+        void setArtistsSortDescending(bool descending);
+
+        bool albumsSortDescending() const;
+        int albumsSortMode(int defaultMode) const;
+        void setAlbumsSortSettings(bool descending, int sortMode);
+
+        bool allAlbumsSortDescending() const;
+        int allAlbumsSortMode(int defaultMode) const;
+        void setAllAlbumsSortSettings(bool descending, int sortMode);
+
+        bool albumTracksSortDescending() const;
+        int albumTracksSortMode(int defaultMode) const;
+        void setAlbumTracksSortSettings(bool descending, int sortMode);
+
+        bool artistTracksSortDescending() const;
+        int artistTracksSortMode(int defaultMode) const;
+        int artistTracksInsideAlbumSortMode(int defaultMode) const;
+        void setArtistTracksSortSettings(bool descending, int sortMode, int insideAlbumSortMode);
+
+        bool allTracksSortDescending() const;
+        int allTracksSortMode(int defaultMode) const;
+        int allTracksInsideAlbumSortMode(int defaultMode) const;
+        void setAllTracksSortSettings(bool descending, int sortMode, int insideAlbumSortMode);
+
+        bool genresSortDescending() const;
+        void setGenresSortDescending(bool descending);
+
         QStringList queueTracks() const;
         int queuePosition() const;
         long long playerPosition() const;

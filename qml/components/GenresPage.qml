@@ -116,6 +116,19 @@ Page {
         }
 
         PullDownMenu {
+            id: pullDownMenu
+
+            MenuItem {
+                function toggle() {
+                    genresModel.toggleSortOrder()
+                    pullDownMenu.activeChanged.disconnect(toggle)
+                }
+
+                text: genresModel.sortDescending ? qsTranslate("unplayer", "Sort Descending")
+                                                 : qsTranslate("unplayer", "Sort Ascending")
+                onClicked: pullDownMenu.activeChanged.connect(toggle)
+            }
+
             SelectionMenuItem {
                 text: qsTranslate("unplayer", "Select genres")
             }

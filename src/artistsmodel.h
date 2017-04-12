@@ -27,6 +27,7 @@ namespace unplayer
     {
         Q_OBJECT
         Q_ENUMS(Role)
+        Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
     public:
         enum Role
         {
@@ -41,11 +42,22 @@ namespace unplayer
 
         QVariant data(const QModelIndex& index, int role) const override;
 
+        bool sortDescending() const;
+
+        Q_INVOKABLE void toggleSortOrder();
+
         Q_INVOKABLE QStringList getTracksForArtist(int index) const;
         Q_INVOKABLE QStringList getTracksForArtists(const QVector<int>& indexes) const;
-
     protected:
         QHash<int, QByteArray> roleNames() const override;
+
+    private:
+        void setQuery();
+
+        bool mSortDescending;
+
+    signals:
+        void sortDescendingChanged();
     };
 }
 

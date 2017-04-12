@@ -34,6 +34,27 @@ namespace unplayer
         const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
         const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
 
+        const QString artistsSortDescendingKey(QLatin1String("artistsSortDescending"));
+
+        const QString albumsSortDescendingKey(QLatin1String("albumsSortDescending"));
+        const QString albumsSortModeKey(QLatin1String("albumsSortMode"));
+
+        const QString allAlbumsSortDescendingKey(QLatin1String("allAlbumsSortDescending"));
+        const QString allAlbumsSortModeKey(QLatin1String("allAlbumsSortMode"));
+
+        const QString albumTracksSortDescendingKey(QLatin1String("albumTracksSortDescending"));
+        const QString albumTracksSortModeKey(QLatin1String("albumTracksSortMode"));
+
+        const QString artistTracksSortDescendingKey(QLatin1String("artistTracksSortDescending"));
+        const QString artistTracksSortModeKey(QLatin1String("artistTracksSortMode"));
+        const QString artistTracksInsideAlbumSortModeKey(QLatin1String("artistTracksInsideSortMode"));
+
+        const QString allTracksSortDescendingKey(QLatin1String("allTracksSortDescending"));
+        const QString allTracksSortModeKey(QLatin1String("allTracksSortMode"));
+        const QString allTracksInsideAlbumSortModeKey(QLatin1String("allTracksInsideSortMode"));
+
+        const QString genresSortDescendingKey(QLatin1String("genresSortDescending"));
+
         const QString queueTracksKey(QLatin1String("state/queueTracks"));
         const QString queuePositionKey(QLatin1String("state/queuePosition"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
@@ -103,6 +124,118 @@ namespace unplayer
     void Settings::setRestorePlayerState(bool restore)
     {
         mSettings->setValue(restorePlayerStateKey, restore);
+    }
+
+    bool Settings::artistsSortDescending() const
+    {
+        return mSettings->value(artistsSortDescendingKey, false).toBool();
+    }
+
+    void Settings::setArtistsSortDescending(bool descending)
+    {
+        mSettings->setValue(artistsSortDescendingKey, descending);
+    }
+
+    bool Settings::albumsSortDescending() const
+    {
+        return mSettings->value(albumsSortDescendingKey, false).toBool();
+    }
+
+    int Settings::albumsSortMode(int defaultMode) const
+    {
+        return mSettings->value(albumsSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAlbumsSortSettings(bool descending, int sortMode)
+    {
+        mSettings->setValue(albumsSortDescendingKey, descending);
+        mSettings->setValue(albumsSortModeKey, sortMode);
+    }
+
+    bool Settings::allAlbumsSortDescending() const
+    {
+        return mSettings->value(allAlbumsSortDescendingKey, false).toBool();
+    }
+
+    int Settings::allAlbumsSortMode(int defaultMode) const
+    {
+        return mSettings->value(allAlbumsSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAllAlbumsSortSettings(bool descending, int sortMode)
+    {
+        mSettings->setValue(allAlbumsSortDescendingKey, descending);
+        mSettings->setValue(allAlbumsSortModeKey, sortMode);
+    }
+
+    bool Settings::albumTracksSortDescending() const
+    {
+        return mSettings->value(albumTracksSortDescendingKey, false).toBool();
+    }
+
+    int Settings::albumTracksSortMode(int defaultMode) const
+    {
+        return mSettings->value(albumTracksSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAlbumTracksSortSettings(bool descending, int sortMode)
+    {
+        mSettings->setValue(albumTracksSortDescendingKey, descending);
+        mSettings->setValue(albumTracksSortModeKey, sortMode);
+    }
+
+    bool Settings::artistTracksSortDescending() const
+    {
+        return mSettings->value(artistTracksSortDescendingKey, false).toBool();
+    }
+
+    int Settings::artistTracksSortMode(int defaultMode) const
+    {
+        return mSettings->value(artistTracksSortModeKey, defaultMode).toInt();
+    }
+
+    int Settings::artistTracksInsideAlbumSortMode(int defaultMode) const
+    {
+        return mSettings->value(artistTracksInsideAlbumSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setArtistTracksSortSettings(bool descending, int sortMode, int insideAlbumSortMode)
+    {
+        mSettings->setValue(artistTracksSortDescendingKey, descending);
+        mSettings->setValue(artistTracksSortModeKey, sortMode);
+        mSettings->setValue(artistTracksInsideAlbumSortModeKey, insideAlbumSortMode);
+    }
+
+    bool Settings::allTracksSortDescending() const
+    {
+        return mSettings->value(allTracksSortDescendingKey, false).toBool();
+    }
+
+    int Settings::allTracksSortMode(int defaultMode) const
+    {
+        return mSettings->value(allTracksSortModeKey, defaultMode).toInt();
+    }
+
+    int Settings::allTracksInsideAlbumSortMode(int defaultMode) const
+    {
+        return mSettings->value(allTracksInsideAlbumSortModeKey, defaultMode).toInt();
+    }
+
+    void Settings::setAllTracksSortSettings(bool descending, int sortMode, int insideAlbumSortMode)
+    {
+        mSettings->setValue(allTracksSortDescendingKey, descending);
+        mSettings->setValue(allTracksSortModeKey, sortMode);
+        mSettings->setValue(allTracksInsideAlbumSortModeKey, insideAlbumSortMode);
+    }
+
+    bool Settings::genresSortDescending() const
+    {
+        return mSettings->value(genresSortDescendingKey, false).toBool();
+    }
+
+    void Settings::setGenresSortDescending(bool descending)
+    {
+        mSettings->setValue(genresSortDescendingKey, descending);
     }
 
     QStringList Settings::queueTracks() const

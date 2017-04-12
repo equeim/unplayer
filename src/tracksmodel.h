@@ -24,16 +24,46 @@
 
 namespace unplayer
 {
-    class TracksModel : public DatabaseModel, public QQmlParserStatus
+    class TracksModelSortMode : public QObject
     {
         Q_OBJECT
-        Q_INTERFACES(QQmlParserStatus)
+        Q_ENUMS(Mode)
+    public:
+        enum Mode
+        {
+            Title,
+            AddedDate,
+            ArtistAlbumTitle,
+            ArtistAlbumYear
+        };
+    };
+
+    class TracksModelInsideAlbumSortMode : public QObject
+    {
+        Q_OBJECT
+        Q_ENUMS(Mode)
+    public:
+        enum Mode
+        {
+            Title,
+            TrackNumber
+        };
+    };
+
+    class TracksModel : public DatabaseModel
+    {
+        Q_OBJECT
         Q_ENUMS(Role)
+
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
         Q_PROPERTY(bool allAlbums READ allAlbums WRITE setAllAlbums)
         Q_PROPERTY(QString artist READ artist WRITE setArtist)
         Q_PROPERTY(QString album READ album WRITE setAlbum)
         Q_PROPERTY(QString genre READ genre WRITE setGenre)
+
+        Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
+        Q_PROPERTY(unplayer::TracksModelSortMode::Mode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
+        Q_PROPERTY(unplayer::TracksModelInsideAlbumSortMode::Mode insideAlbumSortMode READ insideAlbumSortMode WRITE setInsideAlbumSortMode NOTIFY insideAlbumSortModeChanged)
     public:
         enum Role
         {
@@ -44,9 +74,12 @@ namespace unplayer
             DurationRole
         };
 
+        using SortMode = TracksModelSortMode::Mode;
+        using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;
+
         TracksModel();
+        ~TracksModel() override;
         void componentComplete() override;
-        void classBegin() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
 
@@ -65,17 +98,36 @@ namespace unplayer
         const QString& genre() const;
         void setGenre(const QString& genre);
 
+        bool sortDescending() const;
+        void setSortDescending(bool descending);
+
+        SortMode sortMode() const;
+        void setSortMode(SortMode mode);
+
+        InsideAlbumSortMode insideAlbumSortMode() const;
+        void setInsideAlbumSortMode(InsideAlbumSortMode mode);
+
         Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
+        void setQuery();
+
         bool mAllArtists;
         bool mAllAlbums;
         QString mArtist;
         QString mAlbum;
         QString mGenre;
+
+        bool mSortDescending;
+        SortMode mSortMode;
+        InsideAlbumSortMode mInsideAlbumSortMode;
+
+    signals:
+        void sortModeChanged();
+        void insideAlbumSortModeChanged();
     };
 }
 

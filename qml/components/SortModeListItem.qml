@@ -16,42 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "databasemodel.h"
+import Sailfish.Silica 1.0
 
-#include <QDebug>
-#include <QSqlError>
+BackgroundItem {
+    id: item
 
-namespace unplayer
-{
-    DatabaseModel::DatabaseModel()
-        : mQuery(new QSqlQuery()),
-          mRowCount(0)
-    {
+    property bool current
+    property alias text: label.text
 
-    }
+    Label {
+        id: label
 
-    void DatabaseModel::classBegin()
-    {
-
-    }
-
-    void DatabaseModel::componentComplete()
-    {
-
-    }
-
-    int DatabaseModel::rowCount(const QModelIndex&) const
-    {
-        return mRowCount;
-    }
-
-    void DatabaseModel::execQuery()
-    {
-        if (mQuery->exec()) {
-            mQuery->last();
-            mRowCount = mQuery->at() + 1;
-        } else {
-            qWarning() << mQuery->lastError();
+        anchors {
+            left: parent.left
+            leftMargin: Theme.horizontalPageMargin
+            right: parent.right
+            rightMargin: Theme.horizontalPageMargin
+            verticalCenter: parent.verticalCenter
         }
+        color: (highlighted || current) ? Theme.highlightColor : Theme.primaryColor
+        opacity: item.enabled ? 1.0 : 0.4
     }
 }
