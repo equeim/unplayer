@@ -78,6 +78,9 @@ namespace unplayer
         int allTracksInsideAlbumSortMode(int defaultMode) const;
         void setAllTracksSortSettings(bool descending, int sortMode, int insideAlbumSortMode);
 
+        bool genresSortDescending() const;
+        void setGenresSortDescending(bool descending);
+
         QStringList queueTracks() const;
         int queuePosition() const;
         long long playerPosition() const;

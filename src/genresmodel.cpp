@@ -20,6 +20,8 @@
 
 #include <QDebug>
 
+#include "settings.h"
+
 namespace unplayer
 {
     namespace
@@ -40,12 +42,9 @@ namespace unplayer
     }
 
     GenresModel::GenresModel()
+        : mSortDescending(Settings::instance()->genresSortDescending())
     {
-        mQuery->prepare(QLatin1String("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
-                                      "WHERE genre != '' "
-                                      "GROUP BY genre "
-                                      "ORDER BY genre"));
-        execQuery();
+        setQuery();
     }
 
     QVariant GenresModel::data(const QModelIndex& index, int role) const
@@ -61,6 +60,19 @@ namespace unplayer
         default:
             return QVariant();
         }
+    }
+
+    bool GenresModel::sortDescending() const
+    {
+        return mSortDescending;
+    }
+
+    void GenresModel::toggleSortOrder()
+    {
+        mSortDescending = !mSortDescending;
+        Settings::instance()->setGenresSortDescending(mSortDescending);
+        emit sortDescendingChanged();
+        setQuery();
     }
 
     QStringList GenresModel::getTracksForGenre(int index) const
@@ -99,5 +111,17 @@ namespace unplayer
         return {{GenreRole, "genre"},
                 {TracksCountRole, "tracksCount"},
                 {DurationRole, "duration"}};
+    }
+
+    void GenresModel::setQuery()
+    {
+        beginResetModel();
+        mQuery->prepare(QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
+                                            "WHERE genre != '' "
+                                            "GROUP BY genre "
+                                            "ORDER BY genre %1").arg(mSortDescending ? QLatin1String("DESC")
+                                                                                     : QLatin1String("ASC")));
+        execQuery();
+        endResetModel();
     }
 }

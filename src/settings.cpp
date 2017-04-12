@@ -53,6 +53,8 @@ namespace unplayer
         const QString allTracksSortModeKey(QLatin1String("allTracksSortMode"));
         const QString allTracksInsideAlbumSortModeKey(QLatin1String("allTracksInsideSortMode"));
 
+        const QString genresSortDescendingKey(QLatin1String("genresSortDescending"));
+
         const QString queueTracksKey(QLatin1String("state/queueTracks"));
         const QString queuePositionKey(QLatin1String("state/queuePosition"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
@@ -224,6 +226,16 @@ namespace unplayer
         mSettings->setValue(allTracksSortDescendingKey, descending);
         mSettings->setValue(allTracksSortModeKey, sortMode);
         mSettings->setValue(allTracksInsideAlbumSortModeKey, insideAlbumSortMode);
+    }
+
+    bool Settings::genresSortDescending() const
+    {
+        return mSettings->value(genresSortDescendingKey, false).toBool();
+    }
+
+    void Settings::setGenresSortDescending(bool descending)
+    {
+        mSettings->setValue(genresSortDescendingKey, descending);
     }
 
     QStringList Settings::queueTracks() const
