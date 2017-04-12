@@ -124,16 +124,12 @@ namespace unplayer
 
     void ArtistsModel::setQuery()
     {
-        QString query(QLatin1String("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
-                                    "(SELECT artist, album, duration FROM tracks GROUP BY id, artist, album) "
-                                    "GROUP BY artist "
-                                    "ORDER BY artist = '', artist"));
-        if (mSortDescending) {
-            query += QLatin1String(" DESC");
-        }
-
         beginResetModel();
-        mQuery->prepare(query);
+        mQuery->prepare(QString::fromLatin1("SELECT artist, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
+                                            "(SELECT artist, album, duration FROM tracks GROUP BY id, artist, album) "
+                                            "GROUP BY artist "
+                                            "ORDER BY artist = '' %1, artist %1").arg(mSortDescending ? QLatin1String("DESC")
+                                                                                                      : QLatin1String("ASC")));
         execQuery();
         endResetModel();
     }
