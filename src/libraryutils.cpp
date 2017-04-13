@@ -362,6 +362,8 @@ namespace unplayer
                     qWarning() << "failed to create media art directory:" << mMediaArtDirectory;
                 }
 
+                QHash<QString, bool> noMediaDirectories;
+
                 // Remove deleted files and files that are not in selected library directories
                 for (int i = 0, max = files.size(); i < max; ++i) {
                     const QString& filePath = files.at(i);
@@ -377,6 +379,21 @@ namespace unplayer
                             if (filePath.startsWith(directory)) {
                                 remove = false;
                                 break;
+                            }
+                        }
+                        if (!remove) {
+                            const QString directory(fileInfo.path());
+                            if (noMediaDirectories.contains(directory)) {
+                                if (noMediaDirectories.value(directory)) {
+                                    remove = true;
+                                }
+                            } else {
+                                if (QFileInfo(QDir(directory).filePath(QLatin1String(".nomedia"))).isFile()) {
+                                    noMediaDirectories.insert(directory, true);
+                                    remove = true;
+                                } else {
+                                    noMediaDirectories.insert(directory, false);
+                                }
                             }
                         }
                     }
@@ -446,6 +463,22 @@ namespace unplayer
 
                         if (!fileInfo.isReadable()) {
                             continue;
+                        }
+
+                        {
+                            const QString directoryPath(fileInfo.path());
+                            if (noMediaDirectories.contains(directoryPath)) {
+                                if (noMediaDirectories.value(directoryPath)) {
+                                    continue;
+                                }
+                            } else {
+                                if (QFileInfo(QDir(directoryPath).filePath(QLatin1String(".nomedia"))).isFile()) {
+                                    noMediaDirectories.insert(directoryPath, true);
+                                    continue;
+                                } else {
+                                    noMediaDirectories.insert(directoryPath, false);
+                                }
+                            }
                         }
 
                         const int fileIndex = files.indexOf(filePath);
