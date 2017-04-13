@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.2.1] - 2017-04-13
+### Changed
+- Directories that contain .nomedia file are ignored when scanning filesystem
+
+### Fixed
+- Extraction of cover art from APE tags (affects APE and some MP3 files). You will need to reset library for changes to take into effect, since Unplayer does not extract tags from files that were already scanned.
+
 ## [1.2.0] - 2017-04-13
 ### Changed
 - Library is now automatically updated after changing "Prefer cover art..." option
