@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.2.0] - 2017-04-13
 ### Changed
 - Library is now automatically updated after changing "Prefer cover art..." option
 - Directories view and file file picker dialog now restore list position when returning to parent directory
