@@ -95,9 +95,12 @@ namespace unplayer
                 }
 
                 const TagLib::APE::ItemListMap items(tag->itemListMap());
+
                 if (items.contains("COVER ART (FRONT)")) {
                     const TagLib::APE::Item item(items["COVER ART (FRONT)"]);
-                    setMediaArt(item.binaryData(), info);
+                    TagLib::ByteVector data(item.binaryData());
+                    data = data.mid(data.find('\0') + 1);
+                    setMediaArt(data, info);
                 }
             }
 
