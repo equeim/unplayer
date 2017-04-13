@@ -60,7 +60,10 @@ qml/components/AddToPlaylistPage.qml
 qml/components/AlbumDelegate.qml
 qml/components/AlbumPageHeader.qml
 qml/components/AlbumPage.qml
+qml/components/AlbumsSortPage.qml
+qml/components/AlbumTracksSortPage.qml
 qml/components/AllAlbumsPage.qml
+qml/components/AllTracksSortPage.qml
 qml/components/ArtistPageHeader.qml
 qml/components/ArtistPage.qml
 qml/components/ArtistsPage.qml
@@ -93,6 +96,7 @@ qml/components/SelectionMenuItem.qml
 qml/components/SelectionPanel.qml
 qml/components/SettingsPage.qml
 qml/components/TrackInfoPage.qml
+qml/components/SortModeListItem.qml
 qml/components/TracksPage.qml
 qml/components/TranslatorsPage.qml
 
