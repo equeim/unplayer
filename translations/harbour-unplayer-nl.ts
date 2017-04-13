@@ -493,55 +493,55 @@
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteren</translation>
     </message>
     <message>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Volgorde</translation>
     </message>
     <message>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Oplopend</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Aflopend</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Albumnaam</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaar van uitgave</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Artiest - albumnaam</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Artiest - jaar van uitgave</translation>
     </message>
     <message>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum toegevoegd</translation>
     </message>
     <message>
         <source>Inside Album</source>
-        <translation type="unfinished"></translation>
+        <translation>In album</translation>
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Aflopend sorteren</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Oplopend sorteren</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaar</translation>
     </message>
 </context>
 </TS>
