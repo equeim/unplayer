@@ -68,7 +68,6 @@ namespace unplayer
         if (mAllArtists) {
             mSortDescending = Settings::instance()->allTracksSortDescending();
             mSortMode = static_cast<SortMode>(Settings::instance()->allTracksSortMode(SortMode::ArtistAlbumYear));
-            qDebug() << mSortMode;
             mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->allTracksInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber));
         } else {
             if (mAllAlbums) {
