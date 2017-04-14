@@ -156,7 +156,7 @@ namespace unplayer
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
                     const bool isPlaylist = PlaylistUtils::playlistsMimeTypes.contains(mimeType);
-                    if (isPlaylist || LibraryUtils::supportedMimeTypes.contains(mimeType)) {
+                    if (isPlaylist || LibraryUtils::mimeTypesByExtension.contains(mimeType)) {
                         files.append({info.filePath(),
                                       info.fileName(),
                                       false,

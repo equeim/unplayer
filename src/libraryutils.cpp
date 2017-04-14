@@ -52,20 +52,29 @@ namespace unplayer
         const QString rescanConnectionName(QLatin1String("unplayer_rescan"));
 
         const QLatin1String flacMimeType("audio/flac");
+
+        const QLatin1String aacMimeType("audio/aac");
         const QLatin1String mp4MimeType("audio/mp4");
         const QLatin1String mp4bMimeType("audio/x-m4b");
+
         const QLatin1String mpegMimeType("audio/mpeg");
+
         const QLatin1String oggMimeType("audio/ogg");
         const QLatin1String vorbisOggMimeType("audio/x-vorbis+ogg");
         const QLatin1String flacOggMimeType("audio/x-flac+ogg");
         const QLatin1String opusOggMimeType("audio/x-opus+ogg");
+
         const QLatin1String apeMimeType("audio/x-ape");
+
         const QLatin1String matroskaMimeType("audio/x-matroska");
+        const QLatin1String genericMatroskaMimeType("application/x-matroska");
+
         const QLatin1String wavMimeType("audio/x-wav");
         const QLatin1String wavpackMimeType("audio/x-wavpack");
 
-        //LibraryUtils* instancePointer = nullptr;
+
         std::unique_ptr<LibraryUtils> instancePointer;
+
 
         void removeTrackFromDatabase(const QSqlDatabase& db, int id)
         {
@@ -165,9 +174,6 @@ namespace unplayer
         if (string == mpegMimeType) {
             return MimeType::Mpeg;
         }
-        if (string == oggMimeType) {
-            return MimeType::Ogg;
-        }
         if (string == vorbisOggMimeType) {
             return MimeType::VorbisOgg;
         }
@@ -180,7 +186,7 @@ namespace unplayer
         if (string == apeMimeType) {
             return MimeType::Ape;
         }
-        if (string == matroskaMimeType) {
+        if (string == genericMatroskaMimeType) {
             return MimeType::Matroska;
         }
         if (string == wavMimeType) {
@@ -192,16 +198,26 @@ namespace unplayer
         return MimeType::Other;
     }
 
-    const QVector<QString> LibraryUtils::supportedMimeTypes{flacMimeType,
+    const QVector<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
+                                                              aacMimeType,
+                                                              mp4MimeType,
+                                                              mp4bMimeType,
+                                                              mpegMimeType,
+                                                              oggMimeType,
+                                                              apeMimeType,
+                                                              matroskaMimeType,
+                                                              wavMimeType,
+                                                              wavpackMimeType};
+
+    const QVector<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
                                                             mp4MimeType,
                                                             mp4bMimeType,
                                                             mpegMimeType,
-                                                            oggMimeType,
                                                             vorbisOggMimeType,
                                                             flacOggMimeType,
                                                             opusOggMimeType,
                                                             apeMimeType,
-                                                            matroskaMimeType,
+                                                            genericMatroskaMimeType,
                                                             wavMimeType,
                                                             wavpackMimeType};
 
@@ -485,9 +501,9 @@ namespace unplayer
 
                         if (fileIndex == -1) {
                             QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                            if (supportedMimeTypes.contains(mimeType)) {
-                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name();
-                                if (supportedMimeTypes.contains(mimeType)) {
+                            if (mimeTypesByExtension.contains(mimeType)) {
+                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name();
+                                if (mimeTypesByContent.contains(mimeType)) {
                                     int id;
                                     if (ids.isEmpty()) {
                                         id = 0;
@@ -515,7 +531,7 @@ namespace unplayer
                                 const QString mediaArt(mediaArtHash.value(id));
                                 if (!mediaArt.startsWith(mMediaArtDirectory) ||
                                         (QFileInfo(mediaArt).fileName().contains(QLatin1String("-embedded")) && useDirectoryMediaArt)) {
-                                    const QString newMediaArt(getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name()),
+                                    const QString newMediaArt(getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()),
                                                                                embeddedMediaArtHash,
                                                                                fileInfo,
                                                                                mediaArtDirectoriesHash,
@@ -529,8 +545,8 @@ namespace unplayer
                                     }
                                 }
                             } else {
-                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchDefault).name());
-                                if (supportedMimeTypes.contains(mimeType)) {
+                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
+                                if (mimeTypesByContent.contains(mimeType)) {
                                     ids.append(ids.last() + 1);
                                     updateTrackInDatabase(db,
                                                           true,

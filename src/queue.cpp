@@ -318,7 +318,7 @@ namespace unplayer
                     }
 
                     if (getTags) {
-                        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath).name()));
+                        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()));
                         title = info.title;
                         artists = info.artists;
                         albums = info.albums;

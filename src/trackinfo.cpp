@@ -35,7 +35,7 @@ namespace unplayer
     {
         mFilePath = filePath;
 
-        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath).name();
+        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
 
         const QFileInfo fileInfo(mFilePath);
 
