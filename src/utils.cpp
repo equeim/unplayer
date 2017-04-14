@@ -117,7 +117,7 @@ namespace unplayer
                     continue;
                 }
             }
-            if (LibraryUtils::supportedMimeTypes.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
+            if (LibraryUtils::mimeTypesByExtension.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
                 parsed.append(filePath);
             }
         }

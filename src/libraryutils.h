@@ -38,7 +38,6 @@ namespace unplayer
         Mp4,
         Mp4b,
         Mpeg,
-        Ogg,
         VorbisOgg,
         FlacOgg,
         OpusOgg,
@@ -63,7 +62,8 @@ namespace unplayer
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
-        static const QVector<QString> supportedMimeTypes;
+        static const QVector<QString> mimeTypesByExtension;
+        static const QVector<QString> mimeTypesByContent;
         static LibraryUtils* instance();
 
         const QString& databaseFilePath();
