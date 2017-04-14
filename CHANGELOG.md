@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.2.2] - 2017-04-14
+### Added
+- Added support of files with .aac extension. Note that only MP4 files with this extension are fully supported. Raw AAC streams can be played, but some information will not be shown.
+
+### Changed
+- Improved detection of MIME types.
+
 ## [1.2.1] - 2017-04-13
 ### Changed
 - Directories that contain .nomedia file are ignored when scanning filesystem
