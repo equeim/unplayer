@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation>Establecer imagen de la carátula</translation>
+        <translation>Fijar imagen de carátula</translation>
     </message>
     <message>
         <source>No tracks</source>
@@ -132,7 +132,7 @@
     </message>
     <message>
         <source>Home directory</source>
-        <translation>Directorio Home</translation>
+        <translation>Directorio principal</translation>
     </message>
     <message>
         <source>No files</source>
@@ -232,7 +232,7 @@
         <source>Removing %n track(s)</source>
         <translation>
             <numerusform>Eliminando %n pista</numerusform>
-            <numerusform>Eliminando %n pistas</numerusform>
+            <numerusform>Eliminanado %n pistas</numerusform>
         </translation>
     </message>
     <message>
@@ -355,193 +355,193 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Código fuente</translation>
     </message>
     <message>
         <source>Authors</source>
-        <translation type="unfinished"></translation>
+        <translation>Autores</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar imagen</translation>
     </message>
     <message>
         <source>Maintainer</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantenedor</translation>
     </message>
     <message>
         <source>%1 - %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 - %2</translation>
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n Archivo seleccionado</numerusform>
+            <numerusform>%n Archivos seleccionados</numerusform>
         </translation>
     </message>
     <message>
         <source>Set as default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Fijar como directorio predeterminado</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Directorio predeterminado</translation>
     </message>
     <message>
         <source>Select files</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar ficheros</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n Directorios seleccionados</numerusform>
+            <numerusform>%n Directorios seleccionados</numerusform>
         </translation>
     </message>
     <message>
         <source>Library Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Libreria de directorios</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir directorio...</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar directorio</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation type="unfinished"></translation>
+        <translation>No hay directorios</translation>
     </message>
     <message>
         <source>Reset Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Reiniciar libreria</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar libreria</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Libreria</translation>
     </message>
     <message>
         <source>%1, %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1, %2</translation>
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizando libreria...</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation type="unfinished"></translation>
+        <translation>Error inicializando base de datos</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation type="unfinished"></translation>
+        <translation>No hay directorios seleccionados</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizando...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpiar cola</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpiar</translation>
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir libreria al inicio</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kB/s</translation>
     </message>
     <message>
         <source>%1 h %2 m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 h %2 m</translation>
     </message>
     <message>
         <source>%1 m %2 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 m %2 s</translation>
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Preferir que la portada se encuentre como archivo separado en el directorio de archivos de música en lugar de extraerse del archivo de música</translation>
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Reproductor</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Restaurar el estado del reproductor al iniciar</translation>
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar</translation>
     </message>
     <message>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Orden</translation>
     </message>
     <message>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ascendiendo</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Descendiendo</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Título del álbum</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Año del álbum</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista - Título del álbum</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista - Año del álbum</translation>
     </message>
     <message>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Fecha añadida</translation>
     </message>
     <message>
         <source>Inside Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Álbum interior</translation>
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar descendiendo</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar ascendiendo</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Año</translation>
     </message>
 </context>
 </TS>
