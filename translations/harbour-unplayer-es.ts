@@ -401,7 +401,7 @@
     </message>
     <message>
         <source>Library Directories</source>
-        <translation>Libreria de directorios</translation>
+        <translation>Ruta de directorios</translation>
     </message>
     <message>
         <source>Select</source>
@@ -421,11 +421,11 @@
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Reiniciar libreria</translation>
+        <translation>Reiniciar</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Actualizar libreria</translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <source>Library</source>
