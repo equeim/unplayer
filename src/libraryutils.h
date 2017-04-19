@@ -29,7 +29,7 @@ namespace unplayer
 {
     namespace tagutils
     {
-        class Info;
+        struct Info;
     }
 
     enum class MimeType

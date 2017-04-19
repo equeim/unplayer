@@ -120,14 +120,14 @@ namespace unplayer
 
                         if (artist.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(artist);
                         }
 
                         if (album.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(album);
                         }
@@ -137,7 +137,7 @@ namespace unplayer
 
                         if (genre.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(genre);
                         }
@@ -146,7 +146,7 @@ namespace unplayer
 
                         if (mediaArt.isEmpty()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(mediaArt);
                         }
@@ -448,11 +448,14 @@ namespace unplayer
 
                 QHash<QByteArray, QString> embeddedMediaArtHash;
                 QDir mediaArtDir(mMediaArtDirectory);
-                for (const QFileInfo& info : mediaArtDir.entryInfoList(QDir::Files)) {
-                    const QString baseName(info.baseName());
-                    const int index = baseName.indexOf(QLatin1String("-embedded"));
-                    if (index != -1) {
-                        embeddedMediaArtHash.insert(baseName.left(index).toLatin1(), info.filePath());
+                {
+                    const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
+                    for (const QFileInfo& info : files) {
+                        const QString baseName(info.baseName());
+                        const int index = baseName.indexOf(QLatin1String("-embedded"));
+                        if (index != -1) {
+                            embeddedMediaArtHash.insert(baseName.left(index).toLatin1(), info.filePath());
+                        }
                     }
                 }
 
@@ -576,10 +579,13 @@ namespace unplayer
                     }
                 }
 
-                for (const QFileInfo& info : mediaArtDir.entryInfoList(QDir::Files)) {
-                    if (!allMediaArt.contains(info.filePath())) {
-                        if (!QFile::remove(info.filePath())) {
-                            qWarning() << "failed to remove file:" << info.filePath();
+                {
+                    const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
+                    for (const QFileInfo& info : files) {
+                        if (!allMediaArt.contains(info.filePath())) {
+                            if (!QFile::remove(info.filePath())) {
+                                qWarning() << "failed to remove file:" << info.filePath();
+                            }
                         }
                     }
                 }
@@ -742,9 +748,7 @@ namespace unplayer
         id.chop(1);
 
         const QString newFilePath(QString::fromLatin1("%1/%2.%3")
-                                  .arg(mMediaArtDirectory)
-                                  .arg(id)
-                                  .arg(QFileInfo(mediaArt).suffix()));
+                                  .arg(mMediaArtDirectory, id, QFileInfo(mediaArt).suffix()));
 
         if (!QFile::copy(mediaArt, newFilePath)) {
             qWarning() << "failed to copy file from" << mediaArt << "to" << newFilePath;
@@ -811,9 +815,7 @@ namespace unplayer
         }
 
         const QString filePath(QString::fromLatin1("%1/%2-embedded.%3")
-                               .arg(mMediaArtDirectory)
-                               .arg(QString::fromLatin1(md5))
-                               .arg(suffix));
+                               .arg(mMediaArtDirectory, QString::fromLatin1(md5), suffix));
         QFile file(filePath);
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(data);

@@ -147,7 +147,8 @@ namespace unplayer
         auto future = QtConcurrent::run([directory]() {
             QVector<DirectoryTrackFile> files;
             const QMimeDatabase mimeDb;
-            for (const QFileInfo& info : QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable)) {
+            const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
+            for (const QFileInfo& info : fileInfos) {
                 if (info.isDir()) {
                     files.append({info.filePath(),
                                   info.fileName(),

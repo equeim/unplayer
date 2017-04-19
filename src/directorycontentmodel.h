@@ -54,7 +54,7 @@ namespace unplayer
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
-        int rowCount(const QModelIndex&) const;
+        int rowCount(const QModelIndex&) const override;
 
         const QString& directory() const;
         void setDirectory(const QString& directory);

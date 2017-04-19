@@ -77,8 +77,8 @@ Page {
             title: pageTitle
         }
         delegate: BaseTrackDelegate {
-            showArtist: !model.inLibrary
-            showArtistAndAlbum: model.inLibrary
+            showArtist: model.artist && !model.album
+            showArtistAndAlbum: model.artist && model.album
             showDuration: model.hasDuration
             current: model.filePath === Unplayer.Player.queue.currentFilePath
             menu: ContextMenu {

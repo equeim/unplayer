@@ -97,7 +97,9 @@ def build(context):
             "src/utils.h"
         ],
         cxxflags=["-std=c++11", "-Wall", "-Wextra", "-pedantic"],
-        defines=["UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
+        defines=["QT_DEPRECATED_WARNINGS",
+                 "QT_DISABLE_DEPRECATED_BEFORE=0x050200",
+                 "UNPLAYER_VERSION=\"{}\"".format(APP_VERSION)],
         rpath="{}/harbour-unplayer/lib".format(context.env.DATADIR),
         lang=context.path.ant_glob("translations/*.ts")
     )

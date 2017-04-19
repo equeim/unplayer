@@ -88,8 +88,10 @@ namespace unplayer
     {
         auto future = QtConcurrent::run([]() {
             QList<PlaylistsModelItem> playlists;
-            const QDir dir(PlaylistUtils::instance()->playlistsDirectoryPath());
-            for (const QFileInfo& fileInfo : dir.entryInfoList(PlaylistUtils::playlistsNameFilters, QDir::Files)) {
+            const QList<QFileInfo> files(QDir(PlaylistUtils::instance()->playlistsDirectoryPath())
+                                         .entryInfoList(PlaylistUtils::playlistsNameFilters, QDir::Files));
+            playlists.reserve(files.size());
+            for (const QFileInfo& fileInfo : files) {
                 playlists.append(PlaylistsModelItem{fileInfo.filePath(),
                                                     fileInfo.completeBaseName(),
                                                     PlaylistUtils::getPlaylistTracksCount(fileInfo.filePath())});

@@ -146,7 +146,7 @@ namespace unplayer
                 return track->mediaArtFilePath;
             }
             if (!track->mediaArtPixmap.isNull()) {
-                return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId).arg(track->filePath);
+                return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId, track->filePath);
             }
         }
         return QString();
@@ -207,7 +207,7 @@ namespace unplayer
         addTracks({track});
     }
 
-    void Queue::addTracks(QStringList trackPaths, bool clearQueue, int setAsCurrent)
+    void Queue::addTracks(const QStringList& trackPaths, bool clearQueue, int setAsCurrent)
     {
         if (mAddingTracks) {
             return;
@@ -226,19 +226,20 @@ namespace unplayer
             clear();
         }
 
-        auto future = QtConcurrent::run([trackPaths, oldTracks]() mutable {
+        auto future = QtConcurrent::run([trackPaths, oldTracks]() {
             QList<std::shared_ptr<QueueTrack>> tracks;
 
             const QMimeDatabase mimeDb;
 
-            for (int i = 0, max = trackPaths.size(); i < max; ++i) {
-                const QString filePath(trackPaths.at(i));
+            QStringList newTrackPaths(trackPaths);
+            for (int i = 0, max = newTrackPaths.size(); i < max; ++i) {
+                const QString filePath(newTrackPaths.at(i));
                 if (PlaylistUtils::playlistsMimeTypes.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
-                    trackPaths.removeAt(i);
+                    newTrackPaths.removeAt(i);
                     const QStringList playlistTracks(PlaylistUtils::getPlaylistTracks(filePath));
                     int trackIndex = i;
                     for (const QString& playlistTrack : playlistTracks) {
-                        trackPaths.insert(trackIndex, playlistTrack);
+                        newTrackPaths.insert(trackIndex, playlistTrack);
                         ++trackIndex;
                     }
                     i += playlistTracks.size() - 1;
@@ -259,7 +260,7 @@ namespace unplayer
 
                 const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
-                for (const QString& filePath : trackPaths) {
+                for (const QString& filePath : const_cast<const QStringList&>(newTrackPaths)) {
                     bool found = false;
                     for (const std::shared_ptr<QueueTrack>& track : oldTracks) {
                         if (track->filePath == filePath) {

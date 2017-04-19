@@ -134,11 +134,11 @@ namespace unplayer
         const QLocale locale;
 
         if (hours > 0) {
-            return qApp->translate("unplayer", "%1 h %2 m").arg(locale.toString(hours)).arg(locale.toString(minutes));
+            return qApp->translate("unplayer", "%1 h %2 m").arg(locale.toString(hours), locale.toString(minutes));
         }
 
         if (minutes > 0) {
-            return qApp->translate("unplayer", "%1 m %2 s").arg(locale.toString(minutes)).arg(locale.toString(seconds));
+            return qApp->translate("unplayer", "%1 m %2 s").arg(locale.toString(minutes), locale.toString(seconds));
         }
 
         return qApp->translate("unplayer", "%1 s").arg(locale.toString(seconds));
@@ -211,7 +211,9 @@ namespace unplayer
     QStringList Utils::imageNameFilters()
     {
         QStringList nameFilters;
-        for (const QByteArray& format : QImageReader::supportedImageFormats()) {
+        const QList<QByteArray> formats(QImageReader::supportedImageFormats());
+        nameFilters.reserve(formats.size());
+        for (const QByteArray& format : formats) {
             nameFilters.append(QString::fromLatin1("*.%1").arg(QString::fromLatin1(format)));
         }
         return nameFilters;
@@ -219,14 +221,14 @@ namespace unplayer
 
     QString Utils::translators()
     {
-        QFile file(":/translators.html");
+        QFile file(QLatin1String(":/translators.html"));
         file.open(QIODevice::ReadOnly);
         return QString(file.readAll());
     }
 
     QString Utils::license()
     {
-        QFile file(":/license.html");
+        QFile file(QLatin1String(":/license.html"));
         file.open(QIODevice::ReadOnly);
         return QLatin1String(file.readAll());
     }
