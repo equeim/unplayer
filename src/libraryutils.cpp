@@ -448,11 +448,14 @@ namespace unplayer
 
                 QHash<QByteArray, QString> embeddedMediaArtHash;
                 QDir mediaArtDir(mMediaArtDirectory);
-                for (const QFileInfo& info : mediaArtDir.entryInfoList(QDir::Files)) {
-                    const QString baseName(info.baseName());
-                    const int index = baseName.indexOf(QLatin1String("-embedded"));
-                    if (index != -1) {
-                        embeddedMediaArtHash.insert(baseName.left(index).toLatin1(), info.filePath());
+                {
+                    const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
+                    for (const QFileInfo& info : files) {
+                        const QString baseName(info.baseName());
+                        const int index = baseName.indexOf(QLatin1String("-embedded"));
+                        if (index != -1) {
+                            embeddedMediaArtHash.insert(baseName.left(index).toLatin1(), info.filePath());
+                        }
                     }
                 }
 
@@ -576,10 +579,13 @@ namespace unplayer
                     }
                 }
 
-                for (const QFileInfo& info : mediaArtDir.entryInfoList(QDir::Files)) {
-                    if (!allMediaArt.contains(info.filePath())) {
-                        if (!QFile::remove(info.filePath())) {
-                            qWarning() << "failed to remove file:" << info.filePath();
+                {
+                    const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
+                    for (const QFileInfo& info : files) {
+                        if (!allMediaArt.contains(info.filePath())) {
+                            if (!QFile::remove(info.filePath())) {
+                                qWarning() << "failed to remove file:" << info.filePath();
+                            }
                         }
                     }
                 }

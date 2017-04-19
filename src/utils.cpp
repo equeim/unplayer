@@ -211,7 +211,9 @@ namespace unplayer
     QStringList Utils::imageNameFilters()
     {
         QStringList nameFilters;
-        for (const QByteArray& format : QImageReader::supportedImageFormats()) {
+        const QList<QByteArray> formats(QImageReader::supportedImageFormats());
+        nameFilters.reserve(formats.size());
+        for (const QByteArray& format : formats) {
             nameFilters.append(QString::fromLatin1("*.%1").arg(QString::fromLatin1(format)));
         }
         return nameFilters;

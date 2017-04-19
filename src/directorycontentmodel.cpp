@@ -149,7 +149,9 @@ namespace unplayer
 
         auto future = QtConcurrent::run([=]() {
             QVector<DirectoryContentFile> files;
-            for (const QFileInfo& info : QDir(directory).entryInfoList(nameFilters, filters)) {
+            const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(nameFilters, filters));
+            files.reserve(fileInfos.size());
+            for (const QFileInfo& info : fileInfos) {
                 files.append({info.filePath(),
                               info.fileName(),
                               info.isDir()});

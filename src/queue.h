@@ -97,7 +97,7 @@ namespace unplayer
         bool isAddingTracks() const;
 
         Q_INVOKABLE void addTrack(const QString& track);
-        Q_INVOKABLE void addTracks(QStringList trackPaths, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTracks(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void removeTrack(int index);
         Q_INVOKABLE void removeTracks(QVector<int> indexes);
         Q_INVOKABLE void clear();
