@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.2.3] - 2017-04-19
+### Changed
+- Updated Spanish translation
+
+### Fixed
+- Artist/album labels on playlist's page
+
 ## [1.2.2] - 2017-04-14
 ### Added
 - Added support of files with .aac extension. Note that only MP4 files with this extension are fully supported. Raw AAC streams can be played, but some information will not be shown.
