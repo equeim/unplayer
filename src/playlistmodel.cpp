@@ -81,6 +81,7 @@ namespace unplayer
     QStringList PlaylistModel::getTracks(const QVector<int>& indexes)
     {
         QStringList tracks;
+        tracks.reserve(mTracks.size());
         for (int index : indexes) {
             tracks.append(mTracks.at(index).filePath);
         }

@@ -97,6 +97,7 @@ namespace unplayer
         QList<PlaylistTrack> tracksFromPaths(const QStringList& trackPaths)
         {
             QList<PlaylistTrack> tracks;
+            tracks.reserve(trackPaths.size());
             for (const QString& filePath : trackPaths) {
                 tracks.append(trackFromFilePath(filePath));
             }
