@@ -120,14 +120,14 @@ namespace unplayer
 
                         if (artist.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(artist);
                         }
 
                         if (album.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(album);
                         }
@@ -137,7 +137,7 @@ namespace unplayer
 
                         if (genre.isNull()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(genre);
                         }
@@ -146,7 +146,7 @@ namespace unplayer
 
                         if (mediaArt.isEmpty()) {
                             // Empty string instead of NULL
-                            query.addBindValue(QString(""));
+                            query.addBindValue(QLatin1String(""));
                         } else {
                             query.addBindValue(mediaArt);
                         }

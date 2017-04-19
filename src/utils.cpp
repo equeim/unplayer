@@ -221,14 +221,14 @@ namespace unplayer
 
     QString Utils::translators()
     {
-        QFile file(":/translators.html");
+        QFile file(QLatin1String(":/translators.html"));
         file.open(QIODevice::ReadOnly);
         return QString(file.readAll());
     }
 
     QString Utils::license()
     {
-        QFile file(":/license.html");
+        QFile file(QLatin1String(":/license.html"));
         file.open(QIODevice::ReadOnly);
         return QLatin1String(file.readAll());
     }
