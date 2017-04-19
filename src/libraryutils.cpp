@@ -742,9 +742,7 @@ namespace unplayer
         id.chop(1);
 
         const QString newFilePath(QString::fromLatin1("%1/%2.%3")
-                                  .arg(mMediaArtDirectory)
-                                  .arg(id)
-                                  .arg(QFileInfo(mediaArt).suffix()));
+                                  .arg(mMediaArtDirectory, id, QFileInfo(mediaArt).suffix()));
 
         if (!QFile::copy(mediaArt, newFilePath)) {
             qWarning() << "failed to copy file from" << mediaArt << "to" << newFilePath;
@@ -811,9 +809,7 @@ namespace unplayer
         }
 
         const QString filePath(QString::fromLatin1("%1/%2-embedded.%3")
-                               .arg(mMediaArtDirectory)
-                               .arg(QString::fromLatin1(md5))
-                               .arg(suffix));
+                               .arg(mMediaArtDirectory, QString::fromLatin1(md5), suffix));
         QFile file(filePath);
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(data);

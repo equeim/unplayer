@@ -134,11 +134,11 @@ namespace unplayer
         const QLocale locale;
 
         if (hours > 0) {
-            return qApp->translate("unplayer", "%1 h %2 m").arg(locale.toString(hours)).arg(locale.toString(minutes));
+            return qApp->translate("unplayer", "%1 h %2 m").arg(locale.toString(hours), locale.toString(minutes));
         }
 
         if (minutes > 0) {
-            return qApp->translate("unplayer", "%1 m %2 s").arg(locale.toString(minutes)).arg(locale.toString(seconds));
+            return qApp->translate("unplayer", "%1 m %2 s").arg(locale.toString(minutes), locale.toString(seconds));
         }
 
         return qApp->translate("unplayer", "%1 s").arg(locale.toString(seconds));

@@ -146,7 +146,7 @@ namespace unplayer
                 return track->mediaArtFilePath;
             }
             if (!track->mediaArtPixmap.isNull()) {
-                return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId).arg(track->filePath);
+                return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId, track->filePath);
             }
         }
         return QString();

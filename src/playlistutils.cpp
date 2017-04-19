@@ -197,7 +197,7 @@ namespace unplayer
 
     void PlaylistUtils::newPlaylist(const QString& name, const QStringList& trackPaths)
     {
-        savePlaylist(QString::fromLatin1("%1/%2.pls").arg(playlistsDirectoryPath()).arg(name), tracksFromPaths(trackPaths));
+        savePlaylist(QString::fromLatin1("%1/%2.pls").arg(playlistsDirectoryPath(), name), tracksFromPaths(trackPaths));
     }
 
     void PlaylistUtils::addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths)
