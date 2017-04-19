@@ -295,13 +295,6 @@ namespace unplayer
                 while (!stream.atEnd()) {
                     const QString line(stream.readLine().trimmed());
                     if (line.startsWith(QLatin1String("#EXTINF"))) {
-                        const int durationIndex = 8;
-                        const int commaIndex = line.indexOf(',');
-                        const int duration = line.midRef(durationIndex, commaIndex - durationIndex).toInt();
-                        const int hyphenIndex = line.indexOf('-');
-                        const QString artist(line.mid(commaIndex + 1, hyphenIndex - commaIndex - 1).trimmed());
-                        const QString title(line.mid(hyphenIndex + 1).trimmed());
-
                         const QString filePath(filePathFromString(stream.readLine().trimmed(), playlistFileDir));
                         if (filePath.isEmpty()) {
                             continue;
@@ -309,10 +302,13 @@ namespace unplayer
 
                         PlaylistTrack track(trackFromFilePath(filePath));
                         if (!track.inLibrary) {
-                            track.duration = duration;
+                            const int durationIndex = 8;
+                            const int commaIndex = line.indexOf(',');
+                            track.duration = line.midRef(durationIndex, commaIndex - durationIndex).toInt();
                             track.hasDuration = true;
-                            track.title = title;
-                            track.artist = artist;
+                            const int hyphenIndex = line.indexOf('-');
+                            track.artist = line.midRef(commaIndex + 1, hyphenIndex - commaIndex - 1).trimmed().toString();
+                            track.title = line.midRef(hyphenIndex + 1).trimmed().toString();
                         }
                         tracks.append(track);
                     } else if (!line.startsWith('#') && !line.isEmpty()) {
@@ -361,7 +357,7 @@ namespace unplayer
             QTextStream stream(&file);
             while (!stream.atEnd()) {
                 const QString line(stream.readLine());
-                if (!line.trimmed().isEmpty() && !line.startsWith('#')) {
+                if (!QStringRef(&line).trimmed().isEmpty() && !line.startsWith('#')) {
                     ++count;
                 }
             }
