@@ -1,3 +1,5 @@
+# Project is temporarily suspended. I won't be able to support my projects until 2018 spring
+
 # unplayer
 Simple music player for Sailfish OS
 
