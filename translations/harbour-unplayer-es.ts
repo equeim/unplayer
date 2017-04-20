@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Añadir a la lista de reproducción</translation>
+        <translation>Añadir a lista de reproducción</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
@@ -303,7 +303,7 @@
     </message>
     <message>
         <source>MIME type</source>
-        <translation>Tipo de MIME</translation>
+        <translation>Tipo de audio</translation>
     </message>
     <message>
         <source>Duration</source>
