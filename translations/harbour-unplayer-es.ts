@@ -287,7 +287,7 @@
     </message>
     <message>
         <source>Track number</source>
-        <translation>Número de la pista</translation>
+        <translation>Número de pista</translation>
     </message>
     <message>
         <source>Genre</source>
