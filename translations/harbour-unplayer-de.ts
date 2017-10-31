@@ -56,14 +56,12 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Titel ausgewählt</numerusform>
+        <numerusform>%n Titel ausgewählt</numerusform>
+        </translation></message>
     <message>
         <source>Select tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle Titel</translation>
     </message>
     <message>
         <source>Unknown album</source>
@@ -83,14 +81,12 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Album ausgewählt</numerusform>
+        <numerusform>%n Alben ausgewählt</numerusform>
+        </translation></message>
     <message>
         <source>Select albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Alben auswählen</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
@@ -113,22 +109,20 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Interpret ausgewählt</numerusform>
+        <numerusform>%n Interpreten ausgewählt</numerusform>
+        </translation></message>
     <message>
         <source>Select artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Interpreten auswählen</translation>
     </message>
     <message>
         <source>Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzeichnisse</translation>
     </message>
     <message>
         <source>Track information</source>
-        <translation type="unfinished"></translation>
+        <translation>Titelinformationen</translation>
     </message>
     <message>
         <source>SD card</source>
@@ -144,29 +138,25 @@
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Genre ausgewählt</numerusform>
+        <numerusform>%n Genres ausgewählt</numerusform>
+        </translation></message>
     <message>
         <source>Genres</source>
-        <translation type="unfinished"></translation>
+        <translation>Genres</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Titel, %1</numerusform>
+        <numerusform>%n Titel, %1</numerusform>
+        </translation></message>
     <message>
         <source>Select genres</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle Genre</translation>
     </message>
     <message>
         <source>No genres</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein Genre</translation>
     </message>
     <message>
         <source>License</source>
@@ -188,78 +178,68 @@
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation>
-            <numerusform>%n Lied</numerusform>
-            <numerusform>%n Lieder</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Titel</numerusform>
+        <numerusform>%n Titel</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation>
-            <numerusform>%n Playlist</numerusform>
-            <numerusform>%n Playlisten</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Wiedergabeliste</numerusform>
+        <numerusform>%n Wiedergabelisten</numerusform>
+        </translation></message>
     <message>
         <source>Tracks</source>
-        <translation>Lieder</translation>
+        <translation>Titel</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation>Playlisten</translation>
+        <translation>Wiedergabelisten</translation>
     </message>
     <message>
         <source>Add playlist</source>
-        <translation>Playlist hinzufügen</translation>
+        <translation>Wiedergabeliste hinzufügen</translation>
     </message>
     <message>
         <source>Playlist name</source>
-        <translation>Name der Playlist</translation>
+        <translation>Name der Wiedergabeliste</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
-        <translation>Aus der Playlist entfernen</translation>
+        <translation>Aus der Wiedergabeliste entfernen</translation>
     </message>
     <message>
         <source>Removing</source>
-        <translation>Entferne</translation>
+        <translation>Entfernen</translation>
     </message>
     <message>
         <source>Remove playlist</source>
-        <translation>Playlist entfernen</translation>
+        <translation>Wiedergabeliste entfernen</translation>
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Entferne Playlist</translation>
+        <translation>Entfernen der Wiedergabeliste</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Entfernen %n Titel</numerusform>
+        <numerusform>Entfernen %n Titel</numerusform>
+        </translation></message>
     <message>
         <source>Remove</source>
         <translation>Entferne</translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Wiedergabeliste(n) ausgewählt</numerusform>
+        <numerusform>%n Wiedergabelisten ausgewählt</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Wiedergabeliste(n) entfernen</numerusform>
+        <numerusform>%n Wiedergabelisten entfernen</numerusform>
+        </translation></message>
     <message>
         <source>Select playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle Wiedergabeliste</translation>
     </message>
     <message>
         <source>Queue</source>
@@ -271,51 +251,51 @@
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Titel</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Interpret</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Titelnummer</translation>
     </message>
     <message>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre</translation>
     </message>
     <message>
         <source>File path</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei-Pfad</translation>
     </message>
     <message>
         <source>File size</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei-Größe</translation>
     </message>
     <message>
         <source>MIME type</source>
-        <translation type="unfinished"></translation>
+        <translation>MIME Typ</translation>
     </message>
     <message>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Dauer</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitrate</translation>
     </message>
     <message>
         <source>%1 s</source>
@@ -323,225 +303,221 @@
     </message>
     <message>
         <source>%1 B</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 B</translation>
     </message>
     <message>
         <source>%1 KiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 KiB</translation>
     </message>
     <message>
         <source>%1 MiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 MiB</translation>
     </message>
     <message>
         <source>%1 GiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 GiB</translation>
     </message>
     <message>
         <source>%1 TiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 TiB</translation>
     </message>
     <message>
         <source>%1 PiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 PiB</translation>
     </message>
     <message>
         <source>%1 EiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 EiB</translation>
     </message>
     <message>
         <source>%1 ZiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ZiB</translation>
     </message>
     <message>
         <source>%1 YiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 YiB</translation>
     </message>
     <message>
         <source>Source Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Quell-Code</translation>
     </message>
     <message>
         <source>Authors</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoren</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle Bild</translation>
     </message>
     <message>
         <source>Maintainer</source>
-        <translation type="unfinished"></translation>
+        <translation>Betreuer</translation>
     </message>
     <message>
         <source>%1 - %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 - %2</translation>
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Datei(en) gewählt</numerusform>
+        <numerusform>%n Dateien gewählt</numerusform>
+        </translation></message>
     <message>
         <source>Set as default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Als Ausgangs-Verzeichnis festlegen</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausgangsverzeichnis</translation>
     </message>
     <message>
         <source>Select files</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateien auswählen</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Verzeichniss ausgewählt</numerusform>
+        <numerusform>%n Verzeichnisse ausgewählt</numerusform>
+        </translation></message>
     <message>
         <source>Library Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung Ordner</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation type="unfinished"></translation>
+        <translation>Füge Ordner hinzu ...</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle Ordner</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Ordner</translation>
     </message>
     <message>
         <source>Reset Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung zurücksetzen</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung aktualisieren</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung</translation>
     </message>
     <message>
         <source>%1, %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1, %2</translation>
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung wird aktualisiert ...</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler Initialisierung Datenbank</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine ausgewählten Ordner</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualisiert ...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Leere Warteschlange</translation>
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Sammlung beim Start öffnen</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kB/s</translation>
     </message>
     <message>
         <source>%1 h %2 m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 h %2 m</translation>
     </message>
     <message>
         <source>%1 m %2 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 m %2 s</translation>
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation type="unfinished"></translation>
+        <translation>Album-Cover als seperate Datei in Musikdateiverzeichnis bevorzugen statt aus Musikdatei zu extrahieren</translation>
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Player</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Player-Status beim Start wiederherstellen</translation>
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortieren</translation>
     </message>
     <message>
         <source>Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Reihenfolge</translation>
     </message>
     <message>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufsteigend</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Absteigend</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Album-Titel</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Erscheinungsjahr</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Interpret - Album Titel</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Interpret - Erscheinungsjahr</translation>
     </message>
     <message>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum hinzugefügt</translation>
     </message>
     <message>
         <source>Inside Album</source>
-        <translation type="unfinished"></translation>
+        <translation>im Album</translation>
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Absteigend sortieren</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufsteigend sortieren</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Jahr</translation>
     </message>
 </context>
 </TS>
