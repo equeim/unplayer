@@ -21,18 +21,16 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Zu Playlist hinzufügen</translation>
+        <translation>Zu Wiedergabeliste hinzufügen</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation>
-            <numerusform>%n Lied</numerusform>
-            <numerusform>%n Lieder</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Titel</numerusform>
+        <numerusform>%n Titel</numerusform>
+        </translation></message>
     <message>
         <source>New playlist...</source>
-        <translation>Neue Playlist…</translation>
+        <translation>Neue Wiedergabeliste…</translation>
     </message>
     <message>
         <source>Search</source>
@@ -40,7 +38,7 @@
     </message>
     <message>
         <source>No playlists</source>
-        <translation>Keine Playlists</translation>
+        <translation>Keine Wiedergabelisten</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -48,11 +46,11 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation>Coverbild setzen</translation>
+        <translation>Album-Cover einfügen</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation>Keine Lieder</translation>
+        <translation>Keine Titel</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
@@ -105,11 +103,11 @@
     </message>
     <message>
         <source>All tracks</source>
-        <translation>Alle Lieder</translation>
+        <translation>Alle Titel</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation><numerusform>%n Interpret ausgewählt</numerusform>
+        <translation><numerusform>%n Interpret(en) ausgewählt</numerusform>
         <numerusform>%n Interpreten ausgewählt</numerusform>
         </translation></message>
     <message>
@@ -130,7 +128,7 @@
     </message>
     <message>
         <source>Home directory</source>
-        <translation>Home-Verzeichnis</translation>
+        <translation>Start-Verzeichnis</translation>
     </message>
     <message>
         <source>No files</source>
@@ -138,7 +136,7 @@
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation><numerusform>%n Genre ausgewählt</numerusform>
+        <translation><numerusform>%n Genre(s) ausgewählt</numerusform>
         <numerusform>%n Genres ausgewählt</numerusform>
         </translation></message>
     <message>
@@ -152,11 +150,11 @@
         </translation></message>
     <message>
         <source>Select genres</source>
-        <translation>Wähle Genre</translation>
+        <translation>Wähle Genres</translation>
     </message>
     <message>
         <source>No genres</source>
-        <translation>Kein Genre</translation>
+        <translation>Keine Genres</translation>
     </message>
     <message>
         <source>License</source>
@@ -164,11 +162,9 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation>
-            <numerusform>%n Interpret</numerusform>
-            <numerusform>%n Interpreten</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n Interpret(en)</numerusform>
+        <numerusform>%n Interpreten</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>%n albums(s)</source>
         <translation>
@@ -183,7 +179,7 @@
         </translation></message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform>%n Wiedergabeliste</numerusform>
+        <translation><numerusform>%n Wiedergabeliste(n)</numerusform>
         <numerusform>%n Wiedergabelisten</numerusform>
         </translation></message>
     <message>
@@ -220,8 +216,8 @@
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation><numerusform>Entfernen %n Titel</numerusform>
-        <numerusform>Entfernen %n Titel</numerusform>
+        <translation><numerusform>%n Titel entfernen</numerusform>
+        <numerusform>%n Titel entfernen</numerusform>
         </translation></message>
     <message>
         <source>Remove</source>
@@ -239,7 +235,7 @@
         </translation></message>
     <message>
         <source>Select playlists</source>
-        <translation>Wähle Wiedergabeliste</translation>
+        <translation>Wiedergabelisten auswählen</translation>
     </message>
     <message>
         <source>Queue</source>
@@ -347,7 +343,7 @@
     </message>
     <message>
         <source>Select Image</source>
-        <translation>Wähle Bild</translation>
+        <translation>Bild wählen</translation>
     </message>
     <message>
         <source>Maintainer</source>
