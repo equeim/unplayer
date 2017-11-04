@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation>Einfacher Musikabspieler für Sailfish OS</translation>
+        <translation>Einfache Musikwiedergabe für Sailfish OS</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -34,7 +34,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation>Suche</translation>
+        <translation>Suchen</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Home directory</source>
-        <translation>Start-Verzeichnis</translation>
+        <translation>Basisordner</translation>
     </message>
     <message>
         <source>No files</source>
@@ -150,11 +150,11 @@
         </translation></message>
     <message>
         <source>Select genres</source>
-        <translation>Wähle Genres</translation>
+        <translation>Genre wählen</translation>
     </message>
     <message>
         <source>No genres</source>
-        <translation>Keine Genres</translation>
+        <translation>Keine Genre</translation>
     </message>
     <message>
         <source>License</source>
@@ -212,7 +212,7 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Entfernen der Wiedergabeliste</translation>
+        <translation>Wiedergabeliste entfernen</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
@@ -221,7 +221,7 @@
         </translation></message>
     <message>
         <source>Remove</source>
-        <translation>Entferne</translation>
+        <translation>Entfernen</translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
@@ -275,15 +275,15 @@
     </message>
     <message>
         <source>File path</source>
-        <translation>Datei-Pfad</translation>
+        <translation>Dateipfad</translation>
     </message>
     <message>
         <source>File size</source>
-        <translation>Datei-Größe</translation>
+        <translation>Dateigröße</translation>
     </message>
     <message>
         <source>MIME type</source>
-        <translation>MIME Typ</translation>
+        <translation>MIME-Typ</translation>
     </message>
     <message>
         <source>Duration</source>
@@ -335,7 +335,7 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation>Quell-Code</translation>
+        <translation>Quellcode</translation>
     </message>
     <message>
         <source>Authors</source>
@@ -343,7 +343,7 @@
     </message>
     <message>
         <source>Select Image</source>
-        <translation>Bild wählen</translation>
+        <translation>Grafik wählen</translation>
     </message>
     <message>
         <source>Maintainer</source>
@@ -360,11 +360,11 @@
         </translation></message>
     <message>
         <source>Set as default directory</source>
-        <translation>Als Ausgangs-Verzeichnis festlegen</translation>
+        <translation>Als Standardverzeichnis festlegen</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation>Ausgangsverzeichnis</translation>
+        <translation>Standardverzeichnis</translation>
     </message>
     <message>
         <source>Select files</source>
@@ -372,24 +372,24 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform>%n Verzeichniss ausgewählt</numerusform>
-        <numerusform>%n Verzeichnisse ausgewählt</numerusform>
+        <translation><numerusform>%n Ordner ausgewählt</numerusform>
+        <numerusform>%n Ordner ausgewählt</numerusform>
         </translation></message>
     <message>
         <source>Library Directories</source>
-        <translation>Sammlung Ordner</translation>
+        <translation>Bibliotheksverzeichnisse</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>Wähle</translation>
+        <translation>Wählen</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Füge Ordner hinzu ...</translation>
+        <translation>Ordner hinzufügen …</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation>Wähle Ordner</translation>
+        <translation>Ordner wählen</translation>
     </message>
     <message>
         <source>No directories</source>
@@ -397,15 +397,15 @@
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Sammlung zurücksetzen</translation>
+        <translation>Bibliothek zurücksetzen</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Sammlung aktualisieren</translation>
+        <translation>Bibliothek aktualisieren</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation>Sammlung</translation>
+        <translation>Bibliothek</translation>
     </message>
     <message>
         <source>%1, %2</source>
@@ -413,7 +413,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>Sammlung wird aktualisiert ...</translation>
+        <translation>Bibliothek wird aktualisiert …</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -421,7 +421,7 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation>Fehler Initialisierung Datenbank</translation>
+        <translation>Fehler beim Initialisieren der Datenbank</translation>
     </message>
     <message>
         <source>No selected directories</source>
@@ -429,15 +429,15 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation>Aktualisiert ...</translation>
+        <translation>Wird aktualisiert …</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation>Leere Warteschlange</translation>
+        <translation>Warteschlange leeren</translation>
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation>Sammlung beim Start öffnen</translation>
+        <translation>Bibliothek beim Start öffnen</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
@@ -453,7 +453,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Album-Cover als seperate Datei in Musikdateiverzeichnis bevorzugen statt aus Musikdatei zu extrahieren</translation>
+        <translation>Coverbilder bevorzugen, die als separate Datei im Verzeichnis der Musikdateien gespeichert werden, anstatt diese aus der Musikdatei zu extrahieren.</translation>
     </message>
     <message>
         <source>Player</source>
@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Album title</source>
-        <translation>Album-Titel</translation>
+        <translation>Albumtitel</translation>
     </message>
     <message>
         <source>Album year</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation>Interpret - Album Titel</translation>
+        <translation>Interpret - Albumtitel</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
