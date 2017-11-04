@@ -59,7 +59,7 @@
         </translation></message>
     <message>
         <source>Select tracks</source>
-        <translation>Wähle Titel</translation>
+        <translation>Titel auswählen</translation>
     </message>
     <message>
         <source>Unknown album</source>
