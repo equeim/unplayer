@@ -141,7 +141,7 @@
         </translation></message>
     <message>
         <source>Genres</source>
-        <translation>Genres</translation>
+        <translation>Genre</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
