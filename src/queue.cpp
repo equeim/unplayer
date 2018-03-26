@@ -44,6 +44,18 @@ namespace unplayer
         const QString dbConnectionName(QLatin1String("unplayer_queue"));
     }
 
+    namespace
+    {
+        void seedPRNG(void)
+        {
+            static bool didSeedPRNG = false;
+            if (!didSeedPRNG) {
+                qsrand(QTime::currentTime().msec());
+                didSeedPRNG = true;
+            }
+        }
+    }
+
     QueueTrack::QueueTrack(const QString& filePath,
                            const QString& title,
                            int duration,
@@ -68,6 +80,7 @@ namespace unplayer
           mRepeatMode(NoRepeat),
           mAddingTracks(false)
     {
+        seedPRNG();
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
             QSqlDatabase::database().transaction();
             for (const std::shared_ptr<QueueTrack>& track : mTracks) {
