@@ -34,7 +34,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation></translation>
+        <translation>Zoeken</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -413,7 +413,7 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation></translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <source>Error initializing database</source>
