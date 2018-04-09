@@ -5,32 +5,32 @@
     <name>unplayer</name>
     <message>
         <source>About</source>
-        <translation></translation>
+        <translation>Over</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation></translation>
+        <translation>Eenvoudige muziekspeler voor Sailfish OS</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation></translation>
+        <translation>Vertalingen</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation></translation>
+        <translation>Vertalers</translation>
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation></translation>
+        <translation>Toevoegen aan speellijst</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
     <message>
         <source>New playlist...</source>
-        <translation></translation>
+        <translation>Nieuwe speellijst...</translation>
     </message>
     <message>
         <source>Search</source>
@@ -38,36 +38,36 @@
     </message>
     <message>
         <source>No playlists</source>
-        <translation></translation>
+        <translation>Geen speellijsten</translation>
     </message>
     <message>
         <source>Add to queue</source>
-        <translation></translation>
+        <translation>Toevoegen aan wachtrij</translation>
     </message>
     <message>
         <source>Set cover image</source>
-        <translation></translation>
+        <translation>Albumhoes instellen</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation></translation>
+        <translation>Geen nummers</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer geselecteerd</numerusform>
+        <numerusform>%n nummers geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Select tracks</source>
-        <translation></translation>
+        <translation>Selecteer nummers</translation>
     </message>
     <message>
         <source>Unknown album</source>
-        <translation></translation>
+        <translation>Onbekend album</translation>
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation></translation>
+        <translation>Onbekende artiest</translation>
     </message>
     <message>
         <source>Albums</source>
@@ -75,67 +75,67 @@
     </message>
     <message>
         <source>No albums</source>
-        <translation></translation>
+        <translation>Geen albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n album geselecteerd</numerusform>
+        <numerusform>%n albums geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Select albums</source>
-        <translation></translation>
+        <translation>Selecteer albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n album</numerusform>
+        <numerusform>%n albums</numerusform>
         </translation></message>
     <message>
         <source>Artists</source>
-        <translation></translation>
+        <translation>Artiesten</translation>
     </message>
     <message>
         <source>No artists</source>
-        <translation></translation>
+        <translation>Geen artiesten</translation>
     </message>
     <message>
         <source>All tracks</source>
-        <translation></translation>
+        <translation>Alle nummers</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n artiest geselecteerd</numerusform>
+        <numerusform>%n artiesten geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Select artists</source>
-        <translation></translation>
+        <translation>Selecteer artiesten</translation>
     </message>
     <message>
         <source>Directories</source>
-        <translation></translation>
+        <translation>Mappen</translation>
     </message>
     <message>
         <source>Track information</source>
-        <translation></translation>
+        <translation>Nummerinformatie</translation>
     </message>
     <message>
         <source>SD card</source>
-        <translation></translation>
+        <translation>SD-kaart</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation></translation>
+        <translation>Thuismap</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation></translation>
+        <translation>Geen bestanden</translation>
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n genre geselecteerd</numerusform>
+        <numerusform>%n genres geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Genres</source>
@@ -143,119 +143,119 @@
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer, %1</numerusform>
+        <numerusform>%n nummers, %1</numerusform>
         </translation></message>
     <message>
         <source>Select genres</source>
-        <translation></translation>
+        <translation>Selecteer genres</translation>
     </message>
     <message>
         <source>No genres</source>
-        <translation></translation>
+        <translation>Geen genres</translation>
     </message>
     <message>
         <source>License</source>
-        <translation></translation>
+        <translation>Licentie</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n artiest</numerusform>
+        <numerusform>%n artiesten</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n album</numerusform>
+        <numerusform>%n albums</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer</numerusform>
+        <numerusform>%n nummers</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n speellijst</numerusform>
+        <numerusform>%n speellijsten</numerusform>
         </translation></message>
     <message>
         <source>Tracks</source>
-        <translation></translation>
+        <translation>Nummers</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation></translation>
+        <translation>Speellijsten</translation>
     </message>
     <message>
         <source>Add playlist</source>
-        <translation></translation>
+        <translation>Speellijst toevoegen</translation>
     </message>
     <message>
         <source>Playlist name</source>
-        <translation></translation>
+        <translation>Speellijstnaam</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
-        <translation></translation>
+        <translation>Verwijderen uit speellijst</translation>
     </message>
     <message>
         <source>Removing</source>
-        <translation></translation>
+        <translation>Bezig met verwijderen</translation>
     </message>
     <message>
         <source>Remove playlist</source>
-        <translation></translation>
+        <translation>Speellijst verwijderen</translation>
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation></translation>
+        <translation>Bezig met verwijderen van speellijst</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n nummer verwijderen</numerusform>
+        <numerusform>%n nummers verwijderen</numerusform>
         </translation></message>
     <message>
         <source>Remove</source>
-        <translation></translation>
+        <translation>Verwijderen</translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n speellijst geselecteerd</numerusform>
+        <numerusform>%n speellijsten geselecteerd</numerusform>
         </translation></message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n speellijst verwijderen</numerusform>
+        <numerusform>%n speellijsten verwijderen</numerusform>
         </translation></message>
     <message>
         <source>Select playlists</source>
-        <translation></translation>
+        <translation>Selecteer speellijsten</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation></translation>
+        <translation>Wachtrij</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation></translation>
+        <translation>Wissen</translation>
     </message>
     <message>
         <source>All</source>
-        <translation></translation>
+        <translation>Alles</translation>
     </message>
     <message>
         <source>None</source>
-        <translation></translation>
+        <translation>Geen</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation></translation>
+        <translation>Titel</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation></translation>
+        <translation>Artiest</translation>
     </message>
     <message>
         <source>Album</source>
@@ -263,7 +263,7 @@
     </message>
     <message>
         <source>Track number</source>
-        <translation></translation>
+        <translation>Tracknummer</translation>
     </message>
     <message>
         <source>Genre</source>
@@ -271,23 +271,23 @@
     </message>
     <message>
         <source>File path</source>
-        <translation></translation>
+        <translation>Bestandspad</translation>
     </message>
     <message>
         <source>File size</source>
-        <translation></translation>
+        <translation>Bestandsgrootte</translation>
     </message>
     <message>
         <source>MIME type</source>
-        <translation></translation>
+        <translation>MIME-type</translation>
     </message>
     <message>
         <source>Duration</source>
-        <translation></translation>
+        <translation>Duur</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation></translation>
+        <translation>Bitsnelheid</translation>
     </message>
     <message>
         <source>%1 s</source>
@@ -331,19 +331,19 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation></translation>
+        <translation>Broncode</translation>
     </message>
     <message>
         <source>Authors</source>
-        <translation></translation>
+        <translation>Auteurs</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation></translation>
+        <translation>Selecteer afbeelding</translation>
     </message>
     <message>
         <source>Maintainer</source>
-        <translation></translation>
+        <translation>Beheerder</translation>
     </message>
     <message>
         <source>%1 - %2</source>
@@ -351,57 +351,57 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n bestand geselecteerd</numerusform>
+        <numerusform>%n bestanden geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Set as default directory</source>
-        <translation></translation>
+        <translation>Instellen als standaardmap</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation></translation>
+        <translation>Standaardmap</translation>
     </message>
     <message>
         <source>Select files</source>
-        <translation></translation>
+        <translation>Selecteer bestanden</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform></numerusform>
-        <numerusform></numerusform>
+        <translation><numerusform>%n map geselecteerd</numerusform>
+        <numerusform>%n mappen geselecteerd</numerusform>
         </translation></message>
     <message>
         <source>Library Directories</source>
-        <translation></translation>
+        <translation>Bibliotheekmappen</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation></translation>
+        <translation>Selecteren</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation></translation>
+        <translation>Map toevoegen...</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation></translation>
+        <translation>Map toevoegen</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation></translation>
+        <translation>Geen mappen</translation>
     </message>
     <message>
         <source>Reset Library</source>
-        <translation></translation>
+        <translation>Bibliotheek opnieuw instellen</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation></translation>
+        <translation>Bibliotheek bijwerken</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation></translation>
+        <translation>Bibliotheek</translation>
     </message>
     <message>
         <source>%1, %2</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation></translation>
+        <translation>Bibliotheek wordt bijgewerkt...</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -417,23 +417,23 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation></translation>
+        <translation>Database kan niet worden geïnitialiseerd</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation></translation>
+        <translation>Geen mappen geselecteerd</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation></translation>
+        <translation>Wordt bijgewerkt...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation></translation>
+        <translation>Wachtrij wissen</translation>
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation></translation>
+        <translation>Bibliotheek openen bij opstarten</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
@@ -441,7 +441,7 @@
     </message>
     <message>
         <source>%1 h %2 m</source>
-        <translation></translation>
+        <translation>%1 u %2 m</translation>
     </message>
     <message>
         <source>%1 m %2 s</source>
@@ -449,67 +449,67 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation></translation>
+        <translation>Verkies albumhoezen als apart bestand in muziekmap in plaats van geëxtraheerd uit muziekbestand</translation>
     </message>
     <message>
         <source>Player</source>
-        <translation></translation>
+        <translation>Speler</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation></translation>
+        <translation>Herstel afspeelstatus bij opstarten van toepassing</translation>
     </message>
     <message>
         <source>Sort</source>
-        <translation></translation>
+        <translation>Sorteren</translation>
     </message>
     <message>
         <source>Order</source>
-        <translation></translation>
+        <translation>Volgorde</translation>
     </message>
     <message>
         <source>Ascending</source>
-        <translation></translation>
+        <translation>Oplopend</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation></translation>
+        <translation>Aflopend</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation></translation>
+        <translation>Albumnaam</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation></translation>
+        <translation>Jaar van uitgave</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
-        <translation></translation>
+        <translation>Artiest - albumnaam</translation>
     </message>
     <message>
         <source>Artist - Album year</source>
-        <translation></translation>
+        <translation>Artiest - jaar van uitgave</translation>
     </message>
     <message>
         <source>Added date</source>
-        <translation></translation>
+        <translation>Datum toegevoegd</translation>
     </message>
     <message>
         <source>Inside Album</source>
-        <translation></translation>
+        <translation>In album</translation>
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation></translation>
+        <translation>Aflopend sorteren</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation></translation>
+        <translation>Oplopend sorteren</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation></translation>
+        <translation>Jaar</translation>
     </message>
 </context>
 </TS>
