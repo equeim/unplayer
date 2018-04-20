@@ -59,7 +59,7 @@
         </translation></message>
     <message>
         <source>Select tracks</source>
-        <translation>Selecteer nummers</translation>
+        <translation>Selecteerd nummers</translation>
     </message>
     <message>
         <source>Unknown album</source>
@@ -67,7 +67,7 @@
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation>Onbekende artiest</translation>
+        <translation>Onbekenden artiest</translation>
     </message>
     <message>
         <source>Albums</source>
@@ -84,7 +84,7 @@
         </translation></message>
     <message>
         <source>Select albums</source>
-        <translation>Selecteer albums</translation>
+        <translation>Selecteerd albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
@@ -110,7 +110,7 @@
         </translation></message>
     <message>
         <source>Select artists</source>
-        <translation>Selecteer artiesten</translation>
+        <translation>Selecteerd artiesten</translation>
     </message>
     <message>
         <source>Directories</source>
@@ -148,7 +148,7 @@
         </translation></message>
     <message>
         <source>Select genres</source>
-        <translation>Selecteer genres</translation>
+        <translation>Selecteerd genres</translation>
     </message>
     <message>
         <source>No genres</source>
@@ -200,7 +200,7 @@
     </message>
     <message>
         <source>Removing</source>
-        <translation>Bezig met verwijderen</translation>
+        <translation>Wordt verwijderd</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -208,7 +208,7 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Bezig met verwijderen van speellijst</translation>
+        <translation>Speellijst wordt verwijderd</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
@@ -231,7 +231,7 @@
         </translation></message>
     <message>
         <source>Select playlists</source>
-        <translation>Selecteer speellijsten</translation>
+        <translation>Selecteerd speellijsten</translation>
     </message>
     <message>
         <source>Queue</source>
@@ -339,7 +339,7 @@
     </message>
     <message>
         <source>Select Image</source>
-        <translation>Selecteer afbeelding</translation>
+        <translation>Selecteerd een afbeelding</translation>
     </message>
     <message>
         <source>Maintainer</source>
@@ -364,7 +364,7 @@
     </message>
     <message>
         <source>Select files</source>
-        <translation>Selecteer bestanden</translation>
+        <translation>Selecteerd bestanden</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>Bibliotheek wordt bijgewerkt...</translation>
+        <translation>Bibliotheek word bijgewerkt…</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -425,7 +425,7 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation>Wordt bijgewerkt...</translation>
+        <translation>Word bijgewerkt…</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Verkies albumhoezen als apart bestand in muziekmap in plaats van geëxtraheerd uit muziekbestand</translation>
+        <translation>Verkiesd albumhoezen als apart bestand in muziekmap in plek van geëxtraheerd uit muziekbestand</translation>
     </message>
     <message>
         <source>Player</source>
@@ -457,7 +457,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Herstel afspeelstatus bij opstarten van toepassing</translation>
+        <translation>Hersteld afspeelstatus bij opstarten van toepassing</translation>
     </message>
     <message>
         <source>Sort</source>
