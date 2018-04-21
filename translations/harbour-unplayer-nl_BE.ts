@@ -200,7 +200,7 @@
     </message>
     <message>
         <source>Removing</source>
-        <translation>Wordt verwijderd</translation>
+        <translation>Word verwijderd</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -208,7 +208,7 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Speellijst wordt verwijderd</translation>
+        <translation>Speellijst word verwijderd</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
