@@ -25,7 +25,7 @@
 
 namespace unplayer
 {
-    class Utils : public QObject
+    class Utils final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QString homeDirectory READ homeDirectory)

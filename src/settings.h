@@ -25,7 +25,7 @@ class QSettings;
 
 namespace unplayer
 {
-    class Settings : public QObject
+    class Settings final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(bool hasLibraryDirectories READ hasLibraryDirectories NOTIFY libraryDirectoriesChanged)

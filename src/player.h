@@ -25,7 +25,7 @@ namespace unplayer
 {
     class Queue;
 
-    class Player : public QMediaPlayer
+    class Player final : public QMediaPlayer
     {
         Q_OBJECT
         Q_PROPERTY(bool playing READ isPlaying NOTIFY playingChanged)

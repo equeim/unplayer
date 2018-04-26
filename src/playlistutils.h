@@ -35,7 +35,7 @@ namespace unplayer
         bool inLibrary;
     };
 
-    class PlaylistUtils : public QObject
+    class PlaylistUtils final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)

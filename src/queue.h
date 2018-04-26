@@ -48,7 +48,7 @@ namespace unplayer
         QPixmap mediaArtPixmap;
     };
 
-    class Queue : public QObject
+    class Queue final : public QObject
     {
         Q_OBJECT
 
@@ -138,7 +138,7 @@ namespace unplayer
         void addingTracksChanged();
     };
 
-    class QueueImageProvider : public QQuickImageProvider
+    class QueueImageProvider final : public QQuickImageProvider
     {
     public:
         static const QString providerId;

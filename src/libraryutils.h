@@ -50,7 +50,7 @@ namespace unplayer
 
     MimeType mimeTypeFromString(const QString& string);
 
-    class LibraryUtils : public QObject
+    class LibraryUtils final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)

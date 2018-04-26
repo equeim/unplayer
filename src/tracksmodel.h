@@ -24,7 +24,7 @@
 
 namespace unplayer
 {
-    class TracksModelSortMode : public QObject
+    class TracksModelSortMode final : public QObject
     {
         Q_OBJECT
         Q_ENUMS(Mode)
@@ -38,7 +38,7 @@ namespace unplayer
         };
     };
 
-    class TracksModelInsideAlbumSortMode : public QObject
+    class TracksModelInsideAlbumSortMode final : public QObject
     {
         Q_OBJECT
         Q_ENUMS(Mode)
