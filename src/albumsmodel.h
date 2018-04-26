@@ -55,7 +55,6 @@ namespace unplayer
             SortArtistYear
         };
 
-        AlbumsModel();
         ~AlbumsModel() override;
         void componentComplete() override;
 
@@ -83,11 +82,11 @@ namespace unplayer
     private:
         void setQuery();
 
-        bool mAllArtists;
+        bool mAllArtists = true;
         QString mArtist;
 
-        bool mSortDescending;
-        SortMode mSortMode;
+        bool mSortDescending = false;
+        SortMode mSortMode = SortAlbum;
 
     signals:
         void allArtistsChanged();

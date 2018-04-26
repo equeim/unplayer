@@ -60,13 +60,13 @@ namespace unplayer
         QString mTitle;
         QString mArtist;
         QString mAlbum;
-        int mYear;
-        int mTrackNumber;
+        int mYear = 0;
+        int mTrackNumber = 0;
         QString mGenre;
-        int mFileSize;
+        int mFileSize = 0;
         QString mMimeType;
-        int mDuration;
-        int mBitrate;
+        int mDuration = 0;
+        int mBitrate = 0;
     };
 }
 

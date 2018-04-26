@@ -182,6 +182,8 @@ namespace unplayer
     }
 
     DirectoryTracksProxyModel::DirectoryTracksProxyModel()
+        : mDirectoriesCount(0),
+          mTracksCount(0)
     {
         setFilterRole(DirectoryTracksModel::FileNameRole);
         setSortEnabled(true);

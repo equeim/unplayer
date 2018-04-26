@@ -35,7 +35,7 @@ namespace unplayer
         bool lessThan(const QModelIndex& left, const QModelIndex& right) const override;
 
     private:
-        int mIsDirectoryRole;
+        int mIsDirectoryRole = 0;
     };
 }
 

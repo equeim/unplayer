@@ -39,12 +39,6 @@ namespace unplayer
         };
     }
 
-    AlbumsModel::AlbumsModel()
-        : mAllArtists(true)
-    {
-
-    }
-
     AlbumsModel::~AlbumsModel()
     {
         if (mAllArtists) {
