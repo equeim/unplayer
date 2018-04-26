@@ -50,7 +50,6 @@ namespace unplayer
             IsPlaylistRole,
         };
 
-        DirectoryTracksModel();
         void classBegin() override;
         void componentComplete() override;
 
@@ -79,7 +78,7 @@ namespace unplayer
         QVector<DirectoryTrackFile> mFiles;
 
         QString mDirectory;
-        bool mLoaded;
+        bool mLoaded = false;
     signals:
         void directoryChanged();
         void loadedChanged();

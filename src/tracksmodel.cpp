@@ -40,16 +40,6 @@ namespace unplayer
         };
     }
 
-    TracksModel::TracksModel()
-        : mAllArtists(true),
-          mAllAlbums(true),
-          mSortDescending(false),
-          mSortMode(SortMode::ArtistAlbumYear),
-          mInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber)
-    {
-
-    }
-
     TracksModel::~TracksModel()
     {
         if (mAllArtists) {

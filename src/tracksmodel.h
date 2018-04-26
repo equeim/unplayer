@@ -77,7 +77,6 @@ namespace unplayer
         using SortMode = TracksModelSortMode::Mode;
         using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;
 
-        TracksModel();
         ~TracksModel() override;
         void componentComplete() override;
 
@@ -115,15 +114,15 @@ namespace unplayer
     private:
         void setQuery();
 
-        bool mAllArtists;
-        bool mAllAlbums;
+        bool mAllArtists = true;
+        bool mAllAlbums = true;
         QString mArtist;
         QString mAlbum;
         QString mGenre;
 
-        bool mSortDescending;
-        SortMode mSortMode;
-        InsideAlbumSortMode mInsideAlbumSortMode;
+        bool mSortDescending = false;
+        SortMode mSortMode = SortMode::ArtistAlbumYear;
+        InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::TrackNumber;
 
     signals:
         void sortModeChanged();

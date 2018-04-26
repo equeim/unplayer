@@ -32,11 +32,6 @@
 
 namespace unplayer
 {
-    DirectoryTracksModel::DirectoryTracksModel()
-        : mLoaded(false)
-    {
-    }
-
     void DirectoryTracksModel::classBegin()
     {
     }
