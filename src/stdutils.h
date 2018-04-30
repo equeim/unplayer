@@ -20,6 +20,8 @@
 #define UNPLAYER_STDUTILS_H
 
 #include <functional>
+#include <memory>
+
 #include <QHash>
 #include <QString>
 
@@ -46,19 +48,24 @@ namespace std {
 
 namespace unplayer
 {
-    template<class T>
-    inline bool contains(const T& container, const typename T::value_type& value) {
+    template<class C, class V>
+    inline bool contains(const C& container, const V& value) {
         return std::find(container.cbegin(), container.cend(), value) != container.cend();
     }
 
-    template<class T>
-    inline typename T::difference_type index_of(const T& container, const typename T::value_type& value) {
+    template<class C, class V>
+    inline typename C::difference_type index_of(const C& container, const V& value) {
         return std::find(container.cbegin(), container.cend(), value) - container.cbegin();
     }
 
-    template<class T>
-    inline void erase_one(T& container, const typename T::value_type& value) {
+    template<class C, class V>
+    inline void erase_one(C& container, const V& value) {
         container.erase(std::find(container.begin(), container.end(), value));
+    }
+
+    template<class T>
+    inline bool operator==(const std::shared_ptr<T>& shared, const T* raw) {
+        return shared.get() == raw;
     }
 }
 

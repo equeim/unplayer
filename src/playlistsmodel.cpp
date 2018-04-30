@@ -103,7 +103,7 @@ namespace unplayer
         using FutureWatcher = QFutureWatcher<std::vector<PlaylistsModelItem>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const std::vector<PlaylistsModelItem> playlists(watcher->result());
+            std::vector<PlaylistsModelItem> playlists(watcher->result());
 
             for (int i = 0, max = mPlaylists.size(); i < max; ++i) {
                 if (!contains(playlists, mPlaylists[i])) {
@@ -115,14 +115,14 @@ namespace unplayer
                 }
             }
 
-            for (const PlaylistsModelItem& playlist : playlists) {
-                const auto found(std::find(mPlaylists.begin(), mPlaylists.end(), playlist));
+            for (PlaylistsModelItem& playlist : playlists) {
+                auto found(std::find(mPlaylists.begin(), mPlaylists.end(), playlist));
                 if (found == mPlaylists.cend()) {
                     beginInsertRows(QModelIndex(), mPlaylists.size(), mPlaylists.size());
-                    mPlaylists.push_back(playlist);
+                    mPlaylists.push_back(std::move(playlist));
                     endInsertRows();
                 } else {
-                    *found = playlist;
+                    *found = std::move(playlist);
                 }
             }
 

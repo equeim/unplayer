@@ -39,9 +39,9 @@ namespace unplayer
 
         const QFileInfo fileInfo(mFilePath);
 
-        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mMimeType));
+        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mMimeType));
 
-        mTitle = info.title;
+        mTitle = std::move(info.title);
         mArtist = info.artists.join(QLatin1String(", "));
         mAlbum = info.albums.join(QLatin1String(", "));
         mYear = info.year;

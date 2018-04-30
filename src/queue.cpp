@@ -208,7 +208,7 @@ namespace unplayer
         addTracks({track});
     }
 
-    void Queue::addTracks(const QStringList& trackPaths, bool clearQueue, int setAsCurrent)
+    void Queue::addTracks(QStringList trackPaths, bool clearQueue, int setAsCurrent)
     {
         if (mAddingTracks) {
             return;
@@ -221,26 +221,24 @@ namespace unplayer
         mAddingTracks = true;
         emit addingTracksChanged();
 
-        const std::vector<std::shared_ptr<QueueTrack>> oldTracks(mTracks);
-
         if (clearQueue) {
             clear();
         }
 
-        auto future = QtConcurrent::run([trackPaths, oldTracks]() {
+        // FIXME: use proper move capture on C++14
+        auto future = QtConcurrent::run(std::bind([this](QStringList& trackPaths) {
             std::vector<std::shared_ptr<QueueTrack>> tracks;
 
             const QMimeDatabase mimeDb;
 
-            QStringList newTrackPaths(trackPaths);
-            for (int i = 0, max = newTrackPaths.size(); i < max; ++i) {
-                const QString filePath(newTrackPaths.at(i));
+            for (int i = 0, max = trackPaths.size(); i < max; ++i) {
+                const QString filePath(trackPaths[i]);
                 if (contains(PlaylistUtils::playlistsMimeTypes, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
-                    newTrackPaths.removeAt(i);
+                    trackPaths.removeAt(i);
                     const QStringList playlistTracks(PlaylistUtils::getPlaylistTracks(filePath));
                     int trackIndex = i;
                     for (const QString& playlistTrack : playlistTracks) {
-                        newTrackPaths.insert(trackIndex, playlistTrack);
+                        trackPaths.insert(trackIndex, playlistTrack);
                         ++trackIndex;
                     }
                     i += playlistTracks.size() - 1;
@@ -261,11 +259,11 @@ namespace unplayer
 
                 const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
-                for (const QString& filePath : const_cast<const QStringList&>(newTrackPaths)) {
+                for (const QString& filePath : const_cast<const QStringList&>(trackPaths)) {
                     bool found = false;
-                    for (const std::shared_ptr<QueueTrack>& track : oldTracks) {
+                    for (auto& track : std::vector<std::shared_ptr<QueueTrack>>(mTracks)) {
                         if (track->filePath == filePath) {
-                            tracks.push_back(track);
+                            tracks.push_back(std::move(track));
                             found = true;
                             break;
                         }
@@ -320,10 +318,10 @@ namespace unplayer
                     }
 
                     if (getTags) {
-                        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()));
-                        title = info.title;
-                        artists = info.artists;
-                        albums = info.albums;
+                        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()));
+                        title = std::move(info.title);
+                        artists = std::move(info.artists);
+                        albums = std::move(info.albums);
                         duration = info.duration;
                         if (useDirectoryMediaArt) {
                             mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
@@ -334,7 +332,7 @@ namespace unplayer
                             if (info.mediaArtData.isEmpty()) {
                                 mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
                             } else {
-                                mediaArtData = info.mediaArtData;
+                                mediaArtData = std::move(info.mediaArtData);
                             }
                         }
                     }
@@ -353,13 +351,13 @@ namespace unplayer
                         album = albums.join(QLatin1String(", "));
                     }
 
-                    tracks.push_back(std::make_shared<QueueTrack>(filePath,
-                                                                  title,
+                    tracks.push_back(std::make_shared<QueueTrack>(std::move(filePath),
+                                                                  std::move(title),
                                                                   duration,
-                                                                  artist,
-                                                                  album,
-                                                                  mediaArtFilePath,
-                                                                  mediaArtData));
+                                                                  std::move(artist),
+                                                                  std::move(album),
+                                                                  std::move(mediaArtFilePath),
+                                                                  std::move(mediaArtData)));
                 }
 
                 db.commit();
@@ -367,17 +365,17 @@ namespace unplayer
             QSqlDatabase::removeDatabase(dbConnectionName);
 
             return tracks;
-        });
+        }, std::move(trackPaths)));
 
         using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const auto tracks = watcher->result();
+            auto tracks(watcher->result());
 
             emit tracksAboutToBeAdded(tracks.size());
-            for (const auto& track : tracks) {
-                mTracks.push_back(track);
-                mNotPlayedTracks.push_back(track);
+            for (auto& track : tracks) {
+                mNotPlayedTracks.push_back(track.get());
+                mTracks.push_back(std::move(track));
             }
             emit tracksAdded();
 
@@ -402,7 +400,7 @@ namespace unplayer
 
         emit trackAboutToBeRemoved(index);
 
-        erase_one(mNotPlayedTracks, mTracks[index]);
+        erase_one(mNotPlayedTracks, mTracks[index].get());
         mTracks.erase(mTracks.begin() + index);
 
         emit trackRemoved();
@@ -426,7 +424,7 @@ namespace unplayer
         std::reverse(indexes.begin(), indexes.end());
         for (int index : indexes) {
             emit trackAboutToBeRemoved(index);
-            erase_one(mNotPlayedTracks, mTracks[index]);
+            erase_one(mNotPlayedTracks, mTracks[index].get());
             mTracks.erase(mTracks.begin() + index);
             emit trackRemoved();
         }
@@ -457,7 +455,7 @@ namespace unplayer
             if (mNotPlayedTracks.size() == 1) {
                 resetNotPlayedTracks();
             }
-            erase_one(mNotPlayedTracks, mTracks[mCurrentIndex]);
+            erase_one(mNotPlayedTracks, mTracks[mCurrentIndex].get());
             mTracks.erase(mTracks.begin() + mCurrentIndex);
             setCurrentIndex(index_of(mTracks, mNotPlayedTracks[qrand() % mNotPlayedTracks.size()]));
         } else {
@@ -480,11 +478,11 @@ namespace unplayer
 
         if (mShuffle) {
             const std::shared_ptr<QueueTrack>& track = mTracks[mCurrentIndex];
-            erase_one(mNotPlayedTracks, track);
+            erase_one(mNotPlayedTracks, track.get());
             if (mNotPlayedTracks.size() == 0) {
                 if (mRepeatMode == RepeatAll) {
                     resetNotPlayedTracks();
-                    erase_one(mNotPlayedTracks, track);
+                    erase_one(mNotPlayedTracks, track.get());
                 } else {
                     return;
                 }
@@ -530,7 +528,11 @@ namespace unplayer
 
     void Queue::resetNotPlayedTracks()
     {
-        mNotPlayedTracks = mTracks;
+        mNotPlayedTracks.clear();
+        mNotPlayedTracks.reserve(mTracks.size());
+        for (const auto& track : mTracks) {
+            mNotPlayedTracks.push_back(track.get());
+        }
     }
 
     void Queue::reset()

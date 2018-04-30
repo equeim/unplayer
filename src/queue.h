@@ -98,7 +98,7 @@ namespace unplayer
         bool isAddingTracks() const;
 
         Q_INVOKABLE void addTrack(const QString& track);
-        Q_INVOKABLE void addTracks(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTracks(QStringList trackPaths, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void removeTrack(int index);
         Q_INVOKABLE void removeTracks(std::vector<int> indexes);
         Q_INVOKABLE void clear();
@@ -115,7 +115,7 @@ namespace unplayer
 
     private:
         std::vector<std::shared_ptr<QueueTrack>> mTracks;
-        std::vector<std::shared_ptr<QueueTrack>> mNotPlayedTracks;
+        std::vector<const QueueTrack*> mNotPlayedTracks;
 
         int mCurrentIndex;
         bool mShuffle;

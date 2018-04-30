@@ -500,7 +500,7 @@ namespace unplayer
                         }
 
                         {
-                            const QString directoryPath(fileInfo.path());
+                            QString directoryPath(fileInfo.path());
 
                             const auto found(noMediaDirectories.find(directoryPath));
                             if (found != noMediaDirectories.cend()) {
@@ -509,10 +509,10 @@ namespace unplayer
                                 }
                             } else {
                                 if (QFileInfo(QDir(directoryPath).filePath(QLatin1String(".nomedia"))).isFile()) {
-                                    noMediaDirectories.insert({directoryPath, true});
+                                    noMediaDirectories.insert({std::move(directoryPath), true});
                                     continue;
                                 } else {
-                                    noMediaDirectories.insert({directoryPath, false});
+                                    noMediaDirectories.insert({std::move(directoryPath), false});
                                 }
                             }
                         }
@@ -821,7 +821,7 @@ namespace unplayer
 
     QString LibraryUtils::saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtHash)
     {
-        const QByteArray md5(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex());
+        QByteArray md5(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex());
         {
             const auto found(embeddedMediaArtHash.find(md5));
             if (found != embeddedMediaArtHash.end()) {
@@ -839,7 +839,7 @@ namespace unplayer
         QFile file(filePath);
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(data);
-            embeddedMediaArtHash.insert({md5, filePath});
+            embeddedMediaArtHash.insert({std::move(md5), filePath});
             return filePath;
         }
 
