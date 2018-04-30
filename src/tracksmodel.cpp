@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,16 +38,6 @@ namespace unplayer
             AlbumField,
             DurationField
         };
-    }
-
-    TracksModel::TracksModel()
-        : mAllArtists(true),
-          mAllAlbums(true),
-          mSortDescending(false),
-          mSortMode(SortMode::ArtistAlbumYear),
-          mInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber)
-    {
-
     }
 
     TracksModel::~TracksModel()
@@ -210,7 +200,7 @@ namespace unplayer
         }
     }
 
-    QStringList TracksModel::getTracks(const QVector<int>& indexes)
+    QStringList TracksModel::getTracks(const std::vector<int>& indexes)
     {
         QStringList tracks;
         tracks.reserve(indexes.size());

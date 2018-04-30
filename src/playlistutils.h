@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 #ifndef UNPLAYER_PLAYLISTUTILS_H
 #define UNPLAYER_PLAYLISTUTILS_H
 
+#include <memory>
+#include <vector>
+
 #include <QObject>
 #include <QStringList>
 
@@ -35,26 +38,26 @@ namespace unplayer
         bool inLibrary;
     };
 
-    class PlaylistUtils : public QObject
+    class PlaylistUtils final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
         static const QStringList playlistsNameFilters;
-        static const QVector<QString> playlistsMimeTypes;
+        static const std::vector<QString> playlistsMimeTypes;
 
         static PlaylistUtils* instance();
 
         const QString& playlistsDirectoryPath();
         int playlistsCount();
 
-        void savePlaylist(const QString& filePath, const QList<PlaylistTrack>& tracks);
+        void savePlaylist(const QString& filePath, const std::vector<PlaylistTrack>& tracks);
         Q_INVOKABLE void newPlaylist(const QString& name, const QStringList& trackPaths);
         Q_INVOKABLE void addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths);
         Q_INVOKABLE void removePlaylist(const QString& filePath);
         void removePlaylists(const QStringList& playlists);
 
-        static QList<PlaylistTrack> parsePlaylist(const QString& filePath);
+        static std::vector<PlaylistTrack> parsePlaylist(const QString& filePath);
         static int getPlaylistTracksCount(const QString& filePath);
         Q_INVOKABLE static QStringList getPlaylistTracks(const QString& filePath);
     private:

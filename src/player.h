@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ namespace unplayer
 {
     class Queue;
 
-    class Player : public QMediaPlayer
+    class Player final : public QMediaPlayer
     {
         Q_OBJECT
         Q_PROPERTY(bool playing READ isPlaying NOTIFY playingChanged)

@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,12 @@
 #define UNPLAYER_TRACKSMODEL_H
 
 #include <QQmlParserStatus>
+
 #include "databasemodel.h"
 
 namespace unplayer
 {
-    class TracksModelSortMode : public QObject
+    class TracksModelSortMode final : public QObject
     {
         Q_OBJECT
         Q_ENUMS(Mode)
@@ -38,7 +39,7 @@ namespace unplayer
         };
     };
 
-    class TracksModelInsideAlbumSortMode : public QObject
+    class TracksModelInsideAlbumSortMode final : public QObject
     {
         Q_OBJECT
         Q_ENUMS(Mode)
@@ -77,7 +78,6 @@ namespace unplayer
         using SortMode = TracksModelSortMode::Mode;
         using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;
 
-        TracksModel();
         ~TracksModel() override;
         void componentComplete() override;
 
@@ -107,7 +107,7 @@ namespace unplayer
         InsideAlbumSortMode insideAlbumSortMode() const;
         void setInsideAlbumSortMode(InsideAlbumSortMode mode);
 
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
+        Q_INVOKABLE QStringList getTracks(const std::vector<int> &indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -115,15 +115,15 @@ namespace unplayer
     private:
         void setQuery();
 
-        bool mAllArtists;
-        bool mAllAlbums;
+        bool mAllArtists = true;
+        bool mAllAlbums = true;
         QString mArtist;
         QString mAlbum;
         QString mGenre;
 
-        bool mSortDescending;
-        SortMode mSortMode;
-        InsideAlbumSortMode mInsideAlbumSortMode;
+        bool mSortDescending = false;
+        SortMode mSortMode = SortMode::ArtistAlbumYear;
+        InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::TrackNumber;
 
     signals:
         void sortModeChanged();

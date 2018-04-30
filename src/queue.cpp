@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
+#include "stdutils.h"
 #include "tagutils.h"
 
 namespace unplayer
@@ -88,7 +89,7 @@ namespace unplayer
         QObject::connect(this, &Queue::currentTrackChanged, this, &Queue::mediaArtChanged);
     }
 
-    const QList<std::shared_ptr<QueueTrack>>& Queue::tracks() const
+    const std::vector<std::shared_ptr<QueueTrack>>& Queue::tracks() const
     {
         return mTracks;
     }
@@ -108,40 +109,40 @@ namespace unplayer
 
     QString Queue::currentFilePath() const
     {
-        if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->filePath;
+        if (mCurrentIndex >= 0) {
+            return mTracks[mCurrentIndex]->filePath;
         }
         return QString();
     }
 
     QString Queue::currentTitle() const
     {
-        if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->title;
+        if (mCurrentIndex >= 0) {
+            return mTracks[mCurrentIndex]->title;
         }
         return QString();
     }
 
     QString Queue::currentArtist() const
     {
-        if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->artist;
+        if (mCurrentIndex >= 0) {
+            return mTracks[mCurrentIndex]->artist;
         }
         return QString();
     }
 
     QString Queue::currentAlbum() const
     {
-        if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            return mTracks.at(mCurrentIndex)->album;
+        if (mCurrentIndex >= 0) {
+            return mTracks[mCurrentIndex]->album;
         }
         return QString();
     }
 
     QString Queue::currentMediaArt() const
     {
-        if (mCurrentIndex >= 0 && mCurrentIndex < mTracks.size()) {
-            const QueueTrack* track = mTracks.at(mCurrentIndex).get();
+        if (mCurrentIndex >= 0) {
+            const QueueTrack* track = mTracks[mCurrentIndex].get();
             if (!track->mediaArtFilePath.isEmpty()) {
                 return track->mediaArtFilePath;
             }
@@ -207,7 +208,7 @@ namespace unplayer
         addTracks({track});
     }
 
-    void Queue::addTracks(const QStringList& trackPaths, bool clearQueue, int setAsCurrent)
+    void Queue::addTracks(QStringList trackPaths, bool clearQueue, int setAsCurrent)
     {
         if (mAddingTracks) {
             return;
@@ -220,26 +221,24 @@ namespace unplayer
         mAddingTracks = true;
         emit addingTracksChanged();
 
-        const QList<std::shared_ptr<QueueTrack>> oldTracks(mTracks);
-
         if (clearQueue) {
             clear();
         }
 
-        auto future = QtConcurrent::run([trackPaths, oldTracks]() {
-            QList<std::shared_ptr<QueueTrack>> tracks;
+        // FIXME: use proper move capture on C++14
+        auto future = QtConcurrent::run(std::bind([this](QStringList& trackPaths) {
+            std::vector<std::shared_ptr<QueueTrack>> tracks;
 
             const QMimeDatabase mimeDb;
 
-            QStringList newTrackPaths(trackPaths);
-            for (int i = 0, max = newTrackPaths.size(); i < max; ++i) {
-                const QString filePath(newTrackPaths.at(i));
-                if (PlaylistUtils::playlistsMimeTypes.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
-                    newTrackPaths.removeAt(i);
+            for (int i = 0, max = trackPaths.size(); i < max; ++i) {
+                const QString filePath(trackPaths[i]);
+                if (contains(PlaylistUtils::playlistsMimeTypes, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
+                    trackPaths.removeAt(i);
                     const QStringList playlistTracks(PlaylistUtils::getPlaylistTracks(filePath));
                     int trackIndex = i;
                     for (const QString& playlistTrack : playlistTracks) {
-                        newTrackPaths.insert(trackIndex, playlistTrack);
+                        trackPaths.insert(trackIndex, playlistTrack);
                         ++trackIndex;
                     }
                     i += playlistTracks.size() - 1;
@@ -256,15 +255,15 @@ namespace unplayer
 
                 db.transaction();
 
-                QHash<QString, QString> mediaArtDirectoriesHash;
+                std::unordered_map<QString, QString> mediaArtDirectoriesHash;
 
                 const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
-                for (const QString& filePath : const_cast<const QStringList&>(newTrackPaths)) {
+                for (const QString& filePath : const_cast<const QStringList&>(trackPaths)) {
                     bool found = false;
-                    for (const std::shared_ptr<QueueTrack>& track : oldTracks) {
+                    for (auto& track : std::vector<std::shared_ptr<QueueTrack>>(mTracks)) {
                         if (track->filePath == filePath) {
-                            tracks.append(track);
+                            tracks.push_back(std::move(track));
                             found = true;
                             break;
                         }
@@ -319,21 +318,21 @@ namespace unplayer
                     }
 
                     if (getTags) {
-                        const tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()));
-                        title = info.title;
-                        artists = info.artists;
-                        albums = info.albums;
+                        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()));
+                        title = std::move(info.title);
+                        artists = std::move(info.artists);
+                        albums = std::move(info.albums);
                         duration = info.duration;
                         if (useDirectoryMediaArt) {
                             mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
                             if (mediaArtFilePath.isEmpty()) {
-                                mediaArtData = info.mediaArtData;
+                                mediaArtData = std::move(info.mediaArtData);
                             }
                         } else {
                             if (info.mediaArtData.isEmpty()) {
                                 mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
                             } else {
-                                mediaArtData = info.mediaArtData;
+                                mediaArtData = std::move(info.mediaArtData);
                             }
                         }
                     }
@@ -352,13 +351,13 @@ namespace unplayer
                         album = albums.join(QLatin1String(", "));
                     }
 
-                    tracks.append(std::make_shared<QueueTrack>(filePath,
-                                                               title,
-                                                               duration,
-                                                               artist,
-                                                               album,
-                                                               mediaArtFilePath,
-                                                               mediaArtData));
+                    tracks.push_back(std::make_shared<QueueTrack>(std::move(filePath),
+                                                                  std::move(title),
+                                                                  duration,
+                                                                  std::move(artist),
+                                                                  std::move(album),
+                                                                  std::move(mediaArtFilePath),
+                                                                  std::move(mediaArtData)));
                 }
 
                 db.commit();
@@ -366,22 +365,22 @@ namespace unplayer
             QSqlDatabase::removeDatabase(dbConnectionName);
 
             return tracks;
-        });
+        }, std::move(trackPaths)));
 
-        using FutureWatcher = QFutureWatcher<QList<std::shared_ptr<QueueTrack>>>;
+        using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const int start = mTracks.size();
-            const auto tracks = watcher->result();
+            auto tracks(watcher->result());
 
-            for (const auto& track : tracks) {
-                mTracks.append(track);
-                mNotPlayedTracks.append(track);
+            emit tracksAboutToBeAdded(tracks.size());
+            for (auto& track : tracks) {
+                mNotPlayedTracks.push_back(track.get());
+                mTracks.push_back(std::move(track));
             }
-            emit tracksAdded(start);
+            emit tracksAdded();
 
-            if (mCurrentIndex == -1 && !mTracks.isEmpty()) {
-                if (setAsCurrent < 0 || setAsCurrent >= mTracks.size()) {
+            if (mCurrentIndex == -1 && !mTracks.empty()) {
+                if (setAsCurrent == -1) {
                     setCurrentIndex(0);
                 } else {
                     setCurrentIndex(setAsCurrent);
@@ -397,46 +396,52 @@ namespace unplayer
 
     void Queue::removeTrack(int index)
     {
-        const std::shared_ptr<QueueTrack> currentTrack(mTracks.at(mCurrentIndex));
-        mNotPlayedTracks.removeOne(mTracks.takeAt(index));
+        const std::shared_ptr<QueueTrack> current(mTracks[mCurrentIndex]);
 
-        emit trackRemoved(index);
+        emit trackAboutToBeRemoved(index);
+
+        erase_one(mNotPlayedTracks, mTracks[index].get());
+        mTracks.erase(mTracks.begin() + index);
+
+        emit trackRemoved();
 
         if (index == mCurrentIndex) {
-            if (mCurrentIndex >= mTracks.size()) {
-                setCurrentIndex(mTracks.size() - 1);
+            if (mCurrentIndex >= static_cast<int>(mTracks.size())) {
+                setCurrentIndex(static_cast<int>(mTracks.size() - 1));
             } else {
                 emit currentIndexChanged();
             }
             emit currentTrackChanged();
         } else {
-            setCurrentIndex(mTracks.indexOf(currentTrack));
+            setCurrentIndex(index_of(mTracks, current));
         }
     }
 
-    void Queue::removeTracks(QVector<int> indexes)
+    void Queue::removeTracks(std::vector<int> indexes)
     {
-        const std::shared_ptr<QueueTrack> currentTrack(mTracks.at(mCurrentIndex));
+        const std::shared_ptr<QueueTrack> current(mTracks[mCurrentIndex]);
 
         std::reverse(indexes.begin(), indexes.end());
         for (int index : indexes) {
-            mNotPlayedTracks.removeOne(mTracks.takeAt(index));
+            emit trackAboutToBeRemoved(index);
+            erase_one(mNotPlayedTracks, mTracks[index].get());
+            mTracks.erase(mTracks.begin() + index);
+            emit trackRemoved();
         }
 
-        emit tracksRemoved(indexes);
-
-        if (indexes.contains(mCurrentIndex)) {
-            if (mCurrentIndex >= mTracks.size()) {
+        if (contains(indexes, mCurrentIndex)) {
+            if (mCurrentIndex >= static_cast<int>(mTracks.size())) {
                 setCurrentIndex(mTracks.size() - 1);
             }
             emit currentTrackChanged();
         } else {
-            setCurrentIndex(mTracks.indexOf(currentTrack));
+            setCurrentIndex(index_of(mTracks, current));
         }
     }
 
     void Queue::clear()
     {
+        emit aboutToBeCleared();
         mTracks.clear();
         mNotPlayedTracks.clear();
         emit cleared();
@@ -447,13 +452,14 @@ namespace unplayer
     void Queue::next()
     {
         if (mShuffle) {
-            if (mNotPlayedTracks.length() == 1) {
+            if (mNotPlayedTracks.size() == 1) {
                 resetNotPlayedTracks();
             }
-            mNotPlayedTracks.removeOne(mTracks.at(mCurrentIndex));
-            setCurrentIndex(mTracks.indexOf(mNotPlayedTracks.at(qrand() % mNotPlayedTracks.size())));
+            erase_one(mNotPlayedTracks, mTracks[mCurrentIndex].get());
+            mTracks.erase(mTracks.begin() + mCurrentIndex);
+            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[qrand() % mNotPlayedTracks.size()]));
         } else {
-            if (mCurrentIndex == (mTracks.size() - 1)) {
+            if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 setCurrentIndex(0);
             } else {
                 setCurrentIndex(mCurrentIndex + 1);
@@ -471,19 +477,19 @@ namespace unplayer
         }
 
         if (mShuffle) {
-            const std::shared_ptr<QueueTrack>& track = mTracks.at(mCurrentIndex);
-            mNotPlayedTracks.removeOne(track);
+            const std::shared_ptr<QueueTrack>& track = mTracks[mCurrentIndex];
+            erase_one(mNotPlayedTracks, track.get());
             if (mNotPlayedTracks.size() == 0) {
                 if (mRepeatMode == RepeatAll) {
                     resetNotPlayedTracks();
-                    mNotPlayedTracks.removeOne(track);
+                    erase_one(mNotPlayedTracks, track.get());
                 } else {
                     return;
                 }
             }
-            setCurrentIndex(mTracks.indexOf(mNotPlayedTracks.at(qrand() % mNotPlayedTracks.size())));
+            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[qrand() % mNotPlayedTracks.size()]));
         } else {
-            if (mCurrentIndex == (mTracks.size() - 1)) {
+            if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 if (mRepeatMode == RepeatAll) {
                     setCurrentIndex(0);
                 } else {
@@ -522,7 +528,11 @@ namespace unplayer
 
     void Queue::resetNotPlayedTracks()
     {
-        mNotPlayedTracks = mTracks;
+        mNotPlayedTracks.clear();
+        mNotPlayedTracks.reserve(mTracks.size());
+        for (const auto& track : mTracks) {
+            mNotPlayedTracks.push_back(track.get());
+        }
     }
 
     void Queue::reset()

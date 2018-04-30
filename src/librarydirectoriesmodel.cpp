@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ namespace unplayer
         Settings::instance()->setLibraryDirectories(mDirectories);
     }
 
-    void LibraryDirectoriesModel::removeDirectories(QVector<int> indexes)
+    void LibraryDirectoriesModel::removeDirectories(std::vector<int> indexes)
     {
         std::reverse(indexes.begin(), indexes.end());
         for (int index : indexes) {

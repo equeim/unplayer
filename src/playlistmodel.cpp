@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ namespace unplayer
 
     QVariant PlaylistModel::data(const QModelIndex& index, int role) const
     {
-        const PlaylistTrack& track = mTracks.at(index.row());
+        const PlaylistTrack& track = mTracks[index.row()];
         switch (role) {
         case FilePathRole:
             return track.filePath;
@@ -78,12 +78,12 @@ namespace unplayer
         mTracks = PlaylistUtils::parsePlaylist(mFilePath);
     }
 
-    QStringList PlaylistModel::getTracks(const QVector<int>& indexes)
+    QStringList PlaylistModel::getTracks(const std::vector<int>& indexes)
     {
         QStringList tracks;
         tracks.reserve(mTracks.size());
         for (int index : indexes) {
-            tracks.append(mTracks.at(index).filePath);
+            tracks.append(mTracks[index].filePath);
         }
         return tracks;
     }
@@ -91,17 +91,17 @@ namespace unplayer
     void PlaylistModel::removeTrack(int index)
     {
         beginRemoveRows(QModelIndex(), index, index);
-        mTracks.removeAt(index);
+        mTracks.erase(mTracks.begin() + index);
         endRemoveRows();
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);
     }
 
-    void PlaylistModel::removeTracks(QVector<int> indexes)
+    void PlaylistModel::removeTracks(std::vector<int> indexes)
     {
         std::reverse(indexes.begin(), indexes.end());
         for (int index : indexes) {
             beginRemoveRows(QModelIndex(), index, index);
-            mTracks.removeAt(index);
+            mTracks.erase(mTracks.begin() + index);
             endRemoveRows();
         }
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);

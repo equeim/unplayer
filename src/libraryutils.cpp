@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 #include "libraryutils.h"
 
 #include <functional>
+#include <list>
 #include <memory>
+#include <unordered_map>
 
 
 #include <QCoreApplication>
@@ -43,6 +45,7 @@
 #include <QtConcurrentRun>
 
 #include "settings.h"
+#include "stdutils.h"
 #include "tagutils.h"
 
 namespace unplayer
@@ -98,7 +101,7 @@ namespace unplayer
             }
 
             const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
-                if (strings.isEmpty()) {
+                if (strings.empty()) {
                     exec(QString());
                 } else {
                     for (const QString& string : strings) {
@@ -198,7 +201,7 @@ namespace unplayer
         return MimeType::Other;
     }
 
-    const QVector<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
+    const std::vector<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
                                                               aacMimeType,
                                                               mp4MimeType,
                                                               mp4bMimeType,
@@ -209,7 +212,7 @@ namespace unplayer
                                                               wavMimeType,
                                                               wavpackMimeType};
 
-    const QVector<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
+    const std::vector<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
                                                             mp4MimeType,
                                                             mp4bMimeType,
                                                             mpegMimeType,
@@ -235,10 +238,13 @@ namespace unplayer
         return mDatabaseFilePath;
     }
 
-    QString LibraryUtils::findMediaArtForDirectory(QHash<QString, QString>& directoriesHash, const QString& directoryPath)
+    QString LibraryUtils::findMediaArtForDirectory(std::unordered_map<QString, QString>& directoriesHash, const QString& directoryPath)
     {
-        if (directoriesHash.contains(directoryPath)) {
-            return directoriesHash.value(directoryPath);
+        {
+            const auto found(directoriesHash.find(directoryPath));
+            if (found != directoriesHash.end()) {
+                return found->second;
+            }
         }
 
         const QDir dir(directoryPath);
@@ -247,7 +253,7 @@ namespace unplayer
                                                            QRegularExpression::CaseInsensitiveOption)));
         if (!found.isEmpty()) {
             const QString& mediaArt = dir.filePath(found.first());
-            directoriesHash.insert(directoryPath, mediaArt);
+            directoriesHash.insert({directoryPath, mediaArt});
             return mediaArt;
         }
         return QString();
@@ -272,22 +278,22 @@ namespace unplayer
 
         bool createTable = !db.tables().contains(QLatin1String("tracks"));
         if (!createTable) {
-            static const QVector<QString> fields{QLatin1String("id"),
-                                                 QLatin1String("filePath"),
-                                                 QLatin1String("modificationTime"),
-                                                 QLatin1String("title"),
-                                                 QLatin1String("artist"),
-                                                 QLatin1String("album"),
-                                                 QLatin1String("year"),
-                                                 QLatin1String("trackNumber"),
-                                                 QLatin1String("genre"),
-                                                 QLatin1String("duration"),
-                                                 QLatin1String("mediaArt")};
+            static const std::vector<QString> fields{QLatin1String("id"),
+                                                     QLatin1String("filePath"),
+                                                     QLatin1String("modificationTime"),
+                                                     QLatin1String("title"),
+                                                     QLatin1String("artist"),
+                                                     QLatin1String("album"),
+                                                     QLatin1String("year"),
+                                                     QLatin1String("trackNumber"),
+                                                     QLatin1String("genre"),
+                                                     QLatin1String("duration"),
+                                                     QLatin1String("mediaArt")};
 
             const QSqlRecord record(db.record(QLatin1String("tracks")));
-            if (record.count() == fields.size()) {
+            if (record.count() == static_cast<int>(fields.size())) {
                 for (int i = 0, max = record.count(); i < max; ++i) {
-                    if (!fields.contains(record.fieldName(i))) {
+                    if (!contains(fields, record.fieldName(i))) {
                         createTable = true;
                     }
                 }
@@ -339,6 +345,7 @@ namespace unplayer
 
         const QFuture<void> future(QtConcurrent::run([=]() {
             qDebug() << "start scanning files";
+            const QTime time(QTime::currentTime());
             {
                 auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), rescanConnectionName);
                 db.setDatabaseName(mDatabaseFilePath);
@@ -352,10 +359,10 @@ namespace unplayer
 
 
                 // Get all files from database
-                QStringList files;
-                QList<int> ids;
-                QHash<int, long long> modificationTimeHash;
-                QHash<int, QString> mediaArtHash;
+                std::unordered_map<QString, int> files;
+                std::list<int> ids;
+                std::unordered_map<int, long long> modificationTimeHash;
+                std::unordered_map<int, QString> mediaArtHash;
                 {
                     QSqlQuery query(QLatin1String("SELECT id, filePath, modificationTime, mediaArt FROM tracks GROUP BY id ORDER BY id"), db);
                     if (query.lastError().type() != QSqlError::NoError) {
@@ -364,10 +371,10 @@ namespace unplayer
                     }
                     while (query.next()) {
                         const int id(query.value(0).toInt());
-                        files.append(query.value(1).toString());
-                        ids.append(id);
-                        modificationTimeHash.insert(id, query.value(2).toLongLong());
-                        mediaArtHash.insert(id, query.value(3).toString());
+                        files.insert({query.value(1).toString(), id});
+                        ids.push_back(id);
+                        modificationTimeHash.insert({id, query.value(2).toLongLong()});
+                        mediaArtHash.insert({id, query.value(3).toString()});
                     }
                 }
 
@@ -378,65 +385,73 @@ namespace unplayer
                     qWarning() << "failed to create media art directory:" << mMediaArtDirectory;
                 }
 
-                QHash<QString, bool> noMediaDirectories;
+                std::unordered_map<QString, bool> noMediaDirectories;
 
                 // Remove deleted files and files that are not in selected library directories
-                for (int i = 0, max = files.size(); i < max; ++i) {
-                    const QString& filePath = files.at(i);
-                    const int id = ids.at(i);
+                {
+                    auto filesIterator(files.cbegin());
+                    const auto filesEnd(files.cend());
+                    auto idsIterator(ids.begin());
+                    while (filesIterator != filesEnd) {
+                        const QString& filePath = filesIterator->first;
+                        const int id = *idsIterator;
 
-                    const QFileInfo fileInfo(filePath);
-                    bool remove = false;
-                    if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
-                        remove = true;
-                    } else {
-                        remove = true;
-                        for (const QString& directory : libraryDirectories) {
-                            if (filePath.startsWith(directory)) {
-                                remove = false;
-                                break;
-                            }
-                        }
-                        if (!remove) {
-                            const QString directory(fileInfo.path());
-                            if (noMediaDirectories.contains(directory)) {
-                                if (noMediaDirectories.value(directory)) {
-                                    remove = true;
+                        const QFileInfo fileInfo(filePath);
+                        bool remove = false;
+                        if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
+                            remove = true;
+                        } else {
+                            remove = true;
+                            for (const QString& directory : libraryDirectories) {
+                                if (filePath.startsWith(directory)) {
+                                    remove = false;
+                                    break;
                                 }
-                            } else {
-                                if (QFileInfo(QDir(directory).filePath(QLatin1String(".nomedia"))).isFile()) {
-                                    noMediaDirectories.insert(directory, true);
-                                    remove = true;
+                            }
+                            if (!remove) {
+                                const QString directory(fileInfo.path());
+                                const auto found(noMediaDirectories.find(directory));
+                                if (found != noMediaDirectories.end()) {
+                                    if (found->second) {
+                                        remove = true;
+                                    }
                                 } else {
-                                    noMediaDirectories.insert(directory, false);
+                                    if (QFileInfo(QDir(directory).filePath(QLatin1String(".nomedia"))).isFile()) {
+                                        noMediaDirectories.insert({directory, true});
+                                        remove = true;
+                                    } else {
+                                        noMediaDirectories.insert({directory, false});
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if (remove) {
-                        removeTrackFromDatabase(db, id);
+                        if (remove) {
+                            removeTrackFromDatabase(db, id);
 
-                        files.removeAt(i);
-                        --i;
-                        --max;
+                            filesIterator = files.erase(filesIterator);
+                            idsIterator = ids.erase(idsIterator);
 
-                        ids.removeAt(i);
-                        modificationTimeHash.remove(id);
-                        mediaArtHash.remove(id);
+                            modificationTimeHash.erase(modificationTimeHash.find(id));
+                            mediaArtHash.erase(mediaArtHash.find(id));
+                        } else {
+                            ++filesIterator;
+                            ++idsIterator;
+                        }
                     }
                 }
+
 
                 // Remove deleted media art
                 {
                     auto i = mediaArtHash.begin();
                     const auto end = mediaArtHash.end();
                     while (i != end) {
-                        const QString& mediaArt = i.value();
+                        const QString& mediaArt = i->second;
                         if (!mediaArt.isEmpty() && !QFile::exists(mediaArt)) {
                             QSqlQuery query(db);
                             query.prepare(QStringLiteral("UPDATE tracks SET mediaArt = '' WHERE id = ?"));
-                            query.addBindValue(i.key());
+                            query.addBindValue(i->first);
                             query.exec();
 
                             i = mediaArtHash.erase(i);
@@ -446,7 +461,7 @@ namespace unplayer
                     }
                 }
 
-                QHash<QByteArray, QString> embeddedMediaArtHash;
+                std::unordered_map<QByteArray, QString> embeddedMediaArtHash;
                 QDir mediaArtDir(mMediaArtDirectory);
                 {
                     const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
@@ -454,12 +469,12 @@ namespace unplayer
                         const QString baseName(info.baseName());
                         const int index = baseName.indexOf(QLatin1String("-embedded"));
                         if (index != -1) {
-                            embeddedMediaArtHash.insert(baseName.left(index).toLatin1(), info.filePath());
+                            embeddedMediaArtHash.insert({baseName.left(index).toLatin1(), info.filePath()});
                         }
                     }
                 }
 
-                QHash<QString, QString> mediaArtDirectoriesHash;
+                std::unordered_map<QString, QString> mediaArtDirectoriesHash;
                 const QMimeDatabase mimeDb;
 
                 const bool useDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
@@ -485,35 +500,37 @@ namespace unplayer
                         }
 
                         {
-                            const QString directoryPath(fileInfo.path());
-                            if (noMediaDirectories.contains(directoryPath)) {
-                                if (noMediaDirectories.value(directoryPath)) {
+                            QString directoryPath(fileInfo.path());
+
+                            const auto found(noMediaDirectories.find(directoryPath));
+                            if (found != noMediaDirectories.cend()) {
+                                if (found->second) {
                                     continue;
                                 }
                             } else {
                                 if (QFileInfo(QDir(directoryPath).filePath(QLatin1String(".nomedia"))).isFile()) {
-                                    noMediaDirectories.insert(directoryPath, true);
+                                    noMediaDirectories.insert({std::move(directoryPath), true});
                                     continue;
                                 } else {
-                                    noMediaDirectories.insert(directoryPath, false);
+                                    noMediaDirectories.insert({std::move(directoryPath), false});
                                 }
                             }
                         }
 
-                        const int fileIndex = files.indexOf(filePath);
+                        const auto foundInDb(files.find(filePath));
 
-                        if (fileIndex == -1) {
+                        if (foundInDb == files.end()) {
                             QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                            if (mimeTypesByExtension.contains(mimeType)) {
+                            if (contains(mimeTypesByExtension, mimeType)) {
                                 mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name();
-                                if (mimeTypesByContent.contains(mimeType)) {
+                                if (contains(mimeTypesByContent, mimeType)) {
                                     int id;
-                                    if (ids.isEmpty()) {
+                                    if (ids.empty()) {
                                         id = 0;
                                     } else {
-                                        id = ids.last() + 1;
+                                        id = ids.back() + 1;
                                     }
-                                    ids.append(id);
+                                    ids.push_back(id);
                                     updateTrackInDatabase(db,
                                                           false,
                                                           id,
@@ -527,11 +544,11 @@ namespace unplayer
                                 }
                             }
                         } else {
-                            const int id = ids.at(files.indexOf(filePath));
+                            const int id = files[filePath];
 
                             const long long modificationTime = fileInfo.lastModified().toMSecsSinceEpoch();
-                            if (modificationTime == modificationTimeHash.value(id)) {
-                                const QString mediaArt(mediaArtHash.value(id));
+                            if (modificationTime == modificationTimeHash[id]) {
+                                const QString mediaArt(mediaArtHash[id]);
                                 if (!mediaArt.startsWith(mMediaArtDirectory) ||
                                         (QFileInfo(mediaArt).fileName().contains(QLatin1String("-embedded")) && useDirectoryMediaArt)) {
                                     const QString newMediaArt(getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name()),
@@ -549,11 +566,11 @@ namespace unplayer
                                 }
                             } else {
                                 const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
-                                if (mimeTypesByContent.contains(mimeType)) {
-                                    ids.append(ids.last() + 1);
+                                if (contains(mimeTypesByContent, mimeType)) {
+                                    ids.push_back(ids.back() + 1);
                                     updateTrackInDatabase(db,
                                                           true,
-                                                          ids.last(),
+                                                          ids.back(),
                                                           fileInfo,
                                                           tagutils::getTrackInfo(fileInfo, mimeType),
                                                           getTrackMediaArt(tagutils::getTrackInfo(fileInfo, mimeType),
@@ -569,12 +586,12 @@ namespace unplayer
                     }
                 }
 
-                QVector<QString> allMediaArt;
+                std::vector<QString> allMediaArt;
                 {
                     QSqlQuery query(QLatin1String("SELECT DISTINCT(mediaArt) FROM tracks WHERE mediaArt != ''"), db);
                     if (query.lastError().type() == QSqlError::NoError) {
                         while (query.next()) {
-                            allMediaArt.append(query.value(0).toString());
+                            allMediaArt.push_back(query.value(0).toString());
                         }
                     }
                 }
@@ -582,7 +599,7 @@ namespace unplayer
                 {
                     const QList<QFileInfo> files(mediaArtDir.entryInfoList(QDir::Files));
                     for (const QFileInfo& info : files) {
-                        if (!allMediaArt.contains(info.filePath())) {
+                        if (!contains(allMediaArt, info.filePath())) {
                             if (!QFile::remove(info.filePath())) {
                                 qWarning() << "failed to remove file:" << info.filePath();
                             }
@@ -593,7 +610,7 @@ namespace unplayer
                 db.commit();
             }
             QSqlDatabase::removeDatabase(rescanConnectionName);
-            qDebug() << "end scanning files";
+            qDebug() << "end scanning files" << time.msecsTo(QTime::currentTime());
         }));
 
         auto watcher = new QFutureWatcher<void>(this);
@@ -779,9 +796,9 @@ namespace unplayer
     }
 
     QString LibraryUtils::getTrackMediaArt(const tagutils::Info& info,
-                                           QHash<QByteArray, QString>& embeddedMediaArtHash,
+                                           std::unordered_map<QByteArray, QString>& embeddedMediaArtHash,
                                            const QFileInfo& fileInfo,
-                                           QHash<QString, QString>& directoriesHash,
+                                           std::unordered_map<QString, QString>& directoriesHash,
                                            bool useDirectoriesMediaArt)
     {
         QString mediaArt;
@@ -802,11 +819,14 @@ namespace unplayer
         return mediaArt;
     }
 
-    QString LibraryUtils::saveEmbeddedMediaArt(const QByteArray& data, QHash<QByteArray, QString>& embeddedMediaArtHash)
+    QString LibraryUtils::saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtHash)
     {
-        const QByteArray md5(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex());
-        if (embeddedMediaArtHash.contains(md5)) {
-            return embeddedMediaArtHash.value(md5);
+        QByteArray md5(QCryptographicHash::hash(data, QCryptographicHash::Md5).toHex());
+        {
+            const auto found(embeddedMediaArtHash.find(md5));
+            if (found != embeddedMediaArtHash.end()) {
+                return found->second;
+            }
         }
 
         const QString suffix(mMimeDb.mimeTypeForData(data).preferredSuffix());
@@ -819,7 +839,7 @@ namespace unplayer
         QFile file(filePath);
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(data);
-            embeddedMediaArtHash.insert(md5, filePath);
+            embeddedMediaArtHash.insert({std::move(md5), filePath});
             return filePath;
         }
 

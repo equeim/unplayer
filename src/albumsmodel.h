@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 #ifndef UNPLAYER_ALBUMSMODEL_H
 #define UNPLAYER_ALBUMSMODEL_H
 
+#include <vector>
 #include <QQmlParserStatus>
+
 #include "databasemodel.h"
 
 namespace unplayer
@@ -55,7 +57,6 @@ namespace unplayer
             SortArtistYear
         };
 
-        AlbumsModel();
         ~AlbumsModel() override;
         void componentComplete() override;
 
@@ -75,7 +76,7 @@ namespace unplayer
         //Q_INVOKABLE void setSortSettings(bool sortDescending, SortMode sortMode);
 
         Q_INVOKABLE QStringList getTracksForAlbum(int index) const;
-        Q_INVOKABLE QStringList getTracksForAlbums(const QVector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTracksForAlbums(const std::vector<int>& indexes) const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -83,11 +84,11 @@ namespace unplayer
     private:
         void setQuery();
 
-        bool mAllArtists;
+        bool mAllArtists = true;
         QString mArtist;
 
-        bool mSortDescending;
-        SortMode mSortMode;
+        bool mSortDescending = false;
+        SortMode mSortMode = SortAlbum;
 
     signals:
         void allArtistsChanged();

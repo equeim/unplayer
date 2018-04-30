@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ namespace unplayer
         return QStringList();
     }
 
-    QStringList ArtistsModel::getTracksForArtists(const QVector<int>& indexes) const
+    QStringList ArtistsModel::getTracksForArtists(const std::vector<int>& indexes) const
     {
         QStringList tracks;
         QSqlDatabase::database().transaction();

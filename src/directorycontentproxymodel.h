@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ namespace unplayer
         bool lessThan(const QModelIndex& left, const QModelIndex& right) const override;
 
     private:
-        int mIsDirectoryRole;
+        int mIsDirectoryRole = 0;
     };
 }
 

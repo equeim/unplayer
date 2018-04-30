@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,12 +43,12 @@ namespace unplayer
         }
     }
 
-    QVector<int> FilterProxyModel::sourceIndexes() const
+    std::vector<int> FilterProxyModel::sourceIndexes() const
     {
-        QVector<int> indexes;
+        std::vector<int> indexes;
         indexes.reserve(rowCount());
         for (int i = 0, max = rowCount(); i < max; ++i) {
-            indexes.append(sourceIndex(i));
+            indexes.push_back(sourceIndex(i));
         }
         return indexes;
     }
@@ -88,15 +88,15 @@ namespace unplayer
         return mSelectionModel->selectedIndexes().size();
     }
 
-    QVector<int> FilterProxyModel::selectedSourceIndexes() const
+    std::vector<int> FilterProxyModel::selectedSourceIndexes() const
     {
         QModelIndexList modelIndexes(mSelectionModel->selectedIndexes());
         std::sort(modelIndexes.begin(), modelIndexes.end());
 
-        QVector<int> indexes;
+        std::vector<int> indexes;
         indexes.reserve(modelIndexes.size());
         for (const QModelIndex& index : modelIndexes) {
-            indexes.append(index.row());
+            indexes.push_back(index.row());
         }
         return indexes;
     }

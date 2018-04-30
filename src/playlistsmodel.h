@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #ifndef UNPLAYER_PLAYLISTSMODEL_H
 #define UNPLAYER_PLAYLISTSMODEL_H
 
+#include <vector>
 #include <QAbstractListModel>
 
 namespace unplayer
@@ -49,16 +50,16 @@ namespace unplayer
         QVariant data(const QModelIndex& index, int role) const override;
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-        Q_INVOKABLE void removePlaylists(const QVector<int>& indexes) const;
+        Q_INVOKABLE void removePlaylists(const std::vector<int>& indexes) const;
 
-        Q_INVOKABLE QStringList getTracksForPlaylists(const QVector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTracksForPlaylists(const std::vector<int>& indexes) const;
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
         void update();
 
-        QList<PlaylistsModelItem> mPlaylists;
+        std::vector<PlaylistsModelItem> mPlaylists;
     };
 }
 

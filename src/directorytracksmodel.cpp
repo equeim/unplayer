@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,14 +29,10 @@
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
+#include "stdutils.h"
 
 namespace unplayer
 {
-    DirectoryTracksModel::DirectoryTracksModel()
-        : mLoaded(false)
-    {
-    }
-
     void DirectoryTracksModel::classBegin()
     {
     }
@@ -73,7 +69,7 @@ namespace unplayer
         return mFiles.size();
     }
 
-    const QVector<DirectoryTrackFile>& DirectoryTracksModel::files() const
+    const std::vector<DirectoryTrackFile>& DirectoryTracksModel::files() const
     {
         return mFiles;
     }
@@ -114,7 +110,7 @@ namespace unplayer
         return mFiles.at(index).filePath;
     }
 
-    QStringList DirectoryTracksModel::getTracks(const QVector<int>& indexes, bool includePlaylists) const
+    QStringList DirectoryTracksModel::getTracks(const std::vector<int>& indexes, bool includePlaylists) const
     {
         QStringList list;
         for (int index : indexes) {
@@ -145,35 +141,35 @@ namespace unplayer
 
         const QString directory(mDirectory);
         auto future = QtConcurrent::run([directory]() {
-            QVector<DirectoryTrackFile> files;
+            std::vector<DirectoryTrackFile> files;
             const QMimeDatabase mimeDb;
             const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
             for (const QFileInfo& info : fileInfos) {
                 if (info.isDir()) {
-                    files.append({info.filePath(),
-                                  info.fileName(),
-                                  true,
-                                  false});
+                    files.push_back({info.filePath(),
+                                     info.fileName(),
+                                     true,
+                                     false});
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
-                    const bool isPlaylist = PlaylistUtils::playlistsMimeTypes.contains(mimeType);
-                    if (isPlaylist || LibraryUtils::mimeTypesByExtension.contains(mimeType)) {
-                        files.append({info.filePath(),
-                                      info.fileName(),
-                                      false,
-                                      isPlaylist});
+                    const bool isPlaylist = contains(PlaylistUtils::playlistsMimeTypes, mimeType);
+                    if (isPlaylist || contains(LibraryUtils::mimeTypesByExtension, mimeType)) {
+                        files.push_back({info.filePath(),
+                                         info.fileName(),
+                                         false,
+                                         isPlaylist});
                     }
                 }
             }
             return files;
         });
 
-        using FutureWatcher = QFutureWatcher<QVector<DirectoryTrackFile>>;
+        using FutureWatcher = QFutureWatcher<std::vector<DirectoryTrackFile>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const auto files = watcher->result();
+            auto files(watcher->result());
             beginInsertRows(QModelIndex(), 0, files.size() - 1);
-            mFiles = files;
+            mFiles = std::move(files);
             endInsertRows();
             mLoaded = true;
             emit loadedChanged();
@@ -182,6 +178,8 @@ namespace unplayer
     }
 
     DirectoryTracksProxyModel::DirectoryTracksProxyModel()
+        : mDirectoriesCount(0),
+          mTracksCount(0)
     {
         setFilterRole(DirectoryTracksModel::FileNameRole);
         setSortEnabled(true);
@@ -194,7 +192,7 @@ namespace unplayer
         auto updateCount = [=]() {
             mDirectoriesCount = 0;
             mTracksCount = 0;
-            const QVector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
+            const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
             for (int i = 0, max = rowCount(); i < max; ++i) {
                 if (files.at(sourceIndex(i)).isDirectory) {
                     mDirectoriesCount++;
@@ -226,7 +224,7 @@ namespace unplayer
 
     QVariantList DirectoryTracksProxyModel::getSelectedTracks() const
     {
-        const QVector<int> indexes(selectedSourceIndexes());
+        const std::vector<int> indexes(selectedSourceIndexes());
         QVariantList tracks;
         tracks.reserve(indexes.size());
         auto model = static_cast<const DirectoryTracksModel*>(sourceModel());
@@ -238,7 +236,7 @@ namespace unplayer
 
     void DirectoryTracksProxyModel::selectAll()
     {
-        const QVector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
+        const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
         for (int i = 0, max = rowCount(); i < max; ++i) {
             if (!files.at(sourceIndex(i)).isDirectory) {
                 selectionModel()->select(index(i, 0), QItemSelectionModel::Select);

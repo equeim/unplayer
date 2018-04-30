@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,13 +60,13 @@ namespace unplayer
         QString mTitle;
         QString mArtist;
         QString mAlbum;
-        int mYear;
-        int mTrackNumber;
+        int mYear = 0;
+        int mTrackNumber = 0;
         QString mGenre;
-        int mFileSize;
+        int mFileSize = 0;
         QString mMimeType;
-        int mDuration;
-        int mBitrate;
+        int mDuration = 0;
+        int mBitrate = 0;
     };
 }
 

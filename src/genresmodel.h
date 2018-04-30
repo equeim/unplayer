@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 #ifndef UNPLAYER_GENRESMODEL_H
 #define UNPLAYER_GENRESMODEL_H
 
+#include <vector>
+
 #include "databasemodel.h"
 
 namespace unplayer
@@ -36,7 +38,7 @@ namespace unplayer
         Q_INVOKABLE void toggleSortOrder();
 
         Q_INVOKABLE QStringList getTracksForGenre(int index) const;
-        Q_INVOKABLE QStringList getTracksForGenres(const QVector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTracksForGenres(const std::vector<int>& indexes) const;
     protected:
         QHash<int, QByteArray> roleNames() const override;
 

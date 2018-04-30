@@ -1,6 +1,6 @@
 /*
  * Unplayer
- * Copyright (C) 2015-2017 Alexey Rochev <equeim@gmail.com>
+ * Copyright (C) 2015-2018 Alexey Rochev <equeim@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,10 +46,15 @@ DockedPanel {
         } else {
             if (!Qt.inputMethod.visible) {
                 showPanel = false
-                listView.model.selectionModel.clear()
             }
         }
 
+    }
+
+    onShowPanelChanged: {
+        if (!showPanel) {
+            listView.model.selectionModel.clear()
+        }
     }
 
     onVisibleSizeChanged: {
