@@ -144,7 +144,8 @@ namespace unplayer
                 mpris->setCanPause(true);
                 mpris->setCanGoNext(true);
                 mpris->setCanGoPrevious(true);
-                mpris->setMetadata({{Mpris::metadataToString(Mpris::Title), track->title},
+                mpris->setMetadata({{Mpris::metadataToString(Mpris::TrackId), track->trackId},
+                                    {Mpris::metadataToString(Mpris::Title), track->title},
                                     {Mpris::metadataToString(Mpris::Artist), track->artist},
                                     {Mpris::metadataToString(Mpris::Album), track->album}});
             }
