@@ -221,11 +221,14 @@ Page {
                 id: progressBar
 
                 property int duration: Unplayer.Player.duration
+                property int remaining: duration - position
                 property int position: Unplayer.Player.position
 
                 handleVisible: false
-                label: Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
-                                                                                    Format.DurationShort)
+                label: "-%1 / %2".arg(Format.formatDuration(remaining / 1000, remaining >= 3600000 ? Format.DurationLong :
+                                                                                                      Format.DurationShort))
+                                .arg(Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
+                                                                                                  Format.DurationShort))
                 minimumValue: 0
                 maximumValue: duration ? duration : 1
 
