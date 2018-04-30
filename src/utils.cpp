@@ -46,6 +46,7 @@
 #include "queue.h"
 #include "queuemodel.h"
 #include "settings.h"
+#include "stdutils.h"
 #include "trackinfo.h"
 #include "tracksmodel.h"
 
@@ -58,7 +59,7 @@ namespace unplayer
 
     void Utils::registerTypes()
     {
-        qRegisterMetaType<QVector<int>>();
+        qRegisterMetaType<std::vector<int>>();
 
         const char* url = "harbour.unplayer";
         const int major = 0;
@@ -117,7 +118,7 @@ namespace unplayer
                     continue;
                 }
             }
-            if (LibraryUtils::mimeTypesByExtension.contains(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
+            if (contains(LibraryUtils::mimeTypesByExtension, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
                 parsed.append(filePath);
             }
         }

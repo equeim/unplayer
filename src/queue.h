@@ -20,6 +20,7 @@
 #define UNPLAYER_QUEUE_H
 
 #include <memory>
+#include <vector>
 
 #include <QObject>
 #include <QQuickImageProvider>
@@ -76,7 +77,7 @@ namespace unplayer
 
         explicit Queue(QObject* parent);
 
-        const QList<std::shared_ptr<QueueTrack>>& tracks() const;
+        const std::vector<std::shared_ptr<QueueTrack>>& tracks() const;
 
         int currentIndex() const;
         void setCurrentIndex(int index);
@@ -99,7 +100,7 @@ namespace unplayer
         Q_INVOKABLE void addTrack(const QString& track);
         Q_INVOKABLE void addTracks(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void removeTrack(int index);
-        Q_INVOKABLE void removeTracks(QVector<int> indexes);
+        Q_INVOKABLE void removeTracks(std::vector<int> indexes);
         Q_INVOKABLE void clear();
 
         Q_INVOKABLE void next();
@@ -113,8 +114,8 @@ namespace unplayer
         void reset();
 
     private:
-        QList<std::shared_ptr<QueueTrack>> mTracks;
-        QList<std::shared_ptr<QueueTrack>> mNotPlayedTracks;
+        std::vector<std::shared_ptr<QueueTrack>> mTracks;
+        std::vector<std::shared_ptr<QueueTrack>> mNotPlayedTracks;
 
         int mCurrentIndex;
         bool mShuffle;
@@ -130,9 +131,13 @@ namespace unplayer
         void shuffleChanged();
         void repeatModeChanged();
 
-        void tracksAdded(int start);
-        void trackRemoved(int index);
-        void tracksRemoved(const QVector<int>& indexes);
+        void tracksAboutToBeAdded(int count);
+        void tracksAdded();
+
+        void trackAboutToBeRemoved(int index);
+        void trackRemoved();
+
+        void aboutToBeCleared();
         void cleared();
 
         void addingTracksChanged();

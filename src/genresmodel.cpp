@@ -95,7 +95,7 @@ namespace unplayer
         return QStringList();
     }
 
-    QStringList GenresModel::getTracksForGenres(const QVector<int>& indexes) const
+    QStringList GenresModel::getTracksForGenres(const std::vector<int>& indexes) const
     {
         QStringList tracks;
         QSqlDatabase::database().transaction();

@@ -20,6 +20,8 @@
 #define UNPLAYER_QUEUEMODEL_H
 
 #include <memory>
+#include <vector>
+
 #include <QAbstractListModel>
 
 #include "queue.h"
@@ -49,14 +51,13 @@ namespace unplayer
         Queue* queue() const;
         void setQueue(Queue* queue);
 
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
+        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
         Queue* mQueue = nullptr;
-        QList<std::shared_ptr<QueueTrack>> mTracks;
     };
 }
 

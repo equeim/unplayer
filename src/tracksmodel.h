@@ -20,6 +20,7 @@
 #define UNPLAYER_TRACKSMODEL_H
 
 #include <QQmlParserStatus>
+
 #include "databasemodel.h"
 
 namespace unplayer
@@ -106,7 +107,7 @@ namespace unplayer
         InsideAlbumSortMode insideAlbumSortMode() const;
         void setInsideAlbumSortMode(InsideAlbumSortMode mode);
 
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
+        Q_INVOKABLE QStringList getTracks(const std::vector<int> &indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

@@ -19,6 +19,8 @@
 #ifndef UNPLAYER_FILTERPROXYMODEL_H
 #define UNPLAYER_FILTERPROXYMODEL_H
 
+#include <vector>
+
 #include <QCollator>
 #include <QQmlParserStatus>
 #include <QSortFilterProxyModel>
@@ -32,17 +34,17 @@ namespace unplayer
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
         Q_PROPERTY(bool sortEnabled READ isSortEnabled WRITE setSortEnabled)
-        Q_PROPERTY(QVector<int> sourceIndexes READ sourceIndexes)
+        Q_PROPERTY(std::vector<int> sourceIndexes READ sourceIndexes)
         Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
         Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectionChanged)
         Q_PROPERTY(int selectedIndexesCount READ selectedIndexesCount NOTIFY selectionChanged)
-        Q_PROPERTY(QVector<int> selectedSourceIndexes READ selectedSourceIndexes)
+        Q_PROPERTY(std::vector<int> selectedSourceIndexes READ selectedSourceIndexes)
     public:
         FilterProxyModel();
         void classBegin() override;
         void componentComplete() override;
 
-        QVector<int> sourceIndexes() const;
+        std::vector<int> sourceIndexes() const;
 
         bool isSortEnabled() const;
         void setSortEnabled(bool sortEnabled);
@@ -53,7 +55,7 @@ namespace unplayer
         QItemSelectionModel* selectionModel() const;
         bool hasSelection() const;
         int selectedIndexesCount() const;
-        QVector<int> selectedSourceIndexes() const;
+        std::vector<int> selectedSourceIndexes() const;
         Q_INVOKABLE bool isSelected(int row) const;
         Q_INVOKABLE void select(int row);
         Q_INVOKABLE void selectAll();

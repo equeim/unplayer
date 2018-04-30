@@ -76,7 +76,7 @@ namespace unplayer
         void loadDirectory();
 
         bool mComponentCompleted;
-        QVector<DirectoryContentFile> mFiles;
+        std::vector<DirectoryContentFile> mFiles;
         QString mDirectory;
         QString mParentDirectory;
         bool mShowFiles;

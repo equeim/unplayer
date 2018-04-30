@@ -200,7 +200,7 @@ namespace unplayer
         }
     }
 
-    QStringList TracksModel::getTracks(const QVector<int>& indexes)
+    QStringList TracksModel::getTracks(const std::vector<int>& indexes)
     {
         QStringList tracks;
         tracks.reserve(indexes.size());

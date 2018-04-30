@@ -19,7 +19,9 @@
 #ifndef UNPLAYER_ALBUMSMODEL_H
 #define UNPLAYER_ALBUMSMODEL_H
 
+#include <vector>
 #include <QQmlParserStatus>
+
 #include "databasemodel.h"
 
 namespace unplayer
@@ -74,7 +76,7 @@ namespace unplayer
         //Q_INVOKABLE void setSortSettings(bool sortDescending, SortMode sortMode);
 
         Q_INVOKABLE QStringList getTracksForAlbum(int index) const;
-        Q_INVOKABLE QStringList getTracksForAlbums(const QVector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTracksForAlbums(const std::vector<int>& indexes) const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

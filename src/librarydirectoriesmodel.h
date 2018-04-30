@@ -19,6 +19,7 @@
 #ifndef UNPLAYER_LIBRARYDIRECTORIESMODEL_H
 #define UNPLAYER_LIBRARYDIRECTORIESMODEL_H
 
+#include <vector>
 #include <QAbstractListModel>
 
 namespace unplayer
@@ -33,7 +34,7 @@ namespace unplayer
 
         Q_INVOKABLE void addDirectory(const QString& directory);
         Q_INVOKABLE void removeDirectory(int index);
-        Q_INVOKABLE void removeDirectories(QVector<int> indexes);
+        Q_INVOKABLE void removeDirectories(std::vector<int> indexes);
     protected:
         QHash<int, QByteArray> roleNames() const override;
     private:

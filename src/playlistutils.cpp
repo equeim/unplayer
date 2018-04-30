@@ -18,6 +18,9 @@
 
 #include "playlistutils.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -94,12 +97,12 @@ namespace unplayer
                                  inLibrary};
         }
 
-        QList<PlaylistTrack> tracksFromPaths(const QStringList& trackPaths)
+        std::vector<PlaylistTrack> tracksFromPaths(const QStringList& trackPaths)
         {
-            QList<PlaylistTrack> tracks;
+            std::vector<PlaylistTrack> tracks;
             tracks.reserve(trackPaths.size());
             for (const QString& filePath : trackPaths) {
-                tracks.append(trackFromFilePath(filePath));
+                tracks.push_back(trackFromFilePath(filePath));
             }
             return tracks;
         }
@@ -120,9 +123,9 @@ namespace unplayer
     }
 
     const QStringList PlaylistUtils::playlistsNameFilters{QLatin1String("*.pls"), QLatin1String("*.m3u")};
-    const QVector<QString> PlaylistUtils::playlistsMimeTypes{QLatin1String("audio/x-scpls"),
-                                                             QLatin1String("audio/x-mpegurl"),
-                                                             QLatin1String("application/vnd.apple.mpegurl")};
+    const std::vector<QString> PlaylistUtils::playlistsMimeTypes{QLatin1String("audio/x-scpls"),
+                                                                 QLatin1String("audio/x-mpegurl"),
+                                                                 QLatin1String("application/vnd.apple.mpegurl")};
 
     PlaylistUtils* PlaylistUtils::instance()
     {
@@ -142,7 +145,7 @@ namespace unplayer
         return QDir(mPlaylistsDirectoryPath).entryList(playlistsNameFilters, QDir::Files).size();
     }
 
-    void PlaylistUtils::savePlaylist(const QString& filePath, const QList<PlaylistTrack>& tracks)
+    void PlaylistUtils::savePlaylist(const QString& filePath, const std::vector<PlaylistTrack> &tracks)
     {
         switch (playlistTypeFromPath(filePath)) {
         case PlaylistType::Pls:
@@ -158,7 +161,7 @@ namespace unplayer
             stream << "[playlist]" << endl;
 
             for (int i = 0, max = tracks.size(); i < max; ++i) {
-                const PlaylistTrack& track = tracks.at(i);
+                const PlaylistTrack& track = tracks[i];
                 stream << "File" << i + 1 << '=' << track.filePath << endl;
                 stream << "Title" << i + 1 << '=' << track.title << endl;
                 if (track.hasDuration) {
@@ -203,8 +206,10 @@ namespace unplayer
 
     void PlaylistUtils::addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths)
     {
-        QList<PlaylistTrack> tracks(parsePlaylist(filePath));
-        tracks.append(tracksFromPaths(trackPaths));
+        std::vector<PlaylistTrack> tracks(parsePlaylist(filePath));
+        std::vector<PlaylistTrack> newTracks(tracksFromPaths(trackPaths));
+        tracks.reserve(tracks.size() + newTracks.size());
+        std::move(newTracks.begin(), newTracks.end(), std::back_inserter(tracks));
         savePlaylist(filePath, tracks);
     }
 
@@ -232,9 +237,9 @@ namespace unplayer
         }
     }
 
-    QList<PlaylistTrack> PlaylistUtils::parsePlaylist(const QString& filePath)
+    std::vector<PlaylistTrack> PlaylistUtils::parsePlaylist(const QString& filePath)
     {
-        QList<PlaylistTrack> tracks;
+        std::vector<PlaylistTrack> tracks;
         QDir playlistFileDir(QFileInfo(filePath).path());
 
         switch (playlistTypeFromPath(filePath)) {
@@ -280,7 +285,7 @@ namespace unplayer
                     }
                 }
 
-                tracks.append(track);
+                tracks.push_back(std::move(track));
             }
             QSqlDatabase::database().commit();
 
@@ -310,11 +315,11 @@ namespace unplayer
                             track.artist = line.midRef(commaIndex + 1, hyphenIndex - commaIndex - 1).trimmed().toString();
                             track.title = line.midRef(hyphenIndex + 1).trimmed().toString();
                         }
-                        tracks.append(track);
+                        tracks.push_back(std::move(track));
                     } else if (!line.startsWith('#') && !line.isEmpty()) {
                         const QString filePath(filePathFromString(line, playlistFileDir));
                         if (!filePath.isEmpty()) {
-                            tracks.append(trackFromFilePath(filePath));
+                            tracks.push_back(trackFromFilePath(filePath));
                         }
                     }
                 }

@@ -22,11 +22,11 @@ namespace unplayer
 {
     QVariant QueueModel::data(const QModelIndex& index, int role) const
     {
-        if (!index.isValid()) {
+        if (!mQueue || !index.isValid()) {
             return QVariant();
         }
 
-        const QueueTrack* track = mTracks.at(index.row()).get();
+        const QueueTrack* track = mQueue->tracks()[index.row()].get();
 
         switch (role) {
         case FilePathRole:
@@ -50,7 +50,10 @@ namespace unplayer
 
     int QueueModel::rowCount(const QModelIndex&) const
     {
-        return mTracks.size();
+        if (mQueue) {
+            return mQueue->tracks().size();
+        }
+        return 0;
     }
 
     Queue* QueueModel::queue() const
@@ -61,44 +64,39 @@ namespace unplayer
     void QueueModel::setQueue(Queue* queue)
     {
         mQueue = queue;
-        mTracks = mQueue->tracks();
 
-        QObject::connect(mQueue, &Queue::tracksAdded, this, [=](int start) {
-            const QList<std::shared_ptr<QueueTrack>>& tracks = mQueue->tracks();
-            for (int i = start, max = tracks.size(); i < max; i++) {
-                beginInsertRows(QModelIndex(), i, i);
-                mTracks.append(tracks.at(i));
-                endInsertRows();
-            }
+        QObject::connect(mQueue, &Queue::tracksAboutToBeAdded, this, [=](int count) {
+            const int fisrt = rowCount();
+            beginInsertRows(QModelIndex(), fisrt, fisrt + count);
         });
 
-        QObject::connect(mQueue, &Queue::trackRemoved, this, [=](int index) {
+        QObject::connect(mQueue, &Queue::tracksAdded, this, [=]() {
+            endInsertRows();
+        });
+
+        QObject::connect(mQueue, &Queue::trackAboutToBeRemoved, this, [=](int index) {
             beginRemoveRows(QModelIndex(), index, index);
-            mTracks.removeAt(index);
+        });
+
+        QObject::connect(mQueue, &Queue::trackRemoved, this, [=]() {
             endRemoveRows();
         });
 
-        QObject::connect(mQueue, &Queue::tracksRemoved, this, [=](const QVector<int>& indexes) {
-            for (int index : indexes) {
-                beginRemoveRows(QModelIndex(), index, index);
-                mTracks.removeAt(index);
-                endRemoveRows();
-            }
+        QObject::connect(mQueue, &Queue::aboutToBeCleared, this, [=]() {
+            beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
         });
 
         QObject::connect(mQueue, &Queue::cleared, this, [=]() {
-            beginRemoveRows(QModelIndex(), 0, mTracks.size() - 1);
-            mTracks.clear();
             endRemoveRows();
         });
     }
 
-    QStringList QueueModel::getTracks(const QVector<int>& indexes)
+    QStringList QueueModel::getTracks(const std::vector<int>& indexes)
     {
         QStringList tracks;
         tracks.reserve(indexes.size());
         for (int index : indexes) {
-            tracks.append(mTracks.at(index)->filePath);
+            tracks.append(mQueue->tracks()[index]->filePath);
         }
         return tracks;
     }

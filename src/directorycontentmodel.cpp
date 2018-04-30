@@ -148,23 +148,23 @@ namespace unplayer
         }
 
         auto future = QtConcurrent::run([=]() {
-            QVector<DirectoryContentFile> files;
+            std::vector<DirectoryContentFile> files;
             const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(nameFilters, filters));
             files.reserve(fileInfos.size());
             for (const QFileInfo& info : fileInfos) {
-                files.append({info.filePath(),
-                              info.fileName(),
-                              info.isDir()});
+                files.push_back({info.filePath(),
+                                 info.fileName(),
+                                 info.isDir()});
             }
             return files;
         });
 
-        using FutureWatcher = QFutureWatcher<QVector<DirectoryContentFile>>;
+        using FutureWatcher = QFutureWatcher<std::vector<DirectoryContentFile>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const QVector<DirectoryContentFile> files(watcher->result());
+            std::vector<DirectoryContentFile> files(watcher->result());
             beginInsertRows(QModelIndex(), 0, files.size() - 1);
-            mFiles = files;
+            mFiles = std::move(files);
             endInsertRows();
 
             mLoading = false;

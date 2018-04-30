@@ -24,6 +24,7 @@
 #include <QtConcurrentRun>
 
 #include "playlistutils.h"
+#include "stdutils.h"
 
 namespace unplayer
 {
@@ -58,7 +59,7 @@ namespace unplayer
         return mPlaylists.size();
     }
 
-    void PlaylistsModel::removePlaylists(const QVector<int>& indexes) const
+    void PlaylistsModel::removePlaylists(const std::vector<int>& indexes) const
     {
         QStringList paths;
         paths.reserve(indexes.size());
@@ -68,7 +69,7 @@ namespace unplayer
         PlaylistUtils::instance()->removePlaylists(paths);
     }
 
-    QStringList PlaylistsModel::getTracksForPlaylists(const QVector<int>& indexes) const
+    QStringList PlaylistsModel::getTracksForPlaylists(const std::vector<int>& indexes) const
     {
         QStringList tracks;
         for (int index : indexes) {
@@ -87,27 +88,27 @@ namespace unplayer
     void PlaylistsModel::update()
     {
         auto future = QtConcurrent::run([]() {
-            QList<PlaylistsModelItem> playlists;
+            std::vector<PlaylistsModelItem> playlists;
             const QList<QFileInfo> files(QDir(PlaylistUtils::instance()->playlistsDirectoryPath())
                                          .entryInfoList(PlaylistUtils::playlistsNameFilters, QDir::Files));
             playlists.reserve(files.size());
             for (const QFileInfo& fileInfo : files) {
-                playlists.append(PlaylistsModelItem{fileInfo.filePath(),
-                                                    fileInfo.completeBaseName(),
-                                                    PlaylistUtils::getPlaylistTracksCount(fileInfo.filePath())});
+                playlists.push_back(PlaylistsModelItem{fileInfo.filePath(),
+                                                       fileInfo.completeBaseName(),
+                                                       PlaylistUtils::getPlaylistTracksCount(fileInfo.filePath())});
             }
             return playlists;
         });
 
-        using FutureWatcher = QFutureWatcher<QList<PlaylistsModelItem>>;
+        using FutureWatcher = QFutureWatcher<std::vector<PlaylistsModelItem>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            const QList<PlaylistsModelItem> playlists(watcher->result());
+            const std::vector<PlaylistsModelItem> playlists(watcher->result());
 
             for (int i = 0, max = mPlaylists.size(); i < max; ++i) {
-                if (!playlists.contains(mPlaylists.at(i))) {
+                if (!contains(playlists, mPlaylists[i])) {
                     beginRemoveRows(QModelIndex(), i, i);
-                    mPlaylists.removeAt(i);
+                    mPlaylists.erase(mPlaylists.begin() + i);
                     endRemoveRows();
                     i--;
                     max--;
@@ -115,13 +116,13 @@ namespace unplayer
             }
 
             for (const PlaylistsModelItem& playlist : playlists) {
-                const int index = mPlaylists.indexOf(playlist);
-                if (index == -1) {
+                const auto found(std::find(mPlaylists.begin(), mPlaylists.end(), playlist));
+                if (found == mPlaylists.cend()) {
                     beginInsertRows(QModelIndex(), mPlaylists.size(), mPlaylists.size());
-                    mPlaylists.append(playlist);
+                    mPlaylists.push_back(playlist);
                     endInsertRows();
                 } else {
-                    mPlaylists[index] = playlist;
+                    *found = playlist;
                 }
             }
 

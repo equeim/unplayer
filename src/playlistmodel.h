@@ -19,7 +19,9 @@
 #ifndef UNPLAYER_PLAYLISTMODEL_H
 #define UNPLAYER_PLAYLISTMODEL_H
 
+#include <vector>
 #include <QAbstractListModel>
+
 #include "playlistutils.h"
 
 namespace unplayer
@@ -49,14 +51,14 @@ namespace unplayer
         const QString& filePath() const;
         void setFilePath(const QString& filePath);
 
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes);
+        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
         Q_INVOKABLE void removeTrack(int index);
-        Q_INVOKABLE void removeTracks(QVector<int> indexes);
+        Q_INVOKABLE void removeTracks(std::vector<int> indexes);
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        QList<PlaylistTrack> mTracks;
+        std::vector<PlaylistTrack> mTracks;
         QString mFilePath;
     };
 }

@@ -19,8 +19,12 @@
 #ifndef UNPLAYER_LIBRARYUTILS_H
 #define UNPLAYER_LIBRARYUTILS_H
 
+#include <vector>
+
 #include <QMimeDatabase>
 #include <QObject>
+
+#include <unordered_map>
 
 class QFileInfo;
 class QSqlDatabase;
@@ -62,13 +66,13 @@ namespace unplayer
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
-        static const QVector<QString> mimeTypesByExtension;
-        static const QVector<QString> mimeTypesByContent;
+        static const std::vector<QString> mimeTypesByExtension;
+        static const std::vector<QString> mimeTypesByContent;
         static LibraryUtils* instance();
 
         const QString& databaseFilePath();
 
-        static QString findMediaArtForDirectory(QHash<QString, QString>& directoriesHash, const QString& directoryPath);
+        static QString findMediaArtForDirectory(std::unordered_map<QString, QString> &directoriesHash, const QString& directoryPath);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
@@ -91,11 +95,11 @@ namespace unplayer
         LibraryUtils();
 
         QString getTrackMediaArt(const tagutils::Info& info,
-                                 QHash<QByteArray, QString>& embeddedMediaArtHash,
+                                 std::unordered_map<QByteArray, QString> &embeddedMediaArtHash,
                                  const QFileInfo& fileInfo,
-                                 QHash<QString, QString>& directoriesHash,
+                                 std::unordered_map<QString, QString> &directoriesHash,
                                  bool useDirectoriesMediaArt);
-        QString saveEmbeddedMediaArt(const QByteArray& data, QHash<QByteArray, QString>& embeddedMediaArtHash);
+        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtHash);
 
         bool mDatabaseInitialized;
         bool mCreatedTable;

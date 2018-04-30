@@ -102,7 +102,7 @@ namespace unplayer
         return QStringList();
     }
 
-    QStringList ArtistsModel::getTracksForArtists(const QVector<int>& indexes) const
+    QStringList ArtistsModel::getTracksForArtists(const std::vector<int>& indexes) const
     {
         QStringList tracks;
         QSqlDatabase::database().transaction();

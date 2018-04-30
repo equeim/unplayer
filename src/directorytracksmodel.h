@@ -19,6 +19,7 @@
 #ifndef UNPLAYER_DIRECTORYTRACKSMODEL_H
 #define UNPLAYER_DIRECTORYTRACKSMODEL_H
 
+#include <vector>
 #include <QAbstractListModel>
 
 #include "directorycontentproxymodel.h"
@@ -56,7 +57,7 @@ namespace unplayer
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount(const QModelIndex& parent) const override;
 
-        const QVector<DirectoryTrackFile>& files() const;
+        const std::vector<DirectoryTrackFile>& files() const;
 
         QString directory() const;
         void setDirectory(QString newDirectory);
@@ -65,7 +66,7 @@ namespace unplayer
         bool isLoaded() const;
 
         Q_INVOKABLE QString getTrack(int index) const;
-        Q_INVOKABLE QStringList getTracks(const QVector<int>& indexes, bool includePlaylists = true) const;
+        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes, bool includePlaylists = true) const;
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -75,7 +76,7 @@ namespace unplayer
         void onQueryFinished();
 
     private:
-        QVector<DirectoryTrackFile> mFiles;
+        std::vector<DirectoryTrackFile> mFiles;
 
         QString mDirectory;
         bool mLoaded = false;
@@ -107,6 +108,6 @@ namespace unplayer
     };
 }
 
-Q_DECLARE_TYPEINFO(unplayer::DirectoryTrackFile, Q_MOVABLE_TYPE);
+//Q_DECLARE_TYPEINFO(unplayer::DirectoryTrackFile, Q_MOVABLE_TYPE);
 
 #endif // UNPLAYER_DIRECTORYTRACKSMODEL_H
