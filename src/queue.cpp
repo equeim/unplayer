@@ -43,11 +43,8 @@ namespace unplayer
     namespace
     {
         const QString dbConnectionName(QLatin1String("unplayer_queue"));
-    }
 
-    namespace
-    {
-        void seedPRNG(void)
+        void seedPRNG()
         {
             static bool didSeedPRNG = false;
             if (!didSeedPRNG) {
