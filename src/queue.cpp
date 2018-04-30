@@ -30,6 +30,7 @@
 #include <QSqlQuery>
 #include <QSqlDatabase>
 #include <QSqlRecord>
+#include <QUuid>
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
@@ -54,7 +55,8 @@ namespace unplayer
         }
     }
 
-    QueueTrack::QueueTrack(const QString& filePath,
+    QueueTrack::QueueTrack(const QString& trackId,
+                           const QString& filePath,
                            const QString& title,
                            int duration,
                            const QString& artist,
@@ -361,7 +363,8 @@ namespace unplayer
                         album = albums.join(QLatin1String(", "));
                     }
 
-                    tracks.push_back(std::make_shared<QueueTrack>(std::move(filePath),
+                    tracks.push_back(std::make_shared<QueueTrack>(QUuid::createUuid().toString(),
+                                                                  std::move(filePath),
                                                                   std::move(title),
                                                                   duration,
                                                                   std::move(artist),

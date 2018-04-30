@@ -31,13 +31,16 @@ namespace unplayer
 {
     struct QueueTrack
     {
-        explicit QueueTrack(const QString& filePath,
+        explicit QueueTrack(const QString& trackId,
+                            const QString& filePath,
                             const QString& title,
                             int duration,
                             const QString& artist,
                             const QString& album,
                             const QString& mediaArtFilePath,
                             const QByteArray& mediaArtData);
+
+        QString trackId;
 
         QString filePath;
         QString title;
