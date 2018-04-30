@@ -46,10 +46,15 @@ DockedPanel {
         } else {
             if (!Qt.inputMethod.visible) {
                 showPanel = false
-                listView.model.selectionModel.clear()
             }
         }
 
+    }
+
+    onShowPanelChanged: {
+        if (!showPanel) {
+            listView.model.selectionModel.clear()
+        }
     }
 
     onVisibleSizeChanged: {
