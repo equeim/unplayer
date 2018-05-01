@@ -33,6 +33,7 @@ namespace unplayer
         const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
         const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
         const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
+        const QString showVideoFilesKey(QLatin1String("showVideoFiles"));
 
         const QString artistsSortDescendingKey(QLatin1String("artistsSortDescending"));
 
@@ -126,6 +127,16 @@ namespace unplayer
     void Settings::setRestorePlayerState(bool restore)
     {
         mSettings->setValue(restorePlayerStateKey, restore);
+    }
+
+    bool Settings::showVideoFiles() const
+    {
+        return mSettings->value(showVideoFilesKey, false).toBool();
+    }
+
+    void Settings::setShowVideoFiles(bool show)
+    {
+        mSettings->setValue(showVideoFilesKey, show);
     }
 
     bool Settings::artistsSortDescending() const

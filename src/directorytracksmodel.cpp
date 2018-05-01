@@ -39,6 +39,7 @@ namespace unplayer
 
     void DirectoryTracksModel::componentComplete()
     {
+        mShowVideoFiles = Settings::instance()->showVideoFiles();
         setDirectory(Settings::instance()->defaultDirectory());
     }
 
@@ -140,7 +141,8 @@ namespace unplayer
         endRemoveRows();
 
         const QString directory(mDirectory);
-        auto future = QtConcurrent::run([directory]() {
+        const bool showVideoFiles = mShowVideoFiles;
+        auto future = QtConcurrent::run([directory, showVideoFiles]() {
             std::vector<DirectoryTrackFile> files;
             const QMimeDatabase mimeDb;
             const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
@@ -153,7 +155,9 @@ namespace unplayer
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
                     const bool isPlaylist = contains(PlaylistUtils::playlistsMimeTypes, mimeType);
-                    if (isPlaylist || contains(LibraryUtils::mimeTypesByExtension, mimeType)) {
+                    if (isPlaylist
+                            || contains(LibraryUtils::mimeTypesByExtension, mimeType)
+                            || (showVideoFiles && contains(LibraryUtils::videoMimeTypesByExtension, mimeType))) {
                         files.push_back({info.filePath(),
                                          info.fileName(),
                                          false,

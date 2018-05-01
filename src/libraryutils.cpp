@@ -75,6 +75,11 @@ namespace unplayer
         const QLatin1String wavMimeType("audio/x-wav");
         const QLatin1String wavpackMimeType("audio/x-wavpack");
 
+        const QLatin1String mp4VideoMimeType("video/mp4");
+        const QLatin1String mpegVideoMimeType("video/mpeg");
+        const QLatin1String matroskaVideoMimeType("video/x-matroska");
+        const QLatin1String oggVideoMimeType("video/ogg");
+
 
         std::unique_ptr<LibraryUtils> instancePointer;
 
@@ -223,6 +228,11 @@ namespace unplayer
                                                             genericMatroskaMimeType,
                                                             wavMimeType,
                                                             wavpackMimeType};
+
+    const std::vector<QString> LibraryUtils::videoMimeTypesByExtension{mp4VideoMimeType,
+                                                                       mpegVideoMimeType,
+                                                                       matroskaVideoMimeType,
+                                                                       oggVideoMimeType};
 
     LibraryUtils* LibraryUtils::instance()
     {

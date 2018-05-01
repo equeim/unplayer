@@ -65,6 +65,16 @@ Page {
             }
 
             SectionHeader {
+                text: qsTranslate("unplayer", "Directories")
+            }
+
+            TextSwitch {
+                text: qsTranslate("unplayer", "Show video files")
+                onCheckedChanged: Unplayer.Settings.showVideoFiles = checked
+                Component.onCompleted: checked = Unplayer.Settings.showVideoFiles
+            }
+
+            SectionHeader {
                 text: qsTranslate("unplayer", "Library")
             }
 

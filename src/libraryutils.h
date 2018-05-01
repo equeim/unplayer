@@ -68,6 +68,7 @@ namespace unplayer
     public:
         static const std::vector<QString> mimeTypesByExtension;
         static const std::vector<QString> mimeTypesByContent;
+        static const std::vector<QString> videoMimeTypesByExtension;
         static LibraryUtils* instance();
 
         const QString& databaseFilePath();
