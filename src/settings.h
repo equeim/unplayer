@@ -33,6 +33,7 @@ namespace unplayer
         Q_PROPERTY(QString defaultDirectory READ defaultDirectory WRITE setDefaultDirectory)
         Q_PROPERTY(bool useDirectoryMediaArt READ useDirectoryMediaArt WRITE setUseDirectoryMediaArt)
         Q_PROPERTY(bool restorePlayerState READ restorePlayerState WRITE setRestorePlayerState)
+        Q_PROPERTY(bool showVideoFiles READ showVideoFiles WRITE setShowVideoFiles)
     public:
         static Settings* instance();
 
@@ -52,6 +53,9 @@ namespace unplayer
 
         bool restorePlayerState() const;
         void setRestorePlayerState(bool restore);
+
+        bool showVideoFiles() const;
+        void setShowVideoFiles(bool show);
 
         bool artistsSortDescending() const;
         void setArtistsSortDescending(bool descending);

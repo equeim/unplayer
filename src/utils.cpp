@@ -118,7 +118,9 @@ namespace unplayer
                     continue;
                 }
             }
-            if (contains(LibraryUtils::mimeTypesByExtension, mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name())) {
+            const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
+            if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
+                    || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
                 parsed.append(filePath);
             }
         }

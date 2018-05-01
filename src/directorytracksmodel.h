@@ -80,6 +80,8 @@ namespace unplayer
 
         QString mDirectory;
         bool mLoaded = false;
+
+        bool mShowVideoFiles = false;
     signals:
         void directoryChanged();
         void loadedChanged();
