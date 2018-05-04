@@ -40,26 +40,26 @@
         <location filename="../qml/components/AddToPlaylistPage.qml" line="44"/>
         <location filename="../qml/components/AlbumDelegate.qml" line="39"/>
         <location filename="../qml/components/AlbumPage.qml" line="56"/>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="45"/>
-        <location filename="../qml/components/ArtistPage.qml" line="54"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="45"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="98"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="45"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="134"/>
-        <location filename="../qml/components/GenresPage.qml" line="45"/>
-        <location filename="../qml/components/GenresPage.qml" line="88"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="57"/>
+        <location filename="../qml/components/ArtistPage.qml" line="66"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="57"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="128"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="61"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="164"/>
+        <location filename="../qml/components/GenresPage.qml" line="57"/>
+        <location filename="../qml/components/GenresPage.qml" line="118"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="40"/>
         <location filename="../qml/components/NowPlayingPage.qml" line="117"/>
         <location filename="../qml/components/QueuePage.qml" line="62"/>
         <location filename="../qml/components/QueuePage.qml" line="120"/>
-        <location filename="../qml/components/TracksPage.qml" line="51"/>
+        <location filename="../qml/components/TracksPage.qml" line="67"/>
         <source>Add to playlist</source>
         <translation>Добавить в список</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/AddToPlaylistPage.qml" line="48"/>
         <location filename="../qml/components/AlbumPageHeader.qml" line="92"/>
-        <location filename="../qml/components/ArtistPage.qml" line="85"/>
+        <location filename="../qml/components/ArtistPage.qml" line="115"/>
         <location filename="../qml/components/ArtistPageHeader.qml" line="91"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="77"/>
         <source>%n track(s)</source>
@@ -89,40 +89,46 @@
     <message>
         <location filename="../qml/components/AlbumDelegate.qml" line="34"/>
         <location filename="../qml/components/AlbumPage.qml" line="46"/>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="36"/>
-        <location filename="../qml/components/ArtistPage.qml" line="45"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="36"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="93"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="36"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="128"/>
-        <location filename="../qml/components/GenresPage.qml" line="36"/>
-        <location filename="../qml/components/GenresPage.qml" line="83"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="48"/>
+        <location filename="../qml/components/ArtistPage.qml" line="57"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="48"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="123"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="52"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="158"/>
+        <location filename="../qml/components/GenresPage.qml" line="48"/>
+        <location filename="../qml/components/GenresPage.qml" line="113"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="35"/>
         <location filename="../qml/components/PlaylistPage.qml" line="43"/>
         <location filename="../qml/components/PlaylistPage.qml" line="91"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="40"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="80"/>
-        <location filename="../qml/components/TracksPage.qml" line="42"/>
+        <location filename="../qml/components/TracksPage.qml" line="58"/>
         <source>Add to queue</source>
         <translation>Добавить в очередь</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumDelegate.qml" line="45"/>
-        <location filename="../qml/components/AlbumPage.qml" line="105"/>
+        <location filename="../qml/components/AlbumPage.qml" line="123"/>
         <source>Set cover image</source>
         <translation>Установить обложку</translation>
     </message>
     <message>
-        <location filename="../qml/components/AlbumDelegate.qml" line="80"/>
-        <location filename="../qml/components/AlbumPage.qml" line="111"/>
+        <location filename="../qml/components/AlbumDelegate.qml" line="85"/>
+        <location filename="../qml/components/AlbumPage.qml" line="129"/>
         <source>Select Image</source>
         <translation>Выбрать изображение</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/AlbumDelegate.qml" line="96"/>
+        <location filename="../qml/components/AlbumPage.qml" line="113"/>
+        <source>Are you sure you want to remove this album?</source>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/AlbumPage.qml" line="41"/>
         <location filename="../qml/components/PlaylistPage.qml" line="38"/>
         <location filename="../qml/components/QueuePage.qml" line="57"/>
-        <location filename="../qml/components/TracksPage.qml" line="37"/>
+        <location filename="../qml/components/TracksPage.qml" line="53"/>
         <source>%n track(s) selected</source>
         <translation>
             <numerusform>%n трек выбран</numerusform>
@@ -131,50 +137,57 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/AlbumPage.qml" line="120"/>
+        <location filename="../qml/components/AlbumPage.qml" line="138"/>
         <location filename="../qml/components/AlbumsSortPage.qml" line="36"/>
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="36"/>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="106"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="136"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="36"/>
-        <location filename="../qml/components/ArtistPage.qml" line="114"/>
-        <location filename="../qml/components/TracksPage.qml" line="114"/>
+        <location filename="../qml/components/ArtistPage.qml" line="162"/>
+        <location filename="../qml/components/TracksPage.qml" line="148"/>
         <source>Sort</source>
         <translation>Сортировать</translation>
     </message>
     <message>
-        <location filename="../qml/components/AlbumPage.qml" line="125"/>
+        <location filename="../qml/components/AlbumPage.qml" line="143"/>
         <location filename="../qml/components/PlaylistPage.qml" line="139"/>
-        <location filename="../qml/components/QueuePage.qml" line="169"/>
-        <location filename="../qml/components/TracksPage.qml" line="119"/>
+        <location filename="../qml/components/QueuePage.qml" line="168"/>
+        <location filename="../qml/components/TracksPage.qml" line="153"/>
         <source>Select tracks</source>
         <translation>Выбрать треки</translation>
     </message>
     <message>
-        <location filename="../qml/components/AlbumPage.qml" line="132"/>
+        <location filename="../qml/components/AlbumPage.qml" line="150"/>
         <location filename="../qml/components/PlaylistPage.qml" line="147"/>
-        <location filename="../qml/components/QueuePage.qml" line="176"/>
-        <location filename="../qml/components/TracksPage.qml" line="126"/>
+        <location filename="../qml/components/QueuePage.qml" line="175"/>
+        <location filename="../qml/components/TracksPage.qml" line="160"/>
         <source>No tracks</source>
         <translation>Нет треков</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="95"/>
-        <location filename="../src/tracksmodel.cpp" line="112"/>
+        <location filename="../src/albumsmodel.cpp" line="331"/>
+        <location filename="../src/tracksmodel.cpp" line="369"/>
         <source>Unknown album</source>
         <translation>Неизвестный альбом</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="83"/>
-        <location filename="../src/artistsmodel.cpp" line="57"/>
-        <location filename="../src/queue.cpp" line="342"/>
-        <location filename="../src/queue.cpp" line="349"/>
-        <location filename="../src/tracksmodel.cpp" line="104"/>
+        <location filename="../src/albumsmodel.cpp" line="329"/>
+        <location filename="../src/artistsmodel.cpp" line="223"/>
+        <location filename="../src/queue.cpp" line="354"/>
+        <location filename="../src/queue.cpp" line="361"/>
+        <location filename="../src/tracksmodel.cpp" line="368"/>
         <source>Unknown artist</source>
         <translation>Неизвестный исполнитель</translation>
     </message>
+    <message>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="34"/>
+        <location filename="../qml/components/ArtistPage.qml" line="43"/>
+        <location filename="../qml/components/GenresPage.qml" line="34"/>
+        <source>Removing albums...</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message numerus="yes">
-        <location filename="../qml/components/AllAlbumsPage.qml" line="31"/>
-        <location filename="../qml/components/ArtistPage.qml" line="40"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="43"/>
+        <location filename="../qml/components/ArtistPage.qml" line="52"/>
         <source>%n album(s) selected</source>
         <translation>
             <numerusform>%n альбом выбран</numerusform>
@@ -182,33 +195,43 @@
             <numerusform>%n альбомов выбраны</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../qml/components/AllAlbumsPage.qml" line="83"/>
+        <location filename="../qml/components/ArtistPage.qml" line="92"/>
+        <source>Are you sure you want to remove %n selected albums?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="75"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="62"/>
         <source>Albums</source>
         <translation>Альбомы</translation>
     </message>
     <message>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="111"/>
-        <location filename="../qml/components/ArtistPage.qml" line="119"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="141"/>
+        <location filename="../qml/components/ArtistPage.qml" line="167"/>
         <source>Select albums</source>
         <translation>Выбрать альбомы</translation>
     </message>
     <message>
-        <location filename="../qml/components/AllAlbumsPage.qml" line="118"/>
-        <location filename="../qml/components/ArtistPage.qml" line="126"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="148"/>
+        <location filename="../qml/components/ArtistPage.qml" line="174"/>
         <source>No albums</source>
         <translation>Нет альбомов</translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="75"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="50"/>
         <source>Artists</source>
         <translation>Исполнители</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/ArtistPageHeader.qml" line="84"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="81"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="111"/>
         <source>%n album(s)</source>
         <translation>
             <numerusform>%n альбом</numerusform>
@@ -217,18 +240,30 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="160"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="206"/>
         <source>No artists</source>
         <translation>Нет исполнителей</translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistPage.qml" line="100"/>
-        <location filename="../qml/components/ArtistsPage.qml" line="86"/>
+        <location filename="../qml/components/ArtistPage.qml" line="139"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="163"/>
+        <source>Are you sure you want to remove this artist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ArtistPage.qml" line="148"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="116"/>
         <source>All tracks</source>
         <translation>Все треки</translation>
     </message>
+    <message>
+        <location filename="../qml/components/ArtistsPage.qml" line="34"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="34"/>
+        <source>Removing files...</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message numerus="yes">
-        <location filename="../qml/components/ArtistsPage.qml" line="31"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="43"/>
         <source>%n artist(s) selected</source>
         <translation>
             <numerusform>%n исполнитель выбран</numerusform>
@@ -236,25 +271,34 @@
             <numerusform>%n исполнителей выбраны</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../qml/components/ArtistsPage.qml" line="83"/>
+        <source>Are you sure you want to remove %n selected artists?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="147"/>
-        <location filename="../qml/components/GenresPage.qml" line="127"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="193"/>
+        <location filename="../qml/components/GenresPage.qml" line="173"/>
         <source>Sort Descending</source>
         <translation>Сортировать по убыванию</translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="148"/>
-        <location filename="../qml/components/GenresPage.qml" line="128"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="194"/>
+        <location filename="../qml/components/GenresPage.qml" line="174"/>
         <source>Sort Ascending</source>
         <translation>Сортировать по возрастанию</translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="153"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="199"/>
         <source>Select artists</source>
         <translation>Выбрать исполнителей</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/components/DirectoriesPage.qml" line="31"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="47"/>
         <source>%n file(s) selected</source>
         <translation>
             <numerusform>%n файл выбран</numerusform>
@@ -262,20 +306,30 @@
             <numerusform>%n файлов выбраны</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../qml/components/DirectoriesPage.qml" line="81"/>
+        <source>Removing %n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="92"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="116"/>
         <location filename="../qml/components/MainPage.qml" line="127"/>
+        <location filename="../qml/components/SettingsPage.qml" line="68"/>
         <source>Directories</source>
         <translation>Каталоги</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="116"/>
-        <location filename="../qml/components/DirectoriesPage.qml" line="253"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="146"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="288"/>
         <source>Set as default directory</source>
         <translation>Установить по умолчанию</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="122"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="152"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="30"/>
         <location filename="../qml/components/NowPlayingPage.qml" line="122"/>
         <location filename="../qml/components/PlaylistPage.qml" line="86"/>
@@ -285,35 +339,35 @@
         <translation>Информация о треке</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="258"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="293"/>
         <source>Default directory</source>
         <translation>Каталог по умолчанию</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="263"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="298"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="195"/>
         <source>SD card</source>
         <translation>Карта памяти</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="268"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="303"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="207"/>
         <source>Home directory</source>
         <translation>Домашний каталог</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="274"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="309"/>
         <source>Select files</source>
         <translation>Выбрать файлы</translation>
     </message>
     <message>
-        <location filename="../qml/components/DirectoriesPage.qml" line="282"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="317"/>
         <location filename="../qml/components/FilePickerDialog.qml" line="216"/>
         <source>No files</source>
         <translation>Нет файлов</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/components/GenresPage.qml" line="31"/>
+        <location filename="../qml/components/GenresPage.qml" line="43"/>
         <source>%n genre(s) selected</source>
         <translation>
             <numerusform>%n жанр выбран</numerusform>
@@ -321,14 +375,23 @@
             <numerusform>%n жанров выбраны</numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="../qml/components/GenresPage.qml" line="83"/>
+        <source>Are you sure you want to remove %n selected genres?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../qml/components/GenresPage.qml" line="75"/>
+        <location filename="../qml/components/GenresPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="98"/>
         <source>Genres</source>
         <translation>Жанры</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/components/GenresPage.qml" line="79"/>
+        <location filename="../qml/components/GenresPage.qml" line="109"/>
         <source>%n track(s), %1</source>
         <translation>
             <numerusform>%n трек, %1</numerusform>
@@ -337,12 +400,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/GenresPage.qml" line="133"/>
+        <location filename="../qml/components/GenresPage.qml" line="150"/>
+        <source>Are you sure you want to remove this genre?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/GenresPage.qml" line="179"/>
         <source>Select genres</source>
         <translation>Выбрать жанры</translation>
     </message>
     <message>
-        <location filename="../qml/components/GenresPage.qml" line="140"/>
+        <location filename="../qml/components/GenresPage.qml" line="186"/>
         <source>No genres</source>
         <translation>Нет жанров</translation>
     </message>
@@ -367,7 +435,7 @@
     <message>
         <location filename="../qml/components/LibraryPage.qml" line="46"/>
         <location filename="../qml/components/MainPage.qml" line="51"/>
-        <location filename="../qml/components/SettingsPage.qml" line="68"/>
+        <location filename="../qml/components/SettingsPage.qml" line="78"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
@@ -414,7 +482,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/components/LibraryPage.qml" line="132"/>
+        <location filename="../qml/main.qml" line="98"/>
         <source>Updating library...</source>
         <translation>Обновление библиотеки...</translation>
     </message>
@@ -496,7 +564,7 @@
         <translation>Удаление списка</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="29"/>
+        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="32"/>
         <source>%n directories selected</source>
         <translation>
             <numerusform>%n каталог выбран</numerusform>
@@ -505,18 +573,33 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="34"/>
-        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="66"/>
+        <location filename="../qml/components/AlbumDelegate.qml" line="50"/>
+        <location filename="../qml/components/AlbumPage.qml" line="104"/>
+        <location filename="../qml/components/AllAlbumsPage.qml" line="76"/>
+        <location filename="../qml/components/ArtistPage.qml" line="85"/>
+        <location filename="../qml/components/ArtistPage.qml" line="130"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="76"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="133"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="80"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="135"/>
+        <location filename="../qml/components/DirectoriesPage.qml" line="169"/>
+        <location filename="../qml/components/GenresPage.qml" line="76"/>
+        <location filename="../qml/components/GenresPage.qml" line="123"/>
+        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="37"/>
+        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="69"/>
+        <location filename="../qml/components/LibraryTrackDelegate.qml" line="45"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="50"/>
         <location filename="../qml/components/PlaylistsPage.qml" line="85"/>
         <location filename="../qml/components/QueuePage.qml" line="81"/>
         <location filename="../qml/components/QueuePage.qml" line="130"/>
+        <location filename="../qml/components/RemoveFilesDialog.qml" line="34"/>
+        <location filename="../qml/components/TracksPage.qml" line="86"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../qml/components/LibraryDirectoriesPage.qml" line="54"/>
-        <location filename="../qml/components/SettingsPage.qml" line="90"/>
+        <location filename="../qml/components/SettingsPage.qml" line="100"/>
+        <location filename="../qml/components/SettingsPage.qml" line="108"/>
         <source>Library Directories</source>
         <translation>Каталоги библиотеки</translation>
     </message>
@@ -569,17 +652,17 @@
         <translation>Очередь</translation>
     </message>
     <message>
-        <location filename="../qml/components/QueuePage.qml" line="164"/>
+        <location filename="../qml/components/QueuePage.qml" line="163"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/components/SelectionPanel.qml" line="106"/>
+        <location filename="../qml/components/SelectionPanel.qml" line="111"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
     <message>
-        <location filename="../qml/components/SelectionPanel.qml" line="116"/>
+        <location filename="../qml/components/SelectionPanel.qml" line="121"/>
         <source>None</source>
         <translation>Ничего</translation>
     </message>
@@ -644,62 +727,62 @@
         <translation>Битрейт</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="137"/>
+        <location filename="../src/utils.cpp" line="140"/>
         <source>%1 h %2 m</source>
         <translation>%1 ч %2 м</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="141"/>
+        <location filename="../src/utils.cpp" line="144"/>
         <source>%1 m %2 s</source>
         <translation>%1 м %2 с</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="144"/>
+        <location filename="../src/utils.cpp" line="147"/>
         <source>%1 s</source>
         <translation>%1 с</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="164"/>
+        <location filename="../src/utils.cpp" line="167"/>
         <source>%1 B</source>
         <translation>%1 Б</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="166"/>
+        <location filename="../src/utils.cpp" line="169"/>
         <source>%1 KiB</source>
         <translation>%1 КиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="168"/>
+        <location filename="../src/utils.cpp" line="171"/>
         <source>%1 MiB</source>
         <translation>%1 МиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="170"/>
+        <location filename="../src/utils.cpp" line="173"/>
         <source>%1 GiB</source>
         <translation>%1 ГиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="172"/>
+        <location filename="../src/utils.cpp" line="175"/>
         <source>%1 TiB</source>
         <translation>%1 ТиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="174"/>
+        <location filename="../src/utils.cpp" line="177"/>
         <source>%1 PiB</source>
         <translation>%1 ПиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="176"/>
+        <location filename="../src/utils.cpp" line="179"/>
         <source>%1 EiB</source>
         <translation>%1 ЭиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="178"/>
+        <location filename="../src/utils.cpp" line="181"/>
         <source>%1 ZiB</source>
         <translation>%1 ЗиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="180"/>
+        <location filename="../src/utils.cpp" line="183"/>
         <source>%1 YiB</source>
         <translation>%1 ЙиБ</translation>
     </message>
@@ -709,7 +792,7 @@
         <translation>Сопровождающий</translation>
     </message>
     <message>
-        <location filename="../qml/components/BaseTrackDelegate.qml" line="68"/>
+        <location filename="../qml/components/BaseTrackDelegate.qml" line="70"/>
         <source>%1 - %2</source>
         <translation></translation>
     </message>
@@ -735,8 +818,19 @@
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="72"/>
+        <source>Show video files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/SettingsPage.qml" line="82"/>
         <source>Open library on startup</source>
         <translation>Открывать библиотеку при запуске</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/SettingsPage.qml" line="130"/>
+        <location filename="../qml/components/SettingsPage.qml" line="138"/>
+        <source>Blacklisted Directories</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/trackinfo.cpp" line="102"/>
@@ -797,6 +891,30 @@
         <location filename="../qml/components/AllTracksSortPage.qml" line="92"/>
         <source>Inside Album</source>
         <translation>Внутри альбома</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/LibraryTrackDelegate.qml" line="69"/>
+        <source>Are you sure you want to remove this track?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/RemoveFilesDialog.qml" line="39"/>
+        <source>Delete files from the device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/TracksPage.qml" line="40"/>
+        <source>Removing tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../qml/components/TracksPage.qml" line="93"/>
+        <source>Are you sure you want to remove %n selected tracks?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 </TS>
