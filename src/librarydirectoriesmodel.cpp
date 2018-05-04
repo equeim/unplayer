@@ -24,10 +24,23 @@
 
 namespace unplayer
 {
-    LibraryDirectoriesModel::LibraryDirectoriesModel()
-        : mDirectories(Settings::instance()->libraryDirectories())
+    void LibraryDirectoriesModel::classBegin()
     {
 
+    }
+
+    void LibraryDirectoriesModel::componentComplete()
+    {
+        switch (mType) {
+        case Library:
+            mDirectories = Settings::instance()->libraryDirectories();
+            break;
+        case Blacklisted:
+            mDirectories = Settings::instance()->blacklistedDirectories();
+            break;
+        default:
+            break;
+        }
     }
 
     QVariant LibraryDirectoriesModel::data(const QModelIndex& index, int role) const
@@ -43,12 +56,32 @@ namespace unplayer
         return mDirectories.size();
     }
 
+    LibraryDirectoriesModel::Type LibraryDirectoriesModel::type() const
+    {
+        return mType;
+    }
+
+    void LibraryDirectoriesModel::setType(const Type& type)
+    {
+        mType = type;
+    }
+
     void LibraryDirectoriesModel::addDirectory(const QString& directory)
     {
         beginInsertRows(QModelIndex(), mDirectories.size(), mDirectories.size());
         mDirectories.append(directory);
         endInsertRows();
-        Settings::instance()->setLibraryDirectories(mDirectories);
+
+        switch (mType) {
+        case Library:
+            Settings::instance()->setLibraryDirectories(mDirectories);
+            break;
+        case Blacklisted:
+            Settings::instance()->setBlacklistedDirectories(mDirectories);
+            break;
+        default:
+            break;
+        }
     }
 
     void LibraryDirectoriesModel::removeDirectory(int index)
@@ -56,7 +89,17 @@ namespace unplayer
         beginRemoveRows(QModelIndex(), index, index);
         mDirectories.removeAt(index);
         endRemoveRows();
-        Settings::instance()->setLibraryDirectories(mDirectories);
+
+        switch (mType) {
+        case Library:
+            Settings::instance()->setLibraryDirectories(mDirectories);
+            break;
+        case Blacklisted:
+            Settings::instance()->setBlacklistedDirectories(mDirectories);
+            break;
+        default:
+            break;
+        }
     }
 
     void LibraryDirectoriesModel::removeDirectories(std::vector<int> indexes)
@@ -67,7 +110,17 @@ namespace unplayer
             mDirectories.removeAt(index);
             endRemoveRows();
         }
-        Settings::instance()->setLibraryDirectories(mDirectories);
+
+        switch (mType) {
+        case Library:
+            Settings::instance()->setLibraryDirectories(mDirectories);
+            break;
+        case Blacklisted:
+            Settings::instance()->setBlacklistedDirectories(mDirectories);
+            break;
+        default:
+            break;
+        }
     }
 
     QHash<int, QByteArray> LibraryDirectoriesModel::roleNames() const

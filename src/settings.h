@@ -45,6 +45,9 @@ namespace unplayer
         bool openLibraryOnStartup() const;
         void setOpenLibraryOnStartup(bool open);
 
+        QStringList blacklistedDirectories() const;
+        void setBlacklistedDirectories(const QStringList& directories);
+
         QString defaultDirectory() const;
         void setDefaultDirectory(const QString& directory);
 
