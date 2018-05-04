@@ -543,5 +543,80 @@
         <source>Year</source>
         <translation>År</translation>
     </message>
+    <message>
+        <source>Are you sure you want to remove this album?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing albums...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected albums?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this artist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected artists?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Removing %n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected genres?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this genre?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this track?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete files from the device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show video files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blacklisted Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected tracks?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 </TS>
