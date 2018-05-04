@@ -53,6 +53,7 @@ qtmpris_install="${build_directory}/3rdparty/qtmpris/install"
 mkdir -p "${qtmpris_install}"
 qtmpris_build="${build_directory}/3rdparty/qtmpris/build"
 if [ ! -d "${qtmpris_build}" ]; then
+    mkdir -p "${qtmpris_build}"
     cd "${qtmpris_build}"
     %qmake5 "%{_builddir}/3rdparty/qtmpris-0.0.8" \
         CONFIG+=release \
@@ -66,7 +67,7 @@ fi
 taglib_install="${build_directory}/3rdparty/taglib/install"
 mkdir -p "${taglib_install}"
 taglib_build="${build_directory}/3rdparty/taglib/build"
-if [ ! -d "${qtmpris_build}" ]; then
+if [ ! -d "${taglib_build}" ]; then
     mkdir -p "${taglib_build}"
     cd "${taglib_build}"
     cmake "%{_builddir}/3rdparty/taglib-1.11.1" \
@@ -89,7 +90,7 @@ if [ ! -e "${build_directory}/config.log" ]; then
         --qtmpris-rpath-link="${qtdbusextended_install}/usr/lib" \
         --harbour
 fi
-python waf build -v
+python waf build
 
 %install
 rm -rf "%{buildroot}"
