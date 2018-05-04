@@ -40,6 +40,11 @@ BaseTrackDelegate {
                 text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
             }
+
+            MenuItem {
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeTrackDialog)
+            }
         }
     }
 
@@ -53,6 +58,17 @@ BaseTrackDelegate {
                 }
             } else {
                 Unplayer.Player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
+            }
+        }
+    }
+
+    Component {
+        id: removeTrackDialog
+
+        RemoveFilesDialog {
+            title: qsTranslate("unplayer", "Are you sure you want to remove this track?")
+            onAccepted: {
+                tracksModel.removeTrack(tracksProxyModel.sourceIndex(model.index), deleteFiles)
             }
         }
     }

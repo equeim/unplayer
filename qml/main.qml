@@ -33,6 +33,8 @@ ApplicationWindow
 
     signal mediaArtReloadNeeded()
 
+    //property alias modelDialog: modelDialog
+
     _defaultPageOrientations: Orientation.All
     allowedOrientations: defaultAllowedOrientations
     bottomMargin: nowPlayingPanel.visibleSize
@@ -71,6 +73,52 @@ ApplicationWindow
         function addTracksToQueue(tracks) {
             if (tracks.length) {
                 Unplayer.Player.queue.addTracks(tracks, true)
+            }
+        }
+    }
+
+    Rectangle {
+        id: modalDialog
+
+        property bool active: false
+        property string text
+
+        anchors.fill: parent
+        color: Theme.rgba("black", 0.8)
+        opacity: active ? 1 : 0
+        Behavior on opacity { FadeAnimation { } }
+
+        Binding on active {
+            //when: Unplayer.LibraryUtils.updating
+            value: Unplayer.LibraryUtils.updating
+        }
+
+        Binding on text {
+            when: Unplayer.LibraryUtils.updating
+            value: qsTranslate("unplayer", "Updating library...")
+        }
+
+        SilicaFlickable {
+            anchors.fill: parent
+            enabled: modalDialog.active
+
+            BusyIndicator {
+                id: busyIndicator
+
+                anchors {
+                    bottom: placeholder.top
+                    bottomMargin: Theme.paddingLarge
+                    horizontalCenter: parent.horizontalCenter
+                }
+                size: BusyIndicatorSize.Large
+                running: modalDialog.active
+            }
+
+            ViewPlaceholder {
+                id: placeholder
+                verticalOffset: (busyIndicator.height + Theme.paddingLarge) / 2
+                enabled: modalDialog.active
+                text: modalDialog.text
             }
         }
     }

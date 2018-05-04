@@ -19,9 +19,10 @@
 #ifndef UNPLAYER_TRACKSMODEL_H
 #define UNPLAYER_TRACKSMODEL_H
 
-#include <QQmlParserStatus>
+#include <vector>
 
-#include "databasemodel.h"
+#include <QAbstractListModel>
+#include <QQmlParserStatus>
 
 namespace unplayer
 {
@@ -51,9 +52,21 @@ namespace unplayer
         };
     };
 
-    class TracksModel : public DatabaseModel
+    struct Track
+    {
+        QString filePath;
+        QString title;
+        QString artist;
+        QString album;
+        int duration;
+    };
+
+    class TracksModel : public QAbstractListModel, public QQmlParserStatus
     {
         Q_OBJECT
+
+        Q_INTERFACES(QQmlParserStatus)
+
         Q_ENUMS(Role)
 
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
@@ -65,6 +78,8 @@ namespace unplayer
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
         Q_PROPERTY(unplayer::TracksModelSortMode::Mode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
         Q_PROPERTY(unplayer::TracksModelInsideAlbumSortMode::Mode insideAlbumSortMode READ insideAlbumSortMode WRITE setInsideAlbumSortMode NOTIFY insideAlbumSortModeChanged)
+
+        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -79,9 +94,11 @@ namespace unplayer
         using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;
 
         ~TracksModel() override;
+        void classBegin() override;
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
+        int rowCount(const QModelIndex& parent) const override;
 
         bool allArtists() const;
         void setAllArtists(bool allArtists);
@@ -107,13 +124,19 @@ namespace unplayer
         InsideAlbumSortMode insideAlbumSortMode() const;
         void setInsideAlbumSortMode(InsideAlbumSortMode mode);
 
-        Q_INVOKABLE QStringList getTracks(const std::vector<int> &indexes);
+        bool isRemovingFiles() const;
+
+        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
+        Q_INVOKABLE void removeTrack(int index, bool deleteFile);
+        Q_INVOKABLE void removeTracks(std::vector<int> indexes, bool deleteFiles);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        void setQuery();
+        void execQuery();
+
+        std::vector<Track> mTracks;
 
         bool mAllArtists = true;
         bool mAllAlbums = true;
@@ -125,9 +148,12 @@ namespace unplayer
         SortMode mSortMode = SortMode::ArtistAlbumYear;
         InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::TrackNumber;
 
+        bool mRemovingFiles = false;
+
     signals:
         void sortModeChanged();
         void insideAlbumSortModeChanged();
+        void removingFilesChanged();
     };
 }
 

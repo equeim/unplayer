@@ -16,32 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UNPLAYER_DATABASEMODEL_H
-#define UNPLAYER_DATABASEMODEL_H
+import QtQuick 2.2
+import Sailfish.Silica 1.0
 
-#include <memory>
+import harbour.unplayer 0.1 as Unplayer
 
-#include <QAbstractListModel>
-#include <QQmlParserStatus>
-#include <QSqlQuery>
+Dialog {
+    property alias title: header.title
+    property alias deleteFiles: deleteFilesSwitch.checked
 
-namespace unplayer
-{
-    class DatabaseModel : public QAbstractListModel, public QQmlParserStatus
-    {
-        Q_OBJECT
-        Q_INTERFACES(QQmlParserStatus)
-    public:
-        DatabaseModel();
-        void classBegin() override;
-        void componentComplete() override;
-        int rowCount(const QModelIndex& parent) const override;
-    protected:
-        void execQuery();
+    Column {
+        id: column
+        width: parent.width
 
-        std::unique_ptr<QSqlQuery> mQuery;
-        int mRowCount;
-    };
+        DialogHeader {
+            id: header
+            acceptText: qsTranslate("unplayer", "Remove")
+        }
+
+        TextSwitch {
+            id: deleteFilesSwitch
+            text:  qsTranslate("unplayer", "Delete files from the device")
+            checked: true
+        }
+    }
 }
-
-#endif // UNPLAYER_DATABASEMODEL_H

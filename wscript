@@ -52,7 +52,6 @@ def build(context):
         source=[
             "src/albumsmodel.cpp",
             "src/artistsmodel.cpp",
-            "src/databasemodel.cpp",
             "src/directorycontentmodel.cpp",
             "src/directorycontentproxymodel.cpp",
             "src/directorytracksmodel.cpp",
@@ -77,7 +76,6 @@ def build(context):
         moc=[
             "src/albumsmodel.h",
             "src/artistsmodel.h",
-            "src/databasemodel.h",
             "src/directorycontentmodel.h",
             "src/directorycontentproxymodel.h",
             "src/directorytracksmodel.h",

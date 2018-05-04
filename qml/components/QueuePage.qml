@@ -148,7 +148,6 @@ Page {
                     }
                 }
             }
-            ListView.onRemove: animateRemoval()
         }
         model: Unplayer.FilterProxyModel {
             id: queueProxyModel

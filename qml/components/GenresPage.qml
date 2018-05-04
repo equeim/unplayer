@@ -22,6 +22,18 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: genresModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing albums...")
+    }
+
     SearchPanel {
         id: searchPanel
     }
@@ -58,6 +70,24 @@ Page {
                     }
                 }
             }
+
+            MenuItem {
+                enabled: genresProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeGenresDialog)
+
+                Component {
+                    id: removeGenresDialog
+
+                    RemoveFilesDialog {
+                        title: qsTranslate("unplayer", "Are you sure you want to remove %n selected genres?", String(), genresProxyModel.selectedIndexesCount)
+                        onAccepted: {
+                            genresModel.removeGenres(genresProxyModel.selectedSourceIndexes, deleteFiles)
+                            selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -88,6 +118,11 @@ Page {
                         text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)) })
                     }
+
+                    MenuItem {
+                        text: qsTranslate("unplayer", "Remove")
+                        onClicked: pageStack.push(removeGenreDialog)
+                    }
                 }
             }
 
@@ -105,6 +140,17 @@ Page {
                     pageTitle: model.genre
                     allArtists: true
                     genre: model.genre
+                }
+            }
+
+            Component {
+                id: removeGenreDialog
+
+                RemoveFilesDialog {
+                    title: qsTranslate("unplayer", "Are you sure you want to remove this genre?")
+                    onAccepted: {
+                        genresModel.removeGenre(genresProxyModel.sourceIndex(model.index), deleteFiles)
+                    }
                 }
             }
         }

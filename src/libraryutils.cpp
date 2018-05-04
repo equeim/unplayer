@@ -234,6 +234,8 @@ namespace unplayer
                                                                        matroskaVideoMimeType,
                                                                        oggVideoMimeType};
 
+    const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
+
     LibraryUtils* LibraryUtils::instance()
     {
         if (!instancePointer) {
@@ -279,7 +281,7 @@ namespace unplayer
             return;
         }
 
-        auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
+        auto db = QSqlDatabase::addDatabase(databaseType);
         db.setDatabaseName(mDatabaseFilePath);
         if (!db.open()) {
             qWarning() << "failed to open database:" << db.lastError();
@@ -357,7 +359,7 @@ namespace unplayer
             qDebug() << "start scanning files";
             const QTime time(QTime::currentTime());
             {
-                auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), rescanConnectionName);
+                auto db = QSqlDatabase::addDatabase(databaseType, rescanConnectionName);
                 db.setDatabaseName(mDatabaseFilePath);
                 if (!db.open()) {
                     QSqlDatabase::removeDatabase(rescanConnectionName);
@@ -792,6 +794,27 @@ namespace unplayer
         } else {
             qWarning() << "failed to update media art in the database:" << query.lastError();
         }
+    }
+
+    void LibraryUtils::removeFileFromDatabase(const QString& filePath)
+    {
+        QSqlQuery query;
+        query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
+        query.addBindValue(filePath);
+        if (!query.exec()) {
+            qWarning() << "failed to remove file from database" << query.lastQuery();
+        }
+    }
+
+    void LibraryUtils::removeFilesFromDatabase(const QStringList &files)
+    {
+        auto db = QSqlDatabase::database();
+        db.transaction();
+        for (const QString& filePath : files) {
+            removeFileFromDatabase(filePath);
+        }
+        db.commit();
+        emit databaseChanged();
     }
 
     LibraryUtils::LibraryUtils()

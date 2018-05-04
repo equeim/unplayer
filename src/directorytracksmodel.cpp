@@ -20,10 +20,14 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <QFutureWatcher>
 #include <QItemSelectionModel>
 #include <QMimeDatabase>
 #include <QStandardPaths>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
@@ -123,6 +127,82 @@ namespace unplayer
         return list;
     }
 
+    void DirectoryTracksModel::removeTrack(int index)
+    {
+        removeTracks({index});
+    }
+
+    void DirectoryTracksModel::removeTracks(std::vector<int> indexes)
+    {
+        if (mRemovingFiles || !mLoaded) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run(std::bind([this](std::vector<int>& indexes) {
+            std::reverse(indexes.begin(), indexes.end());
+            std::vector<int> removed;
+            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
+            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+            if (!db.open()) {
+                QSqlDatabase::removeDatabase(staticMetaObject.className());
+                qWarning() << "failed to open database" << db.lastError();
+                return removed;
+            }
+            db.transaction();
+            for (int index : indexes) {
+                QString filePath(mFiles[index].filePath);
+                const bool isDir = QFileInfo(filePath).isDir();
+                if (isDir) {
+                    if (!QDir(filePath).removeRecursively()) {
+                        qWarning() << "failed to remove directory:" << filePath;
+                        continue;
+                    }
+                } else {
+                    if (!QFile::remove(filePath)) {
+                        qWarning() << "failed to remove file:" << filePath;
+                        continue;
+                    }
+                }
+                removed.push_back(index);
+
+                QSqlQuery query(db);
+                if (isDir) {
+                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE instr(filePath, ?) = 1"));
+                    filePath.append('/');
+                } else {
+                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
+                }
+                query.addBindValue(filePath);
+                if (!query.exec()) {
+                    qWarning() << "failed to remove file from database" << query.lastQuery();
+                }
+            }
+            db.commit();
+            QSqlDatabase::removeDatabase(db.connectionName());
+
+            return removed;
+        }, std::move(indexes)));
+
+        using Watcher = QFutureWatcher<std::vector<int>>;
+        auto watcher = new Watcher(this);
+        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+
+            for (int index : watcher->result()) {
+                beginRemoveRows(QModelIndex(), index, index);
+                mFiles.erase(mFiles.begin() + index);
+                endRemoveRows();
+            }
+            emit LibraryUtils::instance()->databaseChanged();
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
+    }
+
     QHash<int, QByteArray> DirectoryTracksModel::roleNames() const
     {
         return {{FilePathRole, "filePath"},
@@ -133,6 +213,10 @@ namespace unplayer
 
     void DirectoryTracksModel::loadDirectory()
     {
+        if (mRemovingFiles) {
+            return;
+        }
+
         mLoaded = false;
         emit loadedChanged();
 
@@ -175,10 +259,16 @@ namespace unplayer
             beginInsertRows(QModelIndex(), 0, files.size() - 1);
             mFiles = std::move(files);
             endInsertRows();
+
             mLoaded = true;
             emit loadedChanged();
         });
         watcher->setFuture(future);
+    }
+
+    bool DirectoryTracksModel::isRemovingFiles() const
+    {
+        return mRemovingFiles;
     }
 
     DirectoryTracksProxyModel::DirectoryTracksProxyModel()

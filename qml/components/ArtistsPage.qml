@@ -22,6 +22,18 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: artistsModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing files...")
+    }
+
     SearchPanel {
         id: searchPanel
     }
@@ -54,6 +66,24 @@ Page {
                             if (added) {
                                 selectionPanel.showPanel = false
                             }
+                        }
+                    }
+                }
+            }
+
+            MenuItem {
+                enabled: artistsProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeArtistsDialog)
+
+                Component {
+                    id: removeArtistsDialog
+
+                    RemoveFilesDialog {
+                        title: qsTranslate("unplayer", "Are you sure you want to remove %n selected artists?", String(), artistsProxyModel.selectedIndexesCount)
+                        onAccepted: {
+                            artistsModel.removeArtists(artistsProxyModel.selectedSourceIndexes, deleteFiles)
+                            selectionPanel.showPanel = false
                         }
                     }
                 }
@@ -98,6 +128,11 @@ Page {
                         text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)) })
                     }
+
+                    MenuItem {
+                        text: qsTranslate("unplayer", "Remove")
+                        onClicked: pageStack.push(removeArtistDialog)
+                    }
                 }
             }
 
@@ -118,6 +153,17 @@ Page {
                     tracksCount: model.tracksCount
                     duration: model.duration
                     mediaArt: artistDelegate.mediaArt
+                }
+            }
+
+            Component {
+                id: removeArtistDialog
+
+                RemoveFilesDialog {
+                    title: qsTranslate("unplayer", "Are you sure you want to remove this artist?")
+                    onAccepted: {
+                        artistsModel.removeArtist(artistsProxyModel.sourceIndex(model.index), deleteFiles)
+                    }
                 }
             }
 

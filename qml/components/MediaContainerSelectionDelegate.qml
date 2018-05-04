@@ -22,6 +22,7 @@ MediaContainerListItem {
     id: delegate
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
+    ListView.onRemove: animateRemoval()
 
     Binding {
         target: delegate

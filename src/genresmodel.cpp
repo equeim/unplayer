@@ -19,7 +19,13 @@
 #include "genresmodel.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QFutureWatcher>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QtConcurrentRun>
 
+#include "libraryutils.h"
 #include "settings.h"
 
 namespace unplayer
@@ -42,24 +48,30 @@ namespace unplayer
     }
 
     GenresModel::GenresModel()
-        : mSortDescending(Settings::instance()->genresSortDescending())
+        : mSortDescending(Settings::instance()->genresSortDescending()),
+          mRemovingFiles(false)
     {
-        setQuery();
+        execQuery();
     }
 
     QVariant GenresModel::data(const QModelIndex& index, int role) const
     {
-        mQuery->seek(index.row());
+        const Genre& genre = mGenres[index.row()];
         switch (role) {
         case GenreRole:
-            return mQuery->value(GenreField);
+            return genre.genre;
         case TracksCountRole:
-            return mQuery->value(TracksCountField);
+            return genre.tracksCount;
         case DurationRole:
-            return mQuery->value(DurationField);
+            return genre.duration;
         default:
             return QVariant();
         }
+    }
+
+    int GenresModel::rowCount(const QModelIndex&) const
+    {
+        return mGenres.size();
     }
 
     bool GenresModel::sortDescending() const
@@ -72,7 +84,12 @@ namespace unplayer
         mSortDescending = !mSortDescending;
         Settings::instance()->setGenresSortDescending(mSortDescending);
         emit sortDescendingChanged();
-        setQuery();
+        execQuery();
+    }
+
+    bool GenresModel::isRemovingFiles() const
+    {
+        return mRemovingFiles;
     }
 
     QStringList GenresModel::getTracksForGenre(int index) const
@@ -81,8 +98,7 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath FROM tracks "
                                      "WHERE genre = ?  "
                                      "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
-        mQuery->seek(index);
-        query.addBindValue(mQuery->value(GenreField).toString());
+        query.addBindValue(mGenres[index].genre);
         if (query.exec()) {
             QStringList tracks;
             while (query.next()) {
@@ -106,22 +122,109 @@ namespace unplayer
         return tracks;
     }
 
+    void GenresModel::removeGenre(int index, bool deleteFiles)
+    {
+        removeGenres({index}, deleteFiles);
+    }
+
+    void GenresModel::removeGenres(std::vector<int> indexes, bool deleteFiles)
+    {
+        if (mRemovingFiles) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run(std::bind([this, deleteFiles](std::vector<int>& indexes) {
+            std::reverse(indexes.begin(), indexes.end());
+            std::vector<int> removed;
+            {
+                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
+                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+                if (!db.open()) {
+                    QSqlDatabase::removeDatabase(staticMetaObject.className());
+                    qWarning() << "failed to open database" << db.lastError();
+                    return removed;
+                }
+                db.transaction();
+
+                for (int index : indexes) {
+                    const QString genre(mGenres[index].genre);
+
+                    if (deleteFiles) {
+                        QSqlQuery query(db);
+                        query.prepare(QStringLiteral("SELECT DISTINCT filePath FROM tracks WHERE genre = ?"));
+                        query.addBindValue(genre);
+                        query.exec();
+                        while (query.next()) {
+                            const QString filePath(query.value(0).toString());
+                            if (!QFile::remove(filePath)) {
+                                qWarning() << "failed to remove file:" << filePath;
+                            }
+                        }
+                    }
+
+                    QSqlQuery query(db);
+                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE genre = ?"));
+                    query.addBindValue(genre);
+                    if (query.exec()) {
+                        removed.push_back(index);
+                    } else {
+                        qWarning() << "failed to remove files from database" << query.lastQuery() << query.lastError();
+                    }
+                }
+                db.commit();
+            }
+            QSqlDatabase::removeDatabase(staticMetaObject.className());
+
+            return removed;
+        }, std::move(indexes)));
+
+        using Watcher = QFutureWatcher<std::vector<int>>;
+        auto watcher = new Watcher(this);
+        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+
+            for (int index : watcher->result()) {
+                beginRemoveRows(QModelIndex(), index, index);
+                mGenres.erase(mGenres.begin() + index);
+                endRemoveRows();
+            }
+            emit LibraryUtils::instance()->databaseChanged();
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
+    }
+
     QHash<int, QByteArray> GenresModel::roleNames() const
     {
         return {{GenreRole, "genre"},
                 {TracksCountRole, "tracksCount"},
-                {DurationRole, "duration"}};
+            {DurationRole, "duration"}};
     }
 
-    void GenresModel::setQuery()
+    void GenresModel::execQuery()
     {
         beginResetModel();
-        mQuery->prepare(QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
+        mGenres.clear();
+        QSqlQuery query(QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
                                             "WHERE genre != '' "
                                             "GROUP BY genre "
                                             "ORDER BY genre %1").arg(mSortDescending ? QLatin1String("DESC")
                                                                                      : QLatin1String("ASC")));
-        execQuery();
+
+        if (query.lastError().type() == QSqlError::NoError) {
+            while (query.next()) {
+                mGenres.push_back({query.value(GenreField).toString(),
+                                   query.value(TracksCountField).toInt(),
+                                   query.value(DurationField).toInt()});
+            }
+
+        } else {
+            qWarning() << query.lastError();
+        }
         endResetModel();
     }
 }

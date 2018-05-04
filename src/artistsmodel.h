@@ -20,16 +20,25 @@
 #define UNPLAYER_ARTISTSMODEL_H
 
 #include <vector>
-
-#include "databasemodel.h"
+#include <QAbstractListModel>
 
 namespace unplayer
 {
-    class ArtistsModel : public DatabaseModel
+    struct Artist
+    {
+        QString artist;
+        QString displayedArtist;
+        int albumsCount;
+        int tracksCount;
+        int duration;
+    };
+
+    class ArtistsModel : public QAbstractListModel
     {
         Q_OBJECT
         Q_ENUMS(Role)
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
+        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -43,23 +52,32 @@ namespace unplayer
         ArtistsModel();
 
         QVariant data(const QModelIndex& index, int role) const override;
+        int rowCount(const QModelIndex& parent) const override;
 
         bool sortDescending() const;
 
         Q_INVOKABLE void toggleSortOrder();
 
+        bool isRemovingFiles() const;
+
         Q_INVOKABLE QStringList getTracksForArtist(int index) const;
         Q_INVOKABLE QStringList getTracksForArtists(const std::vector<int>& indexes) const;
+
+        Q_INVOKABLE void removeArtist(int index, bool deleteFiles);
+        Q_INVOKABLE void removeArtists(std::vector<int> indexes, bool deleteFiles);
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        void setQuery();
+        void execQuery();
 
+        std::vector<Artist> mArtists;
         bool mSortDescending;
 
+        bool mRemovingFiles;
     signals:
         void sortDescendingChanged();
+        void removingFilesChanged();
     };
 }
 

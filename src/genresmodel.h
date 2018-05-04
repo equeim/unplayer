@@ -20,35 +20,52 @@
 #define UNPLAYER_GENRESMODEL_H
 
 #include <vector>
-
-#include "databasemodel.h"
+#include <QAbstractListModel>
 
 namespace unplayer
 {
-    class GenresModel : public DatabaseModel
+    struct Genre
+    {
+        QString genre;
+        int tracksCount;
+        int duration;
+    };
+
+    class GenresModel : public QAbstractListModel
     {
         Q_OBJECT
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
+        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         GenresModel();
 
         QVariant data(const QModelIndex& index, int role) const override;
+        int rowCount(const QModelIndex& parent) const override;
 
         bool sortDescending() const;
         Q_INVOKABLE void toggleSortOrder();
 
+        bool isRemovingFiles() const;
+
         Q_INVOKABLE QStringList getTracksForGenre(int index) const;
         Q_INVOKABLE QStringList getTracksForGenres(const std::vector<int>& indexes) const;
+
+        Q_INVOKABLE void removeGenre(int index, bool deleteFiles);
+        Q_INVOKABLE void removeGenres(std::vector<int> indexes, bool deleteFiles);
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        void setQuery();
+        void execQuery();
 
+        std::vector<Genre> mGenres;
         bool mSortDescending;
+
+        bool mRemovingFiles;
 
     signals:
         void sortDescendingChanged();
+        void removingFilesChanged();
     };
 }
 
