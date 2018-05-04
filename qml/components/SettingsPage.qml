@@ -105,6 +105,40 @@ Page {
                 Component {
                     id: libraryDirectoriesPageComponent
                     LibraryDirectoriesPage {
+                        title: qsTranslate("unplayer", "Library Directories")
+                        model: Unplayer.LibraryDirectoriesModel {
+                            type: Unplayer.LibraryDirectoriesModel.Library
+                        }
+                        Component.onDestruction: libraryChanged = changed
+                    }
+                }
+            }
+
+            BackgroundItem {
+                id: blacklistedDirectoriesItem
+
+                onClicked: pageStack.push(blacklistedDirectoriesPageComponent)
+
+                Label {
+                    anchors {
+                        left: parent.left
+                        leftMargin: Theme.horizontalPageMargin
+                        right: parent.right
+                        rightMargin: Theme.horizontalPageMargin
+                        verticalCenter: parent.verticalCenter
+                    }
+                    text: qsTranslate("unplayer", "Blacklisted Directories")
+                    color: blacklistedDirectoriesItem.highlighted ? Theme.highlightColor : Theme.primaryColor
+                    truncationMode: TruncationMode.Fade
+                }
+
+                Component {
+                    id: blacklistedDirectoriesPageComponent
+                    LibraryDirectoriesPage {
+                        title: qsTranslate("unplayer", "Blacklisted Directories")
+                        model: Unplayer.LibraryDirectoriesModel {
+                            type: Unplayer.LibraryDirectoriesModel.Blacklisted
+                        }
                         Component.onDestruction: libraryChanged = changed
                     }
                 }

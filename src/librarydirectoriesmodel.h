@@ -21,24 +21,41 @@
 
 #include <vector>
 #include <QAbstractListModel>
+#include <QQmlParserStatus>
 
 namespace unplayer
 {
-    class LibraryDirectoriesModel : public QAbstractListModel
+    class LibraryDirectoriesModel : public QAbstractListModel, public QQmlParserStatus
     {
         Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
+        Q_ENUMS(Type)
+        Q_PROPERTY(Type type READ type WRITE setType)
     public:
-        LibraryDirectoriesModel();
+        enum Type
+        {
+            Library,
+            Blacklisted
+        };
+
+        void classBegin() override;
+        void componentComplete() override;
+
         QVariant data(const QModelIndex& index, int role) const override;
         int rowCount(const QModelIndex& parent) const override;
+
+        Type type() const;
+        void setType(const Type& type);
 
         Q_INVOKABLE void addDirectory(const QString& directory);
         Q_INVOKABLE void removeDirectory(int index);
         Q_INVOKABLE void removeDirectories(std::vector<int> indexes);
+
     protected:
         QHash<int, QByteArray> roleNames() const override;
     private:
         QStringList mDirectories;
+        Type mType = Library;
     };
 }
 

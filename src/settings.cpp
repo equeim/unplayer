@@ -30,6 +30,7 @@ namespace unplayer
     {
         const QString libraryDirectoriesKey(QLatin1String("libraryDirectories"));
         const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
+        const QString blacklistedDirectoriesKey(QLatin1String("blacklistedDirectories"));
         const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
         const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
         const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
@@ -97,6 +98,16 @@ namespace unplayer
     void Settings::setOpenLibraryOnStartup(bool open)
     {
         mSettings->setValue(openLibraryOnStartupKey, open);
+    }
+
+    QStringList Settings::blacklistedDirectories() const
+    {
+        return mSettings->value(blacklistedDirectoriesKey).toStringList();
+    }
+
+    void Settings::setBlacklistedDirectories(const QStringList& directories)
+    {
+        mSettings->setValue(blacklistedDirectoriesKey, directories);
     }
 
     QString Settings::defaultDirectory() const

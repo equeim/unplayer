@@ -392,6 +392,15 @@ namespace unplayer
 
                 QStringList libraryDirectories(Settings::instance()->libraryDirectories());
                 libraryDirectories.removeDuplicates();
+                for (QString& directory : libraryDirectories) {
+                    directory = QFileInfo(directory + "/").absoluteFilePath();
+                }
+
+                QStringList blacklistedDirectories(Settings::instance()->blacklistedDirectories());
+                blacklistedDirectories.removeDuplicates();
+                for (QString& directory : blacklistedDirectories) {
+                    directory = QFileInfo(directory + "/").absoluteFilePath();
+                }
 
                 if (!QDir().mkpath(mMediaArtDirectory)) {
                     qWarning() << "failed to create media art directory:" << mMediaArtDirectory;
@@ -405,10 +414,10 @@ namespace unplayer
                     const auto filesEnd(files.cend());
                     auto idsIterator(ids.begin());
                     while (filesIterator != filesEnd) {
-                        const QString& filePath = filesIterator->first;
                         const int id = *idsIterator;
+                        const QFileInfo fileInfo(filesIterator->first);
+                        const QString filePath(fileInfo.absoluteFilePath());
 
-                        const QFileInfo fileInfo(filePath);
                         bool remove = false;
                         if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
                             remove = true;
@@ -420,8 +429,18 @@ namespace unplayer
                                     break;
                                 }
                             }
+
                             if (!remove) {
-                                const QString directory(fileInfo.path());
+                                for (const QString& directory : blacklistedDirectories) {
+                                    if (filePath.startsWith(directory)) {
+                                        remove = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!remove) {
+                                const QString directory(fileInfo.absolutePath());
                                 const auto found(noMediaDirectories.find(directory));
                                 if (found != noMediaDirectories.end()) {
                                     if (found->second) {
@@ -500,8 +519,9 @@ namespace unplayer
                             return;
                         }
 
-                        const QString filePath(iterator.next());
-                        const QFileInfo fileInfo(filePath);
+                        iterator.next();
+                        const QFileInfo fileInfo(iterator.fileInfo());
+                        const QString filePath(fileInfo.absoluteFilePath());
 
                         if (fileInfo.isDir()) {
                             continue;
@@ -532,6 +552,21 @@ namespace unplayer
                         const auto foundInDb(files.find(filePath));
 
                         if (foundInDb == files.end()) {
+                            // not in db
+
+                            { // check if inside blacklisted directory or its subdirectories
+                                bool found = false;
+                                for (const QString& directory : blacklistedDirectories) {
+                                    if (filePath.startsWith(directory)) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    continue;
+                                }
+                            }
+
                             QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
                             if (contains(mimeTypesByExtension, mimeType)) {
                                 mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name();
@@ -556,6 +591,8 @@ namespace unplayer
                                 }
                             }
                         } else {
+                            // in db
+
                             const int id = files[filePath];
 
                             const long long modificationTime = fileInfo.lastModified().toMSecsSinceEpoch();

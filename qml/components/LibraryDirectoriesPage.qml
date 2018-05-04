@@ -22,6 +22,9 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: libraryDirectoriesPage
+    property string title
+    property alias model: proxyModel.sourceModel
     property bool changed: false
 
     SelectionPanel {
@@ -33,7 +36,7 @@ Page {
                 enabled: proxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: {
-                    libraryDirectoriesModel.removeDirectories(proxyModel.selectedSourceIndexes)
+                    model.removeDirectories(proxyModel.selectedSourceIndexes)
                     changed = true
                     selectionPanel.showPanel = false
                 }
@@ -51,7 +54,7 @@ Page {
         clip: true
 
         header: PageHeader {
-            title: qsTranslate("unplayer", "Library Directories")
+            title: libraryDirectoriesPage.title
         }
         delegate: ListItem {
             id: delegate
@@ -59,7 +62,7 @@ Page {
             menu: ContextMenu {
                 MenuItem {
                     function remove() {
-                        libraryDirectoriesModel.removeDirectory(model.index)
+                        libraryDirectoriesPage.model.removeDirectory(model.index)
                         changed = true
                         delegate.menuOpenChanged.disconnect(remove)
                     }
@@ -103,9 +106,6 @@ Page {
 
         model: Unplayer.FilterProxyModel {
             id: proxyModel
-            sourceModel: Unplayer.LibraryDirectoriesModel {
-                id: libraryDirectoriesModel
-            }
         }
 
         PullDownMenu {
@@ -124,7 +124,7 @@ Page {
                         title: qsTranslate("unplayer", "Select directory")
                         showFiles: false
                         onAccepted: {
-                            libraryDirectoriesModel.addDirectory(filePath)
+                            model.addDirectory(filePath)
                             changed = true
                         }
                     }
