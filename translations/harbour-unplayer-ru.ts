@@ -122,7 +122,7 @@
         <location filename="../qml/components/AlbumDelegate.qml" line="96"/>
         <location filename="../qml/components/AlbumPage.qml" line="113"/>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этот альбом?</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/AlbumPage.qml" line="41"/>
@@ -183,7 +183,7 @@
         <location filename="../qml/components/ArtistPage.qml" line="43"/>
         <location filename="../qml/components/GenresPage.qml" line="34"/>
         <source>Removing albums...</source>
-        <translation type="unfinished"></translation>
+        <translation>Удаление альбомов...</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/AllAlbumsPage.qml" line="43"/>
@@ -199,12 +199,10 @@
         <location filename="../qml/components/AllAlbumsPage.qml" line="83"/>
         <location filename="../qml/components/ArtistPage.qml" line="92"/>
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный альбом?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных альбома?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных альбомов?</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/components/AllAlbumsPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="62"/>
@@ -248,7 +246,7 @@
         <location filename="../qml/components/ArtistPage.qml" line="139"/>
         <location filename="../qml/components/ArtistsPage.qml" line="163"/>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этого исполнителя?</translation>
     </message>
     <message>
         <location filename="../qml/components/ArtistPage.qml" line="148"/>
@@ -260,7 +258,7 @@
         <location filename="../qml/components/ArtistsPage.qml" line="34"/>
         <location filename="../qml/components/DirectoriesPage.qml" line="34"/>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Удаление файлов...</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/ArtistsPage.qml" line="43"/>
@@ -274,12 +272,10 @@
     <message numerus="yes">
         <location filename="../qml/components/ArtistsPage.qml" line="83"/>
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Вы уверены, что хотите удалить %n выбранного исполнителя?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителя?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителей?</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/components/ArtistsPage.qml" line="193"/>
         <location filename="../qml/components/GenresPage.qml" line="173"/>
@@ -309,12 +305,10 @@
     <message numerus="yes">
         <location filename="../qml/components/DirectoriesPage.qml" line="81"/>
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Удаление %n файла</numerusform>
+        <numerusform>Удаление %n файлов</numerusform>
+        <numerusform>Удаление %n файлов</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="116"/>
         <location filename="../qml/components/MainPage.qml" line="127"/>
@@ -378,12 +372,10 @@
     <message numerus="yes">
         <location filename="../qml/components/GenresPage.qml" line="83"/>
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный жанр?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных жанра?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных жанров?</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/components/GenresPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="98"/>
@@ -402,7 +394,7 @@
     <message>
         <location filename="../qml/components/GenresPage.qml" line="150"/>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этот жанр?</translation>
     </message>
     <message>
         <location filename="../qml/components/GenresPage.qml" line="179"/>
@@ -819,7 +811,7 @@
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="72"/>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Показывать видеофайлы</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="82"/>
@@ -830,7 +822,7 @@
         <location filename="../qml/components/SettingsPage.qml" line="130"/>
         <location filename="../qml/components/SettingsPage.qml" line="138"/>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Черный список каталогов</translation>
     </message>
     <message>
         <location filename="../src/trackinfo.cpp" line="102"/>
@@ -895,26 +887,24 @@
     <message>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="69"/>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этот трек?</translation>
     </message>
     <message>
         <location filename="../qml/components/RemoveFilesDialog.qml" line="39"/>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить файлы с устройства</translation>
     </message>
     <message>
         <location filename="../qml/components/TracksPage.qml" line="40"/>
         <source>Removing tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Удаление треков...</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/TracksPage.qml" line="93"/>
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный трек?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных трека?</numerusform>
+        <numerusform>Вы уверены, что хотите удалить %n выбранных треков?</numerusform>
+        </translation></message>
 </context>
 </TS>
