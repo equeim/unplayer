@@ -10,5 +10,6 @@ lupdate ../src ../qml -ts harbour-unplayer-en.ts \
                           harbour-unplayer-it.ts \
                           harbour-unplayer-nb.ts \
                           harbour-unplayer-nl.ts \
+                          harbour-unplayer-nl_BE.ts \
                           harbour-unplayer-ru.ts \
                           harbour-unplayer-sv.ts

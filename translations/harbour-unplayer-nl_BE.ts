@@ -25,9 +25,11 @@
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message>
         <source>New playlist...</source>
         <translation>Nieuwe speellijst...</translation>
@@ -54,9 +56,11 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation><numerusform>%n nummer geselecteerd</numerusform>
-        <numerusform>%n nummers geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer geselecteerd</numerusform>
+            <numerusform>%n nummers geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Select tracks</source>
         <translation>Selecteerd nummers</translation>
@@ -79,18 +83,22 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation><numerusform>%n album geselecteerd</numerusform>
-        <numerusform>%n albums geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album geselecteerd</numerusform>
+            <numerusform>%n albums geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Select albums</source>
         <translation>Selecteerd albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Artists</source>
         <translation>Artiesten</translation>
@@ -105,9 +113,11 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation><numerusform>%n artiest geselecteerd</numerusform>
-        <numerusform>%n artiesten geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n artiest geselecteerd</numerusform>
+            <numerusform>%n artiesten geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Select artists</source>
         <translation>Selecteerd artiesten</translation>
@@ -134,18 +144,22 @@
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation><numerusform>%n genre geselecteerd</numerusform>
-        <numerusform>%n genres geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n genre geselecteerd</numerusform>
+            <numerusform>%n genres geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Genres</source>
         <translation></translation>
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation><numerusform>%n nummer, %1</numerusform>
-        <numerusform>%n nummers, %1</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer, %1</numerusform>
+            <numerusform>%n nummers, %1</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Select genres</source>
         <translation>Selecteerd genres</translation>
@@ -160,24 +174,32 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation><numerusform>%n artiest</numerusform>
-        <numerusform>%n artiesten</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n artiest</numerusform>
+            <numerusform>%n artiesten</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation><numerusform>%n album</numerusform>
-        <numerusform>%n albums</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albums</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation><numerusform>%n nummer</numerusform>
-        <numerusform>%n nummers</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer</numerusform>
+            <numerusform>%n nummers</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation><numerusform>%n speellijst</numerusform>
-        <numerusform>%n speellijsten</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n speellijst</numerusform>
+            <numerusform>%n speellijsten</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Tracks</source>
         <translation>Nummers</translation>
@@ -212,23 +234,29 @@
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation><numerusform>%n nummer verwijderen</numerusform>
-        <numerusform>%n nummers verwijderen</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n nummer verwijderen</numerusform>
+            <numerusform>%n nummers verwijderen</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Remove</source>
         <translation>Verwijderen</translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation><numerusform>%n speellijst geselecteerd</numerusform>
-        <numerusform>%n speellijsten geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n speellijst geselecteerd</numerusform>
+            <numerusform>%n speellijsten geselecteerd</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation><numerusform>%n speellijst verwijderen</numerusform>
-        <numerusform>%n speellijsten verwijderen</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n speellijst verwijderen</numerusform>
+            <numerusform>%n speellijsten verwijderen</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Select playlists</source>
         <translation>Selecteerd speellijsten</translation>
@@ -351,9 +379,11 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>%n bestand geselecteerd</numerusform>
-        <numerusform>%n bestanden geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n bestand geselecteerd</numerusform>
+            <numerusform>%n bestanden geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>Instellen als standaardmap</translation>
@@ -368,9 +398,11 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform>%n map geselecteerd</numerusform>
-        <numerusform>%n mappen geselecteerd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n map geselecteerd</numerusform>
+            <numerusform>%n mappen geselecteerd</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Library Directories</source>
         <translation>Bibliotheekmappen</translation>
@@ -510,6 +542,81 @@
     <message>
         <source>Year</source>
         <translation>Jaar</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this album?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing albums...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected albums?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this artist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected artists?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Removing %n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected genres?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this genre?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this track?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete files from the device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show video files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blacklisted Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removing tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Are you sure you want to remove %n selected tracks?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 </TS>
