@@ -101,6 +101,24 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeAlbumDialog)
+
+                Component {
+                    id: removeAlbumDialog
+
+                    RemoveFilesDialog {
+                        acceptDestination: pageStack.previousPage(albumPage)
+                        acceptDestinationAction: PageStackAction.Pop
+                        title: qsTranslate("unplayer", "Are you sure you want to remove this album?")
+                        onAccepted: {
+                            albumsModel.removeAlbum(albumsProxyModel.sourceIndex(model.index), deleteFiles)
+                        }
+                    }
+                }
+            }
+
+            MenuItem {
                 visible: !unknownArtist && !unknownAlbum
                 text: qsTranslate("unplayer", "Set cover image")
                 onClicked: pageStack.push(filePickerDialogComponent)

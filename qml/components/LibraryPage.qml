@@ -102,35 +102,4 @@ Page {
 
         VerticalScrollDecorator { }
     }
-
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.rgba("black", 0.8)
-        opacity: Unplayer.LibraryUtils.updating ? 1 : 0
-        Behavior on opacity { FadeAnimation { } }
-
-        SilicaFlickable {
-            anchors.fill: parent
-            enabled: Unplayer.LibraryUtils.updating
-
-            BusyIndicator {
-                id: busyIndicator
-
-                anchors {
-                    bottom: updatingPlaceholder.top
-                    bottomMargin: Theme.paddingLarge
-                    horizontalCenter: parent.horizontalCenter
-                }
-                size: BusyIndicatorSize.Large
-                running: Unplayer.LibraryUtils.updating
-            }
-
-            ViewPlaceholder {
-                id: updatingPlaceholder
-                verticalOffset: (busyIndicator.height + Theme.paddingLarge) / 2
-                enabled: Unplayer.LibraryUtils.updating
-                text: qsTranslate("unplayer", "Updating library...")
-            }
-        }
-    }
 }

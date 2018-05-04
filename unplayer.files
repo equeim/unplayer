@@ -1,3 +1,4 @@
+qml/components/RemoveFilesDialog.qml
 wscript
 CHANGELOG.md
 
@@ -7,8 +8,6 @@ src/albumsmodel.cpp
 src/albumsmodel.h
 src/artistsmodel.cpp
 src/artistsmodel.h
-src/databasemodel.cpp
-src/databasemodel.h
 src/directorycontentmodel.cpp
 src/directorycontentmodel.h
 src/directorycontentproxymodel.cpp

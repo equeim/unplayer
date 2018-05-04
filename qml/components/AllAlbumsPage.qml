@@ -22,6 +22,18 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: albumsModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing albums...")
+    }
+
     SearchPanel {
         id: searchPanel
     }
@@ -54,6 +66,24 @@ Page {
                             if (added) {
                                 selectionPanel.showPanel = false
                             }
+                        }
+                    }
+                }
+            }
+
+            MenuItem {
+                enabled: albumsProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeAlbumsDialog)
+
+                Component {
+                    id: removeAlbumsDialog
+
+                    RemoveFilesDialog {
+                        title: qsTranslate("unplayer", "Are you sure you want to remove %n selected albums?", String(), albumsProxyModel.selectedIndexesCount)
+                        onAccepted: {
+                            albumsModel.removeAlbums(albumsProxyModel.selectedSourceIndexes, deleteFiles)
+                            selectionPanel.showPanel = false
                         }
                     }
                 }

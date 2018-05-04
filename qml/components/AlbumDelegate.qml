@@ -45,6 +45,11 @@ MediaContainerSelectionDelegate {
                 text: qsTranslate("unplayer", "Set cover image")
                 onClicked: pageStack.push(filePickerDialogComponent)
             }
+
+            MenuItem {
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeAlbumDialog)
+            }
         }
     }
 
@@ -81,6 +86,17 @@ MediaContainerSelectionDelegate {
             fileIcon: "image://theme/icon-m-image"
             nameFilters: Unplayer.Utils.imageNameFilters
             onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
+        }
+    }
+
+    Component {
+        id: removeAlbumDialog
+
+        RemoveFilesDialog {
+            title: qsTranslate("unplayer", "Are you sure you want to remove this album?")
+            onAccepted: {
+                albumsModel.removeAlbum(albumsProxyModel.sourceIndex(model.index), deleteFiles)
+            }
         }
     }
 }

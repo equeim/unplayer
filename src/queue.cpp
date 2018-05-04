@@ -259,7 +259,7 @@ namespace unplayer
             }
 
             {
-                auto db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), dbConnectionName);
+                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, dbConnectionName);
                 db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
                 if (!db.open()) {
                     qWarning() << "failed to open database" << db.lastError();

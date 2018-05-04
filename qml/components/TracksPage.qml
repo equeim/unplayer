@@ -28,8 +28,24 @@ Page {
     property alias artist: tracksModel.artist
     property alias genre: tracksModel.genre
 
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: tracksModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing tracks...")
+    }
+
     SearchPanel {
         id: searchPanel
+    }
+
+    RemorsePopup {
+        id: remorsePopup
     }
 
     SelectionPanel {
@@ -60,6 +76,24 @@ Page {
                             if (added) {
                                 selectionPanel.showPanel = false
                             }
+                        }
+                    }
+                }
+            }
+
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeTracksDialog)
+
+                Component {
+                    id: removeTracksDialog
+
+                    RemoveFilesDialog {
+                        title: qsTranslate("unplayer", "Are you sure you want to remove %n selected tracks?", String(), tracksProxyModel.selectedIndexesCount)
+                        onAccepted: {
+                            tracksModel.removeTracks(tracksProxyModel.selectedSourceIndexes, deleteFiles)
+                            selectionPanel.showPanel = false
                         }
                     }
                 }

@@ -22,8 +22,24 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: directoryTracksModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing files...")
+    }
+
     SearchPanel {
         id: searchPanel
+    }
+
+    RemorsePopup {
+        id: remorsePopup
     }
 
     SelectionPanel {
@@ -57,6 +73,14 @@ Page {
                         }
                     }
                 }
+            }
+
+            MenuItem {
+                enabled: directoryTracksProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: remorsePopup.execute(qsTranslate("unplayer", "Removing %n files", String(), directoryTracksProxyModel.selectedIndexesCount), function() {
+                    directoryTracksModel.removeTracks(directoryTracksProxyModel.selectedSourceIndexes)
+                })
             }
         }
     }
@@ -107,6 +131,12 @@ Page {
         delegate: ListItem {
             id: fileDelegate
 
+            function remove() {
+                remorseAction(qsTranslate("unplayer", "Remove"), function() {
+                                  directoryTracksModel.removeTrack(directoryTracksProxyModel.sourceIndex(model.index))
+                              })
+            }
+
             property bool current: model.filePath === Unplayer.Player.queue.currentFilePath
 
             menu: Component {
@@ -133,6 +163,11 @@ Page {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
+                    }
+
+                    MenuItem {
+                        text: qsTranslate("unplayer", "Remove")
+                        onClicked: fileDelegate.remove()
                     }
                 }
             }

@@ -69,6 +69,7 @@ namespace unplayer
         static const std::vector<QString> mimeTypesByExtension;
         static const std::vector<QString> mimeTypesByContent;
         static const std::vector<QString> videoMimeTypesByExtension;
+        static const QString databaseType;
         static LibraryUtils* instance();
 
         const QString& databaseFilePath();
@@ -92,6 +93,9 @@ namespace unplayer
         Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album);
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
+
+        Q_INVOKABLE void removeFileFromDatabase(const QString& filePath);
+        Q_INVOKABLE void removeFilesFromDatabase(const QStringList& files);
     private:
         LibraryUtils();
 

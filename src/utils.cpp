@@ -235,4 +235,16 @@ namespace unplayer
         file.open(QIODevice::ReadOnly);
         return QLatin1String(file.readAll());
     }
+
+    void Utils::removeFile(const QString& filePath)
+    {
+        QFile::remove(filePath);
+    }
+
+    void Utils::removeFiles(const QStringList& files)
+    {
+        for (const QString& filePath : files) {
+            QFile::remove(filePath);
+        }
+    }
 }

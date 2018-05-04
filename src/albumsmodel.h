@@ -20,21 +20,34 @@
 #define UNPLAYER_ALBUMSMODEL_H
 
 #include <vector>
-#include <QQmlParserStatus>
 
-#include "databasemodel.h"
+#include <QAbstractListModel>
+#include <QQmlParserStatus>
 
 namespace unplayer
 {
-    class AlbumsModel : public DatabaseModel
+    struct Album
+    {
+        QString artist;
+        QString displayedArtist;
+        QString album;
+        QString displayedAlbum;
+        int year;
+        int tracksCount;
+        int duration;
+    };
+
+    class AlbumsModel : public QAbstractListModel, public QQmlParserStatus
     {
         Q_OBJECT
+        Q_INTERFACES(QQmlParserStatus)
         Q_ENUMS(Role)
         Q_ENUMS(SortMode)
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists NOTIFY allArtistsChanged)
         Q_PROPERTY(QString artist READ artist WRITE setArtist)
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
         Q_PROPERTY(SortMode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
+        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -58,9 +71,11 @@ namespace unplayer
         };
 
         ~AlbumsModel() override;
+        void classBegin() override;
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
+        int rowCount(const QModelIndex& parent) const override;
 
         bool allArtists() const;
         void setAllArtists(bool allArtists);
@@ -73,16 +88,21 @@ namespace unplayer
         SortMode sortMode() const;
         void setSortMode(SortMode mode);
 
-        //Q_INVOKABLE void setSortSettings(bool sortDescending, SortMode sortMode);
+        bool isRemovingFiles() const;
 
         Q_INVOKABLE QStringList getTracksForAlbum(int index) const;
         Q_INVOKABLE QStringList getTracksForAlbums(const std::vector<int>& indexes) const;
+
+        Q_INVOKABLE void removeAlbum(int index, bool deleteFiles);
+        Q_INVOKABLE void removeAlbums(std::vector<int> indexes, bool deleteFiles);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        void setQuery();
+        void execQuery();
+
+        std::vector<Album> mAlbums;
 
         bool mAllArtists = true;
         QString mArtist;
@@ -90,9 +110,12 @@ namespace unplayer
         bool mSortDescending = false;
         SortMode mSortMode = SortAlbum;
 
+        bool mRemovingFiles = false;
+
     signals:
         void allArtistsChanged();
         void sortModeChanged();
+        void removingFilesChanged();
     };
 }
 

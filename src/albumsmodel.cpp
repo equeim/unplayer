@@ -20,8 +20,14 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFile>
+#include <QFutureWatcher>
+#include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlQuery>
+#include <QtConcurrentRun>
 
+#include "libraryutils.h"
 #include "settings.h"
 #include "utils.h"
 
@@ -48,6 +54,11 @@ namespace unplayer
         }
     }
 
+    void AlbumsModel::classBegin()
+    {
+
+    }
+
     void AlbumsModel::componentComplete()
     {
         if (mAllArtists) {
@@ -60,47 +71,40 @@ namespace unplayer
 
         emit sortModeChanged();
 
-        setQuery();
+        execQuery();
     }
 
     QVariant AlbumsModel::data(const QModelIndex& index, int role) const
     {
-        mQuery->seek(index.row());
+        const Album& album = mAlbums[index.row()];
 
         switch (role) {
         case ArtistRole:
-            return mQuery->value(ArtistField);
+            return album.artist;
         case DisplayedArtistRole:
-        {
-            const QString artist(mQuery->value(ArtistField).toString());
-            if (artist.isEmpty()) {
-                return qApp->translate("unplayer", "Unknown artist");
-            }
-            return artist;
-        }
+            return album.displayedArtist;
         case UnknownArtistRole:
-            return mQuery->value(ArtistField).toString().isEmpty();
+            return album.artist.isEmpty();
         case AlbumRole:
-            return mQuery->value(AlbumField);
+            return album.album;
         case DisplayedAlbumRole:
-        {
-            const QString album(mQuery->value(AlbumField).toString());
-            if (album.isEmpty()) {
-                return qApp->translate("unplayer", "Unknown album");
-            }
-            return album;
-        }
+            return album.displayedAlbum;
         case UnknownAlbumRole:
-            return mQuery->value(AlbumField).toString().isEmpty();
+            return album.album.isEmpty();
         case YearRole:
-            return mQuery->value(YearField).toInt();
+            return album.year;
         case TracksCountRole:
-            return mQuery->value(TracksCountField);
+            return album.tracksCount;
         case DurationRole:
-            return mQuery->value(DurationField);
+            return album.duration;
         default:
             return QVariant();
         }
+    }
+
+    int AlbumsModel::rowCount(const QModelIndex&) const
+    {
+        return mAlbums.size();
     }
 
     bool AlbumsModel::allArtists() const
@@ -133,7 +137,7 @@ namespace unplayer
     {
         if (descending != mSortDescending) {
             mSortDescending = descending;
-            setQuery();
+            execQuery();
         }
     }
 
@@ -147,8 +151,13 @@ namespace unplayer
         if (mode != mSortMode) {
             mSortMode = mode;
             emit sortModeChanged();
-            setQuery();
+            execQuery();
         }
+    }
+
+    bool AlbumsModel::isRemovingFiles() const
+    {
+        return mRemovingFiles;
     }
 
     QStringList AlbumsModel::getTracksForAlbum(int index) const
@@ -157,9 +166,9 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath FROM tracks "
                                      "WHERE artist = ? AND album = ? "
                                      "ORDER BY trackNumber, title"));
-        mQuery->seek(index);
-        query.addBindValue(mQuery->value(ArtistField).toString());
-        query.addBindValue(mQuery->value(AlbumField).toString());
+        const Album& album = mAlbums[index];
+        query.addBindValue(album.artist);
+        query.addBindValue(album.album);
         if (query.exec()) {
             QStringList tracks;
             while (query.next()) {
@@ -183,6 +192,85 @@ namespace unplayer
         return tracks;
     }
 
+    void AlbumsModel::removeAlbum(int index, bool deleteFiles)
+    {
+        removeAlbums({index}, deleteFiles);
+    }
+
+    void AlbumsModel::removeAlbums(std::vector<int> indexes, bool deleteFiles)
+    {
+        if (mRemovingFiles) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run(std::bind([this, deleteFiles](std::vector<int>& indexes) {
+            std::reverse(indexes.begin(), indexes.end());
+            std::vector<int> removed;
+            {
+                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
+                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+                if (!db.open()) {
+                    QSqlDatabase::removeDatabase(staticMetaObject.className());
+                    qWarning() << "failed to open database" << db.lastError();
+                    return removed;
+                }
+                db.transaction();
+
+                for (int index : indexes) {
+                    const QString artist(mAlbums[index].artist);
+                    const QString album(mAlbums[index].album);
+
+                    if (deleteFiles) {
+                        QSqlQuery query(db);
+                        query.prepare(QStringLiteral("SELECT DISTINCT filePath FROM tracks WHERE artist = ? AND album = ?"));
+                        query.addBindValue(artist);
+                        query.addBindValue(album);
+                        query.exec();
+                        while (query.next()) {
+                            const QString filePath(query.value(0).toString());
+                            if (!QFile::remove(filePath)) {
+                                qWarning() << "failed to remove file:" << filePath;
+                            }
+                        }
+                    }
+
+                    QSqlQuery query(db);
+                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE artist = ? AND album = ?"));
+                    query.addBindValue(artist);
+                    query.addBindValue(album);
+                    if (query.exec()) {
+                        removed.push_back(index);
+                    } else {
+                        qWarning() << "failed to remove files from database" << query.lastQuery() << query.lastError();
+                    }
+                }
+                db.commit();
+            }
+            QSqlDatabase::removeDatabase(staticMetaObject.className());
+
+            return removed;
+        }, std::move(indexes)));
+
+        using Watcher = QFutureWatcher<std::vector<int>>;
+        auto watcher = new Watcher(this);
+        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+
+            for (int index : watcher->result()) {
+                beginRemoveRows(QModelIndex(), index, index);
+                mAlbums.erase(mAlbums.begin() + index);
+                endRemoveRows();
+            }
+            emit LibraryUtils::instance()->databaseChanged();
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
+    }
+
     QHash<int, QByteArray> AlbumsModel::roleNames() const
     {
         return {{ArtistRole, "artist"},
@@ -193,44 +281,61 @@ namespace unplayer
                 {UnknownAlbumRole, "unknownAlbum"},
                 {YearRole, "year"},
                 {TracksCountRole, "tracksCount"},
-                {DurationRole, "duration"}};
+            {DurationRole, "duration"}};
     }
 
-    void AlbumsModel::setQuery()
+    void AlbumsModel::execQuery()
     {
-        QString query(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
-                                    "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
+        QString queryString(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
+                                          "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
         if (mAllArtists) {
-            query += QLatin1String("GROUP BY album, artist ");
+            queryString += QLatin1String("GROUP BY album, artist ");
         } else {
-            query += QLatin1String("WHERE artist = ? "
+            queryString += QLatin1String("WHERE artist = ? "
                                    "GROUP BY album ");
         }
 
         switch (mSortMode) {
         case SortAlbum:
-            query += QLatin1String("ORDER BY album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY album = '' %1, album %1");
             break;
         case SortYear:
-            query += QLatin1String("ORDER BY year %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY year %1, album = '' %1, album %1");
             break;
         case SortArtistAlbum:
-            query += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1");
             break;
         case SortArtistYear:
-            query += QLatin1String("ORDER BY artist = '' %1, artist %1, year %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, year %1, album = '' %1, album %1");
         }
 
-        query = query.arg(mSortDescending ? QLatin1String("DESC")
-                                          : QLatin1String("ASC"));
+        queryString = queryString.arg(mSortDescending ? QLatin1String("DESC")
+                                                      : QLatin1String("ASC"));
 
+
+        QSqlQuery query;
+        query.prepare(queryString);
+        if (!mAllArtists) {
+            query.addBindValue(mArtist);
+        }
 
         beginResetModel();
-        mQuery->prepare(query);
-        if (!mAllArtists) {
-            mQuery->addBindValue(mArtist);
+        mAlbums.clear();
+        if (query.exec()) {
+            while (query.next()) {
+                const QString artist(query.value(ArtistField).toString());
+                const QString album(query.value(AlbumField).toString());
+                mAlbums.push_back({artist,
+                                   artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
+                                   album,
+                                   album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
+                                   query.value(YearField).toInt(),
+                                   query.value(TracksCountField).toInt(),
+                                   query.value(DurationField).toInt()});
+            }
+        } else {
+            qWarning() << query.lastError();
         }
-        execQuery();
         endResetModel();
     }
 }

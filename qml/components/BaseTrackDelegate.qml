@@ -31,6 +31,8 @@ ListItem {
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
 
+    ListView.onRemove: animateRemoval()
+
     Binding {
         target: trackDelegate
         property: "highlighted"

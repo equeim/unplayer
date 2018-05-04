@@ -31,6 +31,18 @@ Page {
     property int duration
     property string mediaArt
 
+    Binding {
+        target: modalDialog
+        property: "active"
+        value: albumsModel.removingFiles
+    }
+
+    Binding {
+        target: modalDialog
+        property: "text"
+        value: qsTranslate("unplayer", "Removing albums...")
+    }
+
     SearchPanel {
         id: searchPanel
     }
@@ -67,6 +79,24 @@ Page {
                     }
                 }
             }
+
+            MenuItem {
+                enabled: albumsProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeAlbumsDialog)
+
+                Component {
+                    id: removeAlbumsDialog
+
+                    RemoveFilesDialog {
+                        title: qsTranslate("unplayer", "Are you sure you want to remove %n selected albums?", String(), albumsProxyModel.selectedIndexesCount)
+                        onAccepted: {
+                            albumsModel.removeAlbums(albumsProxyModel.selectedSourceIndexes, deleteFiles)
+                            selectionPanel.showPanel = false
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -96,6 +126,24 @@ Page {
         }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTranslate("unplayer", "Remove")
+                onClicked: pageStack.push(removeArtistDialog)
+
+                Component {
+                    id: removeArtistDialog
+
+                    RemoveFilesDialog {
+                        acceptDestination: pageStack.previousPage(artistPage)
+                        acceptDestinationAction: PageStackAction.Pop
+                        title: qsTranslate("unplayer", "Are you sure you want to remove this artist?")
+                        onAccepted: {
+                            artistsModel.removeArtist(artistsProxyModel.sourceIndex(model.index), deleteFiles)
+                        }
+                    }
+                }
+            }
+
             MenuItem {
                 text: qsTranslate("unplayer", "All tracks")
                 onClicked: pageStack.push(tracksPageComponent)
