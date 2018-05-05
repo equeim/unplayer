@@ -2,7 +2,7 @@ import os.path
 from os.path import splitext
 
 
-APP_VERSION = "1.2.4"
+APP_VERSION = "1.3.0"
 
 
 def options(context):
