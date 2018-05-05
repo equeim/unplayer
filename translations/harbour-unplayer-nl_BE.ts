@@ -620,11 +620,11 @@
     </message>
     <message>
         <source>Donate</source>
-        <translation type="unfinished"></translation>
+        <translation>Doneren</translation>
     </message>
     <message>
         <source>Contributor</source>
-        <translation type="unfinished"></translation>
+        <translation>Bijdrager</translation>
     </message>
 </context>
 </TS>
