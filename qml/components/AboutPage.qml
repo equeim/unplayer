@@ -111,6 +111,13 @@ Page {
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Theme.buttonWidthLarge
+                    text: qsTranslate("unplayer", "Donate")
+                    onClicked: pageStack.push("DonatePage.qml")
+                }
+
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Theme.buttonWidthLarge
                     text: qsTranslate("unplayer", "Authors")
                     onClicked: pageStack.push("AuthorsPage.qml")
                 }

@@ -1,3 +1,4 @@
+qml/components/DonatePage.qml
 qml/components/RemoveFilesDialog.qml
 wscript
 CHANGELOG.md
