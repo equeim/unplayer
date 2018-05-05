@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation>Reproductor de música simple para Sailfish OS</translation>
+        <translation>Un simple reproductor de música para Sailfish OS</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Track information</source>
-        <translation>Información de la pista</translation>
+        <translation>Información</translation>
     </message>
     <message>
         <source>SD card</source>
@@ -395,7 +395,7 @@
     <message numerus="yes">
         <source>%n directories selected</source>
         <translation>
-            <numerusform>%n Directorios seleccionados</numerusform>
+            <numerusform>%n Directorio seleccionado</numerusform>
             <numerusform>%n Directorios seleccionados</numerusform>
         </translation>
     </message>
@@ -545,77 +545,77 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seguro que quieres eliminar este álbum?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="unfinished"></translation>
+        <translation>Removiendo álbumes</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Seguro que quieres eliminar este álbum?</numerusform>
+            <numerusform>Seguro que quieres eliminar este álbumes?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seguro que quieres eliminar a este artista?</translation>
     </message>
     <message>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Removiendo archivos...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Seguro que quieres eliminar a este artista?</numerusform>
+            <numerusform>Seguro que quieres eliminar a estos artistas?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Removiendo %n archivo</numerusform>
+            <numerusform>Removiendo %n archivos</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Seguro que quieres remover el %n géneros seleccionado?</numerusform>
+            <numerusform>Seguro que quieres remover los %n géneros seleccionados?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seguro que quieres remover este género?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Seguro que quieres remover esta pista?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar archivos del dispositivo</translation>
     </message>
     <message>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar archivos de video</translation>
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Directorios en la lista negra</translation>
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Removiendo pistas...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Seguro que quieres remover las %n pistas seleccionadas?</numerusform>
+            <numerusform>Seguro que quieres remover la %n pista seleccionada?</numerusform>
         </translation>
     </message>
     <message>
