@@ -26,12 +26,18 @@
     </message>
     <message>
         <location filename="../qml/components/AboutPage.qml" line="114"/>
+        <location filename="../qml/components/DonatePage.qml" line="36"/>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/AboutPage.qml" line="121"/>
         <location filename="../qml/components/AuthorsPage.qml" line="27"/>
         <source>Authors</source>
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../qml/components/AboutPage.qml" line="121"/>
+        <location filename="../qml/components/AboutPage.qml" line="128"/>
         <location filename="../qml/components/TranslatorsPage.qml" line="34"/>
         <source>Translators</source>
         <translation>Переводчики</translation>
@@ -199,10 +205,12 @@
         <location filename="../qml/components/AllAlbumsPage.qml" line="83"/>
         <location filename="../qml/components/ArtistPage.qml" line="92"/>
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный альбом?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных альбома?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных альбомов?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Вы уверены, что хотите удалить %n выбранный альбом?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных альбома?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных альбомов?</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/components/AllAlbumsPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="62"/>
@@ -272,10 +280,12 @@
     <message numerus="yes">
         <location filename="../qml/components/ArtistsPage.qml" line="83"/>
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation><numerusform>Вы уверены, что хотите удалить %n выбранного исполнителя?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителя?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителей?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Вы уверены, что хотите удалить %n выбранного исполнителя?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителя?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных исполнителей?</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/components/ArtistsPage.qml" line="193"/>
         <location filename="../qml/components/GenresPage.qml" line="173"/>
@@ -305,10 +315,12 @@
     <message numerus="yes">
         <location filename="../qml/components/DirectoriesPage.qml" line="81"/>
         <source>Removing %n files</source>
-        <translation><numerusform>Удаление %n файла</numerusform>
-        <numerusform>Удаление %n файлов</numerusform>
-        <numerusform>Удаление %n файлов</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Удаление %n файла</numerusform>
+            <numerusform>Удаление %n файлов</numerusform>
+            <numerusform>Удаление %n файлов</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="116"/>
         <location filename="../qml/components/MainPage.qml" line="127"/>
@@ -372,10 +384,12 @@
     <message numerus="yes">
         <location filename="../qml/components/GenresPage.qml" line="83"/>
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный жанр?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных жанра?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных жанров?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Вы уверены, что хотите удалить %n выбранный жанр?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных жанра?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных жанров?</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/components/GenresPage.qml" line="105"/>
         <location filename="../qml/components/LibraryPage.qml" line="98"/>
@@ -407,7 +421,7 @@
         <translation>Нет жанров</translation>
     </message>
     <message>
-        <location filename="../qml/components/AboutPage.qml" line="128"/>
+        <location filename="../qml/components/AboutPage.qml" line="135"/>
         <location filename="../qml/components/LicensePage.qml" line="34"/>
         <source>License</source>
         <translation>Лицензия</translation>
@@ -779,9 +793,14 @@
         <translation>%1 ЙиБ</translation>
     </message>
     <message>
-        <location filename="../qml/components/AuthorsPage.qml" line="53"/>
+        <location filename="../qml/components/AuthorsPage.qml" line="54"/>
         <source>Maintainer</source>
         <translation>Сопровождающий</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/AuthorsPage.qml" line="57"/>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/components/BaseTrackDelegate.qml" line="70"/>
@@ -902,9 +921,11 @@
     <message numerus="yes">
         <location filename="../qml/components/TracksPage.qml" line="93"/>
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation><numerusform>Вы уверены, что хотите удалить %n выбранный трек?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных трека?</numerusform>
-        <numerusform>Вы уверены, что хотите удалить %n выбранных треков?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Вы уверены, что хотите удалить %n выбранный трек?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных трека?</numerusform>
+            <numerusform>Вы уверены, что хотите удалить %n выбранных треков?</numerusform>
+        </translation>
+    </message>
 </context>
 </TS>

@@ -553,9 +553,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation><numerusform>Vill du verkligen ta bort %n markerat album?</numerusform>
-        <numerusform>Vill du verkligen ta bort %n markerade album?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Vill du verkligen ta bort %n markerat album?</numerusform>
+            <numerusform>Vill du verkligen ta bort %n markerade album?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
         <translation>Vill du verkligen ta bort den här artisten?</translation>
@@ -566,19 +568,25 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation><numerusform>Vill du verkligen ta bort %n markerad artist?</numerusform>
-        <numerusform>Vill du verkligen ta bort %n markerade artister?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Vill du verkligen ta bort %n markerad artist?</numerusform>
+            <numerusform>Vill du verkligen ta bort %n markerade artister?</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation><numerusform>Tar bort %n fil</numerusform>
-        <numerusform>Tar bort %n filer</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Tar bort %n fil</numerusform>
+            <numerusform>Tar bort %n filer</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation><numerusform>Vill du verkligen ta bort %n markerad genre?</numerusform>
-        <numerusform>Vill du verkligen ta bort %n markerade genrer?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Vill du verkligen ta bort %n markerad genre?</numerusform>
+            <numerusform>Vill du verkligen ta bort %n markerade genrer?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
         <translation>Vill du verkligen ta bort den här genren?</translation>
@@ -605,8 +613,18 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation><numerusform>Vill du verkligen ta bort %n markerat spår?</numerusform>
-        <numerusform>Vill du verkligen ta bort %n markerade spår?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Vill du verkligen ta bort %n markerat spår?</numerusform>
+            <numerusform>Vill du verkligen ta bort %n markerade spår?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

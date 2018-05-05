@@ -379,9 +379,11 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>%n fil valgt</numerusform>
-        <numerusform></numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n fil valgt</numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>Angi som forvalgt mappe</translation>
@@ -396,9 +398,11 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform>%n mappe valgt</numerusform>
-        <numerusform></numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n mappe valgt</numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <source>Library Directories</source>
         <translation>Bibliotekmapper</translation>
@@ -613,6 +617,14 @@
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

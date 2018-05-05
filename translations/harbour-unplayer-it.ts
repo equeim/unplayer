@@ -379,9 +379,11 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>%n file selezionato</numerusform>
-        <numerusform>%n file selezionati</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n file selezionato</numerusform>
+            <numerusform>%n file selezionati</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>Imposta come cartella predefinita</translation>
@@ -396,9 +398,11 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation><numerusform>%n cartella selezionata</numerusform>
-        <numerusform>%n cartelle selezionate</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n cartella selezionata</numerusform>
+            <numerusform>%n cartelle selezionate</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Library Directories</source>
         <translation>Cartelle libreria</translation>
@@ -461,7 +465,7 @@
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation>Apri la libreria all'avvio</translation>
+        <translation>Apri la libreria all&apos;avvio</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
@@ -485,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Ripristina lo stato del lettore all'avvio</translation>
+        <translation>Ripristina lo stato del lettore all&apos;avvio</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -505,11 +509,11 @@
     </message>
     <message>
         <source>Album title</source>
-        <translation>Titolo dell'album</translation>
+        <translation>Titolo dell&apos;album</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation>Anno dell'album</translation>
+        <translation>Anno dell&apos;album</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
@@ -613,6 +617,14 @@
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

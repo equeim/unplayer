@@ -553,9 +553,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation><numerusform>Are you sure you want to remove %n selected album?</numerusform>
-        <numerusform>Are you sure you want to remove %n selected albums?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Are you sure you want to remove %n selected album?</numerusform>
+            <numerusform>Are you sure you want to remove %n selected albums?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
         <translation>Are you sure you want to remove this artist?</translation>
@@ -566,19 +568,25 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation><numerusform>Are you sure you want to remove %n selected artist?</numerusform>
-        <numerusform>Are you sure you want to remove %n selected artists?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Are you sure you want to remove %n selected artist?</numerusform>
+            <numerusform>Are you sure you want to remove %n selected artists?</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation><numerusform>Removing %n file</numerusform>
-        <numerusform>Removing %n files</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Removing %n file</numerusform>
+            <numerusform>Removing %n files</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation><numerusform>Are you sure you want to remove %n selected genre?</numerusform>
-        <numerusform>Are you sure you want to remove %n selected genres?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Are you sure you want to remove %n selected genre?</numerusform>
+            <numerusform>Are you sure you want to remove %n selected genres?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
         <translation>Are you sure you want to remove this genre?</translation>
@@ -605,8 +613,18 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation><numerusform>Are you sure you want to remove %n selected track?</numerusform>
-        <numerusform>Are you sure you want to remove %n selected tracks?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Are you sure you want to remove %n selected track?</numerusform>
+            <numerusform>Are you sure you want to remove %n selected tracks?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

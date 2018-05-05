@@ -553,9 +553,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd album wild verwijderen?</numerusform>
-        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde albums wild verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd album wild verwijderen?</numerusform>
+            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde albums wild verwijderen?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
         <translation>Zij’ ge zeker da’ ge dezen artiest wild verwijderen?</translation>
@@ -566,19 +568,25 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerden artiest wild verwijderen?</numerusform>
-        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde artiesten wild verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zij’ ge zeker da’ ge %n geselecteerden artiest wild verwijderen?</numerusform>
+            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde artiesten wild verwijderen?</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation><numerusform>%n bestand word verwijderd</numerusform>
-        <numerusform>%n bestanden worden verwijderd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n bestand word verwijderd</numerusform>
+            <numerusform>%n bestanden worden verwijderd</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd genre wild verwijderen?</numerusform>
-        <numerusform>Zij’ ge zeker da’ ge da %n geselecteerde genres wild verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd genre wild verwijderen?</numerusform>
+            <numerusform>Zij’ ge zeker da’ ge da %n geselecteerde genres wild verwijderen?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
         <translation>Zij’ ge zeker da’ ge dit genre wild verwijderen?</translation>
@@ -605,8 +613,18 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd nummer wild verwijderen?</numerusform>
-        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde nummers wild verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd nummer wild verwijderen?</numerusform>
+            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde nummers wild verwijderen?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

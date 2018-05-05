@@ -618,5 +618,13 @@
             <numerusform></numerusform>
         </translation>
     </message>
+    <message>
+        <source>Donate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
