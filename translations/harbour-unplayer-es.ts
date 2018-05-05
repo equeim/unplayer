@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Track information</source>
-        <translation>Información de la pista</translation>
+        <translation>Información</translation>
     </message>
     <message>
         <source>SD card</source>
