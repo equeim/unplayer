@@ -1,5 +1,18 @@
 # Change Log
 
+## [1.3.0] - 2018-05-05
+### Added
+- Donation links via PayPal and Yandex.Money
+- Show remaining time on Now Playing page
+- Option to show video files in directories view (only audio streams are played, and they will not be showed in library)
+- Ability to remove files from database and filesystem
+- Blacklist directories (and their subdirectories) from library
+
+### Fixed
+- Shuffle "random" track being the same on every app launch
+- Multi-selection not resetting in some cases
+- MPRIS DBus object doesn't set trackId property
+
 ## [1.2.4] - 2017-04-20
 ### Changed
 - Spanish translation fixes
