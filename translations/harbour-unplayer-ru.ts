@@ -28,7 +28,7 @@
         <location filename="../qml/components/AboutPage.qml" line="114"/>
         <location filename="../qml/components/DonatePage.qml" line="36"/>
         <source>Donate</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожертвовать</translation>
     </message>
     <message>
         <location filename="../qml/components/AboutPage.qml" line="121"/>
@@ -800,7 +800,7 @@
     <message>
         <location filename="../qml/components/AuthorsPage.qml" line="57"/>
         <source>Contributor</source>
-        <translation type="unfinished"></translation>
+        <translation>Участник</translation>
     </message>
     <message>
         <location filename="../qml/components/BaseTrackDelegate.qml" line="70"/>
