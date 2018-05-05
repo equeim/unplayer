@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Nieuwe speellijst...</translation>
+        <translation>Nieuwe speellijst…</translation>
     </message>
     <message>
         <source>Search</source>
@@ -413,7 +413,7 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Map toevoegen...</translation>
+        <translation>Map toevoegen…</translation>
     </message>
     <message>
         <source>Select directory</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation>Database kan niet worden geïnitialiseerd</translation>
+        <translation>Database kan nie worden g’initialiseerd</translation>
     </message>
     <message>
         <source>No selected directories</source>
@@ -545,78 +545,68 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zij’ ge zeker da’ ge dit album wild verwijderen?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="unfinished"></translation>
+        <translation>Albums worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd album wild verwijderen?</numerusform>
+        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde albums wild verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zij’ ge zeker da’ ge dezen artiest wild verwijderen?</translation>
     </message>
     <message>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestanden worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerden artiest wild verwijderen?</numerusform>
+        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde artiesten wild verwijderen?</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n bestand word verwijderd</numerusform>
+        <numerusform>%n bestanden worden verwijderd</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd genre wild verwijderen?</numerusform>
+        <numerusform>Zij’ ge zeker da’ ge da %n geselecteerde genres wild verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zij’ ge zeker da’ ge dit genre wild verwijderen?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zij’ ge zeker da’ ge dit nummer wild verwijderen?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestanden verwijderen van apparaat</translation>
     </message>
     <message>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Videobestanden weergeven</translation>
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Mappen op zwarte lijst</translation>
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Nummers worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zij’ ge zeker da’ ge %n geselecteerd nummer wild verwijderen?</numerusform>
+        <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde nummers wild verwijderen?</numerusform>
+        </translation></message>
 </context>
 </TS>
