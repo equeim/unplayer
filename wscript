@@ -1,3 +1,7 @@
+import os.path
+from os.path import splitext
+
+
 APP_VERSION = "1.2.4"
 
 
@@ -112,9 +116,9 @@ def build(context):
     else:
         context.install_as("${DATADIR}/harbour-unplayer/qml/components/MediaKeys.qml", "qml/MediaKeysPrivate.qml")
 
-    context.install_files("${DATADIR}/harbour-unplayer/translations",
-                          context.path.get_bld().ant_glob("translations/*.qm",
-                          quiet=True))
+    for file in context.path.get_bld().ant_glob("translations/*.qm", quiet=True):
+        basename = splitext(splitext(os.path.basename(file.bldpath()))[0])[0]
+        context.install_as("{}/harbour-unplayer/translations/{}.qm".format(context.env.DATADIR, basename), file)
 
     context.install_files("${DATADIR}",
                           context.path.ant_glob("icons/**/*.png"),
