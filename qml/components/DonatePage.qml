@@ -24,12 +24,7 @@ Page {
         anchors.fill: parent
 
         Column {
-            anchors {
-                left: parent.left
-                leftMargin: Theme.horizontalPageMargin
-                right: parent.right
-                rightMargin: Theme.horizontalPageMargin
-            }
+            width: parent.width
             spacing: Theme.paddingMedium
 
             PageHeader {
