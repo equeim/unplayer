@@ -545,78 +545,68 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet je zeker dat je dit album wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="unfinished"></translation>
+        <translation>Albums worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Weet je zeker dat je %n geselecteerd album wilt verwijderen?</numerusform>
+        <numerusform>Weet je zeker dat je %n geselecteerde albums wilt verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet je zeker dat je deze artiest wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestanden worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Weet je zeker dat je %n geselecteerde artiest wilt verwijderen?</numerusform>
+        <numerusform>Weet je zeker dat je %n geselecteerde artiesten wilt verwijderen?</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n bestand wordt verwijderd</numerusform>
+        <numerusform>%n bestanden worden verwijderd</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Weet je zeker dat je %n geselecteerd genre wilt verwijderen?</numerusform>
+        <numerusform>Weet je zeker dat je %n geselecteerde genres wilt verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet je zeker dat je dit genre wilt verwijderen?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet je zeker dat je dit nummer wilt verwijderen?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestanden verwijderen van apparaat</translation>
     </message>
     <message>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Videobestanden tonen</translation>
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Mappen op zwarte lijst</translation>
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Nummers worden verwijderd…</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Weet je zeker dat je %n geselecteerd nummer wilt verwijderen?</numerusform>
+        <numerusform>Weet je zeker dat je %n geselecteerde nummers wilt verwijderen?</numerusform>
+        </translation></message>
 </context>
 </TS>
