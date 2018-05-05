@@ -43,22 +43,38 @@ Page {
 
                 textFormat: Text.RichText
                 onLinkActivated: Qt.openUrlExternally(link)
-
-                Component.onCompleted: console.log(text)
             }
 
             Label {
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.secondaryColor
-                text: model.type === "maintainer" ? qsTranslate("unplayer", "Maintainer") : String()
+                text: {
+                    switch (type) {
+                    case "maintainer":
+                        qsTranslate("unplayer", "Maintainer")
+                        break
+                    case "contributor":
+                        qsTranslate("unplayer", "Contributor")
+                        break
+                    default:
+                        String()
+                        break
+                    }
+                }
             }
         }
+        spacing: Theme.paddingMedium
 
         model: ListModel {
             ListElement {
                 name: "Alexey Rochev"
                 email: "equeim@gmail.com"
                 type: "maintainer"
+            }
+            ListElement {
+                name: "Rony Fadel"
+                email: "rony.fadel@gmail.com"
+                type: "contributor"
             }
         }
     }
