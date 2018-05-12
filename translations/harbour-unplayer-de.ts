@@ -545,41 +545,35 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie dieses Album wirklich entfernen?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="unfinished"></translation>
+        <translation>Alben werden entfernt …</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Möchten Sie das ausgewählte Album wirklich entfernen?</numerusform>
+        <numerusform>Möchten Sie die %n ausgewählten Alben wirklich entfernen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie diesen Interpreten wirklich entfernen?</translation>
     </message>
     <message>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateien werden entfernt …</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Möchten Sie den ausgewählten Interpreten wirklich entfernen?</numerusform>
+        <numerusform>Möchten Sie wirklich %n ausgewählte Interpreten entfernen?</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Eine Datei wird entfernt</numerusform>
+        <numerusform>%n Dateien werden entfernt</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
         <translation type="unfinished">
