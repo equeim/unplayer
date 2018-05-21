@@ -576,49 +576,45 @@
         </translation></message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Möchten Sie wirklich %n ausgewähltes Genre entfernen?</numerusform>
+        <numerusform>Möchten Sie wirklich %n ausgewählte Genres entfernen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie dieses Genre wirklich entfernen?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie diesen Titel wirklich entfernen?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateien vom Gerät löschen</translation>
     </message>
     <message>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Videodateien anzeigen</translation>
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzeichnisse der schwarzen Liste</translation>
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Titel werden entfernt …</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Möchten Sie wirklich %n ausgewählten Titel entfernen?</numerusform>
+        <numerusform>Möchten Sie wirklich %n ausgewählte Titel entfernen?</numerusform>
+        </translation></message>
     <message>
         <source>Donate</source>
-        <translation type="unfinished"></translation>
+        <translation>Spenden</translation>
     </message>
     <message>
         <source>Contributor</source>
-        <translation type="unfinished"></translation>
+        <translation>Mitwirkende(r)</translation>
     </message>
 </context>
 </TS>
