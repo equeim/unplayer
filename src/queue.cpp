@@ -63,7 +63,8 @@ namespace unplayer
                            const QString& album,
                            const QString& mediaArt,
                            const QByteArray& mediaArtData)
-        : filePath(filePath),
+        : trackId(trackId),
+          filePath(filePath),
           title(title),
           duration(duration),
           artist(artist),
