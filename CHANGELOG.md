@@ -1,5 +1,12 @@
 # Change Log
 
+## [Unreleased]
+### Added
+- Extracting disc number from files and using it when sorting tracks
+
+### Fixed
+- Setting of MPRIS trackId property
+
 ## [1.3.0] - 2018-05-05
 ### Added
 - Donation links via PayPal and Yandex.Money
