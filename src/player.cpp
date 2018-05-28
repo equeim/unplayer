@@ -32,6 +32,32 @@ namespace unplayer
     namespace
     {
         Player* instancePointer = nullptr;
+
+        Mpris::LoopStatus loopStatus(Queue::RepeatMode mode) {
+            switch (mode) {
+            case Queue::NoRepeat:
+                return Mpris::None;
+            case Queue::RepeatAll:
+                return Mpris::Playlist;
+            case Queue::RepeatOne:
+                return Mpris::Track;
+            default:
+                return Mpris::None;
+            }
+        }
+
+        Queue::RepeatMode repeatMode(Mpris::LoopStatus status) {
+            switch (status) {
+            case Mpris::None:
+                return Queue::NoRepeat;
+            case Mpris::Playlist:
+                return Queue::RepeatAll;
+            case Mpris::Track:
+                return Queue::RepeatOne;
+            default:
+                return Queue::NoRepeat;;
+            }
+        }
     }
 
     Player* Player::instance()
@@ -82,7 +108,16 @@ namespace unplayer
     {
         auto mpris = new MprisPlayer(this);
         mpris->setServiceName(QLatin1String("unplayer"));
-        mpris->setCanControl(true);
+
+        mpris->setLoopStatus(loopStatus(mQueue->repeatMode()));
+        QObject::connect(mQueue, &Queue::repeatModeChanged, this, [=]() {
+            mpris->setLoopStatus(loopStatus(mQueue->repeatMode()));
+        });
+
+        mpris->setShuffle(mQueue->isShuffle());
+        QObject::connect(mQueue, &Queue::shuffleChanged, this, [=]() {
+            mpris->setShuffle(mQueue->isShuffle());
+        });
 
         QObject::connect(this, &Player::stateChanged, [=](State newState) {
             if (mSettingNewTrack) {
@@ -117,14 +152,20 @@ namespace unplayer
             }
         });
 
+        QObject::connect(this, &Player::positionChanged, this, [=](qint64 position) {
+            mpris->setPosition(position * 1000);
+        });
+
         QObject::connect(mQueue, &Queue::currentTrackChanged, this, [=]() {
             if (mQueue->currentIndex() == -1) {
                 setMedia(QMediaContent());
 
+                mpris->setCanControl(false);
                 mpris->setCanPlay(false);
                 mpris->setCanPause(false);
                 mpris->setCanGoNext(false);
                 mpris->setCanGoPrevious(false);
+                mpris->setCanSeek(false);
                 mpris->setMetadata(QVariantMap());
             } else {
                 const QueueTrack* track = mQueue->tracks().at(mQueue->currentIndex()).get();
@@ -144,10 +185,13 @@ namespace unplayer
                 mpris->setCanPause(true);
                 mpris->setCanGoNext(true);
                 mpris->setCanGoPrevious(true);
+                mpris->setCanSeek(true);
                 mpris->setMetadata({{Mpris::metadataToString(Mpris::TrackId), track->trackId},
                                     {Mpris::metadataToString(Mpris::Title), track->title},
+                                    {Mpris::metadataToString(Mpris::Length), track->duration * 1000000LL},
                                     {Mpris::metadataToString(Mpris::Artist), track->artist},
                                     {Mpris::metadataToString(Mpris::Album), track->album}});
+                mpris->setCanControl(true);
             }
         });
 
@@ -155,5 +199,27 @@ namespace unplayer
         QObject::connect(mpris, &MprisPlayer::pauseRequested, this, &Player::pause);
         QObject::connect(mpris, &MprisPlayer::nextRequested, mQueue, &Queue::next);
         QObject::connect(mpris, &MprisPlayer::previousRequested, mQueue, &Queue::previous);
+        QObject::connect(mpris, &MprisPlayer::setPositionRequested, this, [=](const QDBusObjectPath& trackId, qint64 position) {
+            if (state() != StoppedState &&
+                    mQueue->currentIndex() != -1 &&
+                    trackId.path() == mQueue->tracks()[mQueue->currentIndex()]->trackId) {
+                setPosition(position / 1000);
+            }
+        });
+        QObject::connect(mpris, &MprisPlayer::seekRequested, this, [=](qint64 offset) {
+            if (state() != StoppedState) {
+                setPosition(position() - (offset / 1000));
+            }
+        });
+        QObject::connect(mpris, &MprisPlayer::loopStatusRequested, this, [=](Mpris::LoopStatus status) {
+            if (mpris->canControl()) {
+                mQueue->setRepeatMode(repeatMode(status));
+            }
+        });
+        QObject::connect(mpris, &MprisPlayer::shuffleRequested, this, [=](bool shuffle) {
+            if (mpris->canControl()) {
+                mQueue->setShuffle(shuffle);
+            }
+        });
     }
 }
