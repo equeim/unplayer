@@ -38,6 +38,7 @@ namespace unplayer
             int year = 0;
             int trackNumber = 0;
             QStringList genres;
+            QString discNumber;
             int duration = 0;
             int bitrate = 0;
             QByteArray mediaArtData;

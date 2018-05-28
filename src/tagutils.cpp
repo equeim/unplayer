@@ -64,6 +64,13 @@ namespace unplayer
                 for (const TagLib::String& genre : properties["GENRE"]) {
                     info.genres.append(genre.toCString(true));
                 }
+
+                if (properties.contains("DISCNUMBER")) {
+                    const TagLib::StringList list(properties["DISCNUMBER"]);
+                    if (!list.isEmpty()) {
+                        info.discNumber = list[0].toCString(true);
+                    }
+                }
             }
 
             void getAudioProperties(const TagLib::File& file, Info& info)

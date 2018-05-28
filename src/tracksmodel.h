@@ -48,7 +48,8 @@ namespace unplayer
         enum Mode
         {
             Title,
-            TrackNumber
+            DiscNumberTitle,
+            DiscNumberTrackNumber
         };
     };
 
@@ -146,7 +147,7 @@ namespace unplayer
 
         bool mSortDescending = false;
         SortMode mSortMode = SortMode::ArtistAlbumYear;
-        InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::TrackNumber;
+        InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumberTrackNumber;
 
         bool mRemovingFiles = false;
 

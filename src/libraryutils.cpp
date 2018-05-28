@@ -119,8 +119,8 @@ namespace unplayer
                 forEachOrOnce(info.albums, [&](const QString& album) {
                     forEachOrOnce(info.genres, [&](const QString& genre) {
                         QSqlQuery query(db);
-                        query.prepare(QStringLiteral("INSERT INTO tracks (id, filePath, modificationTime, title, artist, album, year, trackNumber, genre, duration, mediaArt) "
-                                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+                        query.prepare(QStringLiteral("INSERT INTO tracks (id, filePath, modificationTime, title, artist, album, year, trackNumber, discNumber, genre, duration, mediaArt) "
+                                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
                         query.addBindValue(id);
                         query.addBindValue(fileInfo.filePath());
                         query.addBindValue(fileInfo.lastModified().toMSecsSinceEpoch());
@@ -142,6 +142,13 @@ namespace unplayer
 
                         query.addBindValue(info.year);
                         query.addBindValue(info.trackNumber);
+
+                        if (info.discNumber.isNull()) {
+                            // Empty string instead of NULL
+                            query.addBindValue(QLatin1String(""));
+                        } else {
+                            query.addBindValue(info.discNumber);
+                        }
 
                         if (genre.isNull()) {
                             // Empty string instead of NULL
@@ -298,6 +305,7 @@ namespace unplayer
                                                      QLatin1String("album"),
                                                      QLatin1String("year"),
                                                      QLatin1String("trackNumber"),
+                                                     QLatin1String("discNumber"),
                                                      QLatin1String("genre"),
                                                      QLatin1String("duration"),
                                                      QLatin1String("mediaArt")};
@@ -331,6 +339,7 @@ namespace unplayer
                                           "    album TEXT COLLATE NOCASE,"
                                           "    year INTEGER,"
                                           "    trackNumber INTEGER,"
+                                          "    discNumber TEXT,"
                                           "    genre TEXT,"
                                           "    duration INTEGER,"
                                           "    mediaArt TEXT"

@@ -117,9 +117,24 @@ Page {
                         return false
                     }
                 }
-                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.TrackNumber
-                text: qsTranslate("unplayer", "Track number")
-                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.TrackNumber
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+                text: qsTranslate("unplayer", "Disc number - Title")
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+            }
+
+            SortModeListItem {
+                enabled: {
+                    switch (tracksModel.sortMode) {
+                    case Unplayer.TracksModelSortMode.ArtistAlbumTitle:
+                    case Unplayer.TracksModelSortMode.ArtistAlbumYear:
+                        return true
+                    default:
+                        return false
+                    }
+                }
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
+                text: qsTranslate("unplayer", "Disc number - Track number")
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
             }
         }
 

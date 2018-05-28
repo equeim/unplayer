@@ -67,16 +67,16 @@ namespace unplayer
         if (mAllArtists) {
             mSortDescending = Settings::instance()->allTracksSortDescending();
             mSortMode = static_cast<SortMode>(Settings::instance()->allTracksSortMode(SortMode::ArtistAlbumYear));
-            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->allTracksInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber));
+            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->allTracksInsideAlbumSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
         } else {
             if (mAllAlbums) {
                 mSortDescending = Settings::instance()->artistTracksSortDescending();
                 mSortMode = static_cast<SortMode>(Settings::instance()->artistTracksSortMode(SortMode::ArtistAlbumYear));
-                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->artistTracksInsideAlbumSortMode(InsideAlbumSortMode::TrackNumber));
+                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->artistTracksInsideAlbumSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
             } else {
                 mSortDescending = Settings::instance()->albumTracksSortDescending();
                 mSortMode = SortMode::ArtistAlbumTitle;
-                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->albumTracksSortMode(InsideAlbumSortMode::TrackNumber));
+                mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->albumTracksSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
             }
         }
 
@@ -334,8 +334,11 @@ namespace unplayer
             case InsideAlbumSortMode::Title:
                 queryString += QLatin1String("title %1");
                 break;
-            case InsideAlbumSortMode::TrackNumber:
-                queryString += QLatin1String("trackNumber %1, title %1");
+            case InsideAlbumSortMode::DiscNumberTitle:
+                queryString += QLatin1String("discNumber = '' %1, discNumber %1, title %1");
+                break;
+            case InsideAlbumSortMode::DiscNumberTrackNumber:
+                queryString += QLatin1String("discNumber = '' %1, discNumber %1, trackNumber %1, title %1");
                 break;
             }
         }
