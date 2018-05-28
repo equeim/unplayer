@@ -364,7 +364,12 @@ namespace unplayer
                         album = albums.join(QLatin1String(", "));
                     }
 
-                    tracks.push_back(std::make_shared<QueueTrack>(QUuid::createUuid().toString(),
+                    tracks.push_back(std::make_shared<QueueTrack>([]() {
+                                                                      QString id(QLatin1String("/"));
+                                                                      id += QUuid::createUuid().toString().remove(0, 1).remove('-');
+                                                                      id.chop(1);
+                                                                      return id;
+                                                                  }(),
                                                                   std::move(filePath),
                                                                   std::move(title),
                                                                   duration,
