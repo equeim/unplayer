@@ -449,7 +449,7 @@ namespace unplayer
                             }
 
                             if (!remove) {
-                                const QString directory(fileInfo.absolutePath());
+                                QString directory(fileInfo.absolutePath());
                                 const auto found(noMediaDirectories.find(directory));
                                 if (found != noMediaDirectories.end()) {
                                     if (found->second) {
@@ -457,10 +457,10 @@ namespace unplayer
                                     }
                                 } else {
                                     if (QFileInfo(directory + QStringLiteral("/.nomedia")).isFile()) {
-                                        noMediaDirectories.insert({directory, true});
+                                        noMediaDirectories.insert({std::move(directory), true});
                                         remove = true;
                                     } else {
-                                        noMediaDirectories.insert({directory, false});
+                                        noMediaDirectories.insert({std::move(directory), false});
                                     }
                                 }
                             }
