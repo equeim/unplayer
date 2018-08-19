@@ -456,7 +456,7 @@ namespace unplayer
                                         remove = true;
                                     }
                                 } else {
-                                    if (QFileInfo(QDir(directory).filePath(QLatin1String(".nomedia"))).isFile()) {
+                                    if (QFileInfo(directory + QStringLiteral("/.nomedia")).isFile()) {
                                         noMediaDirectories.insert({directory, true});
                                         remove = true;
                                     } else {
@@ -542,20 +542,20 @@ namespace unplayer
 
                         {
                             QString directoryPath(fileInfo.path());
-
                             const auto found(noMediaDirectories.find(directoryPath));
                             if (found != noMediaDirectories.cend()) {
                                 if (found->second) {
                                     continue;
                                 }
                             } else {
-                                if (QFileInfo(QDir(directoryPath).filePath(QLatin1String(".nomedia"))).isFile()) {
+                                if (QFileInfo(directoryPath + QStringLiteral("/.nomedia")).isFile()) {
                                     noMediaDirectories.insert({std::move(directoryPath), true});
                                     continue;
                                 } else {
                                     noMediaDirectories.insert({std::move(directoryPath), false});
                                 }
                             }
+
                         }
 
                         const auto foundInDb(files.find(filePath));
