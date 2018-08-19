@@ -1,0 +1,18 @@
+--- 3rdparty/qtmpris-0.0.8/src/src.pro
++++ 3rdparty/qtmpris-0.0.8/src/src.pro
+@@ -54,12 +54,12 @@
+ OTHER_FILES += org.mpris.MediaPlayer2.xml \
+     org.mpris.MediaPlayer2.Player.xml
+
+-target.path = $$[QT_INSTALL_LIBS]
++target.path = $$PREFIX/lib
+ headers.files = $$INSTALL_HEADERS
+-headers.path = $$[QT_INSTALL_HEADERS]/MprisQt
++headers.path = $$PREFIX/include/MprisQt
+ prf.files = $${TARGET}.prf
+ prf.path = $$[QMAKE_MKSPECS]/features
+-INSTALLS += target headers prf
++INSTALLS += target headers
+
+ QMAKE_PKGCONFIG_REQUIRES = Qt5Core Qt5DBus dbusextended-qt5
+ QMAKE_PKGCONFIG_LIBDIR = $$target.path

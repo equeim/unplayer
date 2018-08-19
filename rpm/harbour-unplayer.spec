@@ -1,112 +1,136 @@
-Name: harbour-unplayer
-Summary: Simple music player for Sailfish OS
-Version: 1.3.0
-Release: 1
-Group: Applications/Music
-License: GPLv3
-URL: https://github.com/equeim/unplayer
-Source0: %{name}-%{version}.tar.xz
-Requires: sailfishsilica-qt5
+Name:       harbour-unplayer
+Version:    1.3.0
+Release:    1
+Summary:    Simple music player for Sailfish OS
+Group:      Applications/Music
+License:    GPLv3
+URL:        https://github.com/equeim/unplayer
+
+Source0:    https://github.com/equeim/unplayer/archive/%{version}.tar.gz
+Patch0:     qtdbusextended.patch
+Patch1:     qtmpris.patch
+Patch2:     taglib.patch
+
+Requires:      sailfishsilica-qt5
+Requires:      nemo-qml-plugin-dbus-qt5
 BuildRequires: pkgconfig(Qt5Concurrent)
-BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5DBus)
-BuildRequires: pkgconfig(Qt5Gui)
 BuildRequires: pkgconfig(Qt5Multimedia)
-BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Sql)
 BuildRequires: pkgconfig(sailfishapp)
-BuildRequires: pkgconfig(zlib)
-BuildRequires: boost-devel
 BuildRequires: cmake
 BuildRequires: desktop-file-utils
-BuildRequires: python
 
-# >> macros
-%define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libdbusextended-qt5.*|libmpris-qt5.*|libtag.*$
-# << macros
+# qt5-qtmultimedia-devel installs plugins' CMake modules so we need plugins at build time, otherwise CMake will fail
+# https://bugs.merproject.org/show_bug.cgi?id=1943
+BuildRequires: qt5-qtmultimedia-plugin-audio-alsa
+BuildRequires: qt5-qtmultimedia-plugin-audio-pulseaudio
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstcamerabin
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediacapture
+BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
+BuildRequires: qt5-qtmultimedia-plugin-playlistformats-m3u
+BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
+
+# TagLib dependencies
+BuildRequires: pkgconfig(zlib)
+BuildRequires: boost-devel
+
+
+%global build_type debug
+#%%global build_type release
+
+%global harbour ON
+#%%global harbour OFF
+
+%global build_directory "%{_builddir}/build-%{_arch}"
+
+%global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended-0.0.3"
+%global qtdbusextended_build "%{build_directory}/3rdparty/qtdbusextended/build"
+%global qtdbusextended_install "%{build_directory}/3rdparty/qtdbusextended/install"
+
+%global qtmpris "%{_builddir}/3rdparty/qtmpris-0.0.8"
+%global qtmpris_build "%{build_directory}/3rdparty/qtmpris/build"
+%global qtmpris_install "%{build_directory}/3rdparty/qtmpris/install"
+
+%global taglib "%{_builddir}/3rdparty/taglib-1.11.1"
+%global taglib_build "%{build_directory}/3rdparty/taglib/build"
+%global taglib_install "%{build_directory}/3rdparty/taglib/install"
+
 
 %description
 %{summary}
 
+
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
+# patch if not patched
+if ! %{__patch} -p0 -R --dry-run -f -i "%{P:0}"; then
+%patch0
+fi
+if ! %{__patch} -p0 -R --dry-run -f -i "%{P:1}"; then
+%patch1
+fi
+if ! %{__patch} -p0 -R --dry-run -f -i "%{P:2}"; then
+%patch2
+fi
+
 
 %build
-build_directory="%{_builddir}/build-%{_arch}"
-
-qtdbusextended_install="${build_directory}/3rdparty/qtdbusextended/install"
-mkdir -p "${qtdbusextended_install}"
-qtdbusextended_build="${build_directory}/3rdparty/qtdbusextended/build"
-if [ ! -d "${qtdbusextended_build}" ]; then
-    mkdir -p "${qtdbusextended_build}"
-    cd "${qtdbusextended_build}"
-    %qmake5 "%{_builddir}/3rdparty/qtdbusextended-0.0.3" \
-        CONFIG+=release
-    make %{?_smp_mflags}
-    make INSTALL_ROOT="${qtdbusextended_install}" install
+if [ ! -d "%{qtdbusextended_install}" ]; then
+    %{__mkdir_p} "%{qtdbusextended_build}"
+    cd "%{qtdbusextended_build}"
+    %qmake5 "%{qtdbusextended}" CONFIG+="%{build_type} staticlib" PREFIX="%{qtdbusextended_install}"
+    %{__make} %{?_smp_mflags}
+    %{__make} install
     cd -
 fi
+export PKG_CONFIG_PATH="%{qtdbusextended_install}/lib/pkgconfig"
 
-qtmpris_install="${build_directory}/3rdparty/qtmpris/install"
-mkdir -p "${qtmpris_install}"
-qtmpris_build="${build_directory}/3rdparty/qtmpris/build"
-if [ ! -d "${qtmpris_build}" ]; then
-    mkdir -p "${qtmpris_build}"
-    cd "${qtmpris_build}"
-    %qmake5 "%{_builddir}/3rdparty/qtmpris-0.0.8" \
-        CONFIG+=release \
-        DBUSEXTENDED_INCLUDEPATH="${qtdbusextended_install}/usr/include/qt5/DBusExtended" \
-        DBUSEXTENDED_LIBPATH="${qtdbusextended_install}/usr/lib"
-    make %{?_smp_mflags}
-    make INSTALL_ROOT="${qtmpris_install}" install
+if [ ! -d "%{qtmpris_install}" ]; then
+    %{__mkdir_p} "%{qtmpris_build}"
+    cd "%{qtmpris_build}"
+    %qmake5 "%{qtmpris}" CONFIG+="%{build_type} staticlib" PREFIX="%{qtmpris_install}"
+    %{__make} %{?_smp_mflags}
+    %{__make} install
     cd -
 fi
+export PKG_CONFIG_PATH="%{qtmpris_install}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-taglib_install="${build_directory}/3rdparty/taglib/install"
-mkdir -p "${taglib_install}"
-taglib_build="${build_directory}/3rdparty/taglib/build"
-if [ ! -d "${taglib_build}" ]; then
-    mkdir -p "${taglib_build}"
-    cd "${taglib_build}"
-    cmake "%{_builddir}/3rdparty/taglib-1.11.1" \
-        -DCMAKE_INSTALL_PREFIX="${taglib_install}" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=ON \
+if [ ! -d "%{taglib_install}" ]; then
+    %{__mkdir_p} "%{taglib_build}"
+    cd "%{taglib_build}"
+    %cmake "%{taglib}" \
+        -DCMAKE_INSTALL_PREFIX="%{taglib_install}" \
+        -DLIB_INSTALL_DIR="%{taglib_install}/lib" \
+        -DINCLUDE_INSTALL_DIR="%{taglib_install}/include" \
+        -DCMAKE_BUILD_TYPE=%{build_type} \
+        -DBUILD_SHARED_LIBS=OFF \
         -DWITH_MP4=ON
-    VERBOSE=1 make %{?_smp_mflags}
-    make install
+    %{__make} %{?_smp_mflags}
+    %{__make} install
     cd -
 fi
+export PKG_CONFIG_PATH="%{taglib_install}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-if [ ! -e "${build_directory}/config.log" ]; then
-    python waf configure --prefix="%{_prefix}" \
-        --out="${build_directory}" \
-        --taglib-includepath="${taglib_install}/include/taglib" \
-        --taglib-libpath="${taglib_install}/lib" \
-        --qtmpris-includepath="${qtmpris_install}/usr/include/qt5/MprisQt" \
-        --qtmpris-libpath="${qtmpris_install}/usr/lib" \
-        --qtmpris-rpath-link="${qtdbusextended_install}/usr/lib" \
-        --harbour
-fi
-python waf build
+cd "%{build_directory}"
+%cmake .. \
+    -DCMAKE_BUILD_TYPE=%{build_type} \
+    -DHARBOUR=%{harbour} \
+    -DQTMPRIS_STATIC=ON \
+    -DTAGLIB_STATIC=ON
+%{__make} %{?_smp_mflags}
+
 
 %install
-rm -rf "%{buildroot}"
+cd "%{build_directory}"
+%make_install
+desktop-file-install \
+    --delete-original \
+    --dir "%{buildroot}/%{_datadir}/applications" \
+    "%{buildroot}/%{_datadir}/applications/%{name}.desktop"
 
-lib_dir="%{buildroot}%{_datadir}/%{name}/lib"
-build_directory="%{_builddir}/build-%{_arch}"
-mkdir -p "${lib_dir}"
-cp -d "${build_directory}/3rdparty/qtdbusextended/install/usr/lib"/libdbusextended-qt5.so* "${lib_dir}"
-cp -d "${build_directory}/3rdparty/qtmpris/install/usr/lib"/libmpris-qt5.so* "${lib_dir}"
-cp -d "${build_directory}/3rdparty/taglib/install/lib"/libtag.so* "${lib_dir}"
-
-python waf install --destdir="%{buildroot}"
-
-desktop-file-install --delete-original \
-    --dir "%{buildroot}%{_datadir}/applications" \
-    "%{buildroot}%{_datadir}/applications"/*.desktop
 
 %files
 %defattr(-,root,root,-)
