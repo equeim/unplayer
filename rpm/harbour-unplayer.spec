@@ -50,7 +50,7 @@ BuildRequires: boost-devel
 %global qtdbusextended_build "%{build_directory}/3rdparty/qtdbusextended/build"
 %global qtdbusextended_install "%{build_directory}/3rdparty/qtdbusextended/install"
 
-%global qtmpris "%{_builddir}/3rdparty/qtmpris-0.0.8"
+%global qtmpris "%{_builddir}/3rdparty/qtmpris-0.1.0"
 %global qtmpris_build "%{build_directory}/3rdparty/qtmpris/build"
 %global qtmpris_install "%{build_directory}/3rdparty/qtmpris/install"
 

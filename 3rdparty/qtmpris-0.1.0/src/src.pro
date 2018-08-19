@@ -5,10 +5,7 @@ CONFIG += qt link_pkgconfig
 
 QT = core dbus qml
 
-#PKGCONFIG = dbusextended-qt5
-INCLUDEPATH += $${DBUSEXTENDED_INCLUDEPATH}
-LIBS += -L$${DBUSEXTENDED_LIBPATH} -ldbusextended-qt5
-
+PKGCONFIG = dbusextended-qt5
 TARGET = $${MPRISQTLIB}
 
 QMAKE_SUBSTITUTES = $${TARGET}.prf.in

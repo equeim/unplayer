@@ -72,4 +72,5 @@ rm -rf %{buildroot}
 %files qml-plugin
 %defattr(-,root,root,-)
 %{_libdir}/qt5/qml/org/nemomobile/mpris/libmpris-qt5-qml-plugin.so
+%{_libdir}/qt5/qml/org/nemomobile/mpris/plugins.qmltypes
 %{_libdir}/qt5/qml/org/nemomobile/mpris/qmldir

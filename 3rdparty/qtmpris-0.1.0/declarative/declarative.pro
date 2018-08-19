@@ -27,6 +27,9 @@ HEADERS += \
 
 target.path = $$[QT_INSTALL_QML]/$$PLUGIN_IMPORT_PATH
 
-qml.files = qmldir
+qml.files = qmldir plugins.qmltypes
 qml.path = $$target.path
 INSTALLS += target qml
+
+qmltypes.commands = qmlplugindump -nonrelocatable org.nemomobile.mpris 1.0 > $$PWD/plugins.qmltypes
+QMAKE_EXTRA_TARGETS += qmltypes

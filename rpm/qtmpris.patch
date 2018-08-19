@@ -1,5 +1,5 @@
---- 3rdparty/qtmpris-0.0.8/src/src.pro
-+++ 3rdparty/qtmpris-0.0.8/src/src.pro
+--- 3rdparty/qtmpris-0.1.0/src/src.pro
++++ 3rdparty/qtmpris-0.1.0/src/src.pro
 @@ -54,12 +54,12 @@
  OTHER_FILES += org.mpris.MediaPlayer2.xml \
      org.mpris.MediaPlayer2.Player.xml
