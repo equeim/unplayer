@@ -4,6 +4,11 @@
 ### Added
 - Extracting disc number from files and using it when sorting tracks
 
+### Changed
+- MPRIS interface now expose track's length, current position, repeat and shuffle mode
+- CMake build system
+- qtmpris and taglib are now linked statically
+
 ### Fixed
 - Setting of MPRIS trackId property
 
