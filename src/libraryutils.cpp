@@ -155,40 +155,26 @@ namespace unplayer
 
     MimeType mimeTypeFromString(const QString& string)
     {
-        if (string == flacMimeType) {
-            return MimeType::Flac;
+        static const std::unordered_map<QString, MimeType> types{
+            {flacMimeType, MimeType::Flac},
+            {mp4MimeType, MimeType::Mp4},
+            {mp4bMimeType, MimeType::Mp4b},
+            {mpegMimeType, MimeType::Mpeg},
+            {vorbisOggMimeType, MimeType::VorbisOgg},
+            {flacOggMimeType, MimeType::FlacOgg},
+            {opusOggMimeType, MimeType::OpusOgg},
+            {apeMimeType, MimeType::Ape},
+            {genericMatroskaMimeType, MimeType::Matroska},
+            {wavMimeType, MimeType::Wav},
+            {wavpackMimeType, MimeType::Wavpack}
+        };
+        static const auto end(types.end());
+
+        const auto found(types.find(string));
+        if (found == end) {
+            return MimeType::Other;
         }
-        if (string == mp4MimeType) {
-            return MimeType::Mp4;
-        }
-        if (string == mp4bMimeType) {
-            return MimeType::Mp4b;
-        }
-        if (string == mpegMimeType) {
-            return MimeType::Mpeg;
-        }
-        if (string == vorbisOggMimeType) {
-            return MimeType::VorbisOgg;
-        }
-        if (string == flacOggMimeType) {
-            return MimeType::FlacOgg;
-        }
-        if (string == opusOggMimeType) {
-            return MimeType::OpusOgg;
-        }
-        if (string == apeMimeType) {
-            return MimeType::Ape;
-        }
-        if (string == genericMatroskaMimeType) {
-            return MimeType::Matroska;
-        }
-        if (string == wavMimeType) {
-            return MimeType::Wav;
-        }
-        if (string == wavpackMimeType) {
-            return MimeType::Wavpack;
-        }
-        return MimeType::Other;
+        return found->second;
     }
 
     const std::unordered_set<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
