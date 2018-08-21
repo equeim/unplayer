@@ -6,6 +6,7 @@
 
 ### Changed
 - MPRIS interface now expose track's length, current position, repeat and shuffle mode
+- Improved performance of library scanning
 - CMake build system
 - qtmpris and taglib are now linked statically
 
