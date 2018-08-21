@@ -20,8 +20,6 @@
 
 #include <functional>
 #include <memory>
-#include <unordered_set>
-
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -193,33 +191,33 @@ namespace unplayer
         return MimeType::Other;
     }
 
-    const std::vector<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
-                                                                  aacMimeType,
-                                                                  mp4MimeType,
-                                                                  mp4bMimeType,
-                                                                  mpegMimeType,
-                                                                  oggMimeType,
-                                                                  apeMimeType,
-                                                                  matroskaMimeType,
-                                                                  wavMimeType,
-                                                                  wavpackMimeType};
+    const std::unordered_set<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
+                                                                         aacMimeType,
+                                                                         mp4MimeType,
+                                                                         mp4bMimeType,
+                                                                         mpegMimeType,
+                                                                         oggMimeType,
+                                                                         apeMimeType,
+                                                                         matroskaMimeType,
+                                                                         wavMimeType,
+                                                                         wavpackMimeType};
 
-    const std::vector<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
-                                                                mp4MimeType,
-                                                            mp4bMimeType,
-                                                            mpegMimeType,
-                                                            vorbisOggMimeType,
-                                                            flacOggMimeType,
-                                                            opusOggMimeType,
-                                                            apeMimeType,
-                                                            genericMatroskaMimeType,
-                                                            wavMimeType,
-                                                            wavpackMimeType};
+    const std::unordered_set<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
+                                                                       mp4MimeType,
+                                                                       mp4bMimeType,
+                                                                       mpegMimeType,
+                                                                       vorbisOggMimeType,
+                                                                       flacOggMimeType,
+                                                                       opusOggMimeType,
+                                                                       apeMimeType,
+                                                                       genericMatroskaMimeType,
+                                                                       wavMimeType,
+                                                                       wavpackMimeType};
 
-    const std::vector<QString> LibraryUtils::videoMimeTypesByExtension{mp4VideoMimeType,
-                                                                       mpegVideoMimeType,
-                                                                       matroskaVideoMimeType,
-                                                                       oggVideoMimeType};
+    const std::unordered_set<QString> LibraryUtils::videoMimeTypesByExtension{mp4VideoMimeType,
+                                                                              mpegVideoMimeType,
+                                                                              matroskaVideoMimeType,
+                                                                              oggVideoMimeType};
 
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
 
@@ -646,7 +644,7 @@ namespace unplayer
                 {
                     const QFileInfoList files(QDir(mMediaArtDirectory).entryInfoList(QDir::Files));
                     for (const QFileInfo& info : files) {
-                        if (allMediaArt.find(info.filePath()) == allMediaArt.end()) {
+                        if (!contains(allMediaArt, info.filePath())) {
                             if (!QFile::remove(info.filePath())) {
                                 qWarning() << "failed to remove file:" << info.filePath();
                             }

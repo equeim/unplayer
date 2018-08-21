@@ -25,6 +25,7 @@
 #include <QObject>
 
 #include <unordered_map>
+#include <unordered_set>
 
 class QFileInfo;
 class QSqlDatabase;
@@ -66,9 +67,9 @@ namespace unplayer
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
-        static const std::vector<QString> mimeTypesByExtension;
-        static const std::vector<QString> mimeTypesByContent;
-        static const std::vector<QString> videoMimeTypesByExtension;
+        static const std::unordered_set<QString> mimeTypesByExtension;
+        static const std::unordered_set<QString> mimeTypesByContent;
+        static const std::unordered_set<QString> videoMimeTypesByExtension;
         static const QString databaseType;
         static LibraryUtils* instance();
 
