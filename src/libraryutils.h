@@ -74,7 +74,7 @@ namespace unplayer
 
         const QString& databaseFilePath();
 
-        static QString findMediaArtForDirectory(std::unordered_map<QString, QString> &directoriesHash, const QString& directoryPath);
+        static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
@@ -99,12 +99,12 @@ namespace unplayer
     private:
         LibraryUtils();
 
-        QString getTrackMediaArt(const tagutils::Info& info,
-                                 std::unordered_map<QByteArray, QString> &embeddedMediaArtHash,
+        QString getTrackMediaArt(const QByteArray& embeddedMediaArtData,
+                                 std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
                                  const QFileInfo& fileInfo,
-                                 std::unordered_map<QString, QString> &directoriesHash,
-                                 bool useDirectoriesMediaArt);
-        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtHash);
+                                 std::unordered_map<QString, QString>& mediaArtDirectories,
+                                 bool preferDirectoriesMediaArt);
+        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
         bool mDatabaseInitialized;
         bool mCreatedTable;
