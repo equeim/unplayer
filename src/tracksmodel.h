@@ -29,7 +29,6 @@ namespace unplayer
     class TracksModelSortMode final : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(Mode)
     public:
         enum Mode
         {
@@ -38,12 +37,12 @@ namespace unplayer
             ArtistAlbumTitle,
             ArtistAlbumYear
         };
+        Q_ENUM(Mode)
     };
 
     class TracksModelInsideAlbumSortMode final : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(Mode)
     public:
         enum Mode
         {
@@ -51,6 +50,7 @@ namespace unplayer
             DiscNumberTitle,
             DiscNumberTrackNumber
         };
+        Q_ENUM(Mode)
     };
 
     struct Track
@@ -67,8 +67,6 @@ namespace unplayer
         Q_OBJECT
 
         Q_INTERFACES(QQmlParserStatus)
-
-        Q_ENUMS(Role)
 
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
         Q_PROPERTY(bool allAlbums READ allAlbums WRITE setAllAlbums)
@@ -90,6 +88,7 @@ namespace unplayer
             AlbumRole,
             DurationRole
         };
+        Q_ENUM(Role)
 
         using SortMode = TracksModelSortMode::Mode;
         using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;

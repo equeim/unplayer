@@ -29,7 +29,6 @@ namespace unplayer
     class PlaylistModel : public QAbstractListModel
     {
         Q_OBJECT
-        Q_ENUMS(Role)
         Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
     public:
         enum Role
@@ -42,6 +41,7 @@ namespace unplayer
             AlbumRole,
             InLibraryRole
         };
+        Q_ENUM(Role)
 
         PlaylistModel();
 

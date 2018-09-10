@@ -56,8 +56,6 @@ namespace unplayer
     {
         Q_OBJECT
 
-        Q_ENUMS(RepeatMode)
-
         Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
         Q_PROPERTY(QString currentFilePath READ currentFilePath NOTIFY currentTrackChanged)
@@ -77,6 +75,7 @@ namespace unplayer
             RepeatAll,
             RepeatOne
         };
+        Q_ENUM(RepeatMode)
 
         explicit Queue(QObject* parent);
 

@@ -41,8 +41,6 @@ namespace unplayer
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
-        Q_ENUMS(Role)
-        Q_ENUMS(SortMode)
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists NOTIFY allArtistsChanged)
         Q_PROPERTY(QString artist READ artist WRITE setArtist)
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
@@ -61,6 +59,7 @@ namespace unplayer
             TracksCountRole,
             DurationRole
         };
+        Q_ENUM(Role)
 
         enum SortMode
         {
@@ -69,6 +68,7 @@ namespace unplayer
             SortArtistAlbum,
             SortArtistYear
         };
+        Q_ENUM(SortMode)
 
         ~AlbumsModel() override;
         void classBegin() override;

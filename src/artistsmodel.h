@@ -36,7 +36,6 @@ namespace unplayer
     class ArtistsModel : public QAbstractListModel
     {
         Q_OBJECT
-        Q_ENUMS(Role)
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
         Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
@@ -48,6 +47,7 @@ namespace unplayer
             TracksCountRole,
             DurationRole
         };
+        Q_ENUM(Role)
 
         ArtistsModel();
 

@@ -29,7 +29,6 @@ namespace unplayer
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
-        Q_ENUMS(Type)
         Q_PROPERTY(Type type READ type WRITE setType)
     public:
         enum Type
@@ -37,6 +36,7 @@ namespace unplayer
             Library,
             Blacklisted
         };
+        Q_ENUM(Type)
 
         void classBegin() override;
         void componentComplete() override;

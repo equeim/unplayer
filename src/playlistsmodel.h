@@ -36,7 +36,6 @@ namespace unplayer
     class PlaylistsModel : public QAbstractListModel
     {
         Q_OBJECT
-        Q_ENUMS(Role)
     public:
         enum Role
         {
@@ -44,6 +43,7 @@ namespace unplayer
             NameRole,
             TracksCountRole
         };
+        Q_ENUM(Role)
 
         PlaylistsModel();
 

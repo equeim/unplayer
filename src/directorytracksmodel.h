@@ -38,7 +38,6 @@ namespace unplayer
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
-        Q_ENUMS(Role)
         Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
         Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
@@ -51,6 +50,7 @@ namespace unplayer
             IsDirectoryRole,
             IsPlaylistRole,
         };
+        Q_ENUM(Role)
 
         void classBegin() override;
         void componentComplete() override;

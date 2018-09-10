@@ -31,7 +31,6 @@ namespace unplayer
     class QueueModel : public QAbstractListModel
     {
         Q_OBJECT
-        Q_ENUMS(Role)
         Q_PROPERTY(unplayer::Queue* queue READ queue WRITE setQueue)
     public:
         enum Role
@@ -44,6 +43,7 @@ namespace unplayer
             DisplayedAlbumRole,
             DurationRole
         };
+        Q_ENUM(Role)
 
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
