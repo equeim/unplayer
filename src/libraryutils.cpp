@@ -83,7 +83,7 @@ namespace unplayer
         QString emptyIfNull(const QString& string)
         {
             if (string.isNull()) {
-                return QStringLiteral("");
+                return QString();
             }
             return string;
         }
