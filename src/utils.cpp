@@ -52,11 +52,6 @@
 
 namespace unplayer
 {
-    Utils::Utils()
-    {
-
-    }
-
     void Utils::registerTypes()
     {
         qRegisterMetaType<std::vector<int>>();

@@ -34,8 +34,6 @@ namespace unplayer
         Q_PROPERTY(QString translators READ translators CONSTANT)
         Q_PROPERTY(QString license READ license CONSTANT)
     public:
-        Utils();
-
         static void registerTypes();
 
         static QVariantList parseArguments(const QStringList& arguments);

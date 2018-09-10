@@ -24,10 +24,6 @@
 
 namespace unplayer
 {
-    PlaylistModel::PlaylistModel()
-    {
-    }
-
     QVariant PlaylistModel::data(const QModelIndex& index, int role) const
     {
         const PlaylistTrack& track = mTracks[index.row()];

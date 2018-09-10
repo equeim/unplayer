@@ -43,8 +43,6 @@ namespace unplayer
         };
         Q_ENUM(Role)
 
-        PlaylistModel();
-
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount(const QModelIndex& parent) const override;
 
