@@ -45,7 +45,7 @@ namespace unplayer
         int rowCount(const QModelIndex& parent) const override;
 
         Type type() const;
-        void setType(const Type& type);
+        void setType(Type type);
 
         Q_INVOKABLE void addDirectory(const QString& directory);
         Q_INVOKABLE void removeDirectory(int index);

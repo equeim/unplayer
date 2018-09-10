@@ -61,7 +61,7 @@ namespace unplayer
         return mType;
     }
 
-    void LibraryDirectoriesModel::setType(const Type& type)
+    void LibraryDirectoriesModel::setType(Type type)
     {
         mType = type;
     }
