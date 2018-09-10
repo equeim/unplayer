@@ -61,7 +61,7 @@ namespace unplayer
                            int duration,
                            const QString& artist,
                            const QString& album,
-                           const QString& mediaArt,
+                           const QString& mediaArtFilePath,
                            const QByteArray& mediaArtData)
         : trackId(trackId),
           filePath(filePath),
@@ -69,7 +69,7 @@ namespace unplayer
           duration(duration),
           artist(artist),
           album(album),
-          mediaArtFilePath(mediaArt)
+          mediaArtFilePath(mediaArtFilePath)
     {
         mediaArtPixmap.loadFromData(mediaArtData);
     }
@@ -370,7 +370,7 @@ namespace unplayer
                                                                       id.chop(1);
                                                                       return id;
                                                                   }(),
-                                                                  std::move(filePath),
+                                                                  filePath,
                                                                   std::move(title),
                                                                   duration,
                                                                   std::move(artist),
@@ -498,7 +498,7 @@ namespace unplayer
         if (mShuffle) {
             const std::shared_ptr<QueueTrack>& track = mTracks[mCurrentIndex];
             erase_one(mNotPlayedTracks, track.get());
-            if (mNotPlayedTracks.size() == 0) {
+            if (mNotPlayedTracks.empty()) {
                 if (mRepeatMode == RepeatAll) {
                     resetNotPlayedTracks();
                     erase_one(mNotPlayedTracks, track.get());

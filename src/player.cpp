@@ -119,7 +119,7 @@ namespace unplayer
             mpris->setShuffle(mQueue->isShuffle());
         });
 
-        QObject::connect(this, &Player::stateChanged, [=](State newState) {
+        QObject::connect(this, &Player::stateChanged, this, [=](State newState) {
             if (mSettingNewTrack) {
                 return;
             }
