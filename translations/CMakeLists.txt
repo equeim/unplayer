@@ -14,6 +14,6 @@ qt5_add_translation(qm_files
     harbour-unplayer-sv.ts
 )
 
-add_custom_target(translations DEPENDS ${qm_files})
+add_custom_target(translations ALL DEPENDS ${qm_files})
 
 install(FILES ${qm_files} DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/translations")

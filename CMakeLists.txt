@@ -8,13 +8,8 @@ option(HARBOUR "Build for Harbour" ON)
 option(QTMPRIS_STATIC "Link with qtmpris statically" OFF)
 option(TAGLIB_STATIC "Link with taglib statically" OFF)
 
-find_package(Qt5Core CONFIG REQUIRED)
-if (Qt5Core_VERSION VERSION_LESS 5.6)
-    message(FATAL_ERROR "Qt >= 5.6 is required")
-endif()
-
-add_subdirectory("translations")
 add_subdirectory("src")
+add_subdirectory("translations")
 
 install(DIRECTORY "icons/hicolor" DESTINATION "${CMAKE_INSTALL_DATADIR}/icons")
 

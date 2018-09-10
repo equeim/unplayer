@@ -1,6 +1,7 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
+find_package(Qt5Core 5.6 REQUIRED CONFIG)
 find_package(Qt5Concurrent CONFIG REQUIRED)
 find_package(Qt5DBus CONFIG REQUIRED)
 find_package(Qt5Multimedia)
@@ -88,7 +89,5 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
     ${QTMPRIS_CFLAGS_OTHER}
     ${TAGLIB_CFLAGS_OTHER}
 )
-
-add_dependencies("${PROJECT_NAME}" translations)
 
 install(TARGETS "${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")
