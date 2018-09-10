@@ -47,16 +47,15 @@ BuildRequires: boost-devel
 %global build_directory "%{_builddir}/build-%{_arch}"
 
 %global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended-0.0.3"
-%global qtdbusextended_build "%{build_directory}/3rdparty/qtdbusextended/build"
-%global qtdbusextended_install "%{build_directory}/3rdparty/qtdbusextended/install"
+%global qtdbusextended_build "%{build_directory}/3rdparty/build-qtdbusextended"
 
 %global qtmpris "%{_builddir}/3rdparty/qtmpris-0.1.0"
-%global qtmpris_build "%{build_directory}/3rdparty/qtmpris/build"
-%global qtmpris_install "%{build_directory}/3rdparty/qtmpris/install"
+%global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
 
 %global taglib "%{_builddir}/3rdparty/taglib-1.11.1"
-%global taglib_build "%{build_directory}/3rdparty/taglib/build"
-%global taglib_install "%{build_directory}/3rdparty/taglib/install"
+%global taglib_build "%{build_directory}/3rdparty/build-taglib"
+
+%global thirdparty_install "%{build_directory}/3rdparty/install"
 
 
 %description
@@ -78,41 +77,37 @@ fi
 
 
 %build
-if [ ! -d "%{qtdbusextended_install}" ]; then
+export PKG_CONFIG_PATH="%{thirdparty_install}/lib/pkgconfig"
+
+if [ ! -d "%{thirdparty_install}" ] || [ -z "$(ls -A \"%{thirdparty_install}\")" ]; then
     %{__mkdir_p} "%{qtdbusextended_build}"
     cd "%{qtdbusextended_build}"
-    %qmake5 "%{qtdbusextended}" CONFIG+="%{build_type} staticlib" PREFIX="%{qtdbusextended_install}"
+    %qmake5 "%{qtdbusextended}" CONFIG+="%{build_type} staticlib" PREFIX="%{thirdparty_install}"
     %{__make} %{?_smp_mflags}
     %{__make} install
     cd -
-fi
-export PKG_CONFIG_PATH="%{qtdbusextended_install}/lib/pkgconfig"
 
-if [ ! -d "%{qtmpris_install}" ]; then
     %{__mkdir_p} "%{qtmpris_build}"
     cd "%{qtmpris_build}"
-    %qmake5 "%{qtmpris}" CONFIG+="%{build_type} staticlib" PREFIX="%{qtmpris_install}"
+    %qmake5 "%{qtmpris}" CONFIG+="%{build_type} staticlib" PREFIX="%{thirdparty_install}"
     %{__make} %{?_smp_mflags}
     %{__make} install
     cd -
-fi
-export PKG_CONFIG_PATH="%{qtmpris_install}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-if [ ! -d "%{taglib_install}" ]; then
     %{__mkdir_p} "%{taglib_build}"
     cd "%{taglib_build}"
     %cmake "%{taglib}" \
-        -DCMAKE_INSTALL_PREFIX="%{taglib_install}" \
-        -DLIB_INSTALL_DIR="%{taglib_install}/lib" \
-        -DINCLUDE_INSTALL_DIR="%{taglib_install}/include" \
+        -DCMAKE_INSTALL_PREFIX="%{thirdparty_install}" \
+        -DLIB_INSTALL_DIR="%{thirdparty_install}/lib" \
+        -DINCLUDE_INSTALL_DIR="%{thirdparty_install}/include" \
         -DCMAKE_BUILD_TYPE=%{build_type} \
+        -DCMAKE_CXX_FLAGS="-fPIC" \
         -DBUILD_SHARED_LIBS=OFF \
         -DWITH_MP4=ON
     %{__make} %{?_smp_mflags}
     %{__make} install
     cd -
 fi
-export PKG_CONFIG_PATH="%{taglib_install}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 cd "%{build_directory}"
 %cmake .. \
