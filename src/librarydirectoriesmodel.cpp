@@ -104,7 +104,7 @@ namespace unplayer
 
     void LibraryDirectoriesModel::removeDirectories(std::vector<int> indexes)
     {
-        std::reverse(indexes.begin(), indexes.end());
+        std::sort(indexes.begin(), indexes.end(), std::greater<int>());
         for (int index : indexes) {
             beginRemoveRows(QModelIndex(), index, index);
             mDirectories.removeAt(index);

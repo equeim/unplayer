@@ -440,7 +440,7 @@ namespace unplayer
     {
         const std::shared_ptr<QueueTrack> current(mTracks[mCurrentIndex]);
 
-        std::reverse(indexes.begin(), indexes.end());
+        std::sort(indexes.begin(), indexes.end(), std::greater<int>());
         for (int index : indexes) {
             emit trackAboutToBeRemoved(index);
             erase_one(mNotPlayedTracks, mTracks[index].get());

@@ -142,7 +142,6 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run(std::bind([this](std::vector<int>& indexes) {
-            std::reverse(indexes.begin(), indexes.end());
             std::vector<int> removed;
             auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
             db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
@@ -152,6 +151,7 @@ namespace unplayer
                 return removed;
             }
             db.transaction();
+            std::sort(indexes.begin(), indexes.end(), std::greater<int>());
             for (int index : indexes) {
                 QString filePath(mFiles[index].filePath);
                 const bool isDir = QFileInfo(filePath).isDir();

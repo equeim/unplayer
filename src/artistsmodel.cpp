@@ -137,7 +137,7 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run(std::bind([this, deleteFiles](std::vector<int>& indexes) {
-            std::reverse(indexes.begin(), indexes.end());
+            std::sort(indexes.begin(), indexes.end(), std::greater<int>());
             std::vector<int> removed;
             {
                 auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
