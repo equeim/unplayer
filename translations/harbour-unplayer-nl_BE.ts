@@ -63,7 +63,7 @@
     </message>
     <message>
         <source>Select tracks</source>
-        <translation>Selecteerd nummers</translation>
+        <translation>Selecteert nummers</translation>
     </message>
     <message>
         <source>Unknown album</source>
@@ -90,7 +90,7 @@
     </message>
     <message>
         <source>Select albums</source>
-        <translation>Selecteerd albums</translation>
+        <translation>Selecteert albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <source>Select artists</source>
-        <translation>Selecteerd artiesten</translation>
+        <translation>Selecteert artiesten</translation>
     </message>
     <message>
         <source>Directories</source>
@@ -162,7 +162,7 @@
     </message>
     <message>
         <source>Select genres</source>
-        <translation>Selecteerd genres</translation>
+        <translation>Selecteert genres</translation>
     </message>
     <message>
         <source>No genres</source>
@@ -222,7 +222,7 @@
     </message>
     <message>
         <source>Removing</source>
-        <translation>Word verwijderd</translation>
+        <translation>Wordt verwijderd</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -230,7 +230,7 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Speellijst word verwijderd</translation>
+        <translation>Speellijst wordt verwijderd</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
@@ -259,7 +259,7 @@
     </message>
     <message>
         <source>Select playlists</source>
-        <translation>Selecteerd speellijsten</translation>
+        <translation>Selecteert speellijsten</translation>
     </message>
     <message>
         <source>Queue</source>
@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Select Image</source>
-        <translation>Selecteerd een afbeelding</translation>
+        <translation>Selecteert een afbeelding</translation>
     </message>
     <message>
         <source>Maintainer</source>
@@ -394,7 +394,7 @@
     </message>
     <message>
         <source>Select files</source>
-        <translation>Selecteerd bestanden</translation>
+        <translation>Selecteert bestanden</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
@@ -441,7 +441,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>Bibliotheek word bijgewerkt…</translation>
+        <translation>Bibliotheek wordt bijgewerkt…</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation>Database kan nie worden g’initialiseerd</translation>
+        <translation>Database kan niet geïnitialiseerd worden</translation>
     </message>
     <message>
         <source>No selected directories</source>
@@ -457,7 +457,7 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation>Word bijgewerkt…</translation>
+        <translation>Bezig met bijwerken…</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Verkiesd albumhoezen als apart bestand in muziekmap in plek van geëxtraheerd uit muziekbestand</translation>
+        <translation>Verkiest albumhoezen als apart bestand in muziekmap in plek van geëxtraheerd uit muziekbestand</translation>
     </message>
     <message>
         <source>Player</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Hersteld afspeelstatus bij opstarten van toepassing</translation>
+        <translation>Afspeelstatus herstellen bij opstarten van toepassing</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -545,7 +545,7 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation>Zij’ ge zeker da’ ge dit album wild verwijderen?</translation>
+        <translation>Zijt ge zeker dat ge dit album wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
@@ -553,14 +553,12 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation>
-            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd album wild verwijderen?</numerusform>
-            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde albums wild verwijderen?</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd album wilt verwijderen?</numerusform>
+        <numerusform>Zijt ge zeker dat ge de %n geselecteerde albums wilt verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation>Zij’ ge zeker da’ ge dezen artiest wild verwijderen?</translation>
+        <translation>Zijt ge zeker dat ge dezen artiest wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing files...</source>
@@ -568,32 +566,26 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation>
-            <numerusform>Zij’ ge zeker da’ ge %n geselecteerden artiest wild verwijderen?</numerusform>
-            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde artiesten wild verwijderen?</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerden artiest wilt verwijderen?</numerusform>
+        <numerusform>Zijt ge zeker dat ge de %n geselecteerde artiesten wilt verwijderen?</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation>
-            <numerusform>%n bestand word verwijderd</numerusform>
-            <numerusform>%n bestanden worden verwijderd</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>%n bestand wordt verwijderd</numerusform>
+        <numerusform>%n bestanden worden verwijderd</numerusform>
+        </translation></message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation>
-            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd genre wild verwijderen?</numerusform>
-            <numerusform>Zij’ ge zeker da’ ge da %n geselecteerde genres wild verwijderen?</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd genre wilt verwijderen?</numerusform>
+        <numerusform>Zijt ge zeker dat ge da %n geselecteerde genres wilt verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation>Zij’ ge zeker da’ ge dit genre wild verwijderen?</translation>
+        <translation>Zijt ge zeker dat ge dit genre wilt verwijderen?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation>Zij’ ge zeker da’ ge dit nummer wild verwijderen?</translation>
+        <translation>Zijt ge zeker dat ge dit nummer wilt verwijderen?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
@@ -613,11 +605,9 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation>
-            <numerusform>Zij’ ge zeker da’ ge %n geselecteerd nummer wild verwijderen?</numerusform>
-            <numerusform>Zij’ ge zeker da’ ge de %n geselecteerde nummers wild verwijderen?</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd nummer wilt verwijderen?</numerusform>
+        <numerusform>Zijt ge zeker dat ge de %n geselecteerde nummers wilt verwijderen?</numerusform>
+        </translation></message>
     <message>
         <source>Donate</source>
         <translation>Doneren</translation>
