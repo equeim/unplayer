@@ -64,7 +64,7 @@ namespace unplayer
         QStringList paths;
         paths.reserve(indexes.size());
         for (int index : indexes) {
-            paths.append(mPlaylists.at(index).filePath);
+            paths.push_back(mPlaylists[index].filePath);
         }
         PlaylistUtils::instance()->removePlaylists(paths);
     }
@@ -73,7 +73,7 @@ namespace unplayer
     {
         QStringList tracks;
         for (int index : indexes) {
-            tracks.append(PlaylistUtils::getPlaylistTracks(mPlaylists.at(index).filePath));
+            tracks.append(PlaylistUtils::getPlaylistTracks(mPlaylists[index].filePath));
         }
         return tracks;
     }

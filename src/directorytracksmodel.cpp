@@ -53,7 +53,7 @@ namespace unplayer
             return QVariant();
         }
 
-        const DirectoryTrackFile& file = mFiles.at(index.row());
+        const DirectoryTrackFile& file = mFiles[index.row()];
 
         switch (role) {
         case FilePathRole:
@@ -112,14 +112,14 @@ namespace unplayer
 
     QString DirectoryTracksModel::getTrack(int index) const
     {
-        return mFiles.at(index).filePath;
+        return mFiles[index].filePath;
     }
 
     QStringList DirectoryTracksModel::getTracks(const std::vector<int>& indexes, bool includePlaylists) const
     {
         QStringList list;
         for (int index : indexes) {
-            const DirectoryTrackFile& file = mFiles.at(index);
+            const DirectoryTrackFile& file = mFiles[index];
             if (!file.isDirectory && (!file.isPlaylist || includePlaylists)) {
                 list.append(getTrack(index));
             }
@@ -332,7 +332,7 @@ namespace unplayer
     {
         const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
         for (int i = 0, max = rowCount(); i < max; ++i) {
-            if (!files.at(sourceIndex(i)).isDirectory) {
+            if (!files[sourceIndex(i)].isDirectory) {
                 selectionModel()->select(index(i, 0), QItemSelectionModel::Select);
             }
         }
