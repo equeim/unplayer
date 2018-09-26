@@ -50,9 +50,6 @@ namespace unplayer
 
         static QString translators();
         static QString license();
-
-        Q_INVOKABLE static void removeFile(const QString& filePath);
-        Q_INVOKABLE static void removeFiles(const QStringList& files);
     };
 }
 

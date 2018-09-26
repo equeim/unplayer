@@ -815,27 +815,6 @@ namespace unplayer
         }
     }
 
-    void LibraryUtils::removeFileFromDatabase(const QString& filePath)
-    {
-        QSqlQuery query;
-        query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
-        query.addBindValue(filePath);
-        if (!query.exec()) {
-            qWarning() << "failed to remove file from database" << query.lastQuery();
-        }
-    }
-
-    void LibraryUtils::removeFilesFromDatabase(const QStringList &files)
-    {
-        auto db = QSqlDatabase::database();
-        db.transaction();
-        for (const QString& filePath : files) {
-            removeFileFromDatabase(filePath);
-        }
-        db.commit();
-        emit databaseChanged();
-    }
-
     LibraryUtils::LibraryUtils()
         : mDatabaseInitialized(false),
           mCreatedTable(false),

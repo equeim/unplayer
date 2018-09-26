@@ -94,9 +94,6 @@ namespace unplayer
         Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album);
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
-
-        Q_INVOKABLE void removeFileFromDatabase(const QString& filePath);
-        Q_INVOKABLE void removeFilesFromDatabase(const QStringList& files);
     private:
         LibraryUtils();
 
