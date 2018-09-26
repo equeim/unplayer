@@ -618,8 +618,10 @@ namespace unplayer
                     QSqlQuery query(QLatin1String("SELECT DISTINCT(mediaArt) FROM tracks WHERE mediaArt != ''"), db);
                     if (query.lastError().type() == QSqlError::NoError) {
                         if (query.last()) {
-                            allMediaArt.reserve(query.at() + 1);
-                            query.seek(-1);
+                            if (query.at() > 0) {
+                                allMediaArt.reserve(query.at() + 1);
+                            }
+                            query.seek(QSql::BeforeFirstRow);
                             while (query.next()) {
                                 allMediaArt.insert(query.value(0).toString());
                             }
