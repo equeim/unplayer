@@ -609,7 +609,7 @@ namespace unplayer
                     queryString.push_back(')');
                     QSqlQuery query(queryString, db);
                     if (query.lastError().type() != QSqlError::NoError) {
-                        qWarning() << "failed to remove files from database" << query.lastQuery();
+                        qWarning() << "failed to remove files from database" << query.lastError();
                     }
                 }
 

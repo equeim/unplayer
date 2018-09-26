@@ -368,7 +368,7 @@ namespace unplayer
                     }
                 }
             } else {
-                qDebug() << "failed to open playlist:" << filePath;
+                qWarning() << "failed to open playlist:" << filePath;
             }
             break;
         }
@@ -399,7 +399,7 @@ namespace unplayer
         {
             QFile file(filePath);
             if (!file.open(QIODevice::ReadOnly)) {
-                qDebug() << "failed to open playlist:" << filePath;
+                qWarning() << "failed to open playlist:" << filePath;
                 return 0;
             }
             int count = 0;
