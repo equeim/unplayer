@@ -172,7 +172,7 @@ namespace unplayer
                 QSqlQuery query(db);
                 if (isDir) {
                     query.prepare(QStringLiteral("DELETE FROM tracks WHERE instr(filePath, ?) = 1"));
-                    filePath.append('/');
+                    filePath.append(QLatin1Char('/'));
                 } else {
                     query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
                 }

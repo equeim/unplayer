@@ -59,7 +59,7 @@ namespace unplayer
         QString createTrackId()
         {
             QString id(QLatin1String("/"));
-            id += QUuid::createUuid().toString().remove(0, 1).remove('-');
+            id += QUuid::createUuid().toString().remove(0, 1).remove(QLatin1Char('-'));
             id.chop(1);
             return id;
         }

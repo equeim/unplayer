@@ -200,9 +200,9 @@ namespace unplayer
     {
         QFile mtab(QLatin1String("/etc/mtab"));
         if (mtab.open(QIODevice::ReadOnly)) {
-            const QStringList mounts(QString::fromLatin1(mtab.readAll()).split('\n').filter(QLatin1String("/dev/mmcblk1p1")));
+            const QStringList mounts(QString::fromLatin1(mtab.readAll()).split(QLatin1Char('\n')).filter(QLatin1String("/dev/mmcblk1p1")));
             if (!mounts.isEmpty()) {
-                return mounts.first().split(' ').at(1);
+                return mounts.first().split(QLatin1Char(' ')).at(1);
             }
         }
         if (emptyIfNotMounted) {

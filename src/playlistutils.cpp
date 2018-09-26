@@ -299,7 +299,7 @@ namespace unplayer
                     QString file;
                     const QVariant fileVariant(settings.value(QStringLiteral("File%1").arg(i)));
                     if (fileVariant.type() == QVariant::StringList) {
-                        file = fileVariant.toStringList().join(',');
+                        file = fileVariant.toStringList().join(QLatin1Char(','));
                     } else {
                         file = fileVariant.toString();
                     }
@@ -316,7 +316,7 @@ namespace unplayer
                     if (settings.contains(titleKey)) {
                         const QVariant titleVariant(settings.value(titleKey));
                         if (titleVariant.type() == QVariant::StringList) {
-                            track.title = titleVariant.toStringList().join(',');
+                            track.title = titleVariant.toStringList().join(QLatin1Char(','));
                         } else {
                             track.title = titleVariant.toString();
                         }
@@ -352,15 +352,15 @@ namespace unplayer
                         PlaylistTrack track(trackFromFilePath(filePath));
                         if (!track.inLibrary) {
                             const int durationIndex = 8;
-                            const int commaIndex = line.indexOf(',');
+                            const int commaIndex = line.indexOf(QLatin1Char(','));
                             track.duration = line.midRef(durationIndex, commaIndex - durationIndex).toInt();
                             track.hasDuration = true;
-                            const int hyphenIndex = line.indexOf('-');
+                            const int hyphenIndex = line.indexOf(QLatin1Char('-'));
                             track.artist = line.midRef(commaIndex + 1, hyphenIndex - commaIndex - 1).trimmed().toString();
                             track.title = line.midRef(hyphenIndex + 1).trimmed().toString();
                         }
                         tracks.push_back(std::move(track));
-                    } else if (!line.startsWith('#') && !line.isEmpty()) {
+                    } else if (!line.startsWith(QLatin1Char('#')) && !line.isEmpty()) {
                         const QString filePath(filePathFromString(line, playlistFileDir));
                         if (!filePath.isEmpty()) {
                             tracks.push_back(trackFromFilePath(filePath));
@@ -406,7 +406,7 @@ namespace unplayer
             QTextStream stream(&file);
             while (!stream.atEnd()) {
                 const QString line(stream.readLine());
-                if (!QStringRef(&line).trimmed().isEmpty() && !line.startsWith('#')) {
+                if (!QStringRef(&line).trimmed().isEmpty() && !line.startsWith(QLatin1Char('#'))) {
                     ++count;
                 }
             }
@@ -433,7 +433,7 @@ namespace unplayer
                 QString file;
                 const QVariant fileVariant(settings.value(QStringLiteral("File%1").arg(i)));
                 if (fileVariant.type() == QVariant::StringList) {
-                    file = fileVariant.toStringList().join(',');
+                    file = fileVariant.toStringList().join(QLatin1Char(','));
                 } else {
                     file = fileVariant.toString();
                 }
@@ -451,7 +451,7 @@ namespace unplayer
                 QTextStream stream(&file);
                 while (!stream.atEnd()) {
                     const QString line(stream.readLine().trimmed());
-                    if (!line.isEmpty() && !line.startsWith('#')) {
+                    if (!line.isEmpty() && !line.startsWith(QLatin1Char('#'))) {
                         const QString filePath(filePathFromString(line, playlistFileDir));
                         if (!filePath.isEmpty()) {
                             tracks.push_back(filePath);

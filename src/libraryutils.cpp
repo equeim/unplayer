@@ -126,7 +126,7 @@ namespace unplayer
                 for (int i = 0; i < count; ++i) {
                     queryString.push_back(QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?)"));
                     if (i != (count - 1)) {
-                        queryString.push_back(',');
+                        queryString.push_back(QLatin1Char(','));
                     }
                 }
                 queryString = queryString.arg(id).arg(fileInfo.lastModified().toMSecsSinceEpoch()).arg(info.year).arg(info.trackNumber).arg(info.duration);
@@ -353,8 +353,8 @@ namespace unplayer
                 const auto prepareDirs = [](QStringList&& dirs) {
                     dirs.removeDuplicates();
                     for (QString& dir : dirs) {
-                        if (!dir.endsWith('/')) {
-                            dir.push_back('/');
+                        if (!dir.endsWith(QLatin1Char('/'))) {
+                            dir.push_back(QLatin1Char('/'));
                         }
                     }
                     return dirs;
@@ -602,10 +602,10 @@ namespace unplayer
                     QString queryString(QLatin1String("DELETE FROM tracks WHERE id IN ("));
                     queryString.push_back(QString::number(filesToRemove.front()));
                     for (std::size_t i = 1, max = filesToRemove.size(); i < max; ++i) {
-                        queryString.push_back(',');
+                        queryString.push_back(QLatin1Char(','));
                         queryString.push_back(QString::number(filesToRemove[i]));
                     }
-                    queryString.push_back(')');
+                    queryString.push_back(QLatin1Char(')'));
                     QSqlQuery query(queryString, db);
                     if (query.lastError().type() != QSqlError::NoError) {
                         qWarning() << "failed to remove files from database" << query.lastError();
