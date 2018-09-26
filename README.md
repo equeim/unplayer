@@ -8,4 +8,4 @@ Translations are managed on [Hosted Weblate](https://hosted.weblate.org/projects
 
 ## Donate
 I you like this app, you can support its development via 
-[PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DDQTRHTY5YV2G&item_name=Support%20Unplayer%20development&no_note=1&item_number=1&no_shipping=1&currency_code=EUR) or [Yandex.Money](https://yasobe.ru/na/unplayer).
+[PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DDQTRHTY5YV2G&item_name=Support%20Unplayer%20development&no_note=1&item_number=1&no_shipping=1&currency_code=EUR) or [Yandex.Money](https://yasobe.ru/na/equeim_unplayer).

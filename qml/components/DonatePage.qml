@@ -42,7 +42,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: Theme.buttonWidthLarge
                 text: "Yandex.Money"
-                onClicked: Qt.openUrlExternally("https://yasobe.ru/na/unplayer")
+                onClicked: Qt.openUrlExternally("https://yasobe.ru/na/equeim_unplayer")
             }
         }
     }
