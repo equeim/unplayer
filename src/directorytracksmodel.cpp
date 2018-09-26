@@ -117,14 +117,15 @@ namespace unplayer
 
     QStringList DirectoryTracksModel::getTracks(const std::vector<int>& indexes, bool includePlaylists) const
     {
-        QStringList list;
+        QStringList tracks;
+        tracks.reserve(mTracksCount);
         for (int index : indexes) {
             const DirectoryTrackFile& file = mFiles[index];
             if (!file.isDirectory && (!file.isPlaylist || includePlaylists)) {
-                list.append(getTrack(index));
+                tracks.push_back(getTrack(index));
             }
         }
-        return list;
+        return tracks;
     }
 
     void DirectoryTracksModel::removeTrack(int index)
@@ -228,8 +229,9 @@ namespace unplayer
         const bool showVideoFiles = mShowVideoFiles;
         auto future = QtConcurrent::run([directory, showVideoFiles]() {
             std::vector<DirectoryTrackFile> files;
+            int tracksCount = 0;
             const QMimeDatabase mimeDb;
-            const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
+            const QFileInfoList fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
             for (const QFileInfo& info : fileInfos) {
                 if (info.isDir()) {
                     files.push_back({info.filePath(),
@@ -246,19 +248,21 @@ namespace unplayer
                                          info.fileName(),
                                          false,
                                          isPlaylist});
+                        ++tracksCount;
                     }
                 }
             }
-            return files;
+            return std::pair<std::vector<DirectoryTrackFile>, int>(std::move(files), tracksCount);
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<DirectoryTrackFile>>;
+        using FutureWatcher = QFutureWatcher<std::pair<std::vector<DirectoryTrackFile>, int>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            auto files(watcher->result());
-            beginInsertRows(QModelIndex(), 0, files.size() - 1);
-            mFiles = std::move(files);
+            auto result(watcher->result());
+            beginInsertRows(QModelIndex(), 0, result.first.size() - 1);
+            mFiles = std::move(result.first);
             endInsertRows();
+            mTracksCount = result.second;
 
             mLoaded = true;
             emit loadedChanged();

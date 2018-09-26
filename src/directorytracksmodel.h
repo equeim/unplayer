@@ -84,6 +84,8 @@ namespace unplayer
     private:
         std::vector<DirectoryTrackFile> mFiles;
 
+        int mTracksCount = 0;
+
         QString mDirectory;
         bool mLoaded = false;
 

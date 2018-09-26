@@ -291,7 +291,9 @@ namespace unplayer
             settings.beginGroup(QLatin1String("playlist"));
 
             QSqlDatabase::database().transaction();
-            for (int i = 1, max = settings.childKeys().filter(QLatin1String("File")).size() + 1; i < max; ++i) {
+            const int count = settings.childKeys().filter(QLatin1String("File")).size();
+            tracks.reserve(count);
+            for (int i = 1; i < (count + 1); ++i) {
                 QString filePath;
                 {
                     QString file;
@@ -425,7 +427,9 @@ namespace unplayer
         {
             QSettings settings(filePath, QSettings::IniFormat);
             settings.beginGroup(QStringLiteral("playlist"));
-            for (int i = 1, max = settings.childKeys().filter(QStringLiteral("File")).size() + 1; i < max; ++i) {
+            const int count = settings.childKeys().filter(QStringLiteral("File")).size();
+            tracks.reserve(count);
+            for (int i = 1; i < (count + 1); ++i) {
                 QString file;
                 const QVariant fileVariant(settings.value(QStringLiteral("File%1").arg(i)));
                 if (fileVariant.type() == QVariant::StringList) {
