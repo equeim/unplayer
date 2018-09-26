@@ -163,6 +163,8 @@ namespace unplayer
     public:
         static const QString providerId;
         explicit QueueImageProvider(const Queue* queue);
+        QueueImageProvider(const QueueImageProvider& other) = delete;
+        QueueImageProvider& operator=(const QueueImageProvider& other) = delete;
         QPixmap requestPixmap(const QString& id, QSize*, const QSize& requestedSize) override;
     private:
         const Queue* mQueue;
