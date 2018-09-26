@@ -259,7 +259,7 @@ namespace unplayer
         }
     }
 
-    void PlaylistUtils::removePlaylists(const QStringList& playlists)
+    void PlaylistUtils::removePlaylists(const std::vector<QString>& playlists)
     {
         bool removed = false;
         for (const QString& filePath : playlists) {

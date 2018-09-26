@@ -66,7 +66,8 @@ namespace unplayer
         Q_INVOKABLE void addTracksToPlaylistFromLibrary(const QString& filePath, const unplayer::LibraryTrack& libraryTrack);
 
         Q_INVOKABLE void removePlaylist(const QString& filePath);
-        void removePlaylists(const QStringList& playlists);
+
+        void removePlaylists(const std::vector<QString>& playlists);
 
         static std::vector<PlaylistTrack> parsePlaylist(const QString& filePath);
         static int getPlaylistTracksCount(const QString& filePath);
