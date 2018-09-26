@@ -19,6 +19,7 @@
 #include "queue.h"
 
 #include <algorithm>
+#include <functional>
 
 #include <QCoreApplication>
 #include <QDateTime>

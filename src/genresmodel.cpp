@@ -18,6 +18,8 @@
 
 #include "genresmodel.h"
 
+#include <functional>
+
 #include <QDebug>
 #include <QFile>
 #include <QFutureWatcher>

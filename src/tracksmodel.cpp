@@ -18,6 +18,8 @@
 
 #include "tracksmodel.h"
 
+#include <functional>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>

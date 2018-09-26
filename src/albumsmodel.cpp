@@ -18,6 +18,8 @@
 
 #include "albumsmodel.h"
 
+#include <functional>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
