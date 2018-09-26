@@ -61,7 +61,7 @@ namespace unplayer
 
     void PlaylistsModel::removePlaylists(const std::vector<int>& indexes) const
     {
-        QStringList paths;
+        std::vector<QString> paths;
         paths.reserve(indexes.size());
         for (int index : indexes) {
             paths.push_back(mPlaylists[index].filePath);
