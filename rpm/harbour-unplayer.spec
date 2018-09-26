@@ -77,29 +77,29 @@ fi
 
 
 %build
-export PKG_CONFIG_PATH="%{thirdparty_install}/lib/pkgconfig"
+export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
 
-if [ ! -d "%{thirdparty_install}" ] || [ -z "$(ls -A \"%{thirdparty_install}\")" ]; then
-    %{__mkdir_p} "%{qtdbusextended_build}"
-    cd "%{qtdbusextended_build}"
-    %qmake5 "%{qtdbusextended}" CONFIG+="%{build_type} staticlib" PREFIX="%{thirdparty_install}"
+if [ ! -d %{thirdparty_install} ] || [ -z "$(ls -A %{thirdparty_install})" ]; then
+    %{__mkdir_p} %{qtdbusextended_build}
+    cd %{qtdbusextended_build}
+    %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX='%{thirdparty_install}'
     %{__make} %{?_smp_mflags}
     %{__make} install
     cd -
 
-    %{__mkdir_p} "%{qtmpris_build}"
-    cd "%{qtmpris_build}"
-    %qmake5 "%{qtmpris}" CONFIG+="%{build_type} staticlib" PREFIX="%{thirdparty_install}"
+    %{__mkdir_p} %{qtmpris_build}
+    cd %{qtmpris_build}
+    %qmake5 %{qtmpris} CONFIG+="%{build_type} staticlib" PREFIX='%{thirdparty_install}'
     %{__make} %{?_smp_mflags}
     %{__make} install
     cd -
 
-    %{__mkdir_p} "%{taglib_build}"
-    cd "%{taglib_build}"
-    %cmake "%{taglib}" \
-        -DCMAKE_INSTALL_PREFIX="%{thirdparty_install}" \
-        -DLIB_INSTALL_DIR="%{thirdparty_install}/lib" \
-        -DINCLUDE_INSTALL_DIR="%{thirdparty_install}/include" \
+    %{__mkdir_p} %{taglib_build}
+    cd %{taglib_build}
+    %cmake %{taglib} \
+        -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
+        -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
+        -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
         -DCMAKE_BUILD_TYPE=%{build_type} \
         -DCMAKE_CXX_FLAGS="-fPIC" \
         -DBUILD_SHARED_LIBS=OFF \
@@ -109,7 +109,7 @@ if [ ! -d "%{thirdparty_install}" ] || [ -z "$(ls -A \"%{thirdparty_install}\")"
     cd -
 fi
 
-cd "%{build_directory}"
+cd %{build_directory}
 %cmake .. \
     -DCMAKE_BUILD_TYPE=%{build_type} \
     -DHARBOUR=%{harbour} \
@@ -119,13 +119,14 @@ cd "%{build_directory}"
 
 
 %install
-cd "%{build_directory}"
+cd %{build_directory}
 %make_install
 desktop-file-install \
     --delete-original \
-    --dir "%{buildroot}/%{_datadir}/applications" \
-    "%{buildroot}/%{_datadir}/applications/%{name}.desktop"
+    --dir %{buildroot}/%{_datadir}/applications \
+    %{buildroot}/%{_datadir}/applications/%{name}.desktop
 
+#install -m 644 -D %{_libdir}/libstdc++.so.6 %{buildroot}/%{_datadir}/%{name}/lib/libstdc++.so.6
 
 %files
 %defattr(-,root,root,-)
