@@ -79,7 +79,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(mTracks.size());
         for (int index : indexes) {
-            tracks.append(mTracks[index].filePath);
+            tracks.push_back(mTracks[index].filePath);
         }
         return tracks;
     }

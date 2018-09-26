@@ -83,7 +83,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(mQueue->tracks().size());
         for (const auto& track : mQueue->tracks()) {
-            tracks.append(track->filePath);
+            tracks.push_back(track->filePath);
         }
         Settings::instance()->savePlayerState(tracks,
                                               mQueue->currentIndex(),

@@ -439,7 +439,7 @@ namespace unplayer
                 }
                 const QString filePath(filePathFromString(file, playlistFileDir));
                 if (!filePath.isEmpty()) {
-                    tracks.append(filePath);
+                    tracks.push_back(filePath);
                 }
             }
             break;
@@ -454,7 +454,7 @@ namespace unplayer
                     if (!line.isEmpty() && !line.startsWith('#')) {
                         const QString filePath(filePathFromString(line, playlistFileDir));
                         if (!filePath.isEmpty()) {
-                            tracks.append(filePath);
+                            tracks.push_back(filePath);
                         }
                     }
                 }

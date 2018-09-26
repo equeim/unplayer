@@ -69,7 +69,7 @@ namespace unplayer
     void LibraryDirectoriesModel::addDirectory(const QString& directory)
     {
         beginInsertRows(QModelIndex(), mDirectories.size(), mDirectories.size());
-        mDirectories.append(directory);
+        mDirectories.push_back(directory);
         endInsertRows();
 
         switch (mType) {
