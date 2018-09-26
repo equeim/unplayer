@@ -1,17 +1,21 @@
-# Change Log
+# Changelog
 
 ## [Unreleased]
 ### Added
-- Extracting disc number from files and using it when sorting tracks
+- Tracks inside album are now sorted by disc number
 
 ### Changed
 - MPRIS interface now expose track's length, current position, repeat and shuffle mode
 - Improved performance of library scanning
+- Improve performance of adding tracks to queue
 - CMake build system
 - qtmpris and taglib are now linked statically
 
 ### Fixed
 - Setting of MPRIS trackId property
+- Creation of playlists when playlists directory does not exist
+- Adding tracks to playlist from queue
+- Yandex.Money donate link
 
 ## [1.3.0] - 2018-05-05
 ### Added
