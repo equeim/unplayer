@@ -53,17 +53,26 @@ namespace unplayer
                 info.year = tag->year();
                 info.trackNumber = tag->track();
 
-                for (const TagLib::String& artist : properties["ARTIST"]) {
-                    info.artists.append(artist.toCString(true));
+                const TagLib::StringList& artists = properties["ARTIST"];
+                info.artists.reserve(artists.size());
+                for (const TagLib::String& artist : artists) {
+                    info.artists.push_back(artist.toCString(true));
                 }
+                info.artists.removeDuplicates();
 
-                for (const TagLib::String& album : properties["ALBUM"]) {
-                    info.albums.append(album.toCString(true));
+                const TagLib::StringList& albums = properties["ALBUM"];
+                info.albums.reserve(albums.size());
+                for (const TagLib::String& album : albums) {
+                    info.albums.push_back(album.toCString(true));
                 }
+                info.albums.removeDuplicates();
 
-                for (const TagLib::String& genre : properties["GENRE"]) {
-                    info.genres.append(genre.toCString(true));
+                const TagLib::StringList& genres = properties["GENRE"];
+                info.genres.reserve(genres.size());
+                for (const TagLib::String& genre : genres) {
+                    info.genres.push_back(genre.toCString(true));
                 }
+                info.genres.removeDuplicates();
 
                 if (properties.contains("DISCNUMBER")) {
                     const TagLib::StringList list(properties["DISCNUMBER"]);
