@@ -47,7 +47,12 @@ Page {
             title: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
             description: qsTranslate("unplayer", "%n track(s)", String(), model.tracksCount)
             onClicked: {
-                Unplayer.PlaylistUtils.addTracksToPlaylist(model.filePath, tracks)
+                if (Array.isArray(tracks)) {
+                    Unplayer.PlaylistUtils.addTracksToPlaylistFromFilesystem(model.filePath, tracks)
+                } else {
+                    Unplayer.PlaylistUtils.addTracksToPlaylistFromLibrary(model.filePath, tracks)
+                }
+
                 added = true
                 pageStack.pop()
             }

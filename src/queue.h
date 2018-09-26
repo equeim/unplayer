@@ -27,6 +27,8 @@
 #include <QStringList>
 #include <QUrl>
 
+#include "librarytrack.h"
+
 namespace unplayer
 {
     struct QueueTrack
@@ -38,7 +40,8 @@ namespace unplayer
                             const QString& artist,
                             const QString& album,
                             const QString& mediaArtFilePath,
-                            const QByteArray& mediaArtData);
+                            const QByteArray& mediaArtData,
+                            long long modificationTime);
 
         QString trackId;
 
@@ -50,6 +53,8 @@ namespace unplayer
 
         QString mediaArtFilePath;
         QPixmap mediaArtPixmap;
+
+        long long modificationTime;
     };
 
     class Queue final : public QObject
@@ -99,11 +104,17 @@ namespace unplayer
 
         bool isAddingTracks() const;
 
-        Q_INVOKABLE void addTrack(const QString& track);
-        Q_INVOKABLE void addTracks(QStringList trackPaths, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTracksFromFilesystem(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTrackFromFilesystem(const QString& track);
+        Q_INVOKABLE void addTracksFromLibrary(const std::vector<unplayer::LibraryTrack>& libraryTracks, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTrackFromLibrary(const unplayer::LibraryTrack& libraryTrack, bool clearQueue = false, int setAsCurrent = -1);
+
+        Q_INVOKABLE unplayer::LibraryTrack getTrack(int index);
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracks(const std::vector<int>& indexes);
+
         Q_INVOKABLE void removeTrack(int index);
         Q_INVOKABLE void removeTracks(std::vector<int> indexes);
-        Q_INVOKABLE void clear();
+        Q_INVOKABLE void clear(bool emitAbout = true);
 
         Q_INVOKABLE void next();
         void nextOnEos();
@@ -114,6 +125,8 @@ namespace unplayer
 
     private:
         void reset();
+
+        void addingTracksCallback(std::vector<std::shared_ptr<QueueTrack>>&& tracks, int setAsCurrent, const QString& setAsCurrentFilePath);
 
     private:
         std::vector<std::shared_ptr<QueueTrack>> mTracks;

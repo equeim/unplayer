@@ -94,31 +94,42 @@ namespace unplayer
         return mRemovingFiles;
     }
 
-    QStringList GenresModel::getTracksForGenre(int index) const
+    std::vector<LibraryTrack> GenresModel::getTracksForGenre(int index) const
     {
         QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath FROM tracks "
+        query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, mediaArt FROM tracks "
                                      "WHERE genre = ?  "
                                      "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
         query.addBindValue(mGenres[index].genre);
         if (query.exec()) {
-            QStringList tracks;
+            std::vector<LibraryTrack> tracks;
+            query.last();
+            if (query.at() > 0) {
+                tracks.reserve(query.at() + 1);
+            }
+            query.seek(QSql::BeforeFirstRow);
             while (query.next()) {
-                tracks.append(query.value(0).toString());
+                tracks.push_back({query.value(0).toString(),
+                                  query.value(1).toString(),
+                                  query.value(2).toString(),
+                                  query.value(3).toString(),
+                                  query.value(4).toInt(),
+                                  query.value(6).toString()});
             }
             return tracks;
         }
 
         qWarning() << "failed to get tracks from database";
-        return QStringList();
+        return {};
     }
 
-    QStringList GenresModel::getTracksForGenres(const std::vector<int>& indexes) const
+    std::vector<LibraryTrack> GenresModel::getTracksForGenres(const std::vector<int>& indexes) const
     {
-        QStringList tracks;
+        std::vector<LibraryTrack> tracks;
         QSqlDatabase::database().transaction();
         for (int index : indexes) {
-            tracks.append(getTracksForGenre(index));
+            std::vector<LibraryTrack> genreTracks(getTracksForGenre(index));
+            tracks.insert(tracks.end(), std::make_move_iterator(genreTracks.begin()), std::make_move_iterator(genreTracks.end()));
         }
         QSqlDatabase::database().commit();
         return tracks;

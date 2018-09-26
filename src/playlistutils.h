@@ -20,10 +20,14 @@
 #define UNPLAYER_PLAYLISTUTILS_H
 
 #include <memory>
+#include <set>
 #include <vector>
 
 #include <QObject>
 #include <QStringList>
+
+#include "librarytrack.h"
+#include "stdutils.h"
 
 namespace unplayer
 {
@@ -44,7 +48,7 @@ namespace unplayer
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
         static const QStringList playlistsNameFilters;
-        static const std::vector<QString> playlistsMimeTypes;
+        static const std::set<QLatin1String> playlistsExtensions;
 
         static PlaylistUtils* instance();
 
@@ -52,8 +56,15 @@ namespace unplayer
         int playlistsCount();
 
         void savePlaylist(const QString& filePath, const std::vector<PlaylistTrack>& tracks);
-        Q_INVOKABLE void newPlaylist(const QString& name, const QStringList& trackPaths);
-        Q_INVOKABLE void addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths);
+
+        Q_INVOKABLE void newPlaylistFromFilesystem(const QString& name, const QStringList& trackPaths);
+        Q_INVOKABLE void newPlaylistFromLibrary(const QString& name, const std::vector<unplayer::LibraryTrack>& libraryTracks);
+        Q_INVOKABLE void newPlaylistFromLibrary(const QString& name, const unplayer::LibraryTrack& libraryTrack);
+
+        Q_INVOKABLE void addTracksToPlaylistFromFilesystem(const QString& filePath, const QStringList& trackPaths);
+        Q_INVOKABLE void addTracksToPlaylistFromLibrary(const QString& filePath, const std::vector<unplayer::LibraryTrack>& libraryTracks);
+        Q_INVOKABLE void addTracksToPlaylistFromLibrary(const QString& filePath, const unplayer::LibraryTrack& libraryTrack);
+
         Q_INVOKABLE void removePlaylist(const QString& filePath);
         void removePlaylists(const QStringList& playlists);
 
@@ -62,6 +73,9 @@ namespace unplayer
         Q_INVOKABLE static QStringList getPlaylistTracks(const QString& filePath);
     private:
         explicit PlaylistUtils(QObject* parent);
+
+        void newPlaylist(const QString& name, const std::vector<PlaylistTrack>& tracks);
+        void addTracksToPlaylist(const QString& filePath, std::vector<PlaylistTrack>&& tracks);
 
         QString mPlaylistsDirectoryPath;
     signals:

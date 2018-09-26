@@ -51,8 +51,6 @@ namespace unplayer
         Queue* queue() const;
         void setQueue(Queue* queue);
 
-        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
-
     protected:
         QHash<int, QByteArray> roleNames() const override;
 

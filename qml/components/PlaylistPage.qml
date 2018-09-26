@@ -43,7 +43,7 @@ Page {
                 text: qsTranslate("unplayer", "Add to queue")
 
                 onClicked: {
-                    Unplayer.Player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracksFromFilesystem(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -89,7 +89,7 @@ Page {
 
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to queue")
-                    onClicked: Unplayer.Player.queue.addTrack(model.filePath)
+                    onClicked: Unplayer.Player.queue.addTrackFromFilesystem(model.filePath)
                 }
 
                 MenuItem {
@@ -109,9 +109,9 @@ Page {
                             Unplayer.Player.play()
                         }
                     } else {
-                        Unplayer.Player.queue.addTracks(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
-                                                        true,
-                                                        model.index)
+                        Unplayer.Player.queue.addTracksFromFilesystem(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
+                                                                      true,
+                                                                      model.index)
                     }
                 }
             }

@@ -50,11 +50,16 @@
 #include "trackinfo.h"
 #include "tracksmodel.h"
 
+Q_DECLARE_METATYPE(unplayer::LibraryTrack)
+Q_DECLARE_METATYPE(std::vector<unplayer::LibraryTrack>)
+
 namespace unplayer
 {
     void Utils::registerTypes()
     {
         qRegisterMetaType<std::vector<int>>();
+        qRegisterMetaType<LibraryTrack>();
+        qRegisterMetaType<std::vector<LibraryTrack>>();
 
         const char* url = "harbour.unplayer";
         const int major = 0;

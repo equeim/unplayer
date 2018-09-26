@@ -108,7 +108,7 @@ namespace unplayer
         int directoriesCount() const;
         int tracksCount() const;
 
-        Q_INVOKABLE QVariantList getSelectedTracks() const;
+        Q_INVOKABLE QStringList getSelectedTracks() const;
         Q_INVOKABLE void selectAll();
 
     private:

@@ -39,7 +39,7 @@ Page {
                 enabled: playlistsProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    Unplayer.Player.queue.addTracks(playlistsModel.getTracksForPlaylists(playlistsProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracksFromFilesystem(playlistsModel.getTracksForPlaylists(playlistsProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -78,7 +78,7 @@ Page {
             menu: ContextMenu {
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to queue")
-                    onClicked: Unplayer.Player.queue.addTracks(Unplayer.PlaylistUtils.getPlaylistTracks(model.filePath))
+                    onClicked: Unplayer.Player.queue.addTracksFromFilesystem(Unplayer.PlaylistUtils.getPlaylistTracks(model.filePath))
                 }
 
                 MenuItem {

@@ -42,7 +42,8 @@ namespace unplayer
             TitleField,
             ArtistField,
             AlbumField,
-            DurationField
+            DurationField,
+            MediaArtField
         };
     }
 
@@ -90,7 +91,7 @@ namespace unplayer
 
     QVariant TracksModel::data(const QModelIndex& index, int role) const
     {
-        const Track& track = mTracks[index.row()];
+        const LibraryTrack& track = mTracks[index.row()];
 
         switch (role) {
         case FilePathRole:
@@ -209,22 +210,27 @@ namespace unplayer
         return mRemovingFiles;
     }
 
-    QStringList TracksModel::getTracks(const std::vector<int>& indexes)
+    std::vector<LibraryTrack> TracksModel::getTracks(const std::vector<int>& indexes)
     {
-        QStringList tracks;
+        std::vector<LibraryTrack> tracks;
         tracks.reserve(indexes.size());
         for (int index : indexes) {
-            tracks.push_back(mTracks[index].filePath);
+            tracks.push_back(mTracks[index]);
         }
         return tracks;
     }
 
+    LibraryTrack TracksModel::getTrack(int index)
+    {
+        return mTracks[index];
+    }
+
     void TracksModel::removeTrack(int index, bool deleteFile)
-    {   
+    {
         removeTracks({index}, deleteFile);
     }
 
-    void TracksModel::removeTracks(std::vector<int> indexes, bool deleteFiles)
+    void TracksModel::removeTracks(const std::vector<int>& indexes, bool deleteFiles)
     {
         if (mRemovingFiles) {
             return;
@@ -233,8 +239,13 @@ namespace unplayer
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run(std::bind([this, deleteFiles](std::vector<int>& indexes) {
-            std::reverse(indexes.begin(), indexes.end());
+        std::vector<QString> tracks;
+        tracks.reserve(mTracks.size());
+        for (int index : indexes) {
+            tracks.push_back(mTracks[index].filePath);
+        }
+
+        auto future = QtConcurrent::run(std::bind([deleteFiles](std::vector<int>& indexes, std::vector<QString>& tracks) {
             std::vector<int> removed;
             {
                 auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
@@ -244,9 +255,12 @@ namespace unplayer
                     qWarning() << "failed to open database" << db.lastError();
                     return removed;
                 }
+
                 db.transaction();
+
+                std::sort(indexes.begin(), indexes.end(), std::greater<int>());
                 for (int index : indexes) {
-                    QString filePath(mTracks[index].filePath);
+                    const QString& filePath = tracks[index];
 
                     QSqlQuery query(db);
                     query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
@@ -263,12 +277,12 @@ namespace unplayer
                         }
                     }
                 }
+
                 db.commit();
             }
             QSqlDatabase::removeDatabase(staticMetaObject.className());
-
             return removed;
-        }, std::move(indexes)));
+        }, indexes, std::move(tracks)));
 
         using Watcher = QFutureWatcher<std::vector<int>>;
         auto watcher = new Watcher(this);
@@ -298,7 +312,7 @@ namespace unplayer
 
     void TracksModel::execQuery()
     {
-        QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks "));
+        QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration, mediaArt FROM tracks "));
 
         if (mAllArtists) {
             if (!mGenre.isEmpty()) {
@@ -365,6 +379,11 @@ namespace unplayer
         beginResetModel();
         mTracks.clear();
         if (query.exec()) {
+            query.last();
+            if (query.at() > 0) {
+                mTracks.reserve(query.at() + 1);
+            }
+            query.seek(QSql::BeforeFirstRow);
             while (query.next()) {
                 const QString artist(query.value(ArtistField).toString());
                 const QString album(query.value(AlbumField).toString());
@@ -372,7 +391,8 @@ namespace unplayer
                                    query.value(TitleField).toString(),
                                    artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
                                    album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
-                                   query.value(DurationField).toInt()});
+                                   query.value(DurationField).toInt(),
+                                   query.value(MediaArtField).toString()});
             }
         } else {
             qWarning() << query.lastError();

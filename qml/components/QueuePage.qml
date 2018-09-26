@@ -66,7 +66,7 @@ Page {
                     id: addToPlaylistPage
 
                     AddToPlaylistPage {
-                        tracks: queueModel.getTracks(queueProxyModel.selectedSourceIndexes)
+                        tracks: Unplayer.Player.queue.getTracks(queueProxyModel.selectedSourceIndexes)
                         Component.onDestruction: {
                             if (added) {
                                 selectionPanel.showPanel = false
@@ -118,7 +118,7 @@ Page {
 
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to playlist")
-                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
+                    onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: Unplayer.Player.queue.getTrack(queueProxyModel.sourceIndex(model.index)) })
                 }
 
                 MenuItem {

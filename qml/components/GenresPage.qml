@@ -47,7 +47,7 @@ Page {
                 enabled: genresProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    Unplayer.Player.queue.addTracks(genresModel.getTracksForGenres(genresProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracksFromLibrary(genresModel.getTracksForGenres(genresProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -111,7 +111,7 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTranslate("unplayer", "Add to queue")
-                        onClicked: Unplayer.Player.queue.addTracks(genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)))
+                        onClicked: Unplayer.Player.queue.addTracksFromLibrary(genresModel.getTracksForGenre(genresProxyModel.sourceIndex(model.index)))
                     }
 
                     MenuItem {

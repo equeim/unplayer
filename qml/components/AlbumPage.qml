@@ -46,7 +46,7 @@ Page {
                 text: qsTranslate("unplayer", "Add to queue")
 
                 onClicked: {
-                    Unplayer.Player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracksFromLibrary(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }

@@ -33,12 +33,12 @@ BaseTrackDelegate {
 
             MenuItem {
                 text: qsTranslate("unplayer", "Add to queue")
-                onClicked: Unplayer.Player.queue.addTrack(model.filePath)
+                onClicked: Unplayer.Player.queue.addTrackFromLibrary(tracksModel.getTrack(tracksProxyModel.sourceIndex(model.index)))
             }
 
             MenuItem {
                 text: qsTranslate("unplayer", "Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: tracksModel.getTrack(tracksProxyModel.sourceIndex(model.index)) })
             }
 
             MenuItem {
@@ -57,7 +57,7 @@ BaseTrackDelegate {
                     Unplayer.Player.play()
                 }
             } else {
-                Unplayer.Player.queue.addTracks(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
+                Unplayer.Player.queue.addTracksFromLibrary(tracks, true, model.index)
             }
         }
     }

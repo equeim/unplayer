@@ -91,16 +91,6 @@ namespace unplayer
         });
     }
 
-    QStringList QueueModel::getTracks(const std::vector<int>& indexes)
-    {
-        QStringList tracks;
-        tracks.reserve(indexes.size());
-        for (int index : indexes) {
-            tracks.append(mQueue->tracks()[index]->filePath);
-        }
-        return tracks;
-    }
-
     QHash<int, QByteArray> QueueModel::roleNames() const
     {
         return {{FilePathRole, "filePath"},

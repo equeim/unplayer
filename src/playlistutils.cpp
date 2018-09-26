@@ -107,6 +107,22 @@ namespace unplayer
             return tracks;
         }
 
+        std::vector<PlaylistTrack> tracksFromTracks(const std::vector<LibraryTrack>& libraryTracks)
+        {
+            std::vector<PlaylistTrack> tracks;
+            tracks.reserve(libraryTracks.size());
+            for (const LibraryTrack& track : libraryTracks) {
+                tracks.push_back({track.filePath,
+                                  track.title,
+                                  track.duration,
+                                  true,
+                                  track.artist,
+                                  track.album,
+                                  true});
+            }
+            return tracks;
+        }
+
         QString filePathFromString(const QString& string, const QDir& playlistFileDir)
         {
             const QUrl url(string);
@@ -122,10 +138,15 @@ namespace unplayer
         }
     }
 
-    const QStringList PlaylistUtils::playlistsNameFilters{QLatin1String("*.pls"), QLatin1String("*.m3u")};
-    const std::vector<QString> PlaylistUtils::playlistsMimeTypes{QLatin1String("audio/x-scpls"),
-                                                                 QLatin1String("audio/x-mpegurl"),
-                                                                 QLatin1String("application/vnd.apple.mpegurl")};
+    const QStringList PlaylistUtils::playlistsNameFilters{QLatin1String("*.pls"),
+                                                          QLatin1String("*.m3u"),
+                                                          QLatin1String("*.m3u8"),
+                                                          QLatin1String("*.vlc")};
+
+    const std::set<QLatin1String> PlaylistUtils::playlistsExtensions{QLatin1String("pls"),
+                                                                     QLatin1String("m3u"),
+                                                                     QLatin1String("m3u8"),
+                                                                     QLatin1String("vlc")};
 
     PlaylistUtils* PlaylistUtils::instance()
     {
@@ -199,18 +220,34 @@ namespace unplayer
         emit playlistsChanged();
     }
 
-    void PlaylistUtils::newPlaylist(const QString& name, const QStringList& trackPaths)
+    void PlaylistUtils::newPlaylistFromFilesystem(const QString& name, const QStringList& trackPaths)
     {
-        savePlaylist(QString::fromLatin1("%1/%2.pls").arg(playlistsDirectoryPath(), name), tracksFromPaths(trackPaths));
+        newPlaylist(name, tracksFromPaths(trackPaths));
     }
 
-    void PlaylistUtils::addTracksToPlaylist(const QString& filePath, const QStringList& trackPaths)
+    void PlaylistUtils::newPlaylistFromLibrary(const QString& name, const std::vector<LibraryTrack>& libraryTracks)
     {
-        std::vector<PlaylistTrack> tracks(parsePlaylist(filePath));
-        std::vector<PlaylistTrack> newTracks(tracksFromPaths(trackPaths));
-        tracks.reserve(tracks.size() + newTracks.size());
-        std::move(newTracks.begin(), newTracks.end(), std::back_inserter(tracks));
-        savePlaylist(filePath, tracks);
+        newPlaylist(name, tracksFromTracks(libraryTracks));
+    }
+
+    void PlaylistUtils::newPlaylistFromLibrary(const QString& name, const LibraryTrack& libraryTracks)
+    {
+        newPlaylist(name, tracksFromTracks({libraryTracks}));
+    }
+
+    void PlaylistUtils::addTracksToPlaylistFromFilesystem(const QString& filePath, const QStringList& trackPaths)
+    {
+        addTracksToPlaylist(filePath, tracksFromPaths(trackPaths));
+    }
+
+    void PlaylistUtils::addTracksToPlaylistFromLibrary(const QString& filePath, const std::vector<LibraryTrack>& libraryTracks)
+    {
+        addTracksToPlaylist(filePath, tracksFromTracks(libraryTracks));
+    }
+
+    void PlaylistUtils::addTracksToPlaylistFromLibrary(const QString& filePath, const LibraryTrack& libraryTrack)
+    {
+        addTracksToPlaylist(filePath, tracksFromTracks({libraryTrack}));
     }
 
     void PlaylistUtils::removePlaylist(const QString& filePath)
@@ -427,5 +464,17 @@ namespace unplayer
           mPlaylistsDirectoryPath(QString::fromLatin1("%1/playlists").arg(QStandardPaths::writableLocation(QStandardPaths::MusicLocation)))
     {
 
+    }
+
+    void PlaylistUtils::newPlaylist(const QString& name, const std::vector<PlaylistTrack>& tracks)
+    {
+        savePlaylist(QString::fromLatin1("%1/%2.pls").arg(mPlaylistsDirectoryPath, name), tracks);
+    }
+
+    void PlaylistUtils::addTracksToPlaylist(const QString& filePath, std::vector<PlaylistTrack>&& tracks)
+    {
+        std::vector<PlaylistTrack> playlistTracks(parsePlaylist(filePath));
+        playlistTracks.insert(playlistTracks.begin(), std::make_move_iterator(tracks.begin()), std::make_move_iterator(tracks.end()));
+        savePlaylist(filePath, playlistTracks);
     }
 }

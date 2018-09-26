@@ -24,6 +24,8 @@
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
+#include "librarytrack.h"
+
 namespace unplayer
 {
     struct Album
@@ -90,8 +92,8 @@ namespace unplayer
 
         bool isRemovingFiles() const;
 
-        Q_INVOKABLE QStringList getTracksForAlbum(int index) const;
-        Q_INVOKABLE QStringList getTracksForAlbums(const std::vector<int>& indexes) const;
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForAlbum(int index) const;
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForAlbums(const std::vector<int>& indexes) const;
 
         Q_INVOKABLE void removeAlbum(int index, bool deleteFiles);
         Q_INVOKABLE void removeAlbums(std::vector<int> indexes, bool deleteFiles);

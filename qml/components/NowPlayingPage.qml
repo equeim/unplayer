@@ -115,7 +115,7 @@ Page {
 
             MenuItem {
                 text: qsTranslate("unplayer", "Add to playlist")
-                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: Unplayer.Player.queue.currentFilePath })
+                onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: Unplayer.Player.queue.getTrack(Unplayer.Player.queue.currentIndex) })
             }
 
             MenuItem {

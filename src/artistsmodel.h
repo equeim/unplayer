@@ -22,6 +22,8 @@
 #include <vector>
 #include <QAbstractListModel>
 
+#include "librarytrack.h"
+
 namespace unplayer
 {
     struct Artist
@@ -60,8 +62,8 @@ namespace unplayer
 
         bool isRemovingFiles() const;
 
-        Q_INVOKABLE QStringList getTracksForArtist(int index) const;
-        Q_INVOKABLE QStringList getTracksForArtists(const std::vector<int>& indexes) const;
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForArtist(int index) const;
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForArtists(const std::vector<int>& indexes) const;
 
         Q_INVOKABLE void removeArtist(int index, bool deleteFiles);
         Q_INVOKABLE void removeArtists(std::vector<int> indexes, bool deleteFiles);

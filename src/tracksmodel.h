@@ -24,6 +24,8 @@
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
+#include "librarytrack.h"
+
 namespace unplayer
 {
     class TracksModelSortMode final : public QObject
@@ -51,15 +53,6 @@ namespace unplayer
             DiscNumberTrackNumber
         };
         Q_ENUM(Mode)
-    };
-
-    struct Track
-    {
-        QString filePath;
-        QString title;
-        QString artist;
-        QString album;
-        int duration;
     };
 
     class TracksModel : public QAbstractListModel, public QQmlParserStatus
@@ -126,9 +119,11 @@ namespace unplayer
 
         bool isRemovingFiles() const;
 
-        Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracks(const std::vector<int>& indexes);
+        Q_INVOKABLE unplayer::LibraryTrack getTrack(int index);
+
         Q_INVOKABLE void removeTrack(int index, bool deleteFile);
-        Q_INVOKABLE void removeTracks(std::vector<int> indexes, bool deleteFiles);
+        Q_INVOKABLE void removeTracks(const std::vector<int>& indexes, bool deleteFiles);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
@@ -136,7 +131,7 @@ namespace unplayer
     private:
         void execQuery();
 
-        std::vector<Track> mTracks;
+        std::vector<LibraryTrack> mTracks;
 
         bool mAllArtists = true;
         bool mAllAlbums = true;

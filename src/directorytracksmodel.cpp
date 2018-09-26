@@ -238,7 +238,7 @@ namespace unplayer
                                      false});
                 } else {
                     const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
-                    const bool isPlaylist = contains(PlaylistUtils::playlistsMimeTypes, mimeType);
+                    const bool isPlaylist = contains(PlaylistUtils::playlistsExtensions, info.suffix());
                     if (isPlaylist
                             || contains(LibraryUtils::mimeTypesByExtension, mimeType)
                             || (showVideoFiles && contains(LibraryUtils::videoMimeTypesByExtension, mimeType))) {
@@ -316,14 +316,14 @@ namespace unplayer
         return mTracksCount;
     }
 
-    QVariantList DirectoryTracksProxyModel::getSelectedTracks() const
+    QStringList DirectoryTracksProxyModel::getSelectedTracks() const
     {
         const std::vector<int> indexes(selectedSourceIndexes());
-        QVariantList tracks;
+        QStringList tracks;
         tracks.reserve(indexes.size());
         auto model = static_cast<const DirectoryTracksModel*>(sourceModel());
         for (int index : indexes) {
-            tracks.append(model->getTrack(index));
+            tracks.push_back(model->getTrack(index));
         }
         return tracks;
     }

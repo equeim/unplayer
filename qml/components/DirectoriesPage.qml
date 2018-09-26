@@ -51,7 +51,7 @@ Page {
                 enabled: directoryTracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    Unplayer.Player.queue.addTracks(directoryTracksProxyModel.getSelectedTracks())
+                    Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
                 }
             }
@@ -156,13 +156,13 @@ Page {
                     MenuItem {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to queue")
-                        onClicked: Unplayer.Player.queue.addTrack(model.filePath)
+                        onClicked: Unplayer.Player.queue.addTrackFromFilesystem(model.filePath)
                     }
 
                     MenuItem {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to playlist")
-                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: model.filePath })
+                        onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: [model.filePath] })
                     }
 
                     MenuItem {
@@ -191,12 +191,12 @@ Page {
                             }
                         } else {
                             if (model.isPlaylist) {
-                                Unplayer.Player.queue.addTracks(directoryTracksModel.getTrack(directoryTracksProxyModel.sourceIndex(model.index)),
-                                                                true)
+                                Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksModel.getTrack(directoryTracksProxyModel.sourceIndex(model.index)),
+                                                                              true)
                             } else {
-                                Unplayer.Player.queue.addTracks(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes, false),
-                                                                true,
-                                                                model.index - directoryTracksProxyModel.directoriesCount)
+                                Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes, false),
+                                                                              true,
+                                                                              model.index - directoryTracksProxyModel.directoriesCount)
                             }
                         }
                     }

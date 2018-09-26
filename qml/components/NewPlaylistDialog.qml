@@ -26,7 +26,13 @@ Dialog {
 
     canAccept: playlistNameField.text.trim()
 
-    onAccepted: Unplayer.PlaylistUtils.newPlaylist(playlistNameField.text.trim(), tracks)
+    onAccepted: {
+        if (Array.isArray(tracks)) {
+            Unplayer.PlaylistUtils.newPlaylistFromFilesystem(playlistNameField.text.trim(), tracks)
+        } else {
+            Unplayer.PlaylistUtils.newPlaylistFromLibrary(playlistNameField.text.trim(), tracks)
+        }
+    }
 
     SilicaFlickable {
         anchors.fill: parent
