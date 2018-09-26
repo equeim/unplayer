@@ -74,7 +74,6 @@ Page {
                         acceptDestinationAction: PageStackAction.Pop
                         tracks: page.tracks
                         onAccepted: {
-                            console.log(acceptDestination)
                             added = true
                         }
                     }
