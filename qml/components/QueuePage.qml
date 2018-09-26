@@ -154,6 +154,7 @@ Page {
 
             filterRole: Unplayer.QueueModel.TitleRole
             sourceModel: Unplayer.QueueModel {
+                id: queueModel
                 queue: Unplayer.Player.queue
             }
         }
