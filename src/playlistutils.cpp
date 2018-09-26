@@ -168,6 +168,11 @@ namespace unplayer
 
     void PlaylistUtils::savePlaylist(const QString& filePath, const std::vector<PlaylistTrack> &tracks)
     {
+        if (!QDir().mkpath(mPlaylistsDirectoryPath)) {
+            qWarning() << "failed to create playlists directory";
+            return;
+        }
+
         switch (playlistTypeFromPath(filePath)) {
         case PlaylistType::Pls:
         {
