@@ -97,7 +97,7 @@ namespace unplayer
         mRestoringState = true;
         mQueue->setShuffle(Settings::instance()->shuffle());
         mQueue->setRepeatMode(Settings::instance()->repeatMode());
-        mQueue->addTracks(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
+        mQueue->addTracksFromFilesystem(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
     }
 
     Player::Player(QObject* parent)
