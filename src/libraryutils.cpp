@@ -600,11 +600,10 @@ namespace unplayer
                 if (!filesToRemove.empty()) {
                     qDebug() << "removing" << filesToRemove.size() << "tracks from database";
                     QString queryString(QLatin1String("DELETE FROM tracks WHERE id IN ("));
-                    for (std::size_t i = 0, max = filesToRemove.size(); i < max; ++i) {
+                    queryString.push_back(QString::number(filesToRemove.front()));
+                    for (std::size_t i = 1, max = filesToRemove.size(); i < max; ++i) {
+                        queryString.push_back(',');
                         queryString.push_back(QString::number(filesToRemove[i]));
-                        if (i != (max - 1)) {
-                            queryString.push_back(',');
-                        }
                     }
                     queryString.push_back(')');
                     QSqlQuery query(queryString, db);
