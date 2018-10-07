@@ -19,8 +19,13 @@
 #include "playlistmodel.h"
 
 #include <algorithm>
+#include <unordered_map>
+
+#include <QFileInfo>
+#include <QSqlQuery>
 
 #include "playlistutils.h"
+#include "stdutils.h"
 
 namespace unplayer
 {
@@ -28,20 +33,20 @@ namespace unplayer
     {
         const PlaylistTrack& track = mTracks[index.row()];
         switch (role) {
+        case UrlRole:
+            return track.url;
+        case IsLocalFileRole:
+            return track.url.isLocalFile();
         case FilePathRole:
-            return track.filePath;
+            return track.url.path();
         case TitleRole:
             return track.title;
         case DurationRole:
             return track.duration;
-        case HasDurationRole:
-            return track.hasDuration;
         case ArtistRole:
             return track.artist;
         case AlbumRole:
             return track.album;
-        case InLibraryRole:
-            return track.inLibrary;
         default:
             return QVariant();
         }
@@ -54,13 +59,13 @@ namespace unplayer
 
     QHash<int, QByteArray> PlaylistModel::roleNames() const
     {
-        return {{FilePathRole, "filePath"},
+        return {{UrlRole, "url"},
+                {IsLocalFileRole, "isLocalFile"},
+                {FilePathRole, "filePath"},
                 {TitleRole, "title"},
                 {DurationRole, "duration"},
-                {HasDurationRole, "hasDuration"},
                 {ArtistRole, "artist"},
-                {AlbumRole, "album"},
-                {InLibraryRole, "inLibrary"}};
+                {AlbumRole, "album"}};
     }
 
     const QString& PlaylistModel::filePath() const
@@ -72,6 +77,103 @@ namespace unplayer
     {
         mFilePath = filePath;
         mTracks = PlaylistUtils::parsePlaylist(mFilePath);
+
+        std::vector<QString> tracksToQuery;
+        tracksToQuery.reserve(mTracks.size());
+        std::unordered_map<QString, PlaylistTrack*> tracksMap;
+        tracksMap.reserve(mTracks.size());
+        for (PlaylistTrack& track : mTracks) {
+            if (track.url.isLocalFile()) {
+                QString filePath(track.url.path());
+                tracksToQuery.push_back(filePath);
+                tracksMap.insert({std::move(filePath), &track});
+            }
+
+            if (track.title.isEmpty()) {
+                if (track.url.isLocalFile()) {
+                    track.title = QFileInfo(track.url.path()).fileName();
+                } else {
+                    track.title = track.url.toString();
+                }
+            }
+        }
+
+        {
+            /*auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, dbConnectionName);
+            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+            if (!db.open()) {
+                qWarning() << "failed to open database" << db.lastError();
+            }
+            db.transaction();*/
+
+            const int maxParametersCount = 999;
+            for (int i = 0, max = tracksToQuery.size(); i < max; i += maxParametersCount) {
+                const int count = [&]() -> int {
+                    const int left = max - i;
+                    if (left > maxParametersCount) {
+                        return maxParametersCount;
+                    }
+                    return left;
+                }();
+
+                QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
+                queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
+                for (int j = 1; j < count; ++j) {
+                    queryString.push_back(QStringLiteral(",?"));
+                }
+                queryString.push_back(QLatin1Char(')'));
+
+                //QSqlQuery query(db);
+                QSqlQuery query;
+                query.prepare(queryString);
+                for (int j = i, max = i + count; j < max; ++j) {
+                    query.addBindValue(tracksToQuery[j]);
+                }
+
+                if (query.exec()) {
+                    QString previousFilePath;
+                    QStringList artists;
+                    QStringList albums;
+
+                    const auto tracksMapEnd(tracksMap.end());
+                    const auto fill = [&]() {
+                        const auto found(tracksMap.find(previousFilePath));
+                        if (found != tracksMapEnd) {
+                            PlaylistTrack* track = found->second;
+                            track->title = query.value(1).toString();
+                            artists.removeDuplicates();
+                            track->artist = artists.join(QStringLiteral(", "));
+                            albums.removeDuplicates();
+                            track->album = albums.join(QStringLiteral(", "));
+                            track->duration = query.value(4).toInt();
+                        }
+                    };
+
+
+                    while (query.next()) {
+                        QString filePath(query.value(0).toString());
+
+                        if (filePath != previousFilePath) {
+                            if (!previousFilePath.isEmpty()) {
+                                fill();
+                            }
+                        }
+
+                        artists.push_back(query.value(2).toString());
+                        albums.push_back(query.value(3).toString());
+
+                        previousFilePath = std::move(filePath);
+                    }
+
+                    if (query.previous()) {
+                        fill();
+                    }
+                }
+            }
+
+            //db.commit();
+        }
+        //QSqlDatabase::removeDatabase(dbConnectionName);
     }
 
     QStringList PlaylistModel::getTracks(const std::vector<int>& indexes)
@@ -79,7 +181,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(mTracks.size());
         for (int index : indexes) {
-            tracks.push_back(mTracks[index].filePath);
+            tracks.push_back(mTracks[index].url.toString());
         }
         return tracks;
     }

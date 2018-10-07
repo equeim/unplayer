@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QUrl>
 
 #include "librarytrack.h"
 #include "stdutils.h"
@@ -33,13 +34,11 @@ namespace unplayer
 {
     struct PlaylistTrack
     {
-        QString filePath;
+        QUrl url;
         QString title;
         int duration;
-        bool hasDuration;
         QString artist;
         QString album;
-        bool inLibrary;
     };
 
     class PlaylistUtils final : public QObject
@@ -57,11 +56,11 @@ namespace unplayer
 
         void savePlaylist(const QString& filePath, const std::vector<PlaylistTrack>& tracks);
 
-        Q_INVOKABLE void newPlaylistFromFilesystem(const QString& name, const QStringList& trackPaths);
+        Q_INVOKABLE void newPlaylistFromFilesystem(const QString& name, const QStringList& trackUrls);
         Q_INVOKABLE void newPlaylistFromLibrary(const QString& name, const std::vector<unplayer::LibraryTrack>& libraryTracks);
         Q_INVOKABLE void newPlaylistFromLibrary(const QString& name, const unplayer::LibraryTrack& libraryTrack);
 
-        Q_INVOKABLE void addTracksToPlaylistFromFilesystem(const QString& filePath, const QStringList& trackPaths);
+        Q_INVOKABLE void addTracksToPlaylistFromFilesystem(const QString& filePath, const QStringList& trackUrls);
         Q_INVOKABLE void addTracksToPlaylistFromLibrary(const QString& filePath, const std::vector<unplayer::LibraryTrack>& libraryTracks);
         Q_INVOKABLE void addTracksToPlaylistFromLibrary(const QString& filePath, const unplayer::LibraryTrack& libraryTrack);
 
@@ -70,8 +69,8 @@ namespace unplayer
         void removePlaylists(const std::vector<QString>& playlists);
 
         static std::vector<PlaylistTrack> parsePlaylist(const QString& filePath);
-        static int getPlaylistTracksCount(const QString& filePath);
         Q_INVOKABLE static QStringList getPlaylistTracks(const QString& filePath);
+        static int getPlaylistTracksCount(const QString& filePath);
     private:
         explicit PlaylistUtils(QObject* parent);
 

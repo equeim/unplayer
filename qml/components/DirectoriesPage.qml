@@ -51,7 +51,7 @@ Page {
                 enabled: directoryTracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
-                    Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksProxyModel.getSelectedTracks())
+                    Unplayer.Player.queue.addTracksFromUrls(directoryTracksProxyModel.getSelectedTracks())
                     selectionPanel.showPanel = false
                 }
             }
@@ -156,7 +156,7 @@ Page {
                     MenuItem {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to queue")
-                        onClicked: Unplayer.Player.queue.addTrackFromFilesystem(model.filePath)
+                        onClicked: Unplayer.Player.queue.addTrackFromUrl(model.filePath)
                     }
 
                     MenuItem {
@@ -191,10 +191,10 @@ Page {
                             }
                         } else {
                             if (model.isPlaylist) {
-                                Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksModel.getTrack(directoryTracksProxyModel.sourceIndex(model.index)),
+                                Unplayer.Player.queue.addTracksFromUrls(directoryTracksModel.getTrack(directoryTracksProxyModel.sourceIndex(model.index)),
                                                                               true)
                             } else {
-                                Unplayer.Player.queue.addTracksFromFilesystem(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes, false),
+                                Unplayer.Player.queue.addTracksFromUrls(directoryTracksModel.getTracks(directoryTracksProxyModel.sourceIndexes, false),
                                                                               true,
                                                                               model.index - directoryTracksProxyModel.directoriesCount)
                             }

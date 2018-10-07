@@ -23,7 +23,6 @@ import harbour.unplayer 0.1 as Unplayer
 
 BaseTrackDelegate {
     current: model.filePath === Unplayer.Player.queue.currentFilePath
-    showDuration: true
     menu: Component {
         ContextMenu {
             MenuItem {
@@ -57,7 +56,7 @@ BaseTrackDelegate {
                     Unplayer.Player.play()
                 }
             } else {
-                Unplayer.Player.queue.addTracksFromLibrary(tracks, true, model.index)
+                Unplayer.Player.queue.addTracksFromLibrary(tracksModel.getTracks(tracksProxyModel.sourceIndexes), true, model.index)
             }
         }
     }

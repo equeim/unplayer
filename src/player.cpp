@@ -83,7 +83,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(mQueue->tracks().size());
         for (const auto& track : mQueue->tracks()) {
-            tracks.push_back(track->filePath);
+            tracks.push_back(track->url.toString());
         }
         Settings::instance()->savePlayerState(tracks,
                                               mQueue->currentIndex(),
@@ -97,7 +97,7 @@ namespace unplayer
         mRestoringState = true;
         mQueue->setShuffle(Settings::instance()->shuffle());
         mQueue->setRepeatMode(Settings::instance()->repeatMode());
-        mQueue->addTracksFromFilesystem(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
+        mQueue->addTracksFromUrls(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
     }
 
     Player::Player(QObject* parent)
@@ -171,7 +171,7 @@ namespace unplayer
                 const QueueTrack* track = mQueue->tracks().at(mQueue->currentIndex()).get();
 
                 mSettingNewTrack = true;
-                setMedia(QUrl::fromLocalFile(track->filePath));
+                setMedia(track->url);
                 mSettingNewTrack = false;
 
                 if (mRestoringState) {

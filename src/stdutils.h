@@ -24,6 +24,7 @@
 
 #include <QHash>
 #include <QString>
+#include <QUrl>
 
 namespace std {
     template<>
@@ -41,6 +42,15 @@ namespace std {
         size_t operator()(const QByteArray& bytes) const
         {
             return qHash(bytes);
+        }
+    };
+
+    template<>
+    class hash<QUrl> {
+    public:
+        size_t operator()(const QUrl& url) const
+        {
+            return qHash(url);
         }
     };
 }

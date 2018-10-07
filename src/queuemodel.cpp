@@ -29,8 +29,12 @@ namespace unplayer
         const QueueTrack* track = mQueue->tracks()[index.row()].get();
 
         switch (role) {
+        case UrlRole:
+            return track->url;
+        case IsLocalFileRole:
+            return track->url.isLocalFile();
         case FilePathRole:
-            return track->filePath;
+            return track->url.path();
         case TitleRole:
             return track->title;
         case ArtistRole:
@@ -93,7 +97,9 @@ namespace unplayer
 
     QHash<int, QByteArray> QueueModel::roleNames() const
     {
-        return {{FilePathRole, "filePath"},
+        return {{UrlRole, "url"},
+                {IsLocalFileRole, "isLocalFile"},
+                {FilePathRole, "filePath"},
                 {TitleRole, "title"},
                 {ArtistRole, "artist"},
                 {DisplayedArtistRole, "displayedArtist"},

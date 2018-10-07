@@ -106,12 +106,13 @@ Page {
         delegate: BaseTrackDelegate {
             id: trackDelegate
 
-            showArtistAndAlbum: true
-            showDuration: true
+            showArtistAndAlbum: model.isLocalFile
+            showUrl: !showArtistAndAlbum
 
             current: model.index === queueProxyModel.proxyIndex(Unplayer.Player.queue.currentIndex)
             menu: ContextMenu {
                 MenuItem {
+                    visible: model.isLocalFile
                     text: qsTranslate("unplayer", "Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }

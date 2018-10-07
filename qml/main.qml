@@ -51,7 +51,7 @@ ApplicationWindow
             }
         }
         if (commandLineArguments.length) {
-            Unplayer.Player.queue.addTracksFromFilesystem(commandLineArguments, true)
+            Unplayer.Player.queue.addTracksFromUrls(commandLineArguments, true)
         } else if (Unplayer.Settings.restorePlayerState) {
             Unplayer.Player.restoreState()
         }
@@ -72,7 +72,7 @@ ApplicationWindow
 
         function addTracksToQueue(tracks) {
             if (tracks.length) {
-                Unplayer.Player.queue.addTracksFromFilesystem(tracks, true)
+                Unplayer.Player.queue.addTracksFromUrls(tracks, true)
             }
         }
     }

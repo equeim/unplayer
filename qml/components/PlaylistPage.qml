@@ -43,7 +43,7 @@ Page {
                 text: qsTranslate("unplayer", "Add to queue")
 
                 onClicked: {
-                    Unplayer.Player.queue.addTracksFromFilesystem(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
+                    Unplayer.Player.queue.addTracksFromUrls(playlistModel.getTracks(playlistProxyModel.selectedSourceIndexes))
                     selectionPanel.showPanel = false
                 }
             }
@@ -77,19 +77,20 @@ Page {
             title: pageTitle
         }
         delegate: BaseTrackDelegate {
-            showArtist: model.artist && !model.album
-            showArtistAndAlbum: model.artist && model.album
-            showDuration: model.hasDuration
-            current: model.filePath === Unplayer.Player.queue.currentFilePath
+            showArtist: model.isLocalFile && model.artist && !model.album
+            showArtistAndAlbum: model.isLocalFile && model.artist && model.album
+            showUrl: !model.isLocalFile
+            current: model.url === Unplayer.Player.queue.currentUrl
             menu: ContextMenu {
                 MenuItem {
+                    visible: model.isLocalFile
                     text: qsTranslate("unplayer", "Track information")
                     onClicked: pageStack.push("TrackInfoPage.qml", { filePath: model.filePath })
                 }
 
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to queue")
-                    onClicked: Unplayer.Player.queue.addTrackFromFilesystem(model.filePath)
+                    onClicked: Unplayer.Player.queue.addTrackFromUrl(model.url)
                 }
 
                 MenuItem {
@@ -109,7 +110,7 @@ Page {
                             Unplayer.Player.play()
                         }
                     } else {
-                        Unplayer.Player.queue.addTracksFromFilesystem(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
+                        Unplayer.Player.queue.addTracksFromUrls(playlistModel.getTracks(playlistProxyModel.sourceIndexes),
                                                                       true,
                                                                       model.index)
                     }

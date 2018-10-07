@@ -33,13 +33,13 @@ namespace unplayer
     public:
         enum Role
         {
-            FilePathRole = Qt::UserRole,
+            UrlRole = Qt::UserRole,
+            IsLocalFileRole,
+            FilePathRole,
             TitleRole,
             DurationRole,
-            HasDurationRole,
             ArtistRole,
-            AlbumRole,
-            InLibraryRole
+            AlbumRole
         };
         Q_ENUM(Role)
 

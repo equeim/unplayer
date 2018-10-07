@@ -129,6 +129,7 @@ DockedPanel {
                 }
 
                 Label {
+                    visible: text
                     color: Theme.highlightColor
                     font.pixelSize: largeScreen ? Theme.fontSizeMedium : Theme.fontSizeSmall
                     text: Unplayer.Player.queue.currentArtist

@@ -19,8 +19,8 @@
 #include "utils.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QImageReader>
 #include <QItemSelection>
 #include <QLocale>
@@ -101,27 +101,29 @@ namespace unplayer
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
     }
 
-    QVariantList Utils::parseArguments(const QStringList& arguments)
+    QStringList Utils::parseArguments(const QStringList& arguments)
     {
-        QVariantList parsed;
+        QStringList parsed;
+        parsed.reserve(arguments.size());
+
         const QMimeDatabase mimeDb;
+
+        const QDir currentDir;
+
         for (const QString& argument : arguments) {
-            QString filePath;
-            const QFileInfo info(argument);
-            if (info.isFile()) {
-                filePath = info.absoluteFilePath();
-            } else {
-                const QUrl url(QUrl::fromUserInput(argument));
-                if (url.isLocalFile()) {
-                    filePath = url.path();
-                } else {
-                    continue;
+            const QUrl url(argument);
+            if (url.isRelative() || url.isLocalFile()) {
+                QFileInfo fileInfo(url.path());
+                if (fileInfo.isFile() && fileInfo.isReadable()) {
+                    QString filePath(fileInfo.absoluteFilePath());
+                    const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
+                    if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
+                            || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
+                        parsed.push_back(filePath);
+                    }
                 }
-            }
-            const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-            if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
-                    || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
-                parsed.append(filePath);
+            } else {
+                parsed.push_back(argument);
             }
         }
         return parsed;

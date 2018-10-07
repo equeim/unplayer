@@ -27,7 +27,7 @@ ListItem {
     property bool showArtist
     property bool showAlbum
     property bool showArtistAndAlbum
-    property bool showDuration
+    property bool showUrl
 
     showMenuOnPressAndHold: !selectionPanel.showPanel
 
@@ -62,7 +62,7 @@ ListItem {
         }
 
         Label {
-            visible: text
+            visible: model.artist && model.album
             color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {
@@ -76,6 +76,10 @@ ListItem {
 
                 if (showAlbum) {
                     return model.album
+                }
+
+                if (showUrl) {
+                    return model.url
                 }
 
                 return String()
@@ -100,7 +104,7 @@ ListItem {
         color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
         font.pixelSize: Theme.fontSizeExtraSmall
         text: {
-            if (showDuration) {
+            if (model.duration >= 0) {
                 return Format.formatDuration(model.duration, model.duration >= 3600? Format.DurationLong :
                                                                                      Format.DurationShort)
             }

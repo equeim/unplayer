@@ -119,6 +119,7 @@ Page {
             }
 
             MenuItem {
+                enabled: Unplayer.Player.queue.currentIsLocalFile
                 text: qsTranslate("unplayer", "Track information")
                 onClicked: pageStack.push("TrackInfoPage.qml", { filePath: Unplayer.Player.queue.currentFilePath })
             }
@@ -224,13 +225,20 @@ Page {
                 property int remaining: duration - position
                 property int position: Unplayer.Player.position
 
+                enabled: Unplayer.Player.seekable
+
                 handleVisible: false
-                label: "-%1 / %2".arg(Format.formatDuration(remaining / 1000, remaining >= 3600000 ? Format.DurationLong :
-                                                                                                      Format.DurationShort))
+                label: {
+                    if (duration > 0) {
+                        return "-%1 / %2".arg(Format.formatDuration(remaining / 1000, remaining >= 3600000 ? Format.DurationLong :
+                                                                                                             Format.DurationShort))
                                 .arg(Format.formatDuration(duration / 1000, duration >= 3600000 ? Format.DurationLong :
                                                                                                   Format.DurationShort))
+                    }
+                    return String()
+                }
                 minimumValue: 0
-                maximumValue: duration ? duration : 1
+                maximumValue: duration > 0 ? duration : 1
 
                 valueText: Format.formatDuration(value / 1000, value >= 3600000 ? Format.DurationLong :
                                                                                   Format.DurationShort)
@@ -241,7 +249,11 @@ Page {
                         value = position
                     }
                 }
-                onReleased: Unplayer.Player.position = value
+                onReleased: {
+                    if (Unplayer.Player.seekable) {
+                        Unplayer.Player.position = value
+                    }
+                }
             }
 
             Row {

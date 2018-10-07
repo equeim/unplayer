@@ -34,7 +34,7 @@ namespace unplayer
     struct QueueTrack
     {
         explicit QueueTrack(const QString& trackId,
-                            const QString& filePath,
+                            const QUrl& url,
                             const QString& title,
                             int duration,
                             const QString& artist,
@@ -42,10 +42,9 @@ namespace unplayer
                             const QString& mediaArtFilePath,
                             const QByteArray& mediaArtData,
                             long long modificationTime);
-
         QString trackId;
 
-        QString filePath;
+        QUrl url;
         QString title;
         int duration;
         QString artist;
@@ -63,6 +62,8 @@ namespace unplayer
 
         Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 
+        Q_PROPERTY(QUrl currentUrl READ currentUrl NOTIFY currentTrackChanged)
+        Q_PROPERTY(bool currentIsLocalFile READ isCurrentLocalFile NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentFilePath READ currentFilePath NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentTitle READ currentTitle NOTIFY currentTrackChanged)
         Q_PROPERTY(QString currentArtist READ currentArtist NOTIFY currentTrackChanged)
@@ -89,6 +90,8 @@ namespace unplayer
         int currentIndex() const;
         void setCurrentIndex(int index);
 
+        QUrl currentUrl() const;
+        bool isCurrentLocalFile() const;
         QString currentFilePath() const;
         QString currentTitle() const;
         QString currentArtist() const;
@@ -104,8 +107,8 @@ namespace unplayer
 
         bool isAddingTracks() const;
 
-        Q_INVOKABLE void addTracksFromFilesystem(const QStringList& trackPaths, bool clearQueue = false, int setAsCurrent = -1);
-        Q_INVOKABLE void addTrackFromFilesystem(const QString& track);
+        Q_INVOKABLE void addTracksFromUrls(const QStringList& trackUrls, bool clearQueue = false, int setAsCurrent = -1);
+        Q_INVOKABLE void addTrackFromUrl(const QString& trackUrl);
         Q_INVOKABLE void addTracksFromLibrary(const std::vector<unplayer::LibraryTrack>& libraryTracks, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void addTrackFromLibrary(const unplayer::LibraryTrack& libraryTrack, bool clearQueue = false, int setAsCurrent = -1);
 
@@ -126,7 +129,7 @@ namespace unplayer
     private:
         void reset();
 
-        void addingTracksCallback(std::vector<std::shared_ptr<QueueTrack>>&& tracks, int setAsCurrent, const QString& setAsCurrentFilePath);
+        void addingTracksCallback(std::vector<std::shared_ptr<QueueTrack>>&& tracks, int setAsCurrent, const QUrl& setAsCurrentUrl);
 
     private:
         std::vector<std::shared_ptr<QueueTrack>> mTracks;

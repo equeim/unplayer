@@ -36,7 +36,7 @@ namespace unplayer
     public:
         static void registerTypes();
 
-        static QVariantList parseArguments(const QStringList& arguments);
+        static QStringList parseArguments(const QStringList& arguments);
 
         Q_INVOKABLE static QString formatDuration(uint seconds);
         Q_INVOKABLE static QString formatByteSize(double size);
