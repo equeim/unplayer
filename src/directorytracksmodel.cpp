@@ -335,10 +335,15 @@ namespace unplayer
     void DirectoryTracksProxyModel::selectAll()
     {
         const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
+        int firstFileIndex = -1;
         for (int i = 0, max = rowCount(); i < max; ++i) {
             if (!files[sourceIndex(i)].isDirectory) {
-                selectionModel()->select(index(i, 0), QItemSelectionModel::Select);
+                firstFileIndex = i;
+                break;
             }
+        }
+        if (firstFileIndex != -1) {
+            selectionModel()->select(QItemSelection(index(firstFileIndex, 0), index(rowCount() - 1, 0)), QItemSelectionModel::Select);
         }
     }
 }
