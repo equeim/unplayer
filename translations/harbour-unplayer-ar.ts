@@ -511,15 +511,15 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في تثبيت قاعدة البيانات</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation type="unfinished"></translation>
+        <translation>لم يتم اختيار مسارات</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -527,7 +527,7 @@
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>فتح المكتبة في بداية التشغيل</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
