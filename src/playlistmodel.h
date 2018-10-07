@@ -29,6 +29,7 @@ namespace unplayer
     class PlaylistModel : public QAbstractListModel
     {
         Q_OBJECT
+        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
         Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
     public:
         enum Role
@@ -46,6 +47,8 @@ namespace unplayer
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         int rowCount(const QModelIndex& parent) const override;
 
+        bool isLoaded() const;
+
         const QString& filePath() const;
         void setFilePath(const QString& filePath);
 
@@ -56,8 +59,12 @@ namespace unplayer
         QHash<int, QByteArray> roleNames() const override;
 
     private:
+        bool mLoaded = false;
         std::vector<PlaylistTrack> mTracks;
         QString mFilePath;
+
+    signals:
+        void loadedChanged();
     };
 }
 

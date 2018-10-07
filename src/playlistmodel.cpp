@@ -22,8 +22,13 @@
 #include <unordered_map>
 
 #include <QFileInfo>
+#include <QFutureWatcher>
+#include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
+#include <QtConcurrentRun>
 
+#include "libraryutils.h"
 #include "playlistutils.h"
 #include "stdutils.h"
 
@@ -57,6 +62,11 @@ namespace unplayer
         return mTracks.size();
     }
 
+    bool PlaylistModel::isLoaded() const
+    {
+        return mLoaded;
+    }
+
     QHash<int, QByteArray> PlaylistModel::roleNames() const
     {
         return {{UrlRole, "url"},
@@ -76,104 +86,127 @@ namespace unplayer
     void PlaylistModel::setFilePath(const QString& filePath)
     {
         mFilePath = filePath;
-        mTracks = PlaylistUtils::parsePlaylist(mFilePath);
 
-        std::vector<QString> tracksToQuery;
-        tracksToQuery.reserve(mTracks.size());
-        std::unordered_map<QString, PlaylistTrack*> tracksMap;
-        tracksMap.reserve(mTracks.size());
-        for (PlaylistTrack& track : mTracks) {
-            if (track.url.isLocalFile()) {
-                QString filePath(track.url.path());
-                tracksToQuery.push_back(filePath);
-                tracksMap.insert({std::move(filePath), &track});
-            }
+        if (mLoaded) {
+            mLoaded = false;
+            emit loadedChanged();
+        }
 
-            if (track.title.isEmpty()) {
+        auto future = QtConcurrent::run([filePath]() {
+            std::vector<PlaylistTrack> tracks(PlaylistUtils::parsePlaylist(filePath));
+
+            std::vector<QString> tracksToQuery;
+            tracksToQuery.reserve(tracks.size());
+            std::unordered_map<QString, PlaylistTrack*> tracksMap;
+            tracksMap.reserve(tracks.size());
+            for (PlaylistTrack& track : tracks) {
                 if (track.url.isLocalFile()) {
-                    track.title = QFileInfo(track.url.path()).fileName();
-                } else {
-                    track.title = track.url.toString();
+                    QString filePath(track.url.path());
+                    tracksToQuery.push_back(filePath);
+                    tracksMap.insert({std::move(filePath), &track});
                 }
-            }
-        }
 
-        {
-            /*auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, dbConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
-            }
-            db.transaction();*/
-
-            const int maxParametersCount = 999;
-            for (int i = 0, max = tracksToQuery.size(); i < max; i += maxParametersCount) {
-                const int count = [&]() -> int {
-                    const int left = max - i;
-                    if (left > maxParametersCount) {
-                        return maxParametersCount;
+                if (track.title.isEmpty()) {
+                    if (track.url.isLocalFile()) {
+                        track.title = QFileInfo(track.url.path()).fileName();
+                    } else {
+                        track.title = track.url.toString();
                     }
-                    return left;
-                }();
-
-                QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
-                queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
-                for (int j = 1; j < count; ++j) {
-                    queryString.push_back(QStringLiteral(",?"));
                 }
-                queryString.push_back(QLatin1Char(')'));
+            }
 
-                //QSqlQuery query(db);
-                QSqlQuery query;
-                query.prepare(queryString);
-                for (int j = i, max = i + count; j < max; ++j) {
-                    query.addBindValue(tracksToQuery[j]);
+            const QString dbConnectionName(QLatin1String("playlistmodel"));
+
+            {
+                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, dbConnectionName);
+                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+                if (!db.open()) {
+                    qWarning() << "failed to open database" << db.lastError();
                 }
+                db.transaction();
 
-                if (query.exec()) {
-                    QString previousFilePath;
-                    QStringList artists;
-                    QStringList albums;
-
-                    const auto tracksMapEnd(tracksMap.end());
-                    const auto fill = [&]() {
-                        const auto found(tracksMap.find(previousFilePath));
-                        if (found != tracksMapEnd) {
-                            PlaylistTrack* track = found->second;
-                            track->title = query.value(1).toString();
-                            artists.removeDuplicates();
-                            track->artist = artists.join(QStringLiteral(", "));
-                            albums.removeDuplicates();
-                            track->album = albums.join(QStringLiteral(", "));
-                            track->duration = query.value(4).toInt();
+                const int maxParametersCount = 999;
+                for (int i = 0, max = tracksToQuery.size(); i < max; i += maxParametersCount) {
+                    const int count = [&]() -> int {
+                        const int left = max - i;
+                        if (left > maxParametersCount) {
+                            return maxParametersCount;
                         }
-                    };
+                        return left;
+                    }();
 
+                    QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
+                    queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
+                    for (int j = 1; j < count; ++j) {
+                        queryString.push_back(QStringLiteral(",?"));
+                    }
+                    queryString.push_back(QLatin1Char(')'));
 
-                    while (query.next()) {
-                        QString filePath(query.value(0).toString());
+                    QSqlQuery query(db);
+                    query.prepare(queryString);
+                    for (int j = i, max = i + count; j < max; ++j) {
+                        query.addBindValue(tracksToQuery[j]);
+                    }
 
-                        if (filePath != previousFilePath) {
-                            if (!previousFilePath.isEmpty()) {
-                                fill();
+                    if (query.exec()) {
+                        QString previousFilePath;
+                        QStringList artists;
+                        QStringList albums;
+
+                        const auto tracksMapEnd(tracksMap.end());
+                        const auto fill = [&]() {
+                            const auto found(tracksMap.find(previousFilePath));
+                            if (found != tracksMapEnd) {
+                                PlaylistTrack* track = found->second;
+                                track->title = query.value(1).toString();
+                                artists.removeDuplicates();
+                                track->artist = artists.join(QStringLiteral(", "));
+                                albums.removeDuplicates();
+                                track->album = albums.join(QStringLiteral(", "));
+                                track->duration = query.value(4).toInt();
                             }
+                        };
+
+
+                        while (query.next()) {
+                            QString filePath(query.value(0).toString());
+
+                            if (filePath != previousFilePath) {
+                                if (!previousFilePath.isEmpty()) {
+                                    fill();
+                                }
+                            }
+
+                            artists.push_back(query.value(2).toString());
+                            albums.push_back(query.value(3).toString());
+
+                            previousFilePath = std::move(filePath);
                         }
 
-                        artists.push_back(query.value(2).toString());
-                        albums.push_back(query.value(3).toString());
-
-                        previousFilePath = std::move(filePath);
-                    }
-
-                    if (query.previous()) {
-                        fill();
+                        if (query.previous()) {
+                            fill();
+                        }
                     }
                 }
-            }
 
-            //db.commit();
-        }
-        //QSqlDatabase::removeDatabase(dbConnectionName);
+                db.commit();
+            }
+            QSqlDatabase::removeDatabase(dbConnectionName);
+
+            return tracks;
+        });
+
+        using FutureWatcher = QFutureWatcher<std::vector<PlaylistTrack>>;
+        auto watcher = new FutureWatcher(this);
+        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+            auto tracks(watcher->result());
+            beginInsertRows(QModelIndex(), 0, tracks.size() - 1);
+            mTracks = std::move(tracks);
+            endInsertRows();
+            mLoaded = true;
+            emit loadedChanged();
+        });
+        watcher->setFuture(future);
     }
 
     QStringList PlaylistModel::getTracks(const std::vector<int>& indexes)
