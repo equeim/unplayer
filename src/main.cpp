@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
                                                             QLatin1String("/org/equeim/unplayer"),
                                                             QLatin1String("org.equeim.unplayer"),
                                                             QLatin1String("addTracksToQueue")));
-        message.setArguments(Utils::parseArguments(parser.positionalArguments()));
+        message.setArguments({Utils::parseArguments(parser.positionalArguments())});
         connection.call(message);
         return 0;
     }
