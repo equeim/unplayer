@@ -3,11 +3,13 @@
 ## [Unreleased]
 ### Added
 - Tracks inside album are now sorted by disc number
+- Added support of opening network streams (e.g. podcasts, IP radio)
+- Added support of nested playlists
 
 ### Changed
 - MPRIS interface now expose track's length, current position, repeat and shuffle mode
 - Improved performance of library scanning
-- Improve performance of adding tracks to queue
+- Improved performance of adding tracks to queue
 - CMake build system
 - qtmpris and taglib are now linked statically
 
