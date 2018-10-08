@@ -133,6 +133,17 @@ Page {
                     DirectoriesPage { }
                 }
             }
+
+            MainPageListItem {
+                title: qsTranslate("unplayer", "Open URL")
+                fallbackIcon: "image://theme/icon-m-link"
+                onClicked: pageStack.push(openUrlDialogComponent)
+
+                Component {
+                    id: openUrlDialogComponent
+                    OpenUrlDialog { }
+                }
+            }
         }
 
         VerticalScrollDecorator { }
