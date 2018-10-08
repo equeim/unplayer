@@ -532,7 +532,7 @@
         <location filename="../qml/components/MainPage.qml" line="138"/>
         <location filename="../qml/components/OpenUrlDialog.qml" line="38"/>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть URL</translation>
     </message>
     <message>
         <location filename="../qml/components/NewPlaylistDialog.qml" line="46"/>
@@ -690,13 +690,13 @@
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="73"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="121"/>
         <source>Disc number - Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер диска - Название</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumTracksSortPage.qml" line="79"/>
         <location filename="../qml/components/AllTracksSortPage.qml" line="136"/>
         <source>Disc number - Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер диска - Номер трека</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="51"/>
@@ -721,7 +721,7 @@
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="63"/>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер диска</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="81"/>
@@ -731,7 +731,7 @@
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="90"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="98"/>
@@ -956,12 +956,12 @@
     <message>
         <location filename="../qml/components/OpenUrlDialog.qml" line="39"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть</translation>
     </message>
     <message>
         <location filename="../qml/components/OpenUrlDialog.qml" line="47"/>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
 </context>
 </TS>
