@@ -82,9 +82,22 @@ Page {
                 value: trackInfo.genre
             }
 
-            DetailItem {
-                label: qsTranslate("unplayer", "File path")
-                value: filePath
+            ListItem {
+                contentHeight: detailItem.height
+                menu: Component {
+                    ContextMenu {
+                        MenuItem {
+                            text: qsTranslate("unplayer", "Copy")
+                            onClicked: Clipboard.text = value
+                        }
+                    }
+                }
+
+                DetailItem {
+                    id: detailItem
+                    label: qsTranslate("unplayer", "File path")
+                    value: filePath
+                }
             }
 
             DetailItem {
