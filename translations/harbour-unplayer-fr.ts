@@ -626,5 +626,33 @@
         <source>Contributor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disc number - Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number - Track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -435,13 +435,15 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>0</numerusform>
-        <numerusform>1</numerusform>
-        <numerusform>2</numerusform>
-        <numerusform>عدة</numerusform>
-        <numerusform>بعض</numerusform>
-        <numerusform>أخرى</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>0</numerusform>
+            <numerusform>1</numerusform>
+            <numerusform>2</numerusform>
+            <numerusform>عدة</numerusform>
+            <numerusform>بعض</numerusform>
+            <numerusform>أخرى</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>مصدر</translation>
@@ -706,6 +708,34 @@
     </message>
     <message>
         <source>Contributor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number - Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number - Track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

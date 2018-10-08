@@ -379,9 +379,11 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation><numerusform>%n valgt fil</numerusform>
-        <numerusform>%n filer valgt</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n valgt fil</numerusform>
+            <numerusform>%n filer valgt</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Set as default directory</source>
         <translation>Angi som forvalgt mappe</translation>
@@ -396,9 +398,11 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation type="unfinished"><numerusform>%n mappe valgt</numerusform>
-        <numerusform>%n mapper valgt</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>%n mappe valgt</numerusform>
+            <numerusform>%n mapper valgt</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Library Directories</source>
         <translation>Bibliotekmapper</translation>
@@ -549,9 +553,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished"><numerusform>Er du sikker på at du ønsker å fjerne %n valgt album?</numerusform>
-        <numerusform>Er du sikker på at du ønsker å fjerne %n valgte album?</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgt album?</numerusform>
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgte album?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
         <translation>Er du sikker på at du ønsker å fjerne denne artisten?</translation>
@@ -562,19 +568,25 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished"><numerusform>Er du sikker på at du ønsker å fjerne %n valgt artist?</numerusform>
-        <numerusform>Er du sikker på at du ønsker å fjerne %n valgte artister?</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgt artist?</numerusform>
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgte artister?</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished"><numerusform>Fjerner %n fil</numerusform>
-        <numerusform>Fjerner %n filer</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>Fjerner %n fil</numerusform>
+            <numerusform>Fjerner %n filer</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished"><numerusform>Er du sikker på at du ønsker å fjerne %n valgt sjanger?</numerusform>
-        <numerusform>Er du sikker på at du ønsker å fjerne %n valgte sjangere?</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgt sjanger?</numerusform>
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgte sjangere?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
         <translation>Er du sikker på at du ønsker å fjerne denne sjangeren?</translation>
@@ -601,9 +613,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished"><numerusform>Er du sikker på at du ønsker å fjerne %n valgt spor?</numerusform>
-        <numerusform>Er du sikker på at du ønsker å fjerne %n valgte spor?</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgt spor?</numerusform>
+            <numerusform>Er du sikker på at du ønsker å fjerne %n valgte spor?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Donate</source>
         <translation>Doner</translation>
@@ -611,6 +625,34 @@
     <message>
         <source>Contributor</source>
         <translation>Bidragsyter</translation>
+    </message>
+    <message>
+        <source>Disc number - Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number - Track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

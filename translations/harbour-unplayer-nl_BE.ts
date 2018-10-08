@@ -553,9 +553,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd album wilt verwijderen?</numerusform>
-        <numerusform>Zijt ge zeker dat ge de %n geselecteerde albums wilt verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zijt ge zeker dat ge %n geselecteerd album wilt verwijderen?</numerusform>
+            <numerusform>Zijt ge zeker dat ge de %n geselecteerde albums wilt verwijderen?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
         <translation>Zijt ge zeker dat ge dezen artiest wilt verwijderen?</translation>
@@ -566,19 +568,25 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerden artiest wilt verwijderen?</numerusform>
-        <numerusform>Zijt ge zeker dat ge de %n geselecteerde artiesten wilt verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zijt ge zeker dat ge %n geselecteerden artiest wilt verwijderen?</numerusform>
+            <numerusform>Zijt ge zeker dat ge de %n geselecteerde artiesten wilt verwijderen?</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation><numerusform>%n bestand wordt verwijderd</numerusform>
-        <numerusform>%n bestanden worden verwijderd</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>%n bestand wordt verwijderd</numerusform>
+            <numerusform>%n bestanden worden verwijderd</numerusform>
+        </translation>
+    </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd genre wilt verwijderen?</numerusform>
-        <numerusform>Zijt ge zeker dat ge da %n geselecteerde genres wilt verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zijt ge zeker dat ge %n geselecteerd genre wilt verwijderen?</numerusform>
+            <numerusform>Zijt ge zeker dat ge da %n geselecteerde genres wilt verwijderen?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
         <translation>Zijt ge zeker dat ge dit genre wilt verwijderen?</translation>
@@ -605,9 +613,11 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation><numerusform>Zijt ge zeker dat ge %n geselecteerd nummer wilt verwijderen?</numerusform>
-        <numerusform>Zijt ge zeker dat ge de %n geselecteerde nummers wilt verwijderen?</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Zijt ge zeker dat ge %n geselecteerd nummer wilt verwijderen?</numerusform>
+            <numerusform>Zijt ge zeker dat ge de %n geselecteerde nummers wilt verwijderen?</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Donate</source>
         <translation>Doneren</translation>
@@ -615,6 +625,34 @@
     <message>
         <source>Contributor</source>
         <translation>Bijdrager</translation>
+    </message>
+    <message>
+        <source>Disc number - Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number - Track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
