@@ -41,16 +41,19 @@ Page {
             }
 
             DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Title")
                 value: trackInfo.title
             }
 
             DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Artist")
                 value: trackInfo.artist
             }
 
             DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Album")
                 value: trackInfo.album
             }
@@ -62,16 +65,19 @@ Page {
             }
 
             DetailItem {
+                visible: trackInfo.year !== 0
                 label: qsTranslate("unplayer", "Year")
                 value: trackInfo.year
             }
 
             DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Track number")
                 value: trackInfo.trackNumber ? trackInfo.trackNumber : String()
             }
 
             DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Genre")
                 value: trackInfo.genre
             }
