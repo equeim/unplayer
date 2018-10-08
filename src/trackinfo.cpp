@@ -44,6 +44,7 @@ namespace unplayer
         mTitle = std::move(info.title);
         mArtist = info.artists.join(QLatin1String(", "));
         mAlbum = info.albums.join(QLatin1String(", "));
+        mDiscNumber = std::move(info.discNumber);
         mYear = info.year;
         mTrackNumber = info.trackNumber;
         mGenre = info.genres.join(QLatin1String(", "));
@@ -65,6 +66,11 @@ namespace unplayer
     const QString& TrackInfo::album() const
     {
         return mAlbum;
+    }
+
+    const QString&TrackInfo::discNumber() const
+    {
+        return mDiscNumber;
     }
 
     int TrackInfo::year() const

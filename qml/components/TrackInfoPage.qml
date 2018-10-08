@@ -56,6 +56,12 @@ Page {
             }
 
             DetailItem {
+                visible: value
+                label: qsTranslate("unplayer", "Disc number")
+                value: trackInfo.discNumber
+            }
+
+            DetailItem {
                 label: qsTranslate("unplayer", "Year")
                 value: trackInfo.year
             }
