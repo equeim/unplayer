@@ -475,20 +475,24 @@ namespace unplayer
 
                     if (query.exec()) {
                         QString previousFilePath;
+                        QString title;
+                        int duration;
                         QStringList artists;
                         QStringList albums;
+                        QString mediaArtFilePath;
+                        long long modificationTime;
                         bool shouldInsert = false;
 
                         const auto insert = [&]() {
                             const QUrl url(QUrl::fromLocalFile(previousFilePath));
                             tracksMap.insert({url, makeTrack(url,
-                                                             query.value(2).toString(),
-                                                             query.value(4).toInt(),
+                                                             std::move(title),
+                                                             duration,
                                                              std::move(artists),
                                                              std::move(albums),
-                                                             query.value(6).toString(),
+                                                             std::move(mediaArtFilePath),
                                                              QByteArray(),
-                                                             query.value(1).toLongLong())});
+                                                             modificationTime)});
                         };
 
                         while (query.next()) {
@@ -502,6 +506,15 @@ namespace unplayer
 
                                 const QFileInfo info(filePath);
                                 shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == toMsecsSinceEpoch(info.lastModified()));
+
+                                if (shouldInsert) {
+                                    title = query.value(2).toString();
+                                    duration = query.value(4).toInt();
+                                    artists.clear();
+                                    albums.clear();
+                                    mediaArtFilePath = query.value(6).toString();
+                                    modificationTime = query.value(1).toLongLong();
+                                }
                             }
 
                             if (shouldInsert) {

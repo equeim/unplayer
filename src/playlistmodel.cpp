@@ -150,20 +150,22 @@ namespace unplayer
 
                     if (query.exec()) {
                         QString previousFilePath;
+                        QString title;
                         QStringList artists;
                         QStringList albums;
+                        int duration;
 
                         const auto tracksMapEnd(tracksMap.end());
                         const auto fill = [&]() {
                             const auto found(tracksMap.find(previousFilePath));
                             if (found != tracksMapEnd) {
                                 PlaylistTrack* track = found->second;
-                                track->title = query.value(1).toString();
+                                track->title = std::move(title);
                                 artists.removeDuplicates();
                                 track->artist = artists.join(QStringLiteral(", "));
                                 albums.removeDuplicates();
                                 track->album = albums.join(QStringLiteral(", "));
-                                track->duration = query.value(4).toInt();
+                                track->duration = duration;
                             }
                         };
 
@@ -175,6 +177,11 @@ namespace unplayer
                                 if (!previousFilePath.isEmpty()) {
                                     fill();
                                 }
+
+                                title = query.value(1).toString();
+                                artists.clear();
+                                albums.clear();
+                                duration = query.value(4).toInt();
                             }
 
                             artists.push_back(query.value(2).toString());
