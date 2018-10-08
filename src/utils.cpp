@@ -116,10 +116,14 @@ namespace unplayer
                 QFileInfo fileInfo(url.path());
                 if (fileInfo.isFile() && fileInfo.isReadable()) {
                     QString filePath(fileInfo.absoluteFilePath());
-                    const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                    if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
-                            || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
+                    if (contains(PlaylistUtils::playlistsExtensions, fileInfo.suffix())) {
                         parsed.push_back(filePath);
+                    } else {
+                        const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
+                        if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
+                                || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
+                            parsed.push_back(filePath);
+                        }
                     }
                 }
             } else {
