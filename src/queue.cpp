@@ -848,6 +848,8 @@ namespace unplayer
     {
         emit tracksAboutToBeAdded(tracks.size());
 
+        setAsCurrent += mTracks.size();
+
         mNotPlayedTracks.reserve(mNotPlayedTracks.size() + tracks.size());
         mTracks.reserve(mTracks.size() + tracks.size());
         for (auto& track : tracks) {
