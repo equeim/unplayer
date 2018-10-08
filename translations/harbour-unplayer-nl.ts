@@ -222,7 +222,7 @@
     </message>
     <message>
         <source>Removing</source>
-        <translation>Bezig met verwijderen</translation>
+        <translation>Wordt verwijderd</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -230,7 +230,7 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>Bezig met verwijderen van speellijst</translation>
+        <translation>Speellijst wordt verwijderd</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
@@ -457,7 +457,7 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation>Wordt bijgewerkt...</translation>
+        <translation>Bezig met bijwerken…</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Herstel afspeelstatus bij opstarten van applicatie</translation>
+        <translation>Afspeelstatus herstellen bij opstarten van applicatie</translation>
     </message>
     <message>
         <source>Sort</source>
