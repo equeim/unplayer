@@ -415,15 +415,15 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation type="unfinished"></translation>
+        <translation>الكود المصدري</translation>
     </message>
     <message>
         <source>Authors</source>
-        <translation type="unfinished"></translation>
+        <translation>الكتاب</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر صورة</translation>
     </message>
     <message>
         <source>Maintainer</source>
@@ -435,26 +435,24 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>0</numerusform>
+        <numerusform>1</numerusform>
+        <numerusform>2</numerusform>
+        <numerusform>عدة</numerusform>
+        <numerusform>بعض</numerusform>
+        <numerusform>أخرى</numerusform>
+        </translation></message>
     <message>
         <source>Set as default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>مصدر</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation type="unfinished"></translation>
+        <translation>المسار الإفتراضي</translation>
     </message>
     <message>
         <source>Select files</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر ملف</translation>
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
@@ -469,23 +467,23 @@
     </message>
     <message>
         <source>Library Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>مسار المكتبات</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation type="unfinished"></translation>
+        <translation>اضف مسار</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر مسار</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation type="unfinished"></translation>
+        <translation>لا يوجد مسارات</translation>
     </message>
     <message>
         <source>Reset Library</source>
@@ -493,11 +491,11 @@
     </message>
     <message>
         <source>Update Library</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث المكتبة</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>مكتبة</translation>
     </message>
     <message>
         <source>%1, %2</source>
@@ -505,23 +503,23 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث المكتبة</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>الإعدادات</translation>
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation type="unfinished"></translation>
+        <translation>خطأ في تثبيت قاعدة البيانات</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation type="unfinished"></translation>
+        <translation>لم يتم اختيار مسارات</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -529,7 +527,7 @@
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>فتح المكتبة في بداية التشغيل</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
