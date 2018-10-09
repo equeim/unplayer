@@ -628,31 +628,31 @@
     </message>
     <message>
         <source>Disc number - Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Platenummer - Tittel</translation>
     </message>
     <message>
         <source>Disc number - Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Platenummer - Spornummer</translation>
     </message>
     <message>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Åpne nettadresse</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Åpne</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Nettadresse</translation>
     </message>
     <message>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation>Platenummer</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopier</translation>
     </message>
 </context>
 </TS>
