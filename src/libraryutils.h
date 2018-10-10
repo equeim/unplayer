@@ -92,6 +92,7 @@ namespace unplayer
         QString randomMediaArt();
         Q_INVOKABLE QString randomMediaArtForArtist(const QString& artist);
         Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album);
+        Q_INVOKABLE QString randomMediaArtForGenre(const QString& genre);
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
     private:

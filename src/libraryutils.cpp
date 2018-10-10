@@ -785,6 +785,25 @@ namespace unplayer
         return QString();
     }
 
+    QString LibraryUtils::randomMediaArtForGenre(const QString& genre)
+    {
+        if (!mDatabaseInitialized) {
+            return QString();
+        }
+
+        QSqlQuery query;
+        query.prepare(QLatin1String("SELECT mediaArt FROM tracks "
+                                    "WHERE mediaArt != '' AND genre = ? "
+                                    "GROUP BY mediaArt "
+                                    "ORDER BY RANDOM() LIMIT 1"));
+        query.addBindValue(genre);
+        query.exec();
+        if (query.next()) {
+            return query.value(0).toString();
+        }
+        return QString();
+    }
+
     void LibraryUtils::setMediaArt(const QString& artist, const QString& album, const QString& mediaArt)
     {
         if (!QDir().mkpath(mMediaArtDirectory)) {

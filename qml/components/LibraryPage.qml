@@ -96,6 +96,7 @@ Page {
 
             MainPageListItem {
                 title: qsTranslate("unplayer", "Genres")
+                mediaArt: Unplayer.LibraryUtils.randomMediaArt
                 onClicked: pageStack.push("GenresPage.qml")
             }
         }
