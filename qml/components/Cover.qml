@@ -96,6 +96,11 @@ CoverBackground {
         iconBackground: true
 
         CoverAction {
+            iconSource: "image://theme/icon-cover-previous-song"
+            onTriggered: Unplayer.Player.queue.previous()
+        }
+
+        CoverAction {
             iconSource: Unplayer.Player.playing ? "image://theme/icon-cover-pause" :
                                          "image://theme/icon-cover-play"
             onTriggered: {
