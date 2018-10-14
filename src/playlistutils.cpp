@@ -52,9 +52,9 @@ namespace unplayer
 
         const QLatin1String plsExtension("pls");
 
-        const std::set<QLatin1String> m3uExtensions{QLatin1String("m3u"),
-                                                    QLatin1String("m3u8"),
-                                                    QLatin1String("vlc")};
+        const std::unordered_set<QString> m3uExtensions{QLatin1String("m3u"),
+                                                        QLatin1String("m3u8"),
+                                                        QLatin1String("vlc")};
 
         PlaylistType playlistTypeFromExtension(const QString& extension)
         {
@@ -410,7 +410,7 @@ namespace unplayer
         }
     }
 
-    const std::set<QLatin1String> PlaylistUtils::playlistsExtensions([]() {
+    const std::unordered_set<QString> PlaylistUtils::playlistsExtensions([]() {
         auto extensions(m3uExtensions);
         extensions.insert(plsExtension);
         return extensions;
@@ -419,7 +419,7 @@ namespace unplayer
     const QStringList PlaylistUtils::playlistsNameFilters([]() {
         QStringList filters;
         filters.reserve(m3uExtensions.size() + 1);
-        for (const QLatin1String& extension : m3uExtensions) {
+        for (const QString& extension : m3uExtensions) {
             filters.push_back(QLatin1String("*.") % extension);
         }
         filters.push_back(QLatin1String("*.") % plsExtension);

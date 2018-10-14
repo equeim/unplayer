@@ -20,8 +20,8 @@
 #define UNPLAYER_PLAYLISTUTILS_H
 
 #include <memory>
-#include <set>
 #include <vector>
+#include <unordered_set>
 
 #include <QObject>
 #include <QStringList>
@@ -47,7 +47,7 @@ namespace unplayer
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
         static const QStringList playlistsNameFilters;
-        static const std::set<QLatin1String> playlistsExtensions;
+        static const std::unordered_set<QString> playlistsExtensions;
 
         static PlaylistUtils* instance();
 
