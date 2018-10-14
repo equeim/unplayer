@@ -24,7 +24,6 @@
 #include <QImageReader>
 #include <QItemSelection>
 #include <QLocale>
-#include <QMimeDatabase>
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QUrl>
@@ -106,8 +105,6 @@ namespace unplayer
         QStringList parsed;
         parsed.reserve(arguments.size());
 
-        const QMimeDatabase mimeDb;
-
         const QDir currentDir;
 
         for (const QString& argument : arguments) {
@@ -119,9 +116,9 @@ namespace unplayer
                     if (contains(PlaylistUtils::playlistsExtensions, fileInfo.suffix())) {
                         parsed.push_back(filePath);
                     } else {
-                        const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                        if (contains(LibraryUtils::mimeTypesByExtension, mimeType)
-                                || contains(LibraryUtils::videoMimeTypesByExtension, mimeType)) {
+                        const QString suffix(fileInfo.suffix());
+                        if (contains(LibraryUtils::mimeTypesExtensions, suffix)
+                                || contains(LibraryUtils::videoMimeTypesExtensions, suffix)) {
                             parsed.push_back(filePath);
                         }
                     }

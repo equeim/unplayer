@@ -53,29 +53,21 @@ namespace unplayer
 
         const QLatin1String flacMimeType("audio/flac");
 
-        const QLatin1String aacMimeType("audio/aac");
         const QLatin1String mp4MimeType("audio/mp4");
         const QLatin1String mp4bMimeType("audio/x-m4b");
 
         const QLatin1String mpegMimeType("audio/mpeg");
 
-        const QLatin1String oggMimeType("audio/ogg");
         const QLatin1String vorbisOggMimeType("audio/x-vorbis+ogg");
         const QLatin1String flacOggMimeType("audio/x-flac+ogg");
         const QLatin1String opusOggMimeType("audio/x-opus+ogg");
 
         const QLatin1String apeMimeType("audio/x-ape");
 
-        const QLatin1String matroskaMimeType("audio/x-matroska");
         const QLatin1String genericMatroskaMimeType("application/x-matroska");
 
         const QLatin1String wavMimeType("audio/x-wav");
         const QLatin1String wavpackMimeType("audio/x-wavpack");
-
-        const QLatin1String mp4VideoMimeType("video/mp4");
-        const QLatin1String mpegVideoMimeType("video/mpeg");
-        const QLatin1String matroskaVideoMimeType("video/x-matroska");
-        const QLatin1String oggVideoMimeType("video/ogg");
 
 
         std::unique_ptr<LibraryUtils> instancePointer;
@@ -177,16 +169,28 @@ namespace unplayer
         return found->second;
     }
 
-    const std::unordered_set<QString> LibraryUtils::mimeTypesByExtension{flacMimeType,
-                                                                         aacMimeType,
-                                                                         mp4MimeType,
-                                                                         mp4bMimeType,
-                                                                         mpegMimeType,
-                                                                         oggMimeType,
-                                                                         apeMimeType,
-                                                                         matroskaMimeType,
-                                                                         wavMimeType,
-                                                                         wavpackMimeType};
+    const std::unordered_set<QString> LibraryUtils::mimeTypesExtensions{QLatin1String("flac"),
+                                                                        QLatin1String("aac"),
+
+                                                                        QLatin1String("m4a"),
+                                                                        QLatin1String("f4a"),
+                                                                        QLatin1String("m4b"),
+                                                                        QLatin1String("f4b"),
+
+                                                                        QLatin1String("mp3"),
+                                                                        QLatin1String("mpga"),
+
+                                                                        QLatin1String("oga"),
+                                                                        QLatin1String("ogg"),
+                                                                        QLatin1String("opus"),
+
+                                                                        QLatin1String("ape"),
+
+                                                                        QLatin1String("mka"),
+
+                                                                        QLatin1String("wav"),
+                                                                        QLatin1String("wv"),
+                                                                        QLatin1String("wvp")};
 
     const std::unordered_set<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
                                                                        mp4MimeType,
@@ -200,10 +204,20 @@ namespace unplayer
                                                                        wavMimeType,
                                                                        wavpackMimeType};
 
-    const std::unordered_set<QString> LibraryUtils::videoMimeTypesByExtension{mp4VideoMimeType,
-                                                                              mpegVideoMimeType,
-                                                                              matroskaVideoMimeType,
-                                                                              oggVideoMimeType};
+    const std::unordered_set<QString> LibraryUtils::videoMimeTypesExtensions{QLatin1String("mp4"),
+                                                                             QLatin1String("m4v"),
+                                                                             QLatin1String("f4v"),
+                                                                             QLatin1String("lrv"),
+
+                                                                             QLatin1String("mpeg"),
+                                                                             QLatin1String("mpg"),
+                                                                             QLatin1String("mp2"),
+                                                                             QLatin1String("mpe"),
+                                                                             QLatin1String("vob"),
+
+                                                                             QLatin1String("mkv"),
+
+                                                                             QLatin1String("ogv")};
 
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
 
@@ -502,9 +516,9 @@ namespace unplayer
                                 continue;
                             }
 
-                            QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
-                            if (contains(mimeTypesByExtension, mimeType)) {
-                                mimeType = mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name();
+                            //QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
+                            if (contains(mimeTypesExtensions, fileInfo.suffix())) {
+                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
                                 if (contains(mimeTypesByContent, mimeType)) {
                                     const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeType));
                                     updateTrackInDatabase(db,

@@ -23,7 +23,6 @@
 #include <QFile>
 #include <QFutureWatcher>
 #include <QItemSelectionModel>
-#include <QMimeDatabase>
 #include <QStandardPaths>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -230,7 +229,6 @@ namespace unplayer
         auto future = QtConcurrent::run([directory, showVideoFiles]() {
             std::vector<DirectoryTrackFile> files;
             int tracksCount = 0;
-            const QMimeDatabase mimeDb;
             const QFileInfoList fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
             for (const QFileInfo& info : fileInfos) {
                 if (info.isDir()) {
@@ -239,11 +237,11 @@ namespace unplayer
                                      true,
                                      false});
                 } else {
-                    const QString mimeType(mimeDb.mimeTypeForFile(info, QMimeDatabase::MatchExtension).name());
-                    const bool isPlaylist = contains(PlaylistUtils::playlistsExtensions, info.suffix());
-                    if (isPlaylist
-                            || contains(LibraryUtils::mimeTypesByExtension, mimeType)
-                            || (showVideoFiles && contains(LibraryUtils::videoMimeTypesByExtension, mimeType))) {
+                    const QString suffix(info.suffix());
+                    const bool isPlaylist = contains(PlaylistUtils::playlistsExtensions, suffix);
+                    if (isPlaylist ||
+                            contains(LibraryUtils::mimeTypesExtensions, suffix) ||
+                            (showVideoFiles && contains(LibraryUtils::videoMimeTypesExtensions, suffix))) {
                         files.push_back({info.filePath(),
                                          info.fileName(),
                                          false,

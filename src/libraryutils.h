@@ -67,9 +67,9 @@ namespace unplayer
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
-        static const std::unordered_set<QString> mimeTypesByExtension;
+        static const std::unordered_set<QString> mimeTypesExtensions;
         static const std::unordered_set<QString> mimeTypesByContent;
-        static const std::unordered_set<QString> videoMimeTypesByExtension;
+        static const std::unordered_set<QString> videoMimeTypesExtensions;
         static const QString databaseType;
         static LibraryUtils* instance();
 
