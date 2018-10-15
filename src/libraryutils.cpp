@@ -403,6 +403,9 @@ namespace unplayer
                 std::unordered_map<int, long long> modificationTimeHash;
                 std::unordered_map<int, QString> mediaArtHash;
 
+                std::unordered_map<QString, bool> mediaArtExistanceHash;
+                int deletedMediaArtCount = 0;
+
                 std::vector<int> filesToRemove;
 
                 {
@@ -411,8 +414,6 @@ namespace unplayer
                         qWarning() << "failed to get files from database" << query.lastError();
                         return;
                     }
-
-                    std::unordered_map<QString, bool> mediaArtExistanceHash;
 
                     while (query.next()) {
                         const int id(query.value(0).toInt());
@@ -458,6 +459,7 @@ namespace unplayer
                                         mediaArtHash.insert({id, mediaArt});
                                     } else {
                                         mediaArtExistanceHash.insert({mediaArt, false});
+                                        ++deletedMediaArtCount;
                                     }
                                 } else if (found->second) {
                                     mediaArtHash.insert({id, mediaArt});
@@ -622,6 +624,44 @@ namespace unplayer
                     QSqlQuery query(queryString, db);
                     if (query.lastError().type() != QSqlError::NoError) {
                         qWarning() << "failed to remove files from database" << query.lastError();
+                    }
+                }
+
+                if (deletedMediaArtCount > 0) {
+                    std::vector<QString> deletedMediaArt;
+                    deletedMediaArt.reserve(deletedMediaArtCount);
+                    for (const auto& i : mediaArtExistanceHash) {
+                        if (!i.second) {
+                            deletedMediaArt.push_back(i.first);
+                        }
+                    }
+
+                    const int maxParametersCount = 999;
+                    for (int i = 0, max = deletedMediaArt.size(); i < max; i += maxParametersCount) {
+                        const int count = [&]() -> int {
+                            const int left = max - i;
+                            if (left > maxParametersCount) {
+                                return maxParametersCount;
+                            }
+                            return left;
+                        }();
+
+                        QString queryString(QLatin1String("UPDATE tracks SET mediaArt = '' WHERE mediaArt IN (?"));
+                        queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
+                        for (int j = 1; j < count; ++j) {
+                            queryString.push_back(QStringLiteral(",?"));
+                        }
+                        queryString.push_back(QLatin1Char(')'));
+
+                        QSqlQuery query(db);
+                        query.prepare(queryString);
+                        for (int j = i, max = i + count; j < max; ++j) {
+                            query.addBindValue(deletedMediaArt[j]);
+                        }
+
+                        if (!query.exec()) {
+                            qWarning() << "failed to remove media art from database" << query.lastError();
+                        }
                     }
                 }
 
