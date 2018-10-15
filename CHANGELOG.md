@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1] - 2018-10-16
+### Changed
+- Updated Spanish translation
+
+### Fixed
+- Always return true for MPRIS CanControl property (fixes lockscreen controls)
+- Deleted media art files are now removed from database when updating library
+
 ## [1.4.0] - 2018-10-15
 ### Added
 - Tracks inside album are now sorted by disc number
@@ -20,6 +28,7 @@
 - Adding tracks to playlist from queue
 - Fixed opening playlists from command line
 - Yandex.Money donate link
+- Crash when restoring player state
 
 ## [1.3.0] - 2018-05-05
 ### Added
