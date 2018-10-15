@@ -516,7 +516,6 @@ namespace unplayer
                                 continue;
                             }
 
-                            //QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchExtension).name());
                             if (contains(mimeTypesExtensions, fileInfo.suffix())) {
                                 const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
                                 if (contains(mimeTypesByContent, mimeType)) {

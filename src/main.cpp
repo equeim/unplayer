@@ -41,7 +41,6 @@ using namespace unplayer;
 int main(int argc, char* argv[])
 {
     const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
-    //const std::unique_ptr<QGuiApplication> app(new QGuiApplication(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
     QCommandLineParser parser;
@@ -62,7 +61,6 @@ int main(int argc, char* argv[])
     }
 
     const std::unique_ptr<QQuickView> view(SailfishApp::createView());
-    //const std::unique_ptr<QQuickView> view;
 
     view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::parseArguments(parser.positionalArguments()));
 
