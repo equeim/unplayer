@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.0] - 2018-10-15
 ### Added
 - Tracks inside album are now sorted by disc number
 - Added support of opening network streams (e.g. podcasts, IP radio)
@@ -10,6 +10,7 @@
 - MPRIS interface now expose track's length, current position, repeat and shuffle mode
 - Improved performance of library scanning
 - Improved performance of adding tracks to queue
+- Improved playlists parsing
 - CMake build system
 - qtmpris and taglib are now linked statically
 
@@ -17,6 +18,7 @@
 - Setting of MPRIS trackId property
 - Creation of playlists when playlists directory does not exist
 - Adding tracks to playlist from queue
+- Fixed opening playlists from command line
 - Yandex.Money donate link
 
 ## [1.3.0] - 2018-05-05
