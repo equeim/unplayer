@@ -108,6 +108,7 @@ namespace unplayer
     {
         auto mpris = new MprisPlayer(this);
         mpris->setServiceName(QLatin1String("unplayer"));
+        mpris->setCanControl(true);
 
         mpris->setLoopStatus(loopStatus(mQueue->repeatMode()));
         QObject::connect(mQueue, &Queue::repeatModeChanged, this, [=]() {
@@ -160,7 +161,6 @@ namespace unplayer
             if (mQueue->currentIndex() == -1) {
                 setMedia(QMediaContent());
 
-                mpris->setCanControl(false);
                 mpris->setCanPlay(false);
                 mpris->setCanPause(false);
                 mpris->setCanGoNext(false);
@@ -191,7 +191,6 @@ namespace unplayer
                                     {Mpris::metadataToString(Mpris::Length), track->duration * 1000000LL},
                                     {Mpris::metadataToString(Mpris::Artist), track->artist},
                                     {Mpris::metadataToString(Mpris::Album), track->album}});
-                mpris->setCanControl(true);
             }
         });
 
