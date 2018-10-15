@@ -1,15 +1,22 @@
 #!/bin/sh
 
-QT_SELECT=5
+if command -v lupdate-qt5 > /dev/null 2>&1; then
+    _lupdate=lupdate-qt5
+else
+    _kupdate=lupdate
+fi
 
-lupdate ../src ../qml -ts harbour-unplayer-en.ts \
-                          harbour-unplayer-ar.ts \
-                          harbour-unplayer-de.ts \
-                          harbour-unplayer-es.ts \
-                          harbour-unplayer-fr.ts \
-                          harbour-unplayer-it.ts \
-                          harbour-unplayer-nb.ts \
-                          harbour-unplayer-nl.ts \
-                          harbour-unplayer-nl_BE.ts \
-                          harbour-unplayer-ru.ts \
-                          harbour-unplayer-sv.ts
+_dir="$(realpath $(dirname $0))"
+cd "$_dir"
+
+QT_SELECT=5 $_lupdate ../src ../qml -ts harbour-unplayer-en.ts \
+                                        harbour-unplayer-ar.ts \
+                                        harbour-unplayer-de.ts \
+                                        harbour-unplayer-es.ts \
+                                        harbour-unplayer-fr.ts \
+                                        harbour-unplayer-it.ts \
+                                        harbour-unplayer-nb.ts \
+                                        harbour-unplayer-nl.ts \
+                                        harbour-unplayer-nl_BE.ts \
+                                        harbour-unplayer-ru.ts \
+                                        harbour-unplayer-sv.ts
