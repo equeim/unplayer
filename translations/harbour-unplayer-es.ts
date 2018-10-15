@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Agregar a reproducciones</translation>
+        <translation>Agregar a reproducción</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
@@ -636,15 +636,15 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Abrir LUR</translation>
+        <translation>Secuencia</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation>Aceptar</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation>LUR</translation>
+        <translation>introducir lur</translation>
     </message>
     <message>
         <source>Disc number</source>
