@@ -18,6 +18,7 @@
 
 #include "tagutils.h"
 
+#include <QDebug>
 #include <QFileInfo>
 
 #include <apefile.h>
@@ -32,6 +33,8 @@
 #include <opusfile.h>
 #include <tpropertymap.h>
 #include <vorbisfile.h>
+#include <wavfile.h>
+#include <wavpackfile.h>
 #include <xiphcomment.h>
 
 namespace unplayer
@@ -40,58 +43,7 @@ namespace unplayer
     {
         namespace
         {
-            enum class VorbisComment
-            {
-                Artist,
-                Album,
-                Genre
-            };
-
-            void getTags(const TagLib::Tag* tag, const TagLib::PropertyMap& properties, Info& info)
-            {
-                info.title = tag->title().toCString(true);
-                info.year = tag->year();
-                info.trackNumber = tag->track();
-
-                const TagLib::StringList& artists = properties["ARTIST"];
-                info.artists.reserve(artists.size());
-                for (const TagLib::String& artist : artists) {
-                    info.artists.push_back(artist.toCString(true));
-                }
-                info.artists.removeDuplicates();
-
-                const TagLib::StringList& albums = properties["ALBUM"];
-                info.albums.reserve(albums.size());
-                for (const TagLib::String& album : albums) {
-                    info.albums.push_back(album.toCString(true));
-                }
-                info.albums.removeDuplicates();
-
-                const TagLib::StringList& genres = properties["GENRE"];
-                info.genres.reserve(genres.size());
-                for (const TagLib::String& genre : genres) {
-                    info.genres.push_back(genre.toCString(true));
-                }
-                info.genres.removeDuplicates();
-
-                if (properties.contains("DISCNUMBER")) {
-                    const TagLib::StringList list(properties["DISCNUMBER"]);
-                    if (!list.isEmpty()) {
-                        info.discNumber = list[0].toCString(true);
-                    }
-                }
-            }
-
-            void getAudioProperties(const TagLib::File& file, Info& info)
-            {
-                const TagLib::AudioProperties* audioProperties = file.audioProperties();
-                if (audioProperties) {
-                    info.duration = audioProperties->length();
-                    info.bitrate = audioProperties->bitrate();
-                }
-            }
-
-            void setMediaArt(const TagLib::ByteVector& data, Info& info)
+            inline void setMediaArt(const TagLib::ByteVector& data, Info& info)
             {
                 info.mediaArtData = QByteArray(data.data(), data.size());
             }
@@ -163,92 +115,190 @@ namespace unplayer
                     setMediaArt(pictures.front()->data(), info);
                 }
             }
+
+            bool fillFromFile(Info& info, const TagLib::File& file)
+            {
+                if (file.isValid()) {
+                    info.isValid = true;
+
+                    const TagLib::Tag* tag = file.tag();
+                    const TagLib::PropertyMap properties(tag->properties());
+
+                    info.title = tag->title().toCString(true);
+                    info.year = tag->year();
+                    info.trackNumber = tag->track();
+
+                    const TagLib::StringList& artists = properties["ARTIST"];
+                    info.artists.reserve(artists.size());
+                    for (const TagLib::String& artist : artists) {
+                        info.artists.push_back(artist.toCString(true));
+                    }
+                    info.artists.removeDuplicates();
+
+                    const TagLib::StringList& albums = properties["ALBUM"];
+                    info.albums.reserve(albums.size());
+                    for (const TagLib::String& album : albums) {
+                        info.albums.push_back(album.toCString(true));
+                    }
+                    info.albums.removeDuplicates();
+
+                    const TagLib::StringList& genres = properties["GENRE"];
+                    info.genres.reserve(genres.size());
+                    for (const TagLib::String& genre : genres) {
+                        info.genres.push_back(genre.toCString(true));
+                    }
+                    info.genres.removeDuplicates();
+
+                    if (properties.contains("DISCNUMBER")) {
+                        const TagLib::StringList list(properties["DISCNUMBER"]);
+                        if (!list.isEmpty()) {
+                            info.discNumber = list[0].toCString(true);
+                        }
+                    }
+
+                    const TagLib::AudioProperties* audioProperties = file.audioProperties();
+                    info.duration = audioProperties->length();
+                    info.bitrate = audioProperties->bitrate();
+                } else {
+                    info.isValid = false;
+                }
+                return info.isValid;
+            }
         }
 
-        Info getTrackInfo(const QFileInfo& fileInfo, const QString& mimeType)
+        Info getTrackInfo(const QFileInfo& fileInfo, const QMimeDatabase& mimeDb)
         {
             Info info;
 
-            switch (mimeTypeFromString(mimeType)) {
-            case MimeType::Flac:
+            const QString filePath(fileInfo.filePath());
+            const QByteArray filePathBytes(filePath.toUtf8());
+
+            switch (extensionFromSuffux(fileInfo.suffix())) {
+            case Extension::FLAC:
             {
-                TagLib::FLAC::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                if (file.hasID3v2Tag()) {
-                    getTags(file.ID3v2Tag(), file.ID3v2Tag()->properties(), info);
-                } else if (file.hasXiphComment()) {
-                    getTags(file.xiphComment(), file.xiphComment()->properties(), info);
+                TagLib::FLAC::File file(filePathBytes);
+                if (fillFromFile(info, file)) {
+                    getFlacMediaArt(file, info);
+                } else {
+                    qWarning() << filePath << "is not a FLAC file";
                 }
-                getFlacMediaArt(file, info);
                 break;
             }
-            case MimeType::Mp4:
-            case MimeType::Mp4b:
+            case Extension::AAC:
             {
-                const TagLib::MP4::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                if (file.hasMP4Tag()) {
-                    getTags(file.tag(), file.tag()->properties(), info);
+                if (mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name() != QLatin1String("audio/aac")) {
+                    info.isValid = false;
+                } else {
+                    qWarning() << filePath << "is not an AAC file";
+                }
+                break;
+            }
+            case Extension::M4A:
+            {
+                const TagLib::MP4::File file(filePathBytes);
+                if (fillFromFile(info, file) && file.hasMP4Tag()) {
                     getMp4MediaArt(file.tag(), info);
+                } else {
+                    qWarning() << filePath << "is not a M4A/M4B file";
                 }
                 break;
             }
-            case MimeType::Mpeg:
+            case Extension::MP3:
             {
-                TagLib::MPEG::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                if (file.hasAPETag()) {
-                    getTags(file.APETag(), file.APETag()->properties(), info);
+                TagLib::MPEG::File file(filePathBytes);
+                if (fillFromFile(info, file)) {
+                    if (file.hasAPETag()) {
+                        getApeMediaArt(file.APETag(), info);
+                    }
+                    if (info.mediaArtData.isEmpty() && file.hasID3v2Tag()) {
+                        getId3v2MediaArt(file.ID3v2Tag(), info);
+                    }
+                } else {
+                    qWarning() << filePath << "is not a MP3 file";
+                }
+                break;
+            }
+            case Extension::OGA:
+            case Extension::OGG:
+            {
+                const QString mimeType(mimeDb.mimeTypeForFile(fileInfo.filePath(), QMimeDatabase::MatchContent).name());
+                if (mimeType == QLatin1String("audio/x-vorbis+ogg")) {
+                    const TagLib::Ogg::Vorbis::File file(filePathBytes);
+                    if (fillFromFile(info, file)) {
+                        getXiphMediaArt(file.tag(), info);
+                    } else {
+                        qWarning() << filePath << "is not a Ogg Vorbis file";
+                    }
+                } else if (mimeType == QLatin1String("audio/x-flac+ogg")) {
+                    const TagLib::Ogg::FLAC::File file(filePathBytes);
+                    if (fillFromFile(info, file)) {
+                        getXiphMediaArt(file.tag(), info);
+                    } else {
+                        qWarning() << filePath << "is not a Ogg FLAC file";
+                    }
+                } else if (mimeType == QLatin1String("audio/x-opus+ogg")) {
+                    const TagLib::Ogg::Opus::File file(filePathBytes);
+                    if (fillFromFile(info, file)) {
+                        getXiphMediaArt(file.tag(), info);
+                    } else {
+                        qWarning() << filePath << "is not a Ogg Opus file";
+                    }
+                } else {
+                    qWarning() << filePath << "is not a OGG audio file";
+                }
+                break;
+            }
+            case Extension::OPUS:
+            {
+                const TagLib::Ogg::Opus::File file(filePathBytes);
+                if (fillFromFile(info, file)) {
+                    getXiphMediaArt(file.tag(), info);
+                } else {
+                    qWarning() << filePath << "is not a Ogg Opus file";
+                }
+                break;
+            }
+            case Extension::APE:
+            {
+                TagLib::APE::File file(filePathBytes);
+                if (fillFromFile(info, file) && file.hasAPETag()) {
                     getApeMediaArt(file.APETag(), info);
-                } else if (file.hasID3v2Tag()) {
-                    getId3v2MediaArt(file.ID3v2Tag(), info);
-                    getTags(file.ID3v2Tag(), file.ID3v2Tag()->properties(), info);
+                } else {
+                    qWarning() << filePath << "is not an APE file";
                 }
                 break;
             }
-            case MimeType::VorbisOgg:
+            case Extension::MKA:
             {
-                const TagLib::Ogg::Vorbis::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                getTags(file.tag(), file.tag()->properties(), info);
-                getXiphMediaArt(file.tag(), info);
+                if (mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name() != QLatin1String("audio/x-matroska")) {
+                    info.isValid = false;
+                } else {
+                    qWarning() << filePath << "is not a MKA file";
+                }
                 break;
             }
-            case MimeType::FlacOgg:
+            case Extension::WAV:
             {
-                const TagLib::Ogg::FLAC::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                getTags(file.tag(), file.tag()->properties(), info);
-                getXiphMediaArt(file.tag(), info);
+                if (!fillFromFile(info, TagLib::RIFF::WAV::File(filePathBytes))) {
+                    qWarning() << filePath << "is not a WAV file";
+                }
                 break;
             }
-            case MimeType::OpusOgg:
+            case Extension::WAVPACK:
             {
-                const TagLib::Ogg::Opus::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                getTags(file.tag(), file.tag()->properties(), info);
-                getXiphMediaArt(file.tag(), info);
-                break;
-            }
-            case MimeType::Ape:
-            {
-                TagLib::APE::File file(fileInfo.filePath().toUtf8().data());
-                getAudioProperties(file, info);
-                if (file.hasAPETag()) {
+                TagLib::WavPack::File file(filePathBytes);
+                if (fillFromFile(info, file) && file.hasAPETag()) {
                     getApeMediaArt(file.APETag(), info);
-                    getTags(file.APETag(), file.APETag()->properties(), info);
+                } else {
+                    qWarning() << filePath << "is not a WavPack file";
                 }
                 break;
             }
+            case Extension::Other:
             default:
             {
-                const TagLib::FileRef file(fileInfo.filePath().toUtf8().data());
-                if (file.file()) {
-                    getAudioProperties(*file.file(), info);
-                    if (file.tag()) {
-                        getTags(file.tag(), file.tag()->properties(), info);
-                    }
-                }
+                qWarning() << filePath << "is not a supported file";
+                break;
             }
             }
 

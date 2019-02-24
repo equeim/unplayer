@@ -37,23 +37,28 @@ namespace unplayer
         struct Info;
     }
 
-    enum class MimeType
+    enum class Extension
     {
-        Flac,
-        Mp4,
-        Mp4b,
-        Mpeg,
-        VorbisOgg,
-        FlacOgg,
-        OpusOgg,
-        Ape,
-        Matroska,
-        Wav,
-        Wavpack,
+        FLAC,
+        AAC,
+
+        M4A,
+        MP3,
+
+        OGA,
+        OGG,
+        OPUS,
+
+        APE,
+        MKA,
+
+        WAV,
+        WAVPACK,
+
         Other
     };
 
-    MimeType mimeTypeFromString(const QString& string);
+    Extension extensionFromSuffux(const QString& suffix);
 
     class LibraryUtils final : public QObject
     {
@@ -68,7 +73,6 @@ namespace unplayer
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
         static const std::unordered_set<QString> mimeTypesExtensions;
-        static const std::unordered_set<QString> mimeTypesByContent;
         static const std::unordered_set<QString> videoMimeTypesExtensions;
         static const QString databaseType;
         static LibraryUtils* instance();

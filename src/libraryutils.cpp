@@ -51,23 +51,29 @@ namespace unplayer
     {
         const QString rescanConnectionName(QLatin1String("unplayer_rescan"));
 
-        const QLatin1String flacMimeType("audio/flac");
+        const QLatin1String flacSuffix("flac");
+        const QLatin1String aacSuffix("aac");
 
-        const QLatin1String mp4MimeType("audio/mp4");
-        const QLatin1String mp4bMimeType("audio/x-m4b");
+        const QLatin1String m4aSuffix("m4a");
+        const QLatin1String f4aSuffix("f4a");
+        const QLatin1String m4bSuffix("m4b");
+        const QLatin1String f4bSuffix("f4b");
 
-        const QLatin1String mpegMimeType("audio/mpeg");
+        const QLatin1String mp3Suffix("mp3");
+        const QLatin1String mpgaSuffix("mpga");
 
-        const QLatin1String vorbisOggMimeType("audio/x-vorbis+ogg");
-        const QLatin1String flacOggMimeType("audio/x-flac+ogg");
-        const QLatin1String opusOggMimeType("audio/x-opus+ogg");
+        const QLatin1String ogaSuffix("oga");
+        const QLatin1String oggSuffix("ogg");
+        const QLatin1String opusSuffix("opus");
 
-        const QLatin1String apeMimeType("audio/x-ape");
+        const QLatin1String apeSuffix("ape");
 
-        const QLatin1String genericMatroskaMimeType("application/x-matroska");
+        const QLatin1String mkaSuffix("mka");
 
-        const QLatin1String wavMimeType("audio/x-wav");
-        const QLatin1String wavpackMimeType("audio/x-wavpack");
+        const QLatin1String wavSuffix("wav");
+
+        const QLatin1String wvSuffix("wv");
+        const QLatin1String wvpSuffix("wvp");
 
 
         std::unique_ptr<LibraryUtils> instancePointer;
@@ -145,64 +151,58 @@ namespace unplayer
         }
     }
 
-    MimeType mimeTypeFromString(const QString& string)
+    Extension extensionFromSuffux(const QString& suffix)
     {
-        static const std::unordered_map<QString, MimeType> types{
-            {flacMimeType, MimeType::Flac},
-            {mp4MimeType, MimeType::Mp4},
-            {mp4bMimeType, MimeType::Mp4b},
-            {mpegMimeType, MimeType::Mpeg},
-            {vorbisOggMimeType, MimeType::VorbisOgg},
-            {flacOggMimeType, MimeType::FlacOgg},
-            {opusOggMimeType, MimeType::OpusOgg},
-            {apeMimeType, MimeType::Ape},
-            {genericMatroskaMimeType, MimeType::Matroska},
-            {wavMimeType, MimeType::Wav},
-            {wavpackMimeType, MimeType::Wavpack}
-        };
-        static const auto end(types.end());
+        static const std::unordered_map<QString, Extension> extensions{
+            {flacSuffix, Extension::FLAC},
+            {aacSuffix, Extension::AAC},
 
-        const auto found(types.find(string));
+            {m4aSuffix, Extension::M4A},
+            {f4aSuffix, Extension::M4A},
+            {m4bSuffix, Extension::M4A},
+            {f4bSuffix, Extension::M4A},
+
+            {mp3Suffix, Extension::MP3},
+            {mpgaSuffix, Extension::MP3},
+
+            {ogaSuffix, Extension::OGA},
+            {oggSuffix, Extension::OGG},
+            {opusSuffix, Extension::OPUS},
+
+            {apeSuffix, Extension::APE},
+
+            {mkaSuffix, Extension::MKA},
+
+            {wavSuffix, Extension::WAV},
+
+            {wvSuffix, Extension::WAVPACK},
+            {wvpSuffix, Extension::WAVPACK}
+        };
+        static const auto end(extensions.end());
+
+        const auto found(extensions.find(suffix));
         if (found == end) {
-            return MimeType::Other;
+            return Extension::Other;
         }
         return found->second;
     }
 
-    const std::unordered_set<QString> LibraryUtils::mimeTypesExtensions{QLatin1String("flac"),
-                                                                        QLatin1String("aac"),
-
-                                                                        QLatin1String("m4a"),
-                                                                        QLatin1String("f4a"),
-                                                                        QLatin1String("m4b"),
-                                                                        QLatin1String("f4b"),
-
-                                                                        QLatin1String("mp3"),
-                                                                        QLatin1String("mpga"),
-
-                                                                        QLatin1String("oga"),
-                                                                        QLatin1String("ogg"),
-                                                                        QLatin1String("opus"),
-
-                                                                        QLatin1String("ape"),
-
-                                                                        QLatin1String("mka"),
-
-                                                                        QLatin1String("wav"),
-                                                                        QLatin1String("wv"),
-                                                                        QLatin1String("wvp")};
-
-    const std::unordered_set<QString> LibraryUtils::mimeTypesByContent{flacMimeType,
-                                                                       mp4MimeType,
-                                                                       mp4bMimeType,
-                                                                       mpegMimeType,
-                                                                       vorbisOggMimeType,
-                                                                       flacOggMimeType,
-                                                                       opusOggMimeType,
-                                                                       apeMimeType,
-                                                                       genericMatroskaMimeType,
-                                                                       wavMimeType,
-                                                                       wavpackMimeType};
+    const std::unordered_set<QString> LibraryUtils::mimeTypesExtensions{flacSuffix,
+                                                                        aacSuffix,
+                                                                        m4aSuffix,
+                                                                        f4aSuffix,
+                                                                        m4bSuffix,
+                                                                        f4bSuffix,
+                                                                        mp3Suffix,
+                                                                        mpgaSuffix,
+                                                                        ogaSuffix,
+                                                                        oggSuffix,
+                                                                        opusSuffix,
+                                                                        apeSuffix,
+                                                                        mkaSuffix,
+                                                                        wavSuffix,
+                                                                        wvSuffix,
+                                                                        wvpSuffix};
 
     const std::unordered_set<QString> LibraryUtils::videoMimeTypesExtensions{QLatin1String("mp4"),
                                                                              QLatin1String("m4v"),
@@ -519,9 +519,8 @@ namespace unplayer
                             }
 
                             if (contains(mimeTypesExtensions, fileInfo.suffix())) {
-                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
-                                if (contains(mimeTypesByContent, mimeType)) {
-                                    const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeType));
+                                const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
+                                if (trackInfo.isValid) {
                                     updateTrackInDatabase(db,
                                                           false,
                                                           ++lastId,
@@ -568,9 +567,7 @@ namespace unplayer
                                         if ((!deleted && mediaArt.isEmpty()) || embedded) {
                                             return QByteArray();
                                         }
-                                        return tagutils::getTrackInfo(fileInfo,
-                                                                      mimeDb.mimeTypeForFile(filePath,
-                                                                                             QMimeDatabase::MatchContent).name()).mediaArtData;
+                                        return tagutils::getTrackInfo(fileInfo, mimeDb).mediaArtData;
                                     }());
 
                                     const QString newMediaArt(getTrackMediaArt(mediaArtData,
@@ -591,9 +588,8 @@ namespace unplayer
                                 }
                             } else {
                                 // File has changed
-                                const QString mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name());
-                                if (contains(mimeTypesByContent, mimeType)) {
-                                    const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeType));
+                                const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
+                                if (trackInfo.isValid) {
                                     updateTrackInDatabase(db,
                                                           true,
                                                           id,

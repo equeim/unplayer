@@ -42,9 +42,10 @@ namespace unplayer
             int duration = 0;
             int bitrate = 0;
             QByteArray mediaArtData;
+            bool isValid;
         };
 
-        Info getTrackInfo(const QFileInfo& fileInfo, const QString& mimeType);
+        Info getTrackInfo(const QFileInfo& fileInfo, const QMimeDatabase& mimeDb);
     }
 }
 

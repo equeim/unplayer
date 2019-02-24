@@ -35,11 +35,11 @@ namespace unplayer
     {
         mFilePath = filePath;
 
-        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
-
         const QFileInfo fileInfo(mFilePath);
 
-        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mMimeType));
+        const QMimeDatabase mimeDb;
+        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
+        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb));
 
         mTitle = std::move(info.title);
         mArtist = info.artists.join(QLatin1String(", "));
