@@ -63,14 +63,6 @@ namespace unplayer
             id.chop(1);
             return id;
         }
-
-        long long toMsecsSinceEpoch(const QDateTime& date)
-        {
-            if (date.isValid()) {
-                return date.toMSecsSinceEpoch();
-            }
-            return -1;
-        }
     }
 
     QueueTrack::QueueTrack(const QString& trackId,
@@ -361,7 +353,7 @@ namespace unplayer
                                 }
                             } else {
                                 if (tracksMap.find(url) == tracksMapEnd) {
-                                    const auto modificationTime = toMsecsSinceEpoch(fileInfo.lastModified());
+                                    const auto modificationTime = getLastModifiedTime(fileInfo.filePath());
                                     auto found(std::find_if(oldTracksBegin, oldTracksEnd, [&url, &modificationTime](const std::shared_ptr<QueueTrack>& track) {
                                         return track->url == url && track->modificationTime == modificationTime;
                                     }));
@@ -505,7 +497,7 @@ namespace unplayer
                                 }
 
                                 const QFileInfo info(filePath);
-                                shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == toMsecsSinceEpoch(info.lastModified()));
+                                shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == getLastModifiedTime(filePath));
 
                                 if (shouldInsert) {
                                     title = query.value(2).toString();
@@ -573,7 +565,7 @@ namespace unplayer
                                                       std::move(info.albums),
                                                       std::move(mediaArtFilePath),
                                                       std::move(mediaArtData),
-                                                      toMsecsSinceEpoch(fileInfo.lastModified())));
+                                                      getLastModifiedTime(filePath)));
                     } else {
                         newTracks.push_back(std::make_shared<QueueTrack>(createTrackId(),
                                                                          url,

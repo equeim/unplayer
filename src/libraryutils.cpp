@@ -91,7 +91,7 @@ namespace unplayer
         void updateTrackInDatabase(const QSqlDatabase& db,
                                    bool inDb,
                                    int id,
-                                   const QFileInfo& fileInfo,
+                                   const QString& filePath,
                                    const tagutils::Info& info,
                                    const QString& mediaArt)
         {
@@ -128,14 +128,14 @@ namespace unplayer
                         queryString.push_back(QLatin1Char(','));
                     }
                 }
-                queryString = queryString.arg(id).arg(fileInfo.lastModified().toMSecsSinceEpoch()).arg(info.year).arg(info.trackNumber).arg(info.duration);
+                queryString = queryString.arg(id).arg(getLastModifiedTime(filePath)).arg(info.year).arg(info.trackNumber).arg(info.duration);
                 return queryString;
             }());
 
             forEachOrOnce(info.artists, [&](const QString& artist) {
                 forEachOrOnce(info.albums, [&](const QString& album) {
                     forEachOrOnce(info.genres, [&](const QString& genre) {
-                        query.addBindValue(fileInfo.filePath());
+                        query.addBindValue(filePath);
                         query.addBindValue(info.title);
                         query.addBindValue(emptyIfNull(artist));
                         query.addBindValue(emptyIfNull(album));
@@ -524,7 +524,7 @@ namespace unplayer
                                 updateTrackInDatabase(db,
                                                       false,
                                                       ++lastId,
-                                                      fileInfo,
+                                                      filePath,
                                                       trackInfo,
                                                       getTrackMediaArt(trackInfo.mediaArtData,
                                                                        embeddedMediaArtFiles,
@@ -537,7 +537,7 @@ namespace unplayer
 
                             const int id = foundInDb->second;
 
-                            const long long modificationTime = fileInfo.lastModified().toMSecsSinceEpoch();
+                            const long long modificationTime = getLastModifiedTime(filePath);
                             if (modificationTime == modificationTimeHash[id]) {
                                 // File has not changed
 
@@ -592,7 +592,7 @@ namespace unplayer
                                     updateTrackInDatabase(db,
                                                           true,
                                                           id,
-                                                          fileInfo,
+                                                          filePath,
                                                           trackInfo,
                                                           getTrackMediaArt(trackInfo.mediaArtData,
                                                                            embeddedMediaArtFiles,
