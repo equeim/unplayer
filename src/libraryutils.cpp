@@ -38,6 +38,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QStringBuilder>
 #include <QUuid>
 #include <QtConcurrentRun>
 
@@ -484,8 +485,17 @@ namespace unplayer
                 const QMimeDatabase mimeDb;
                 const bool preferDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
 
+                const QStringList filters([&]() {
+                    QStringList f;
+                    f.reserve(mimeTypesExtensions.size());
+                    for (const QString& ext : mimeTypesExtensions) {
+                        f.push_back(QStringLiteral("*.") % ext);
+                    }
+                    return f;
+                }());
+
                 for (const QString& topLevelDirectory : libraryDirectories) {
-                    QDirIterator iterator(topLevelDirectory, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+                    QDirIterator iterator(topLevelDirectory, filters, QDir::Files | QDir::Readable, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
                     while (iterator.hasNext()) {
                         if (!qApp) {
                             qWarning() << "app shutdown, stop updating";
@@ -493,17 +503,8 @@ namespace unplayer
                             return;
                         }
 
-                        iterator.next();
-                        const QString filePath(iterator.filePath());
+                        const QString filePath(iterator.next());
                         const QFileInfo fileInfo(iterator.fileInfo());
-
-                        if (fileInfo.isDir()) {
-                            continue;
-                        }
-
-                        if (!fileInfo.isReadable()) {
-                            continue;
-                        }
 
                         const auto foundInDb(files.find(filePath));
 
@@ -518,20 +519,18 @@ namespace unplayer
                                 continue;
                             }
 
-                            if (contains(mimeTypesExtensions, fileInfo.suffix())) {
-                                const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
-                                if (trackInfo.isValid) {
-                                    updateTrackInDatabase(db,
-                                                          false,
-                                                          ++lastId,
-                                                          fileInfo,
-                                                          trackInfo,
-                                                          getTrackMediaArt(trackInfo.mediaArtData,
-                                                                           embeddedMediaArtFiles,
-                                                                           fileInfo,
-                                                                           mediaArtDirectoriesHash,
-                                                                           preferDirectoryMediaArt));
-                                }
+                            const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
+                            if (trackInfo.isValid) {
+                                updateTrackInDatabase(db,
+                                                      false,
+                                                      ++lastId,
+                                                      fileInfo,
+                                                      trackInfo,
+                                                      getTrackMediaArt(trackInfo.mediaArtData,
+                                                                       embeddedMediaArtFiles,
+                                                                       fileInfo,
+                                                                       mediaArtDirectoriesHash,
+                                                                       preferDirectoryMediaArt));
                             }
                         } else {
                             // File is in database
