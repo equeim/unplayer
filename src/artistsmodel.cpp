@@ -97,7 +97,7 @@ namespace unplayer
     std::vector<LibraryTrack> ArtistsModel::getTracksForArtist(int index) const
     {
         QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, mediaArt FROM tracks "
+        query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
                                      "WHERE artist = ? "
                                      "ORDER BY album = '', year, album, trackNumber, title"));
         query.addBindValue(mArtists[index].artist);
@@ -114,7 +114,7 @@ namespace unplayer
                                   query.value(2).toString(),
                                   query.value(3).toString(),
                                   query.value(4).toInt(),
-                                  query.value(6).toString()});
+                                  mediaArtFromQuery(query, 5, 6)});
             }
             return tracks;
         }

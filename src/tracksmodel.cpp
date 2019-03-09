@@ -43,7 +43,8 @@ namespace unplayer
             ArtistField,
             AlbumField,
             DurationField,
-            MediaArtField
+            DirectoryMediaArtField,
+            EmbeddedMediaArtField
         };
     }
 
@@ -312,7 +313,7 @@ namespace unplayer
 
     void TracksModel::execQuery()
     {
-        QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration, mediaArt FROM tracks "));
+        QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "));
 
         if (mAllArtists) {
             if (!mGenre.isEmpty()) {
@@ -392,7 +393,7 @@ namespace unplayer
                                    artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
                                    album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
                                    query.value(DurationField).toInt(),
-                                   query.value(MediaArtField).toString()});
+                                   mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)});
             }
         } else {
             qWarning() << query.lastError();

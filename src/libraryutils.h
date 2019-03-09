@@ -29,6 +29,7 @@
 
 class QFileInfo;
 class QSqlDatabase;
+class QSqlQuery;
 
 namespace unplayer
 {
@@ -59,6 +60,8 @@ namespace unplayer
     };
 
     Extension extensionFromSuffux(const QString& suffix);
+
+    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField);
 
     class LibraryUtils final : public QObject
     {
@@ -102,11 +105,6 @@ namespace unplayer
     private:
         LibraryUtils();
 
-        QString getTrackMediaArt(const QByteArray& embeddedMediaArtData,
-                                 std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
-                                 const QFileInfo& fileInfo,
-                                 std::unordered_map<QString, QString>& mediaArtDirectories,
-                                 bool preferDirectoriesMediaArt);
         QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
         bool mDatabaseInitialized;

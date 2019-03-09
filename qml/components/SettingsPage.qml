@@ -25,8 +25,10 @@ Page {
     property bool libraryChanged
 
     Component.onDestruction: {
-        if (libraryChanged || mediaArtSwitch.checked !== mediaArtSwitch.useDirectoryMediaArt) {
+        if (libraryChanged) {
             Unplayer.LibraryUtils.updateDatabase()
+        } else if (mediaArtSwitch.checked !== mediaArtSwitch.useDirectoryMediaArt) {
+            Unplayer.LibraryUtils.mediaArtChanged()
         }
     }
 

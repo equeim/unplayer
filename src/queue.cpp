@@ -100,11 +100,11 @@ namespace unplayer
                 if (track->url.isLocalFile()) {
                     const QString filePath(track->url.path());
                     QSqlQuery query;
-                    query.prepare(QStringLiteral("SELECT mediaArt FROM tracks WHERE filePath = ?"));
+                    query.prepare(QStringLiteral("SELECT directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath = ?"));
                     query.addBindValue(filePath);
                     if (query.exec()) {
                         if (query.next()) {
-                            track->mediaArtFilePath = query.value(0).toString();
+                            track->mediaArtFilePath = mediaArtFromQuery(query, 0, 1);
                         }
                     } else {
                         qWarning() << "failed to get media art from database for track:" << filePath;
@@ -451,7 +451,7 @@ namespace unplayer
                         }
                         return left;
                     }();
-                    QString queryString(QLatin1String("SELECT filePath, modificationTime, title, artist, album, duration, mediaArt FROM tracks WHERE filePath IN (?"));
+                    QString queryString(QLatin1String("SELECT filePath, modificationTime, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
                     queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
                     for (int j = 1; j < count; ++j) {
                         queryString.push_back(QStringLiteral(",?"));
@@ -501,10 +501,10 @@ namespace unplayer
 
                                 if (shouldInsert) {
                                     title = query.value(2).toString();
-                                    duration = query.value(4).toInt();
+                                    duration = query.value(5).toInt();
                                     artists.clear();
                                     albums.clear();
-                                    mediaArtFilePath = query.value(6).toString();
+                                    mediaArtFilePath = mediaArtFromQuery(query, 6, 7);
                                     modificationTime = query.value(1).toLongLong();
                                 }
                             }
