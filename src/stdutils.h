@@ -22,10 +22,6 @@
 #include <functional>
 #include <memory>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 #include <QHash>
 #include <QString>
 #include <QUrl>
@@ -93,15 +89,6 @@ namespace unplayer
     template<class T>
     inline bool operator==(const std::shared_ptr<T>& shared, const T* raw) {
         return shared.get() == raw;
-    }
-
-    inline long long getLastModifiedTime(const QString& filePath)
-    {
-        struct stat64 result;
-        if (stat64(filePath.toUtf8().constData(), &result) != 0) {
-            return -1;
-        }
-        return result.st_mtim.tv_sec * 1000 + result.st_mtim.tv_nsec / 1000000;
     }
 }
 

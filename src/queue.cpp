@@ -38,8 +38,8 @@
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
-#include "stdutils.h"
 #include "tagutils.h"
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -442,15 +442,7 @@ namespace unplayer
 
                 db.transaction();
 
-                const int maxParametersCount = 999;
-                for (int i = 0, max = tracksToQuery.size(); i < max; i += maxParametersCount) {
-                    const int count = [&]() -> int {
-                        const int left = max - i;
-                        if (left > maxParametersCount) {
-                            return maxParametersCount;
-                        }
-                        return left;
-                    }();
+                forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
                     QString queryString(QLatin1String("SELECT filePath, modificationTime, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
                     queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
                     for (int j = 1; j < count; ++j) {
@@ -460,7 +452,7 @@ namespace unplayer
 
                     QSqlQuery query(db);
                     query.prepare(queryString);
-                    for (int j = i, max = i + count; j < max; ++j) {
+                    for (int j = first, max = first + count; j < max; ++j) {
                         query.addBindValue(tracksToQuery[j]);
                     }
 
@@ -524,7 +516,7 @@ namespace unplayer
                     } else {
                         qWarning() << query.lastError();
                     }
-                }
+                });
 
                 db.commit();
             }

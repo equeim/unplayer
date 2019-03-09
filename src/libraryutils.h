@@ -78,6 +78,7 @@ namespace unplayer
         static const std::unordered_set<QString> mimeTypesExtensions;
         static const std::unordered_set<QString> videoMimeTypesExtensions;
         static const QString databaseType;
+        static const int maxDbVariableCount;
         static LibraryUtils* instance();
 
         const QString& databaseFilePath();
