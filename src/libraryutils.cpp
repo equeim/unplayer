@@ -80,10 +80,10 @@ namespace unplayer
 
         std::unique_ptr<LibraryUtils> instancePointer;
 
-        QString emptyIfNull(const QString& string)
+        inline QString emptyIfNull(const QString& string)
         {
             if (string.isNull()) {
-                return QString();
+                return QString("");
             }
             return string;
         }
