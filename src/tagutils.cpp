@@ -116,7 +116,12 @@ namespace unplayer
                 }
             }
 
-            bool fillFromFile(Info& info, const TagLib::File& file)
+            inline void printError(const QString& filePath)
+            {
+                qWarning() << "Warning: can't read tags from" << filePath;
+            }
+
+            bool fillFromFile(Info& info, const TagLib::File& file, const QString& filePath)
             {
                 if (file.isValid()) {
                     info.isValid = true;
@@ -161,6 +166,7 @@ namespace unplayer
                     info.bitrate = audioProperties->bitrate();
                 } else {
                     info.isValid = false;
+                    printError(filePath);
                 }
                 return info.isValid;
             }
@@ -177,10 +183,8 @@ namespace unplayer
             case Extension::FLAC:
             {
                 TagLib::FLAC::File file(filePathBytes);
-                if (fillFromFile(info, file)) {
+                if (fillFromFile(info, file, filePath)) {
                     getFlacMediaArt(file, info);
-                } else {
-                    qWarning() << filePath << "is not a FLAC file";
                 }
                 break;
             }
@@ -189,32 +193,28 @@ namespace unplayer
                 if (mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name() != QLatin1String("audio/aac")) {
                     info.isValid = false;
                 } else {
-                    qWarning() << filePath << "is not an AAC file";
+                    printError(filePath);
                 }
                 break;
             }
             case Extension::M4A:
             {
                 const TagLib::MP4::File file(filePathBytes);
-                if (fillFromFile(info, file) && file.hasMP4Tag()) {
+                if (fillFromFile(info, file, filePath) && file.hasMP4Tag()) {
                     getMp4MediaArt(file.tag(), info);
-                } else {
-                    qWarning() << filePath << "is not a M4A/M4B file";
                 }
                 break;
             }
             case Extension::MP3:
             {
                 TagLib::MPEG::File file(filePathBytes);
-                if (fillFromFile(info, file)) {
+                if (fillFromFile(info, file, filePath)) {
                     if (file.hasAPETag()) {
                         getApeMediaArt(file.APETag(), info);
                     }
                     if (info.mediaArtData.isEmpty() && file.hasID3v2Tag()) {
                         getId3v2MediaArt(file.ID3v2Tag(), info);
                     }
-                } else {
-                    qWarning() << filePath << "is not a MP3 file";
                 }
                 break;
             }
@@ -224,47 +224,37 @@ namespace unplayer
                 const QString mimeType(mimeDb.mimeTypeForFile(fileInfo.filePath(), QMimeDatabase::MatchContent).name());
                 if (mimeType == QLatin1String("audio/x-vorbis+ogg")) {
                     const TagLib::Ogg::Vorbis::File file(filePathBytes);
-                    if (fillFromFile(info, file)) {
+                    if (fillFromFile(info, file, filePath)) {
                         getXiphMediaArt(file.tag(), info);
-                    } else {
-                        qWarning() << filePath << "is not a Ogg Vorbis file";
                     }
                 } else if (mimeType == QLatin1String("audio/x-flac+ogg")) {
                     const TagLib::Ogg::FLAC::File file(filePathBytes);
-                    if (fillFromFile(info, file)) {
+                    if (fillFromFile(info, file, filePath)) {
                         getXiphMediaArt(file.tag(), info);
-                    } else {
-                        qWarning() << filePath << "is not a Ogg FLAC file";
                     }
                 } else if (mimeType == QLatin1String("audio/x-opus+ogg")) {
                     const TagLib::Ogg::Opus::File file(filePathBytes);
-                    if (fillFromFile(info, file)) {
+                    if (fillFromFile(info, file, filePath)) {
                         getXiphMediaArt(file.tag(), info);
-                    } else {
-                        qWarning() << filePath << "is not a Ogg Opus file";
                     }
                 } else {
-                    qWarning() << filePath << "is not a OGG audio file";
+                    printError(filePath);
                 }
                 break;
             }
             case Extension::OPUS:
             {
                 const TagLib::Ogg::Opus::File file(filePathBytes);
-                if (fillFromFile(info, file)) {
+                if (fillFromFile(info, file, filePath)) {
                     getXiphMediaArt(file.tag(), info);
-                } else {
-                    qWarning() << filePath << "is not a Ogg Opus file";
                 }
                 break;
             }
             case Extension::APE:
             {
                 TagLib::APE::File file(filePathBytes);
-                if (fillFromFile(info, file) && file.hasAPETag()) {
+                if (fillFromFile(info, file, filePath) && file.hasAPETag()) {
                     getApeMediaArt(file.APETag(), info);
-                } else {
-                    qWarning() << filePath << "is not an APE file";
                 }
                 break;
             }
@@ -273,31 +263,29 @@ namespace unplayer
                 if (mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent).name() != QLatin1String("audio/x-matroska")) {
                     info.isValid = false;
                 } else {
-                    qWarning() << filePath << "is not a MKA file";
+                    printError(filePath);
                 }
                 break;
             }
             case Extension::WAV:
             {
-                if (!fillFromFile(info, TagLib::RIFF::WAV::File(filePathBytes))) {
-                    qWarning() << filePath << "is not a WAV file";
+                if (!fillFromFile(info, TagLib::RIFF::WAV::File(filePathBytes), filePath)) {
+                    printError(filePath);
                 }
                 break;
             }
             case Extension::WAVPACK:
             {
                 TagLib::WavPack::File file(filePathBytes);
-                if (fillFromFile(info, file) && file.hasAPETag()) {
+                if (fillFromFile(info, file, filePath) && file.hasAPETag()) {
                     getApeMediaArt(file.APETag(), info);
-                } else {
-                    qWarning() << filePath << "is not a WavPack file";
                 }
                 break;
             }
             case Extension::Other:
             default:
             {
-                qWarning() << filePath << "is not a supported file";
+                printError(filePath);
                 break;
             }
             }
