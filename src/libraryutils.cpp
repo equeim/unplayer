@@ -272,18 +272,22 @@ namespace unplayer
             }
         }
 
-        const QDir dir(directoryPath);
-        const QStringList found(dir.entryList(QDir::Files | QDir::Readable)
-                                .filter(QRegularExpression(QStringLiteral("^(albumart.*|cover|folder|front)\\.(jpeg|jpg|png)$"),
-                                                           QRegularExpression::CaseInsensitiveOption)));
-        if (found.isEmpty()) {
-            mediaArtHash.insert({directoryPath, QString()});
-            return QString();
+        static const QStringList nameFilters{QLatin1String("*.jpeg"), QLatin1String("*.jpg"), QLatin1String("*.png")};
+        QDirIterator iterator(directoryPath, nameFilters, QDir::Files | QDir::Readable);
+        while (iterator.hasNext()) {
+            const QString filePath(iterator.next());
+            const QString fileName(iterator.fileName().toLower());
+            if (fileName == QLatin1String("cover") ||
+                    fileName == QLatin1String("front") ||
+                    fileName == QLatin1String("folder") ||
+                    fileName.startsWith(QLatin1String("albumart"))) {
+                mediaArtHash.insert({directoryPath, filePath});
+                return filePath;
+            }
         }
 
-        const QString mediaArt(dir.filePath(found.first()));
-        mediaArtHash.insert({directoryPath, mediaArt});
-        return mediaArt;
+        mediaArtHash.insert({directoryPath, QString()});
+        return QString();
     }
 
     void LibraryUtils::initDatabase()
