@@ -141,7 +141,7 @@ namespace unplayer
 
         bool mAddingTracks;
     signals:
-        void currentTrackChanged();
+        void currentTrackChanged(bool setAsCurrentWasSet = false);
 
         void mediaArtChanged();
 

@@ -50,7 +50,7 @@ namespace unplayer
         Queue* mQueue;
         bool mSettingNewTrack;
 
-        bool mRestoringState;
+        bool mRestoringTracks;
 
         bool mStopAfterEos;
         bool mStoppedAfterEos;

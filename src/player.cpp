@@ -108,18 +108,21 @@ namespace unplayer
 
     void Player::restoreState()
     {
-        mRestoringState = true;
         mQueue->setShuffle(Settings::instance()->shuffle());
         mQueue->setRepeatMode(Settings::instance()->repeatMode());
         mStopAfterEos = Settings::instance()->stopAfterEos();
-        mQueue->addTracksFromUrls(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
+        const auto tracks(Settings::instance()->queueTracks());
+        if (!tracks.isEmpty()) {
+            mRestoringTracks = true;
+            mQueue->addTracksFromUrls(tracks, true, Settings::instance()->queuePosition());
+        }
     }
 
     Player::Player(QObject* parent)
         : QMediaPlayer(parent),
           mQueue(new Queue(this)),
           mSettingNewTrack(false),
-          mRestoringState(false),
+          mRestoringTracks(false),
           mStopAfterEos(false),
           mStoppedAfterEos(false)
     {
@@ -182,7 +185,7 @@ namespace unplayer
             mpris->setPosition(position * 1000);
         });
 
-        QObject::connect(mQueue, &Queue::currentTrackChanged, this, [=]() {
+        QObject::connect(mQueue, &Queue::currentTrackChanged, this, [=](bool setAsCurrentWasSet) {
             if (mQueue->currentIndex() == -1) {
                 setMedia(QMediaContent());
 
@@ -199,9 +202,12 @@ namespace unplayer
                 setMedia(track->url);
                 mSettingNewTrack = false;
 
-                if (mRestoringState) {
-                    setPosition(Settings::instance()->playerPosition());
-                    mRestoringState = false;
+                if (mRestoringTracks) {
+                    if (setAsCurrentWasSet) {
+                        // Restore position only if we set correct track as current
+                        setPosition(Settings::instance()->playerPosition());
+                    }
+                    mRestoringTracks = false;
                 } else {
                     play();
                 }
@@ -216,6 +222,14 @@ namespace unplayer
                                     {Mpris::metadataToString(Mpris::Length), track->duration * 1000000LL},
                                     {Mpris::metadataToString(Mpris::Artist), track->artist},
                                     {Mpris::metadataToString(Mpris::Album), track->album}});
+            }
+        });
+
+        QObject::connect(mQueue, &Queue::addingTracksChanged, this, [=]() {
+            if (!mQueue->isAddingTracks()) {
+                // If we are restoring state but no tracks are actually added to queue (e.g. because they all have been removed)
+                // currentTrackChanged() won't be emitted so we need to reset mRestoringTracks here too.
+                mRestoringTracks = false;
             }
         });
 

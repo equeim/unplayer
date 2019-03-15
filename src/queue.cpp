@@ -853,14 +853,17 @@ namespace unplayer
             mNotPlayedTracks.push_back(track.get());
             mTracks.push_back(std::move(track));
         }
+
         emit tracksAdded();
 
         if (mCurrentIndex == -1 && !mTracks.empty()) {
-            if (setAsCurrent < 0 || setAsCurrent >= mTracks.size()) {
+            bool set = false;
+            if (setAsCurrentUrl.isEmpty()) {
                 setCurrentIndex(0);
             } else {
-                if (mTracks[setAsCurrent]->url == setAsCurrentUrl) {
+                if (setAsCurrent >= 0 && setAsCurrent < mTracks.size() && mTracks[setAsCurrent]->url == setAsCurrentUrl) {
                     setCurrentIndex(setAsCurrent);
+                    set = true;
                 } else {
                     const auto found(std::find_if(mTracks.begin(), mTracks.end(), [&setAsCurrentUrl](const std::shared_ptr<QueueTrack>& track) {
                         return track->url == setAsCurrentUrl;
@@ -869,10 +872,11 @@ namespace unplayer
                         setCurrentIndex(0);
                     } else {
                         setCurrentIndex(found - mTracks.begin());
+                        set = true;
                     }
                 }
             }
-            emit currentTrackChanged();
+            emit currentTrackChanged(set);
         }
 
         mAddingTracks = false;
