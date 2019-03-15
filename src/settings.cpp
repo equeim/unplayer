@@ -62,6 +62,7 @@ namespace unplayer
         const QString shuffleKey(QLatin1String("state/shuffle"));
         const QString repeatModeKey(QLatin1String("state/repeatMode"));
         const QString playerPositionKey(QLatin1String("state/playerPosition"));
+        const QString stopAfterEosKey(QLatin1String("state/stopAfterEos"));
 
         Settings* instancePointer = nullptr;
     }
@@ -287,13 +288,24 @@ namespace unplayer
         return mSettings->value(playerPositionKey).toLongLong();
     }
 
-    void Settings::savePlayerState(const QStringList& tracks, int queuePosition, bool shuffle, int repeatMode, long long playerPosition)
+    bool Settings::stopAfterEos() const
+    {
+        return mSettings->value(stopAfterEosKey).toBool();
+    }
+
+    void Settings::savePlayerState(const QStringList& tracks,
+                                   int queuePosition,
+                                   bool shuffle,
+                                   int repeatMode,
+                                   long long playerPosition,
+                                   bool stopAfterEos)
     {
         mSettings->setValue(queueTracksKey, tracks);
         mSettings->setValue(queuePositionKey, queuePosition);
         mSettings->setValue(shuffleKey, shuffle);
         mSettings->setValue(repeatModeKey, repeatMode);
         mSettings->setValue(playerPositionKey, playerPosition);
+        mSettings->setValue(stopAfterEosKey, stopAfterEos);
     }
 
     Settings::Settings(QObject* parent)

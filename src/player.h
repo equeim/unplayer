@@ -29,11 +29,16 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool playing READ isPlaying NOTIFY playingChanged)
+        Q_PROPERTY(bool stopAfterEos READ stopAfterEos WRITE setStopAfterEos NOTIFY stopAfterEosChanged)
         Q_PROPERTY(unplayer::Queue* queue READ queue CONSTANT)
     public:
         static Player* instance();
 
         bool isPlaying() const;
+
+        bool stopAfterEos() const;
+        void setStopAfterEos(bool stop);
+
         Queue* queue() const;
 
         Q_INVOKABLE void saveState() const;
@@ -47,8 +52,12 @@ namespace unplayer
 
         bool mRestoringState;
 
+        bool mStopAfterEos;
+        bool mStoppedAfterEos;
+
     signals:
         void playingChanged();
+        void stopAfterEosChanged();
     };
 }
 

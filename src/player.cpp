@@ -73,6 +73,19 @@ namespace unplayer
         return (state() == PlayingState);
     }
 
+    bool Player::stopAfterEos() const
+    {
+        return mStopAfterEos;
+    }
+
+    void Player::setStopAfterEos(bool stop)
+    {
+        if (stop != mStopAfterEos) {
+            mStopAfterEos = stop;
+            emit stopAfterEosChanged();
+        }
+    }
+
     Queue* Player::queue() const
     {
         return mQueue;
@@ -89,7 +102,8 @@ namespace unplayer
                                               mQueue->currentIndex(),
                                               mQueue->isShuffle(),
                                               mQueue->repeatMode(),
-                                              position());
+                                              position(),
+                                              mStopAfterEos);
     }
 
     void Player::restoreState()
@@ -97,6 +111,7 @@ namespace unplayer
         mRestoringState = true;
         mQueue->setShuffle(Settings::instance()->shuffle());
         mQueue->setRepeatMode(Settings::instance()->repeatMode());
+        mStopAfterEos = Settings::instance()->stopAfterEos();
         mQueue->addTracksFromUrls(Settings::instance()->queueTracks(), true, Settings::instance()->queuePosition());
     }
 
@@ -104,7 +119,9 @@ namespace unplayer
         : QMediaPlayer(parent),
           mQueue(new Queue(this)),
           mSettingNewTrack(false),
-          mRestoringState(false)
+          mRestoringState(false),
+          mStopAfterEos(false),
+          mStoppedAfterEos(false)
     {
         auto mpris = new MprisPlayer(this);
         mpris->setServiceName(QLatin1String("unplayer"));
@@ -138,6 +155,10 @@ namespace unplayer
                     break;
                 case PlayingState:
                     mpris->setPlaybackStatus(Mpris::Playing);
+                    if (mStoppedAfterEos) {
+                        mStoppedAfterEos = false;
+                        mQueue->nextOnEos();
+                    }
                     break;
                 case PausedState:
                     mpris->setPlaybackStatus(Mpris::Paused);
@@ -147,7 +168,11 @@ namespace unplayer
 
         QObject::connect(this, &Player::mediaStatusChanged, this, [=](MediaStatus status) {
             if (status == EndOfMedia) {
-                mQueue->nextOnEos();
+                if (mStopAfterEos) {
+                    mStoppedAfterEos = true;
+                } else {
+                    mQueue->nextOnEos();
+                }
             } else if (status == InvalidMedia) {
                 qWarning() << error() << errorString();
             }

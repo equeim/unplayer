@@ -93,7 +93,13 @@ namespace unplayer
         bool shuffle() const;
         int repeatMode() const;
         long long playerPosition() const;
-        void savePlayerState(const QStringList& tracks, int queuePosition, bool shuffle, int repeatMode, long long playerPosition);
+        bool stopAfterEos() const;
+        void savePlayerState(const QStringList& tracks,
+                             int queuePosition,
+                             bool shuffle,
+                             int repeatMode,
+                             long long playerPosition,
+                             bool stopAfterEos);
     private:
         explicit Settings(QObject* parent);
 
