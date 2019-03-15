@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- Added option to stop after end of track instead of playing next track in queue
+
+### Changed
+- Improved performance of library scanning
+- Embedded media art files are now always saved to the cache directory regardless of "Prefer directory media art" setting.
+Now there is no need rescan library after changing this setting.
+
+### Fixed
+- Fixed not starting playback the first time if "Restore player state on startup" is enabled and saved queue is empty
+- Unplayer now doesn't restore track position if current track wasn't added to queue when restoring player state
+
 ## [1.4.1] - 2018-10-16
 ### Changed
 - Updated Spanish translation
