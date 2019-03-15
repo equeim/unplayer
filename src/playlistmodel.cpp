@@ -145,7 +145,7 @@ namespace unplayer
                         QString title;
                         QStringList artists;
                         QStringList albums;
-                        int duration;
+                        int duration = 0;
 
                         const auto tracksMapEnd(tracksMap.end());
                         const auto fill = [&]() {

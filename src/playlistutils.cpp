@@ -209,8 +209,8 @@ namespace unplayer
                     }
                 }
                 tracks.reserve(tracksMap.size());
-                for (auto& i : tracksMap) {
-                    tracks.push_back(std::move(i.second));
+                for (auto&& i : tracksMap) {
+                    tracks.push_back(std::move(i).second);
                 }
             }
 
