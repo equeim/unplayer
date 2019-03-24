@@ -57,7 +57,7 @@ Item {
         opacity: listView.showSearchField ? 0 : 1
 
         Behavior on opacity {
-            FadeAnimation { }
+            FadeAnimator { }
         }
 
         MediaArt {

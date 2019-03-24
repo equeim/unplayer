@@ -32,7 +32,7 @@ DockedPanel {
     opacity: open ? 1.0 : 0.0
 
     Behavior on opacity {
-        FadeAnimation { }
+        FadeAnimator { }
     }
 
     Binding {
@@ -61,7 +61,7 @@ DockedPanel {
 
         enabled: !Unplayer.Player.queue.addingTracks
         opacity: enabled ? 1 : 0
-        Behavior on opacity { FadeAnimation { } }
+        Behavior on opacity { FadeAnimator { } }
 
         onClicked: {
             if (pageStack.currentPage.objectName === "queuePage") {

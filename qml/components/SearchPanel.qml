@@ -48,7 +48,7 @@ DockedPanel {
     }
 
     Behavior on opacity {
-        FadeAnimation { }
+        FadeAnimator { }
     }
 
     Item {

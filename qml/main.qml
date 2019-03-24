@@ -86,7 +86,7 @@ ApplicationWindow
         anchors.fill: parent
         color: Theme.rgba("black", 0.8)
         opacity: active ? 1 : 0
-        Behavior on opacity { FadeAnimation { } }
+        Behavior on opacity { FadeAnimator { } }
 
         Binding on active {
             //when: Unplayer.LibraryUtils.updating
