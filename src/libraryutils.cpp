@@ -24,7 +24,6 @@
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
-#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
@@ -32,7 +31,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMimeDatabase>
-#include <QRegularExpression>
 #include <QRunnable>
 #include <QQmlEngine>
 #include <QSqlDatabase>

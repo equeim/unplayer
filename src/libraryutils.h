@@ -19,17 +19,13 @@
 #ifndef UNPLAYER_LIBRARYUTILS_H
 #define UNPLAYER_LIBRARYUTILS_H
 
-#include <vector>
-
 #include <QMimeDatabase>
 #include <QObject>
 
 #include <unordered_map>
 #include <unordered_set>
 
-class QFileInfo;
 class QRunnable;
-class QSqlDatabase;
 class QSqlQuery;
 
 namespace unplayer
