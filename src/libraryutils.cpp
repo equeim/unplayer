@@ -809,21 +809,27 @@ namespace unplayer
 
     void LibraryUtils::updateDatabase()
     {
-        if (mUpdating) {
+        if (mLibraryUpdateRunnable) {
             return;
         }
 
-        mUpdating = true;
-        emit updatingChanged();
-
         auto runnable = new LibraryUpdateRunnable(mDatabaseFilePath, mMediaArtDirectory);
         QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::finished, this, [this]() {
-            mUpdating = false;
+            mLibraryUpdateRunnable = nullptr;
             emit updatingChanged();
             emit databaseChanged();
         });
         QObject::connect(qApp, &QCoreApplication::aboutToQuit, runnable->notifier(), [runnable]() { runnable->cancel(); });
+        mLibraryUpdateRunnable = runnable;
         QThreadPool::globalInstance()->start(runnable);
+        emit updatingChanged();
+    }
+
+    void LibraryUtils::cancelDatabaseUpdate()
+    {
+        if (mLibraryUpdateRunnable) {
+            static_cast<LibraryUpdateRunnable*>(mLibraryUpdateRunnable)->cancel();
+        }
     }
 
     void LibraryUtils::resetDatabase()
@@ -850,7 +856,7 @@ namespace unplayer
 
     bool LibraryUtils::isUpdating()
     {
-        return mUpdating;
+        return mLibraryUpdateRunnable;
     }
 
     int LibraryUtils::artistsCount()
@@ -1012,7 +1018,7 @@ namespace unplayer
     LibraryUtils::LibraryUtils()
         : mDatabaseInitialized(false),
           mCreatedTable(false),
-          mUpdating(false),
+          mLibraryUpdateRunnable(nullptr),
           mDatabaseFilePath(QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation))),
           mMediaArtDirectory(QString::fromLatin1("%1/media-art").arg(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)))
     {

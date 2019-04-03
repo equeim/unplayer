@@ -28,6 +28,7 @@
 #include <unordered_set>
 
 class QFileInfo;
+class QRunnable;
 class QSqlDatabase;
 class QSqlQuery;
 
@@ -87,6 +88,7 @@ namespace unplayer
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
+        Q_INVOKABLE void cancelDatabaseUpdate();
         Q_INVOKABLE void resetDatabase();
 
         bool isDatabaseInitialized();
@@ -110,7 +112,8 @@ namespace unplayer
 
         bool mDatabaseInitialized;
         bool mCreatedTable;
-        bool mUpdating;
+
+        QRunnable* mLibraryUpdateRunnable;
 
         QString mDatabaseFilePath;
         QString mMediaArtDirectory;
