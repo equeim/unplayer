@@ -78,7 +78,7 @@ namespace unplayer
         static const int maxDbVariableCount;
         static LibraryUtils* instance();
 
-        const QString& databaseFilePath();
+        const QString& databaseFilePath() const;
 
         static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath);
 

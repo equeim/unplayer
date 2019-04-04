@@ -694,7 +694,7 @@ namespace unplayer
         return instancePointer.get();
     }
 
-    const QString& LibraryUtils::databaseFilePath()
+    const QString& LibraryUtils::databaseFilePath() const
     {
         return mDatabaseFilePath;
     }
