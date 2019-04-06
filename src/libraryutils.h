@@ -65,13 +65,27 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)
         Q_PROPERTY(bool createdTable READ isCreatedTable CONSTANT)
+
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
+        Q_PROPERTY(UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
+        Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
+        Q_PROPERTY(int extractedTracks READ extractedTracks NOTIFY extractedTracksChanged)
+
         Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
         Q_PROPERTY(int tracksCount READ tracksCount NOTIFY databaseChanged)
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
     public:
+        enum UpdateStage {
+            NoneStage,
+            PreparingStage,
+            ScanningStage,
+            ExtractingStage,
+            FinishingStage
+        };
+        Q_ENUM(UpdateStage)
+
         static const std::unordered_set<QString> mimeTypesExtensions;
         static const std::unordered_set<QString> videoMimeTypesExtensions;
         static const QString databaseType;
@@ -89,7 +103,11 @@ namespace unplayer
 
         bool isDatabaseInitialized();
         bool isCreatedTable();
+
         bool isUpdating();
+        UpdateStage updateStage() const;
+        int foundTracks() const;
+        int extractedTracks() const;
 
         int artistsCount();
         int albumsCount();
@@ -110,12 +128,19 @@ namespace unplayer
         bool mCreatedTable;
 
         QRunnable* mLibraryUpdateRunnable;
+        UpdateStage mLibraryUpdateStage;
+        int mFoundTracks;
+        int mExtractedTracks;
 
         QString mDatabaseFilePath;
         QString mMediaArtDirectory;
         QMimeDatabase mMimeDb;
     signals:
         void updatingChanged();
+        void updateStageChanged();
+        void foundTracksChanged();
+        void extractedTracksChanged();
+
         void databaseChanged();
         void mediaArtChanged();
     };
