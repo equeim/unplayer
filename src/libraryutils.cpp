@@ -879,17 +879,17 @@ namespace unplayer
         emit databaseChanged();
     }
 
-    bool LibraryUtils::isDatabaseInitialized()
+    bool LibraryUtils::isDatabaseInitialized() const
     {
         return mDatabaseInitialized;
     }
 
-    bool LibraryUtils::isCreatedTable()
+    bool LibraryUtils::isCreatedTable() const
     {
         return mCreatedTable;
     }
 
-    bool LibraryUtils::isUpdating()
+    bool LibraryUtils::isUpdating() const
     {
         return mLibraryUpdateRunnable;
     }
@@ -909,7 +909,7 @@ namespace unplayer
         return mExtractedTracks;
     }
 
-    int LibraryUtils::artistsCount()
+    int LibraryUtils::artistsCount() const
     {
         if (!mDatabaseInitialized) {
             return 0;
@@ -922,7 +922,7 @@ namespace unplayer
         return 0;
     }
 
-    int LibraryUtils::albumsCount()
+    int LibraryUtils::albumsCount() const
     {
         if (!mDatabaseInitialized) {
             return 0;
@@ -935,7 +935,7 @@ namespace unplayer
         return 0;
     }
 
-    int LibraryUtils::tracksCount()
+    int LibraryUtils::tracksCount() const
     {
         if (!mDatabaseInitialized) {
             return 0;
@@ -948,7 +948,7 @@ namespace unplayer
         return 0;
     }
 
-    int LibraryUtils::tracksDuration()
+    int LibraryUtils::tracksDuration() const
     {
         if (!mDatabaseInitialized) {
             return 0;
@@ -961,7 +961,7 @@ namespace unplayer
         return 0;
     }
 
-    QString LibraryUtils::randomMediaArt()
+    QString LibraryUtils::randomMediaArt() const
     {
         if (!mDatabaseInitialized) {
             return QString();
@@ -976,7 +976,7 @@ namespace unplayer
         return QString();
     }
 
-    QString LibraryUtils::randomMediaArtForArtist(const QString& artist)
+    QString LibraryUtils::randomMediaArtForArtist(const QString& artist) const
     {
         if (!mDatabaseInitialized) {
             return QString();
@@ -995,7 +995,7 @@ namespace unplayer
         return QString();
     }
 
-    QString LibraryUtils::randomMediaArtForAlbum(const QString& artist, const QString& album)
+    QString LibraryUtils::randomMediaArtForAlbum(const QString& artist, const QString& album) const
     {
         if (!mDatabaseInitialized) {
             return QString();
@@ -1015,7 +1015,7 @@ namespace unplayer
         return QString();
     }
 
-    QString LibraryUtils::randomMediaArtForGenre(const QString& genre)
+    QString LibraryUtils::randomMediaArtForGenre(const QString& genre) const
     {
         if (!mDatabaseInitialized) {
             return QString();

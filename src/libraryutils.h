@@ -101,22 +101,22 @@ namespace unplayer
         Q_INVOKABLE void cancelDatabaseUpdate();
         Q_INVOKABLE void resetDatabase();
 
-        bool isDatabaseInitialized();
-        bool isCreatedTable();
+        bool isDatabaseInitialized() const;
+        bool isCreatedTable() const;
 
-        bool isUpdating();
+        bool isUpdating() const;
         UpdateStage updateStage() const;
         int foundTracks() const;
         int extractedTracks() const;
 
-        int artistsCount();
-        int albumsCount();
-        int tracksCount();
-        int tracksDuration();
-        QString randomMediaArt();
-        Q_INVOKABLE QString randomMediaArtForArtist(const QString& artist);
-        Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album);
-        Q_INVOKABLE QString randomMediaArtForGenre(const QString& genre);
+        int artistsCount() const;
+        int albumsCount() const;
+        int tracksCount() const;
+        int tracksDuration() const;
+        QString randomMediaArt() const;
+        Q_INVOKABLE QString randomMediaArtForArtist(const QString& artist) const;
+        Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album) const;
+        Q_INVOKABLE QString randomMediaArtForGenre(const QString& genre) const;
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
     private:
