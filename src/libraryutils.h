@@ -122,8 +122,6 @@ namespace unplayer
     private:
         LibraryUtils();
 
-        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
-
         bool mDatabaseInitialized;
         bool mCreatedTable;
 
