@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Preferir portada independiente</translation>
+        <translation>Preferir carátula independiente</translation>
     </message>
     <message>
         <source>Player</source>
