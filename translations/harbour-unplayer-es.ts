@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Set cover image</source>
-        <translation>Fijar imagen de carátula</translation>
+        <translation>Fijar carátula</translation>
     </message>
     <message>
         <source>No tracks</source>
@@ -382,7 +382,7 @@
     </message>
     <message>
         <source>Set as default directory</source>
-        <translation>Fijar como directorio predeterminado</translation>
+        <translation>Fijar a directorio predeterminado</translation>
     </message>
     <message>
         <source>Default directory</source>
@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Preferir que la portada se encuentre como archivo separado en el directorio de archivos de música, en lugar de extraerse de la pista</translation>
+        <translation>Preferir portada independiente</translation>
     </message>
     <message>
         <source>Player</source>
@@ -636,7 +636,7 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Secuencia</translation>
+        <translation>Flujos</translation>
     </message>
     <message>
         <source>Open</source>
@@ -644,7 +644,7 @@
     </message>
     <message>
         <source>URL</source>
-        <translation>introducir lur</translation>
+        <translation>introducir l.u.r</translation>
     </message>
     <message>
         <source>Disc number</source>
