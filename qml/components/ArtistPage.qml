@@ -31,16 +31,8 @@ Page {
     property int duration
     property string mediaArt
 
-    Binding {
-        target: modalDialog
-        property: "active"
-        value: albumsModel.removingFiles
-    }
-
-    Binding {
-        target: modalDialog
-        property: "text"
-        value: qsTranslate("unplayer", "Removing albums...")
+    BusyPanelBindings {
+        when: albumsModel.removingFiles
     }
 
     SearchPanel {

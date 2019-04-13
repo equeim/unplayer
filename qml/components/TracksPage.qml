@@ -28,16 +28,8 @@ Page {
     property alias artist: tracksModel.artist
     property alias genre: tracksModel.genre
 
-    Binding {
-        target: modalDialog
-        property: "active"
-        value: tracksModel.removingFiles
-    }
-
-    Binding {
-        target: modalDialog
-        property: "text"
-        value: qsTranslate("unplayer", "Removing tracks...")
+    BusyPanelBindings {
+        when: tracksModel.removingFiles
     }
 
     SearchPanel {

@@ -22,16 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    Binding {
-        target: modalDialog
-        property: "active"
-        value: albumsModel.removingFiles
-    }
-
-    Binding {
-        target: modalDialog
-        property: "text"
-        value: qsTranslate("unplayer", "Removing albums...")
+    BusyPanelBindings {
+        when: albumsModel.removingFiles
     }
 
     SearchPanel {
