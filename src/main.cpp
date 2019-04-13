@@ -57,13 +57,17 @@ int main(int argc, char* argv[])
     std::signal(SIGTERM, signalHandler);
     std::signal(SIGHUP, signalHandler);
 
+    bool updateLibrary = false;
     std::vector<std::string> files;
     {
         using namespace clara;
 
         bool version = false;
         bool help = false;
-        auto cli = Opt(version)["-v"]["--version"]("display version information") | Help(help) | Arg(files, "files");
+        auto cli = Opt(updateLibrary)["-u"]["--update-library"]("update music library and exit") |
+                   Opt(version)["-v"]["--version"]("display version information") |
+                   Help(help) |
+                   Arg(files, "files");
         auto result = cli.parse(Args(argc, argv));
         if (!result) {
             std::cerr << result.errorMessage() << std::endl;
@@ -81,6 +85,33 @@ int main(int argc, char* argv[])
 
     if (exitRequested) {
         return 0;
+    }
+
+    if (updateLibrary) {
+        QCoreApplication app(argc, argv);
+        app.setOrganizationName(app.applicationName());
+        app.setOrganizationDomain(app.applicationName());
+
+        Settings::instance();
+        LibraryUtils::instance();
+
+        if (exitRequested) {
+            return 0;
+        }
+
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::updatingChanged, &app, []() {
+            if (!LibraryUtils::instance()->isUpdating()) {
+                QCoreApplication::quit();
+            }
+        });
+
+        LibraryUtils::instance()->updateDatabase();
+
+        if (exitRequested) {
+            return 0;
+        }
+
+        return app.exec();
     }
 
     {
