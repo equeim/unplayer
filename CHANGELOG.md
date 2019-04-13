@@ -3,11 +3,16 @@
 ## [Unreleased]
 ### Added
 - Added option to stop after end of track instead of playing next track in queue
+- Library scanning is now cancellable
+- Added indication of library scanning progress
+- Added command line option to update library without launching GUI
 
 ### Changed
-- Improved performance of library scanning
+- Library scanning and removing of files doesn't block user interaction anymore
+- Improved performance and reduced memory usage of library scanning
 - Embedded media art files are now always saved to the cache directory regardless of "Prefer directory media art" setting.
 Now there is no need rescan library after changing this setting.
+- Command line options that do not launch GUI now doesn't require OS graphical session
 
 ### Fixed
 - Fixed not starting playback the first time if "Restore player state on startup" is enabled and saved queue is empty
