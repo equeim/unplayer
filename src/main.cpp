@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <atomic>
+#include <csignal>
 #include <iostream>
 #include <memory>
 
@@ -39,10 +41,22 @@
 #include "settings.h"
 #include "utils.h"
 
+static std::atomic_bool exitRequested;
+void signalHandler(int)
+{
+    exitRequested = true;
+    QCoreApplication::quit();
+}
+
 using namespace unplayer;
 
 int main(int argc, char* argv[])
 {
+    std::signal(SIGQUIT, signalHandler);
+    std::signal(SIGINT, signalHandler);
+    std::signal(SIGTERM, signalHandler);
+    std::signal(SIGHUP, signalHandler);
+
     std::vector<std::string> files;
     {
         using namespace clara;
@@ -65,6 +79,10 @@ int main(int argc, char* argv[])
         }
     }
 
+    if (exitRequested) {
+        return 0;
+    }
+
     {
         const QDBusConnection connection(QDBusConnection::sessionBus());
         if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
@@ -81,6 +99,10 @@ int main(int argc, char* argv[])
     const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
+    if (exitRequested) {
+        return 0;
+    }
+
     const std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
     view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::processArguments(files));
@@ -91,8 +113,16 @@ int main(int argc, char* argv[])
 
     view->engine()->addImageProvider(QueueImageProvider::providerId, new QueueImageProvider(Player::instance()->queue()));
 
+    if (exitRequested) {
+        return 0;
+    }
+
     view->setSource(SailfishApp::pathTo(QLatin1String("qml/main.qml")));
     view->show();
+
+    if (exitRequested) {
+        return 0;
+    }
 
     return app->exec();
 }
