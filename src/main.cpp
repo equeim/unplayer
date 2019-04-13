@@ -73,12 +73,12 @@ int main(int argc, char* argv[])
             std::cerr << result.errorMessage() << std::endl;
             return 1;
         }
-        if (version) {
-            std::cout << cli.m_exeName.name() << ' ' << UNPLAYER_VERSION << std::endl;
-            return 0;
-        }
         if (help) {
             std::cout << cli << std::endl;
+            return 0;
+        }
+        if (version) {
+            std::cout << cli.m_exeName.name() << ' ' << UNPLAYER_VERSION << std::endl;
             return 0;
         }
     }
