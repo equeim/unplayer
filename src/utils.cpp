@@ -100,15 +100,16 @@ namespace unplayer
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
     }
 
-    QStringList Utils::parseArguments(const QStringList& arguments)
+    QStringList Utils::processArguments(const std::vector<std::string>& arguments)
     {
         QStringList parsed;
         parsed.reserve(arguments.size());
 
         const QDir currentDir;
 
-        for (const QString& argument : arguments) {
-            const QUrl url(argument);
+        for (const std::string& argument : arguments) {
+            const QString argumentString(QString::fromStdString(argument));
+            const QUrl url(argumentString);
             if (url.isRelative() || url.isLocalFile()) {
                 QFileInfo fileInfo(url.path());
                 if (fileInfo.isFile() && fileInfo.isReadable()) {
@@ -124,7 +125,7 @@ namespace unplayer
                     }
                 }
             } else {
-                parsed.push_back(argument);
+                parsed.push_back(argumentString);
             }
         }
         return parsed;

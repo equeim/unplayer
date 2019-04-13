@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include <memory>
 
 #include <QCommandLineParser>
@@ -30,6 +31,8 @@
 
 #include <sailfishapp.h>
 
+#include "clara.hpp"
+
 #include "libraryutils.h"
 #include "player.h"
 #include "queue.h"
@@ -40,29 +43,47 @@ using namespace unplayer;
 
 int main(int argc, char* argv[])
 {
+    std::vector<std::string> files;
+    {
+        using namespace clara;
+
+        bool version = false;
+        bool help = false;
+        auto cli = Opt(version)["-v"]["--version"]("display version information") | Help(help) | Arg(files, "files");
+        auto result = cli.parse(Args(argc, argv));
+        if (!result) {
+            std::cerr << result.errorMessage() << std::endl;
+            return 1;
+        }
+        if (version) {
+            std::cout << cli.m_exeName.name() << ' ' << UNPLAYER_VERSION << std::endl;
+            return 0;
+        }
+        if (help) {
+            std::cout << cli << std::endl;
+            return 0;
+        }
+    }
+
+    {
+        const QDBusConnection connection(QDBusConnection::sessionBus());
+        if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
+            QDBusMessage message(QDBusMessage::createMethodCall(QLatin1String("org.equeim.unplayer"),
+                                                                QLatin1String("/org/equeim/unplayer"),
+                                                                QLatin1String("org.equeim.unplayer"),
+                                                                QLatin1String("addTracksToQueue")));
+            message.setArguments({Utils::processArguments(files)});
+            connection.call(message);
+            return 0;
+        }
+    }
+
     const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
-    QCommandLineParser parser;
-    parser.addPositionalArgument(QLatin1String("files"), QLatin1String("Music files"));
-    parser.addHelpOption();
-    parser.addVersionOption();
-    parser.process(app->arguments());
-
-    const QDBusConnection connection(QDBusConnection::sessionBus());
-    if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
-        QDBusMessage message(QDBusMessage::createMethodCall(QLatin1String("org.equeim.unplayer"),
-                                                            QLatin1String("/org/equeim/unplayer"),
-                                                            QLatin1String("org.equeim.unplayer"),
-                                                            QLatin1String("addTracksToQueue")));
-        message.setArguments({Utils::parseArguments(parser.positionalArguments())});
-        connection.call(message);
-        return 0;
-    }
-
     const std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
-    view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::parseArguments(parser.positionalArguments()));
+    view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::processArguments(files));
 
     Settings::instance();
     LibraryUtils::instance();
