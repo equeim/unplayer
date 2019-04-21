@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
     std::signal(SIGHUP, signalHandler);
 
     bool updateLibrary = false;
+    bool resetLibrary = false;
     std::vector<std::string> files;
     {
         using namespace clara;
@@ -65,6 +66,7 @@ int main(int argc, char* argv[])
         bool version = false;
         bool help = false;
         auto cli = Opt(updateLibrary)["-u"]["--update-library"]("update music library and exit") |
+                   Opt(resetLibrary)["-r"]["--reset-library"]("reset music library and exit") |
                    Opt(version)["-v"]["--version"]("display version information") |
                    Help(help) |
                    Arg(files, "files");
@@ -87,13 +89,19 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if (updateLibrary) {
+    if (resetLibrary || updateLibrary) {
         QCoreApplication app(argc, argv);
         app.setOrganizationName(app.applicationName());
         app.setOrganizationDomain(app.applicationName());
 
+        if (resetLibrary) {
+            LibraryUtils::instance()->resetDatabase();
+            if (!updateLibrary) {
+                return 0;
+            }
+        }
+
         Settings::instance();
-        LibraryUtils::instance();
 
         if (exitRequested) {
             return 0;
