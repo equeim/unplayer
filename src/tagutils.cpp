@@ -127,7 +127,7 @@ namespace unplayer
                     info.isValid = true;
 
                     const TagLib::Tag* tag = file.tag();
-                    const TagLib::PropertyMap properties(tag->properties());
+                    const TagLib::PropertyMap properties(file.properties());
 
                     info.title = tag->title().toCString(true);
                     info.year = tag->year();
