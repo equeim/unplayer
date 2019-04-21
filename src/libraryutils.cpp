@@ -878,6 +878,7 @@ namespace unplayer
 
     void LibraryUtils::resetDatabase()
     {
+        qInfo("Resetting database");
         QSqlQuery query(QLatin1String("DELETE from tracks"));
         if (query.lastError().type() != QSqlError::NoError) {
             qWarning() << "failed to reset database";
