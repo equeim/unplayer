@@ -37,7 +37,6 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
-        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         GenresModel();
 
@@ -46,8 +45,6 @@ namespace unplayer
 
         bool sortDescending() const;
         Q_INVOKABLE void toggleSortOrder();
-
-        bool isRemovingFiles() const;
 
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForGenre(int index) const;
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForGenres(const std::vector<int>& indexes) const;
@@ -63,11 +60,8 @@ namespace unplayer
         std::vector<Genre> mGenres;
         bool mSortDescending;
 
-        bool mRemovingFiles;
-
     signals:
         void sortDescendingChanged();
-        void removingFilesChanged();
     };
 }
 

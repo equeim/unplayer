@@ -31,10 +31,6 @@ Page {
     property int duration
     property string mediaArt
 
-    BusyPanelBindings {
-        when: albumsModel.removingFiles
-    }
-
     SearchPanel {
         id: searchPanel
     }

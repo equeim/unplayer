@@ -39,7 +39,6 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
-        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -60,8 +59,6 @@ namespace unplayer
 
         Q_INVOKABLE void toggleSortOrder();
 
-        bool isRemovingFiles() const;
-
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForArtist(int index) const;
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForArtists(const std::vector<int>& indexes) const;
 
@@ -75,11 +72,8 @@ namespace unplayer
 
         std::vector<Artist> mArtists;
         bool mSortDescending;
-
-        bool mRemovingFiles;
     signals:
         void sortDescendingChanged();
-        void removingFilesChanged();
     };
 }
 

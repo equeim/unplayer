@@ -206,11 +206,6 @@ namespace unplayer
         }
     }
 
-    bool TracksModel::isRemovingFiles() const
-    {
-        return mRemovingFiles;
-    }
-
     std::vector<LibraryTrack> TracksModel::getTracks(const std::vector<int>& indexes)
     {
         std::vector<LibraryTrack> tracks;
@@ -233,73 +228,27 @@ namespace unplayer
 
     void TracksModel::removeTracks(const std::vector<int>& indexes, bool deleteFiles)
     {
-        if (mRemovingFiles) {
+        if (LibraryUtils::instance()->isRemovingFiles()) {
             return;
         }
 
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        std::vector<QString> tracks;
-        tracks.reserve(mTracks.size());
+        std::vector<QString> files;
+        files.reserve(indexes.size());
         for (int index : indexes) {
-            tracks.push_back(mTracks[index].filePath);
+            files.push_back(mTracks[index].filePath);
         }
-
-        auto future = QtConcurrent::run(std::bind([deleteFiles](std::vector<int>& indexes, std::vector<QString>& tracks) {
-            std::vector<int> removed;
-            {
-                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
-                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-                if (!db.open()) {
-                    QSqlDatabase::removeDatabase(staticMetaObject.className());
-                    qWarning() << "failed to open database" << db.lastError();
-                    return removed;
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, std::bind([this](std::vector<int>& indexes) {
+            if (!LibraryUtils::instance()->isRemovingFiles()) {
+                for (int i = indexes.size() - 1; i >= 0; --i) {
+                    const int index = indexes[i];
+                    beginRemoveRows(QModelIndex(), index, index);
+                    mTracks.erase(mTracks.begin() + index);
+                    endRemoveRows();
                 }
-
-                db.transaction();
-
-                std::sort(indexes.begin(), indexes.end(), std::greater<int>());
-                for (int index : indexes) {
-                    const QString& filePath = tracks[index];
-
-                    QSqlQuery query(db);
-                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
-                    query.addBindValue(filePath);
-                    if (query.exec()) {
-                        removed.push_back(index);
-                    } else {
-                        qWarning() << "failed to remove file from database" << query.lastQuery()  << query.lastError();
-                    }
-
-                    if (deleteFiles) {
-                        if (!QFile::remove(filePath)) {
-                            qWarning() << "failed to remove file:" << filePath << query.lastError();
-                        }
-                    }
-                }
-
-                db.commit();
+                QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
-            QSqlDatabase::removeDatabase(staticMetaObject.className());
-            return removed;
-        }, indexes, std::move(tracks)));
-
-        using Watcher = QFutureWatcher<std::vector<int>>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-
-            for (int index : watcher->result()) {
-                beginRemoveRows(QModelIndex(), index, index);
-                mTracks.erase(mTracks.begin() + index);
-                endRemoveRows();
-            }
-            emit LibraryUtils::instance()->databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
+        }, std::move(indexes)));
+        LibraryUtils::instance()->removeFiles(std::move(files), deleteFiles, false);
     }
 
     QHash<int, QByteArray> TracksModel::roleNames() const

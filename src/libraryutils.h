@@ -30,6 +30,8 @@ class QSqlQuery;
 
 namespace unplayer
 {
+    struct Album;
+
     namespace tagutils
     {
         struct Info;
@@ -71,6 +73,8 @@ namespace unplayer
         Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
         Q_PROPERTY(int extractedTracks READ extractedTracks NOTIFY extractedTracksChanged)
 
+        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
+
         Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
         Q_PROPERTY(int tracksCount READ tracksCount NOTIFY databaseChanged)
@@ -109,6 +113,8 @@ namespace unplayer
         int foundTracks() const;
         int extractedTracks() const;
 
+        bool isRemovingFiles() const;
+
         int artistsCount() const;
         int albumsCount() const;
         int tracksCount() const;
@@ -119,6 +125,11 @@ namespace unplayer
         Q_INVOKABLE QString randomMediaArtForGenre(const QString& genre) const;
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
+
+        void removeArtists(std::vector<QString>&& artists, bool deleteFiles);
+        void removeAlbums(std::vector<Album>&& albums, bool deleteFiles);
+        void removeGenres(std::vector<QString>&& genres, bool deleteFiles);
+        void removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories);
     private:
         LibraryUtils();
 
@@ -129,6 +140,8 @@ namespace unplayer
         UpdateStage mLibraryUpdateStage;
         int mFoundTracks;
         int mExtractedTracks;
+
+        bool mRemovingFiles;
 
         QString mDatabaseFilePath;
         QString mMediaArtDirectory;
@@ -141,6 +154,8 @@ namespace unplayer
 
         void databaseChanged();
         void mediaArtChanged();
+
+        void removingFilesChanged();
     };
 }
 

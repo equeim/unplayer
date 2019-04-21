@@ -50,8 +50,7 @@ namespace unplayer
     }
 
     GenresModel::GenresModel()
-        : mSortDescending(Settings::instance()->genresSortDescending()),
-          mRemovingFiles(false)
+        : mSortDescending(Settings::instance()->genresSortDescending())
     {
         execQuery();
     }
@@ -87,11 +86,6 @@ namespace unplayer
         Settings::instance()->setGenresSortDescending(mSortDescending);
         emit sortDescendingChanged();
         execQuery();
-    }
-
-    bool GenresModel::isRemovingFiles() const
-    {
-        return mRemovingFiles;
     }
 
     std::vector<LibraryTrack> GenresModel::getTracksForGenre(int index) const
@@ -142,73 +136,27 @@ namespace unplayer
 
     void GenresModel::removeGenres(std::vector<int> indexes, bool deleteFiles)
     {
-        if (mRemovingFiles) {
+        if (LibraryUtils::instance()->isRemovingFiles()) {
             return;
         }
 
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        auto future = QtConcurrent::run(std::bind([this, deleteFiles](std::vector<int>& indexes) {
-            std::sort(indexes.begin(), indexes.end(), std::greater<int>());
-            std::vector<int> removed;
-            {
-                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
-                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-                if (!db.open()) {
-                    QSqlDatabase::removeDatabase(staticMetaObject.className());
-                    qWarning() << "failed to open database" << db.lastError();
-                    return removed;
+        std::vector<QString> genres;
+        genres.reserve(indexes.size());
+        for (int index : indexes) {
+            genres.push_back(mGenres[index].genre);
+        }
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, std::bind([this](std::vector<int>& indexes) {
+            if (!LibraryUtils::instance()->isRemovingFiles()) {
+                for (int i = indexes.size() - 1; i >= 0; --i) {
+                    const int index = indexes[i];
+                    beginRemoveRows(QModelIndex(), index, index);
+                    mGenres.erase(mGenres.begin() + index);
+                    endRemoveRows();
                 }
-                db.transaction();
-
-                for (int index : indexes) {
-                    const QString genre(mGenres[index].genre);
-
-                    if (deleteFiles) {
-                        QSqlQuery query(db);
-                        query.prepare(QStringLiteral("SELECT DISTINCT filePath FROM tracks WHERE genre = ?"));
-                        query.addBindValue(genre);
-                        query.exec();
-                        while (query.next()) {
-                            const QString filePath(query.value(0).toString());
-                            if (!QFile::remove(filePath)) {
-                                qWarning() << "failed to remove file:" << filePath;
-                            }
-                        }
-                    }
-
-                    QSqlQuery query(db);
-                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE genre = ?"));
-                    query.addBindValue(genre);
-                    if (query.exec()) {
-                        removed.push_back(index);
-                    } else {
-                        qWarning() << "failed to remove files from database" << query.lastQuery() << query.lastError();
-                    }
-                }
-                db.commit();
+                QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
-            QSqlDatabase::removeDatabase(staticMetaObject.className());
-
-            return removed;
         }, std::move(indexes)));
-
-        using Watcher = QFutureWatcher<std::vector<int>>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-
-            for (int index : watcher->result()) {
-                beginRemoveRows(QModelIndex(), index, index);
-                mGenres.erase(mGenres.begin() + index);
-                endRemoveRows();
-            }
-            emit LibraryUtils::instance()->databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
+        LibraryUtils::instance()->removeArtists(std::move(genres), deleteFiles);
     }
 
     QHash<int, QByteArray> GenresModel::roleNames() const

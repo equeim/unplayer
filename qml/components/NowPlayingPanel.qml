@@ -27,9 +27,6 @@ DockedPanel {
     property bool shouldBeClosed
     property int itemHeight: largeScreen ? Theme.itemSizeExtraLarge : Theme.itemSizeMedium
 
-    property bool busyPanelActive: Unplayer.Player.queue.addingTracks
-    property alias busyPanelText: busyLabel.text
-
     width: parent.width
     height: column.height
 
@@ -57,7 +54,7 @@ DockedPanel {
         Item {
             id: firstItem
 
-            property bool active: nowPlayingItem.active || busyPanelActive
+            property bool active: nowPlayingItem.active || busyItem.active
 
             width: parent.width
             height: itemHeight
@@ -68,7 +65,7 @@ DockedPanel {
 
                 property bool active: Unplayer.Player.queue.currentIndex !== -1 &&
                                       pageStack.currentPage !== nowPlayingPage &&
-                                      !busyPanelActive
+                                      !busyItem.active
 
                 property bool shouldBeVisible: active || opacity
 
@@ -217,11 +214,13 @@ DockedPanel {
             Item {
                 id: busyItem
 
-                property bool shouldBeVisible: busyPanelActive || opacity
+                property bool active: Unplayer.Player.queue.addingTracks || Unplayer.LibraryUtils.removingFiles
+
+                property bool shouldBeVisible: active || opacity
 
                 anchors.fill: parent
 
-                opacity: busyPanelActive ? 1.0 : 0.0
+                opacity: active ? 1.0 : 0.0
                 visible: shouldBeVisible
 
                 Behavior on opacity {
@@ -252,7 +251,15 @@ DockedPanel {
                     }
                     color: Theme.highlightColor
                     truncationMode: TruncationMode.Fade
-                    text: Unplayer.Player.queue.addingTracks ? qsTranslate("unplayer", "Adding tracks...") : ""
+                    text: {
+                        if (Unplayer.Player.queue.addingTracks) {
+                            return qsTranslate("unplayer", "Adding tracks...")
+                        }
+                        if (Unplayer.LibraryUtils.removingFiles) {
+                            return qsTranslate("unplayer", "Removing files...")
+                        }
+                        return ""
+                    }
                 }
             }
         }

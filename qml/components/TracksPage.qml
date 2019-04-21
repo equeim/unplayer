@@ -28,10 +28,6 @@ Page {
     property alias artist: tracksModel.artist
     property alias genre: tracksModel.genre
 
-    BusyPanelBindings {
-        when: tracksModel.removingFiles
-    }
-
     SearchPanel {
         id: searchPanel
     }

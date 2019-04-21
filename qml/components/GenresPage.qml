@@ -22,10 +22,6 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
-    BusyPanelBindings {
-        when: genresModel.removingFiles
-    }
-
     SearchPanel {
         id: searchPanel
     }

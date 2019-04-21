@@ -41,7 +41,6 @@ namespace unplayer
         Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
         Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
-        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -72,8 +71,6 @@ namespace unplayer
         Q_INVOKABLE void removeTrack(int index);
         Q_INVOKABLE void removeTracks(std::vector<int> indexes);
 
-        bool isRemovingFiles() const;
-
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
@@ -90,12 +87,9 @@ namespace unplayer
         bool mLoaded = false;
 
         bool mShowVideoFiles = false;
-
-        bool mRemovingFiles = false;
     signals:
         void directoryChanged();
         void loadedChanged();
-        void removingFilesChanged();
     };
 
     class DirectoryTracksProxyModel : public DirectoryContentProxyModel

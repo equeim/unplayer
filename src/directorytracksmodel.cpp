@@ -134,73 +134,27 @@ namespace unplayer
 
     void DirectoryTracksModel::removeTracks(std::vector<int> indexes)
     {
-        if (mRemovingFiles || !mLoaded) {
+        if (LibraryUtils::instance()->isRemovingFiles() || !mLoaded) {
             return;
         }
 
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        auto future = QtConcurrent::run(std::bind([this](std::vector<int>& indexes) {
-            std::vector<int> removed;
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, staticMetaObject.className());
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                QSqlDatabase::removeDatabase(staticMetaObject.className());
-                qWarning() << "failed to open database" << db.lastError();
-                return removed;
+        std::vector<QString> files;
+        files.reserve(indexes.size());
+        for (int index : indexes) {
+            files.push_back(mFiles[index].filePath);
+        }
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, std::bind([this](std::vector<int>& indexes) {
+            if (!LibraryUtils::instance()->isRemovingFiles()) {
+                for (int i = indexes.size() - 1; i >= 0; --i) {
+                    const int index = indexes[i];
+                    beginRemoveRows(QModelIndex(), index, index);
+                    mFiles.erase(mFiles.begin() + index);
+                    endRemoveRows();
+                }
+                QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
-            db.transaction();
-            std::sort(indexes.begin(), indexes.end(), std::greater<int>());
-            for (int index : indexes) {
-                QString filePath(mFiles[index].filePath);
-                const bool isDir = QFileInfo(filePath).isDir();
-                if (isDir) {
-                    if (!QDir(filePath).removeRecursively()) {
-                        qWarning() << "failed to remove directory:" << filePath;
-                        continue;
-                    }
-                } else {
-                    if (!QFile::remove(filePath)) {
-                        qWarning() << "failed to remove file:" << filePath;
-                        continue;
-                    }
-                }
-                removed.push_back(index);
-
-                QSqlQuery query(db);
-                if (isDir) {
-                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE instr(filePath, ?) = 1"));
-                    filePath.append(QLatin1Char('/'));
-                } else {
-                    query.prepare(QStringLiteral("DELETE FROM tracks WHERE filePath = ?"));
-                }
-                query.addBindValue(filePath);
-                if (!query.exec()) {
-                    qWarning() << "failed to remove file from database" << query.lastQuery();
-                }
-            }
-            db.commit();
-            QSqlDatabase::removeDatabase(db.connectionName());
-
-            return removed;
         }, std::move(indexes)));
-
-        using Watcher = QFutureWatcher<std::vector<int>>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-
-            for (int index : watcher->result()) {
-                beginRemoveRows(QModelIndex(), index, index);
-                mFiles.erase(mFiles.begin() + index);
-                endRemoveRows();
-            }
-            emit LibraryUtils::instance()->databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
+        LibraryUtils::instance()->removeFiles(std::move(files), true, true);
     }
 
     QHash<int, QByteArray> DirectoryTracksModel::roleNames() const
@@ -213,7 +167,8 @@ namespace unplayer
 
     void DirectoryTracksModel::loadDirectory()
     {
-        if (mRemovingFiles) {
+        if (LibraryUtils::instance()->isRemovingFiles()) {
+            QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             return;
         }
 
@@ -266,11 +221,6 @@ namespace unplayer
             emit loadedChanged();
         });
         watcher->setFuture(future);
-    }
-
-    bool DirectoryTracksModel::isRemovingFiles() const
-    {
-        return mRemovingFiles;
     }
 
     DirectoryTracksProxyModel::DirectoryTracksProxyModel()

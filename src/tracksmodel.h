@@ -70,8 +70,6 @@ namespace unplayer
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
         Q_PROPERTY(unplayer::TracksModelSortMode::Mode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
         Q_PROPERTY(unplayer::TracksModelInsideAlbumSortMode::Mode insideAlbumSortMode READ insideAlbumSortMode WRITE setInsideAlbumSortMode NOTIFY insideAlbumSortModeChanged)
-
-        Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
     public:
         enum Role
         {
@@ -143,12 +141,9 @@ namespace unplayer
         SortMode mSortMode = SortMode::ArtistAlbumYear;
         InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumberTrackNumber;
 
-        bool mRemovingFiles = false;
-
     signals:
         void sortModeChanged();
         void insideAlbumSortModeChanged();
-        void removingFilesChanged();
     };
 }
 
