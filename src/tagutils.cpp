@@ -53,6 +53,13 @@ namespace unplayer
                 return str;
             }
 
+            inline QString toQString(const TagLib::String& string)
+            {
+                QString str(static_cast<int>(string.size()), QChar());
+                std::copy(string.begin(), string.end(), str.begin());
+                return str;
+            }
+
             const char* errorCauseTagExtractionNotSupported = "tag extraction for this file format is not supported";
             const char* errorCauseTagSavingNotSupported = "tag saving for this file format is not supported";
             const char* errorCauseExtensionDoesntMatch = "file format doesn't match extension";
@@ -97,28 +104,28 @@ namespace unplayer
                         const TagLib::Tag* tag = file.tag();
                         const TagLib::PropertyMap properties(file.properties());
 
-                        info.title = tag->title().toCString(true);
+                        info.title = toQString(tag->title());
                         info.year = static_cast<int>(tag->year());
                         info.trackNumber = static_cast<int>(tag->track());
 
                         const TagLib::StringList& artists = properties[ArtistsTag.data()];
                         info.artists.reserve(static_cast<int>(artists.size()));
                         for (const TagLib::String& artist : artists) {
-                            info.artists.push_back(artist.toCString(true));
+                            info.artists.push_back(toQString(artist));
                         }
                         info.artists.removeDuplicates();
 
                         const TagLib::StringList& albums = properties[AlbumsTag.data()];
                         info.albums.reserve(static_cast<int>(albums.size()));
                         for (const TagLib::String& album : albums) {
-                            info.albums.push_back(album.toCString(true));
+                            info.albums.push_back(toQString(album));
                         }
                         info.albums.removeDuplicates();
 
                         const TagLib::StringList& genres = properties[GenresTag.data()];
                         info.genres.reserve(static_cast<int>(genres.size()));
                         for (const TagLib::String& genre : genres) {
-                            info.genres.push_back(genre.toCString(true));
+                            info.genres.push_back(toQString(genre));
                         }
                         info.genres.removeDuplicates();
 
@@ -127,7 +134,7 @@ namespace unplayer
                             if (found != properties.end()) {
                                 const TagLib::StringList& list = found->second;
                                 if (!list.isEmpty()) {
-                                    info.discNumber = list[0].toCString(true);
+                                    info.discNumber = toQString(list[0]);
                                 }
 
                             }
