@@ -96,7 +96,7 @@ namespace unplayer
         std::vector<int> indexes;
         indexes.reserve(modelIndexes.size());
         for (const QModelIndex& index : modelIndexes) {
-            indexes.push_back(index.row());
+            indexes.push_back(mapToSource(index).row());
         }
         return indexes;
     }
