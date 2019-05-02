@@ -244,6 +244,7 @@ namespace unplayer
                 {
                     QString filePath;
                     QString directoryMediaArt;
+                    Extension extension;
                     int id;
                 };
                 std::vector<FileToAdd> filesToAdd;
@@ -412,7 +413,8 @@ namespace unplayer
                             QString filePath(iterator.next());
                             const QFileInfo fileInfo(iterator.fileInfo());
 
-                            if (!contains(LibraryUtils::mimeTypesExtensions, fileInfo.suffix())) {
+                            const Extension extension = LibraryUtils::extensionFromSuffix(fileInfo.suffix());
+                            if (extension == Extension::Other) {
                                 continue;
                             }
 
@@ -447,7 +449,7 @@ namespace unplayer
                                     continue;
                                 }
 
-                                filesToAdd.push_back({std::move(filePath), directoryMediaArt, ++lastId});
+                                filesToAdd.push_back({std::move(filePath), directoryMediaArt, extension, ++lastId});
                                 ++foundFiles;
                                 emit mNotifier.foundFilesChanged(foundFiles);
                             } else {
@@ -459,7 +461,7 @@ namespace unplayer
                                 if (modificationTime == file.modificationTime) {
                                     // File has not changed
                                     if (file.embeddedMediaArtDeleted) {
-                                        const QString embeddedMediaArt(saveEmbeddedMediaArt(tagutils::getTrackInfo(fileInfo, mimeDb).mediaArtData,
+                                        const QString embeddedMediaArt(saveEmbeddedMediaArt(tagutils::getTrackInfo(fileInfo, extension, mimeDb).mediaArtData,
                                                                                             embeddedMediaArtFiles,
                                                                                             mimeDb));
                                         QSqlQuery query(db);
@@ -473,7 +475,7 @@ namespace unplayer
                                 } else {
                                     // File has changed
                                     filesToRemove.push_back(file.id);
-                                    filesToAdd.push_back({foundInDb->first, directoryMediaArt, file.id});
+                                    filesToAdd.push_back({foundInDb->first, directoryMediaArt, extension, file.id});
                                     ++foundFiles;
                                     emit mNotifier.foundFilesChanged(foundFiles);
                                 }
@@ -521,7 +523,7 @@ namespace unplayer
                         }
 
                         QFileInfo fileInfo(file.filePath);
-                        const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
+                        const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, file.extension, mimeDb));
                         if (trackInfo.fileTypeValid) {
                             ++count;
                             addTrackToDatabase(db,
@@ -638,7 +640,7 @@ namespace unplayer
             {mp3Suffix, Extension::MP3},
             {mpgaSuffix, Extension::MP3},
 
-            {ogaSuffix, Extension::OGA},
+            {ogaSuffix, Extension::OGG},
             {oggSuffix, Extension::OGG},
             {opusSuffix, Extension::OPUS},
 
@@ -683,40 +685,70 @@ namespace unplayer
         return directoryMediaArt;
     }
 
-    const std::unordered_set<QString> LibraryUtils::mimeTypesExtensions{flacSuffix,
-                                                                        aacSuffix,
-                                                                        m4aSuffix,
-                                                                        f4aSuffix,
-                                                                        m4bSuffix,
-                                                                        f4bSuffix,
-                                                                        mp3Suffix,
-                                                                        mpgaSuffix,
-                                                                        ogaSuffix,
-                                                                        oggSuffix,
-                                                                        opusSuffix,
-                                                                        apeSuffix,
-                                                                        mkaSuffix,
-                                                                        wavSuffix,
-                                                                        wvSuffix,
-                                                                        wvpSuffix};
-
-    const std::unordered_set<QString> LibraryUtils::videoMimeTypesExtensions{QLatin1String("mp4"),
-                                                                             QLatin1String("m4v"),
-                                                                             QLatin1String("f4v"),
-                                                                             QLatin1String("lrv"),
-
-                                                                             QLatin1String("mpeg"),
-                                                                             QLatin1String("mpg"),
-                                                                             QLatin1String("mp2"),
-                                                                             QLatin1String("mpe"),
-                                                                             QLatin1String("vob"),
-
-                                                                             QLatin1String("mkv"),
-
-                                                                             QLatin1String("ogv")};
-
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
     const int LibraryUtils::maxDbVariableCount = 999; // SQLITE_MAX_VARIABLE_NUMBER
+
+    Extension LibraryUtils::extensionFromSuffix(const QString& suffix)
+    {
+        static const std::unordered_map<QString, Extension> extensions{
+            {flacSuffix, Extension::FLAC},
+            {aacSuffix, Extension::AAC},
+
+            {m4aSuffix, Extension::M4A},
+            {f4aSuffix, Extension::M4A},
+            {m4bSuffix, Extension::M4A},
+            {f4bSuffix, Extension::M4A},
+
+            {mp3Suffix, Extension::MP3},
+            {mpgaSuffix, Extension::MP3},
+
+            {ogaSuffix, Extension::OGG},
+            {oggSuffix, Extension::OGG},
+            {opusSuffix, Extension::OPUS},
+
+            {apeSuffix, Extension::APE},
+
+            {mkaSuffix, Extension::MKA},
+
+            {wavSuffix, Extension::WAV},
+
+            {wvSuffix, Extension::WAVPACK},
+            {wvpSuffix, Extension::WAVPACK}
+        };
+        static const auto end(extensions.end());
+
+        const auto found(extensions.find(suffix));
+        if (found == end) {
+            return Extension::Other;
+        }
+        return found->second;
+    }
+
+    bool LibraryUtils::isExtensionSupported(const QString& suffix)
+    {
+        return extensionFromSuffix(suffix) != Extension::Other;
+    }
+
+    bool LibraryUtils::isVideoExtensionSupported(const QString& suffix)
+    {
+        static const std::unordered_set<QString> videoMimeTypesExtensions{
+            QLatin1String("mp4"),
+            QLatin1String("m4v"),
+            QLatin1String("f4v"),
+            QLatin1String("lrv"),
+
+            QLatin1String("mpeg"),
+            QLatin1String("mpg"),
+            QLatin1String("mp2"),
+            QLatin1String("mpe"),
+            QLatin1String("vob"),
+
+            QLatin1String("mkv"),
+
+            QLatin1String("ogv")
+        };
+        return contains(videoMimeTypesExtensions, suffix);
+    }
 
     LibraryUtils* LibraryUtils::instance()
     {

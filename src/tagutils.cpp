@@ -318,7 +318,6 @@ namespace unplayer
                 case Extension::MP3:
                     processor.processFile(TagLib::MPEG::File(filePath.toUtf8()));
                     break;
-                case Extension::OGA:
                 case Extension::OGG:
                 {
                     const QMimeType mimeType(mimeDb.mimeTypeForFile(filePath, QMimeDatabase::MatchContent));
@@ -366,12 +365,12 @@ namespace unplayer
         const QLatin1String GenresTag("GENRE");
         const QLatin1String DiscNumberTag("DISCNUMBER");
 
-        Info getTrackInfo(const QFileInfo& fileInfo, const QMimeDatabase& mimeDb)
+        Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb)
         {
             Info info;
             const QString filePath(fileInfo.filePath());
             info.filePath = filePath;
-            processFile(filePath, extensionFromSuffux(fileInfo.suffix()), mimeDb, ExtractProcessor{info, mimeDb});
+            processFile(filePath, extension, mimeDb, ExtractProcessor{info, mimeDb});
             if (info.fileTypeValid && info.title.isEmpty()) {
                 info.title = fileInfo.fileName();
             }
@@ -404,7 +403,7 @@ namespace unplayer
                 if (!qApp) {
                     break;
                 }
-                processFile(filePath, extensionFromSuffux(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{filePath, replaceProperties, infos, mimeDb});
+                processFile(filePath, LibraryUtils::extensionFromSuffix(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{filePath, replaceProperties, infos, mimeDb});
                 if (IncrementTrackNumber) {
                     ++trackNumber;
                     *trackNumberString = TagLib::String::number(trackNumber);

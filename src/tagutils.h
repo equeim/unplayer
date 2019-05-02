@@ -55,7 +55,7 @@ namespace unplayer
             bool canReadTags = false;
         };
 
-        Info getTrackInfo(const QFileInfo& fileInfo, const QMimeDatabase& mimeDb);
+        Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb);
 
         template<bool IncrementTrackNumber>
         std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);

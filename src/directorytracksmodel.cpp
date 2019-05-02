@@ -32,7 +32,6 @@
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
-#include "stdutils.h"
 
 namespace unplayer
 {
@@ -195,8 +194,8 @@ namespace unplayer
                     const QString suffix(info.suffix());
                     const bool isPlaylist = contains(PlaylistUtils::playlistsExtensions, suffix);
                     if (isPlaylist ||
-                            contains(LibraryUtils::mimeTypesExtensions, suffix) ||
-                            (showVideoFiles && contains(LibraryUtils::videoMimeTypesExtensions, suffix))) {
+                            LibraryUtils::isExtensionSupported(suffix) ||
+                            (showVideoFiles && LibraryUtils::isVideoExtensionSupported(suffix))) {
                         files.push_back({info.filePath(),
                                          info.fileName(),
                                          false,

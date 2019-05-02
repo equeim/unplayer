@@ -45,7 +45,6 @@
 #include "queue.h"
 #include "queuemodel.h"
 #include "settings.h"
-#include "stdutils.h"
 #include "trackinfo.h"
 #include "tracksmodel.h"
 
@@ -118,8 +117,8 @@ namespace unplayer
                         parsed.push_back(filePath);
                     } else {
                         const QString suffix(fileInfo.suffix());
-                        if (contains(LibraryUtils::mimeTypesExtensions, suffix)
-                                || contains(LibraryUtils::videoMimeTypesExtensions, suffix)) {
+
+                        if (LibraryUtils::isExtensionSupported(suffix) || LibraryUtils::isVideoExtensionSupported(suffix)) {
                             parsed.push_back(filePath);
                         }
                     }

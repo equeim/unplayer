@@ -45,7 +45,6 @@ namespace unplayer
         M4A,
         MP3,
 
-        OGA,
         OGG,
         OPUS,
 
@@ -57,8 +56,6 @@ namespace unplayer
 
         Other
     };
-
-    Extension extensionFromSuffux(const QString& suffix);
 
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField);
 
@@ -99,8 +96,10 @@ namespace unplayer
         };
         Q_ENUM(UpdateStage)
 
-        static const std::unordered_set<QString> mimeTypesExtensions;
-        static const std::unordered_set<QString> videoMimeTypesExtensions;
+        static Extension extensionFromSuffix(const QString& suffix);
+        static bool isExtensionSupported(const QString& suffix);
+        static bool isVideoExtensionSupported(const QString& suffix);
+
         static const QString databaseType;
         static const int maxDbVariableCount;
         static LibraryUtils* instance();
