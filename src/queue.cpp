@@ -670,7 +670,7 @@ namespace unplayer
         addTracksFromLibrary({libraryTrack}, clearQueue, setAsCurrent);
     }
 
-    LibraryTrack Queue::getTrack(int index)
+    LibraryTrack Queue::getTrack(int index) const
     {
         const QueueTrack* track = mTracks[index].get();
         return {track->url.toString(),
@@ -681,7 +681,7 @@ namespace unplayer
                 track->mediaArtFilePath};
     }
 
-    std::vector<LibraryTrack> Queue::getTracks(const std::vector<int>& indexes)
+    std::vector<LibraryTrack> Queue::getTracks(const std::vector<int>& indexes) const
     {
         std::vector<LibraryTrack> tracks;
         tracks.reserve(indexes.size());

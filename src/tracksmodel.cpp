@@ -206,7 +206,7 @@ namespace unplayer
         }
     }
 
-    std::vector<LibraryTrack> TracksModel::getTracks(const std::vector<int>& indexes)
+    std::vector<LibraryTrack> TracksModel::getTracks(const std::vector<int>& indexes) const
     {
         std::vector<LibraryTrack> tracks;
         tracks.reserve(indexes.size());
@@ -216,12 +216,12 @@ namespace unplayer
         return tracks;
     }
 
-    LibraryTrack TracksModel::getTrack(int index)
+    LibraryTrack TracksModel::getTrack(int index) const
     {
         return mTracks[index];
     }
 
-    QStringList TracksModel::getTrackPaths(const std::vector<int>& indexes)
+    QStringList TracksModel::getTrackPaths(const std::vector<int>& indexes) const
     {
         QStringList tracks;
         tracks.reserve(indexes.size());

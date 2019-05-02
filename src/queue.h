@@ -112,8 +112,8 @@ namespace unplayer
         Q_INVOKABLE void addTracksFromLibrary(const std::vector<unplayer::LibraryTrack>& libraryTracks, bool clearQueue = false, int setAsCurrent = -1);
         Q_INVOKABLE void addTrackFromLibrary(const unplayer::LibraryTrack& libraryTrack, bool clearQueue = false, int setAsCurrent = -1);
 
-        Q_INVOKABLE unplayer::LibraryTrack getTrack(int index);
-        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracks(const std::vector<int>& indexes);
+        Q_INVOKABLE unplayer::LibraryTrack getTrack(int index) const;
+        Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracks(const std::vector<int>& indexes) const;
         Q_INVOKABLE bool hasLocalFileForTracks(const std::vector<int>& indexes) const;
         Q_INVOKABLE QStringList getTrackPaths(const std::vector<int>& indexes) const;
 
