@@ -214,7 +214,7 @@ DockedPanel {
             Item {
                 id: busyItem
 
-                property bool active: Unplayer.Player.queue.addingTracks || Unplayer.LibraryUtils.removingFiles
+                property bool active: Unplayer.Player.queue.addingTracks || Unplayer.LibraryUtils.savingTags || Unplayer.LibraryUtils.removingFiles
 
                 property bool shouldBeVisible: active || opacity
 
@@ -254,6 +254,9 @@ DockedPanel {
                     text: {
                         if (Unplayer.Player.queue.addingTracks) {
                             return qsTranslate("unplayer", "Adding tracks...")
+                        }
+                        if (Unplayer.LibraryUtils.savingTags) {
+                            return qsTranslate("unplayer", "Saving tags...")
                         }
                         if (Unplayer.LibraryUtils.removingFiles) {
                             return qsTranslate("unplayer", "Removing files...")

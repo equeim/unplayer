@@ -22,8 +22,6 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 
-#include "tagutils.h"
-
 namespace unplayer
 {
     const QString& TrackInfo::filePath() const
@@ -34,61 +32,70 @@ namespace unplayer
     void TrackInfo::setFilePath(const QString& filePath)
     {
         mFilePath = filePath;
-
         const QFileInfo fileInfo(mFilePath);
-
         const QMimeDatabase mimeDb;
-        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
-        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb));
-
-        mTitle = std::move(info.title);
-        mArtist = info.artists.join(QLatin1String(", "));
-        mAlbum = info.albums.join(QLatin1String(", "));
-        mDiscNumber = std::move(info.discNumber);
-        mYear = info.year;
-        mTrackNumber = info.trackNumber;
-        mGenre = info.genres.join(QLatin1String(", "));
+        mInfo = tagutils::getTrackInfo(fileInfo, mimeDb);
         mFileSize = fileInfo.size();
-        mDuration = info.duration;
-        mBitrate = info.bitrate;
+        mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
+        emit loaded();
+    }
+
+    bool TrackInfo::canReadTags() const
+    {
+        return mInfo.canReadTags;
     }
 
     const QString& TrackInfo::title() const
     {
-        return mTitle;
+        return mInfo.title;
     }
 
-    const QString& TrackInfo::artist() const
+    const QStringList& TrackInfo::artists() const
     {
-        return mArtist;
+        return mInfo.artists;
     }
 
-    const QString& TrackInfo::album() const
+    QString TrackInfo::artist() const
     {
-        return mAlbum;
+        return mInfo.artists.join(QLatin1String(", "));
     }
 
-    const QString&TrackInfo::discNumber() const
+    const QStringList& TrackInfo::albums() const
     {
-        return mDiscNumber;
+        return mInfo.albums;
+    }
+
+    QString TrackInfo::album() const
+    {
+        return mInfo.albums.join(QLatin1String(", "));
+    }
+
+    const QString& TrackInfo::discNumber() const
+    {
+        return mInfo.discNumber;
     }
 
     int TrackInfo::year() const
     {
-        return mYear;
+        return mInfo.year;
     }
 
     int TrackInfo::trackNumber() const
     {
-        return mTrackNumber;
+        return mInfo.trackNumber;
     }
 
-    const QString& TrackInfo::genre() const
+    const QStringList& TrackInfo::genres() const
     {
-        return mGenre;
+        return mInfo.genres;
     }
 
-    int TrackInfo::fileSize() const
+    QString TrackInfo::genre() const
+    {
+        return mInfo.genres.join(QLatin1String(", "));
+    }
+
+    long long TrackInfo::fileSize() const
     {
         return mFileSize;
     }
@@ -100,11 +107,11 @@ namespace unplayer
 
     int TrackInfo::duration() const
     {
-        return mDuration;
+        return mInfo.duration;
     }
 
     QString TrackInfo::bitrate() const
     {
-        return qApp->translate("unplayer", "%1 kB/s").arg(mBitrate);
+        return qApp->translate("unplayer", "%1 kB/s").arg(mInfo.bitrate);
     }
 }

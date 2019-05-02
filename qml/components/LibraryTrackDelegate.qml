@@ -41,6 +41,11 @@ BaseTrackDelegate {
             }
 
             MenuItem {
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: [model.filePath]})
+            }
+
+            MenuItem {
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: pageStack.push(removeTrackDialog)
             }

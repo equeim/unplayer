@@ -71,6 +71,12 @@ Page {
 
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: tracksModel.getTrackPaths(tracksProxyModel.selectedSourceIndexes)})
+            }
+
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: pageStack.push(removeTracksDialog)
 

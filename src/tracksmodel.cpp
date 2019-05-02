@@ -221,6 +221,16 @@ namespace unplayer
         return mTracks[index];
     }
 
+    QStringList TracksModel::getTrackPaths(const std::vector<int>& indexes)
+    {
+        QStringList tracks;
+        tracks.reserve(indexes.size());
+        for (int index : indexes) {
+            tracks.push_back(mTracks[index].filePath);
+        }
+        return tracks;
+    }
+
     void TracksModel::removeTrack(int index, bool deleteFile)
     {
         removeTracks({index}, deleteFile);

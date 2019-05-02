@@ -61,6 +61,12 @@ Page {
 
             MenuItem {
                 enabled: artistsProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: artistsModel.getTrackPathsForArtists(artistsProxyModel.selectedSourceIndexes)})
+            }
+
+            MenuItem {
+                enabled: artistsProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: pageStack.push(removeArtistsDialog)
 
@@ -115,6 +121,11 @@ Page {
                     MenuItem {
                         text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: artistsModel.getTracksForArtist(artistsProxyModel.sourceIndex(model.index)) })
+                    }
+
+                    MenuItem {
+                        text: qsTranslate("unplayer", "Edit tags")
+                        onClicked: pageStack.push("TagEditDialog.qml", {files: artistsModel.getTrackPathsForArtist(artistsProxyModel.sourceIndex(model.index))})
                     }
 
                     MenuItem {

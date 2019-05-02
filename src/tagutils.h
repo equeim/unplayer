@@ -30,8 +30,17 @@ namespace unplayer
 {
     namespace tagutils
     {
+        extern const QLatin1String TitleTag;
+        extern const QLatin1String ArtistsTag;
+        extern const QLatin1String AlbumsTag;
+        extern const QLatin1String YearTag;
+        extern const QLatin1String TrackNumberTag;
+        extern const QLatin1String GenresTag;
+        extern const QLatin1String DiscNumberTag;
+
         struct Info
         {
+            QString filePath;
             QString title;
             QStringList artists;
             QStringList albums;
@@ -42,10 +51,14 @@ namespace unplayer
             int duration = 0;
             int bitrate = 0;
             QByteArray mediaArtData;
-            bool isValid;
+            bool fileTypeValid = false;
+            bool canReadTags = false;
         };
 
         Info getTrackInfo(const QFileInfo& fileInfo, const QMimeDatabase& mimeDb);
+
+        template<bool IncrementTrackNumber>
+        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
     }
 }
 

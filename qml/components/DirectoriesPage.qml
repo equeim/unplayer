@@ -65,6 +65,12 @@ Page {
 
             MenuItem {
                 enabled: directoryTracksProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: directoryTracksProxyModel.getSelectedTracks()})
+            }
+
+            MenuItem {
+                enabled: directoryTracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: remorsePopup.execute(qsTranslate("unplayer", "Removing %n files", String(), directoryTracksProxyModel.selectedIndexesCount), function() {
                     directoryTracksModel.removeTracks(directoryTracksProxyModel.selectedSourceIndexes)
@@ -151,6 +157,12 @@ Page {
                         visible: !model.isDirectory
                         text: qsTranslate("unplayer", "Add to playlist")
                         onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: [model.filePath] })
+                    }
+
+                    MenuItem {
+                        visible: !model.isDirectory
+                        text: qsTranslate("unplayer", "Edit tags")
+                        onClicked: pageStack.push("TagEditDialog.qml", {files: [model.filePath]})
                     }
 
                     MenuItem {

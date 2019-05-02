@@ -47,6 +47,11 @@ MediaContainerSelectionDelegate {
             }
 
             MenuItem {
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: albumsModel.getTrackPathsForAlbum(albumsProxyModel.sourceIndex(model.index))})
+            }
+
+            MenuItem {
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: pageStack.push(removeAlbumDialog)
             }

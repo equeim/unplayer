@@ -98,10 +98,10 @@ namespace unplayer
         if (query.exec()) {
             std::vector<LibraryTrack> tracks;
             query.last();
-            if (query.at() > 0) {
+            if (query.at() >= 0) {
                 tracks.reserve(query.at() + 1);
+                query.seek(QSql::BeforeFirstRow);
             }
-            query.seek(QSql::BeforeFirstRow);
             while (query.next()) {
                 tracks.push_back({query.value(0).toString(),
                                   query.value(1).toString(),
@@ -124,6 +124,41 @@ namespace unplayer
         for (int index : indexes) {
             std::vector<LibraryTrack> genreTracks(getTracksForGenre(index));
             tracks.insert(tracks.end(), std::make_move_iterator(genreTracks.begin()), std::make_move_iterator(genreTracks.end()));
+        }
+        QSqlDatabase::database().commit();
+        return tracks;
+    }
+
+    QStringList GenresModel::getTrackPathsForGenre(int index) const
+    {
+        QSqlQuery query;
+        query.prepare(QStringLiteral("SELECT filePath FROM tracks "
+                                     "WHERE genre = ?  "
+                                     "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
+        query.addBindValue(mGenres[index].genre);
+        if (query.exec()) {
+            QStringList tracks;
+            query.last();
+            if (query.at() >= 0) {
+                tracks.reserve(query.at() + 1);
+                query.seek(QSql::BeforeFirstRow);
+            }
+            while (query.next()) {
+                tracks.push_back(query.value(0).toString());
+            }
+            return tracks;
+        }
+
+        qWarning() << "failed to get tracks from database";
+        return {};
+    }
+
+    QStringList GenresModel::getTrackPathsForGenres(const std::vector<int>& indexes) const
+    {
+        QStringList tracks;
+        QSqlDatabase::database().transaction();
+        for (int index : indexes) {
+            tracks.append(getTrackPathsForGenre(index));
         }
         QSqlDatabase::database().commit();
         return tracks;

@@ -77,6 +77,13 @@ Page {
             }
 
             MenuItem {
+                visible: Unplayer.Player.queue.hasLocalFileForTracks(queueProxyModel.selectedSourceIndexes)
+                enabled: queueProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: Unplayer.Player.queue.getTrackPaths(queueProxyModel.selectedSourceIndexes)})
+            }
+
+            MenuItem {
                 enabled: queueProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: {
@@ -120,6 +127,12 @@ Page {
                 MenuItem {
                     text: qsTranslate("unplayer", "Add to playlist")
                     onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: Unplayer.Player.queue.getTrack(queueProxyModel.sourceIndex(model.index)) })
+                }
+
+                MenuItem {
+                    visible: model.isLocalFile
+                    text: qsTranslate("unplayer", "Edit tags")
+                    onClicked: pageStack.push("TagEditDialog.qml", {files: [model.filePath]})
                 }
 
                 MenuItem {

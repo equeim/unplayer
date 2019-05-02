@@ -38,7 +38,7 @@ namespace unplayer
         Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel CONSTANT)
         Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectionChanged)
         Q_PROPERTY(int selectedIndexesCount READ selectedIndexesCount NOTIFY selectionChanged)
-        Q_PROPERTY(std::vector<int> selectedSourceIndexes READ selectedSourceIndexes)
+        Q_PROPERTY(std::vector<int> selectedSourceIndexes READ selectedSourceIndexes NOTIFY selectionChanged)
     public:
         FilterProxyModel();
         void classBegin() override;

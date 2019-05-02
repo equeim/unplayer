@@ -91,6 +91,8 @@ namespace unplayer
 
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForAlbum(int index) const;
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracksForAlbums(const std::vector<int>& indexes) const;
+        Q_INVOKABLE QStringList getTrackPathsForAlbum(int index) const;
+        Q_INVOKABLE QStringList getTrackPathsForAlbums(const std::vector<int>& indexes) const;
 
         Q_INVOKABLE void removeAlbum(int index, bool deleteFiles);
         Q_INVOKABLE void removeAlbums(std::vector<int> indexes, bool deleteFiles);

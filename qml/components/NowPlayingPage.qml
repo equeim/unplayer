@@ -106,18 +106,9 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTranslate("unplayer", "Clear Queue")
-                onClicked: {
-                    Unplayer.Player.queue.clear()
-                    pageStack.pop()
-                }
-            }
-
-            MenuItem {
-                text: qsTranslate("unplayer", Unplayer.Player.stopAfterEos ? "Stop after playing track: <font color=\"%1\">yes</font>" :
-                                                                             "Stop after playing track: <font color=\"%1\">no</font>")
-                .arg(Theme.highlightColor)
-                onClicked: Unplayer.Player.stopAfterEos = !Unplayer.Player.stopAfterEos
+                visible: Unplayer.Player.queue.currentIsLocalFile
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", { files: [Unplayer.Player.queue.currentFilePath] })
             }
 
             MenuItem {
@@ -126,9 +117,26 @@ Page {
             }
 
             MenuItem {
-                enabled: Unplayer.Player.queue.currentIsLocalFile
+                visible: Unplayer.Player.queue.currentIsLocalFile
                 text: qsTranslate("unplayer", "Track information")
                 onClicked: pageStack.push("TrackInfoPage.qml", { filePath: Unplayer.Player.queue.currentFilePath })
+            }
+        }
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTranslate("unplayer", Unplayer.Player.stopAfterEos ? "Stop after playing track: <font color=\"%1\">yes</font>" :
+                                                                             "Stop after playing track: <font color=\"%1\">no</font>")
+                .arg(Theme.highlightColor)
+                onClicked: Unplayer.Player.stopAfterEos = !Unplayer.Player.stopAfterEos
+            }
+
+            MenuItem {
+                text: qsTranslate("unplayer", "Clear Queue")
+                onClicked: {
+                    Unplayer.Player.queue.clear()
+                    pageStack.pop()
+                }
             }
         }
 

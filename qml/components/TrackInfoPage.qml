@@ -111,12 +111,14 @@ Page {
             }
 
             DetailItem {
+                visible: trackInfo.canReadTags
                 label: qsTranslate("unplayer", "Duration")
-                value: Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong :
-                                                                                              Format.DurationShort)
+                value: Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong
+                                                                                            : Format.DurationShort)
             }
 
             DetailItem {
+                visible: trackInfo.canReadTags
                 label: qsTranslate("unplayer", "Bitrate")
                 value: trackInfo.bitrate
             }

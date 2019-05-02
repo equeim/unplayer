@@ -21,55 +21,62 @@
 
 #include <QObject>
 
+#include "tagutils.h"
+
 namespace unplayer
 {
     class TrackInfo : public QObject
     {
         Q_OBJECT
 
-        Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
+        Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY loaded)
 
-        Q_PROPERTY(QString title READ title CONSTANT)
-        Q_PROPERTY(QString artist READ artist CONSTANT)
-        Q_PROPERTY(QString album READ album CONSTANT)
-        Q_PROPERTY(QString discNumber READ discNumber CONSTANT)
-        Q_PROPERTY(int year READ year CONSTANT)
-        Q_PROPERTY(int trackNumber READ trackNumber CONSTANT)
-        Q_PROPERTY(QString genre READ genre CONSTANT)
-        Q_PROPERTY(int fileSize READ fileSize CONSTANT)
-        Q_PROPERTY(QString mimeType READ mimeType CONSTANT)
-        Q_PROPERTY(int duration READ duration CONSTANT)
-        Q_PROPERTY(QString bitrate READ bitrate CONSTANT)
+        Q_PROPERTY(bool canReadTags READ canReadTags NOTIFY loaded)
+
+        Q_PROPERTY(QString title READ title NOTIFY loaded)
+        Q_PROPERTY(QStringList artists READ artists NOTIFY loaded)
+        Q_PROPERTY(QString artist READ artist NOTIFY loaded)
+        Q_PROPERTY(QStringList albums READ albums NOTIFY loaded)
+        Q_PROPERTY(QString album READ album NOTIFY loaded)
+        Q_PROPERTY(QString discNumber READ discNumber NOTIFY loaded)
+        Q_PROPERTY(int year READ year NOTIFY loaded)
+        Q_PROPERTY(int trackNumber READ trackNumber NOTIFY loaded)
+        Q_PROPERTY(QStringList genres READ genres NOTIFY loaded)
+        Q_PROPERTY(QString genre READ genre NOTIFY loaded)
+        Q_PROPERTY(long long fileSize READ fileSize NOTIFY loaded)
+        Q_PROPERTY(QString mimeType READ mimeType NOTIFY loaded)
+        Q_PROPERTY(int duration READ duration NOTIFY loaded)
+        Q_PROPERTY(QString bitrate READ bitrate NOTIFY loaded)
+
     public:
         const QString& filePath() const;
         void setFilePath(const QString& filePath);
 
+        bool canReadTags() const;
+
         const QString& title() const;
-        const QString& artist() const;
-        const QString& album() const;
+        const QStringList& artists() const;
+        QString artist() const;
+        const QStringList& albums() const;
+        QString album() const;
         const QString& discNumber() const;
         int year() const;
         int trackNumber() const;
-        const QString& genre() const;
-        int fileSize() const;
+        const QStringList& genres() const;
+        QString genre() const;
+        long long fileSize() const;
         const QString& mimeType() const;
         int duration() const;
         QString bitrate() const;
 
     private:
         QString mFilePath;
-
-        QString mTitle;
-        QString mArtist;
-        QString mAlbum;
-        QString mDiscNumber;
-        int mYear = 0;
-        int mTrackNumber = 0;
-        QString mGenre;
-        int mFileSize = 0;
+        tagutils::Info mInfo;
         QString mMimeType;
-        int mDuration = 0;
-        int mBitrate = 0;
+        long long mFileSize;
+
+    signals:
+        void loaded();
     };
 }
 

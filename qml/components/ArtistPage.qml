@@ -70,6 +70,12 @@ Page {
 
             MenuItem {
                 enabled: albumsProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", {files: albumsModel.getTrackPathsForAlbums(albumsProxyModel.selectedSourceIndexes)})
+            }
+
+            MenuItem {
+                enabled: albumsProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Remove")
                 onClicked: pageStack.push(removeAlbumsDialog)
 

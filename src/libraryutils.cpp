@@ -56,6 +56,7 @@ namespace unplayer
     {
         const QLatin1String rescanConnectionName("unplayer_rescan");
         const QLatin1String removeFilesConnectionName("unplayer_remove");
+        const QLatin1String saveTagsConnectionName("unplayer_save");
 
         const QLatin1String flacSuffix("flac");
         const QLatin1String aacSuffix("aac");
@@ -107,6 +108,68 @@ namespace unplayer
             }
             QSqlDatabase& db;
         };
+
+        template<bool SetMediaArt = true>
+        void addTrackToDatabase(const QSqlDatabase& db,
+                                int id,
+                                const QString& filePath,
+                                long long modificationTime,
+                                const tagutils::Info& info,
+                                const QString& directoryMediaArt = QString(),
+                                const QString& embeddedMediaArt = QString())
+            {
+                const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
+                    if (strings.empty()) {
+                        exec(QString());
+                    } else {
+                        for (const QString& string : strings) {
+                            exec(string);
+                        }
+                    }
+                };
+
+                QSqlQuery query(db);
+                query.prepare([&]() {
+                    QString queryString(SetMediaArt ? QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, album, discNumber, genre, directoryMediaArt, embeddedMediaArt) "
+                                                                     "VALUES ")
+                                                    : QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, album, discNumber, genre) "
+                                                                     "VALUES "));
+                    const auto sizeOrOne = [](const QStringList& strings) {
+                        return strings.empty() ? 1 : strings.size();
+                    };
+                    const int count = sizeOrOne(info.artists) * sizeOrOne(info.albums) * sizeOrOne(info.genres);
+                    for (int i = 0; i < count; ++i) {
+                        queryString.push_back(SetMediaArt ? QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?, ?)")
+                                                          : QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?)"));
+                        if (i != (count - 1)) {
+                            queryString.push_back(QLatin1Char(','));
+                        }
+                    }
+                    queryString = queryString.arg(id).arg(modificationTime).arg(info.year).arg(info.trackNumber).arg(info.duration);
+                    return queryString;
+                }());
+
+                forEachOrOnce(info.artists, [&](const QString& artist) {
+                    forEachOrOnce(info.albums, [&](const QString& album) {
+                        forEachOrOnce(info.genres, [&](const QString& genre) {
+                            query.addBindValue(filePath);
+                            query.addBindValue(info.title);
+                            query.addBindValue(emptyIfNull(artist));
+                            query.addBindValue(emptyIfNull(album));
+                            query.addBindValue(emptyIfNull(info.discNumber));
+                            query.addBindValue(emptyIfNull(genre));
+                            if (SetMediaArt) {
+                                query.addBindValue(emptyIfNull(directoryMediaArt));
+                                query.addBindValue(emptyIfNull(embeddedMediaArt));
+                            }
+                        });
+                    });
+                });
+
+                if (!query.exec()) {
+                    qWarning() << "failed to insert track in the database" << query.lastError();
+                }
+            }
 
         class LibraryUpdateRunnableNotifier : public QObject
         {
@@ -459,7 +522,7 @@ namespace unplayer
 
                         QFileInfo fileInfo(file.filePath);
                         const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, mimeDb));
-                        if (trackInfo.isValid) {
+                        if (trackInfo.fileTypeValid) {
                             ++count;
                             addTrackToDatabase(db,
                                                file.id,
@@ -519,62 +582,6 @@ namespace unplayer
 
                 qInfo("End updating database (last stage took %.3f s)", stageTimer.elapsed() / 1000.0);
                 qInfo("Total time: %.3f s", timer.elapsed() / 1000.0);
-            }
-
-            void addTrackToDatabase(const QSqlDatabase& db,
-                                    int id,
-                                    const QString& filePath,
-                                    long long modificationTime,
-                                    const tagutils::Info& info,
-                                    const QString& directoryMediaArt,
-                                    const QString& embeddedMediaArt)
-            {
-                const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
-                    if (strings.empty()) {
-                        exec(QString());
-                    } else {
-                        for (const QString& string : strings) {
-                            exec(string);
-                        }
-                    }
-                };
-
-                QSqlQuery query(db);
-                query.prepare([&]() {
-                    QString queryString(QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, album, discNumber, genre, directoryMediaArt, embeddedMediaArt) "
-                                                       "VALUES "));
-                    const auto sizeOrOne = [](const QStringList& strings) {
-                        return strings.empty() ? 1 : strings.size();
-                    };
-                    const int count = sizeOrOne(info.artists) * sizeOrOne(info.albums) * sizeOrOne(info.genres);
-                    for (int i = 0; i < count; ++i) {
-                        queryString.push_back(QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?, ?)"));
-                        if (i != (count - 1)) {
-                            queryString.push_back(QLatin1Char(','));
-                        }
-                    }
-                    queryString = queryString.arg(id).arg(modificationTime).arg(info.year).arg(info.trackNumber).arg(info.duration);
-                    return queryString;
-                }());
-
-                forEachOrOnce(info.artists, [&](const QString& artist) {
-                    forEachOrOnce(info.albums, [&](const QString& album) {
-                        forEachOrOnce(info.genres, [&](const QString& genre) {
-                            query.addBindValue(filePath);
-                            query.addBindValue(info.title);
-                            query.addBindValue(emptyIfNull(artist));
-                            query.addBindValue(emptyIfNull(album));
-                            query.addBindValue(emptyIfNull(info.discNumber));
-                            query.addBindValue(emptyIfNull(genre));
-                            query.addBindValue(emptyIfNull(directoryMediaArt));
-                            query.addBindValue(emptyIfNull(embeddedMediaArt));
-                        });
-                    });
-                });
-
-                if (!query.exec()) {
-                    qWarning() << "failed to insert track in the database" << query.lastError();
-                }
             }
 
             QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles, const QMimeDatabase& mimeDb)
@@ -899,31 +906,6 @@ namespace unplayer
         return mCreatedTable;
     }
 
-    bool LibraryUtils::isUpdating() const
-    {
-        return mLibraryUpdateRunnable;
-    }
-
-    LibraryUtils::UpdateStage LibraryUtils::updateStage() const
-    {
-        return mLibraryUpdateStage;
-    }
-
-    int LibraryUtils::foundTracks() const
-    {
-        return mFoundTracks;
-    }
-
-    int LibraryUtils::extractedTracks() const
-    {
-        return mExtractedTracks;
-    }
-
-    bool LibraryUtils::isRemovingFiles() const
-    {
-        return mRemovingFiles;
-    }
-
     int LibraryUtils::artistsCount() const
     {
         if (!mDatabaseInitialized) {
@@ -1078,6 +1060,31 @@ namespace unplayer
         } else {
             qWarning() << "failed to update media art in the database:" << query.lastError();
         }
+    }
+
+    bool LibraryUtils::isUpdating() const
+    {
+        return mLibraryUpdateRunnable;
+    }
+
+    LibraryUtils::UpdateStage LibraryUtils::updateStage() const
+    {
+        return mLibraryUpdateStage;
+    }
+
+    int LibraryUtils::foundTracks() const
+    {
+        return mFoundTracks;
+    }
+
+    int LibraryUtils::extractedTracks() const
+    {
+        return mExtractedTracks;
+    }
+
+    bool LibraryUtils::isRemovingFiles() const
+    {
+        return mRemovingFiles;
     }
 
     void LibraryUtils::removeArtists(std::vector<QString>&& artists, bool deleteFiles)
@@ -1397,6 +1404,132 @@ namespace unplayer
         watcher->setFuture(future);
     }
 
+    QString LibraryUtils::titleTag() const
+    {
+        return tagutils::TitleTag;
+    }
+
+    QString LibraryUtils::artistsTag() const
+    {
+        return tagutils::ArtistsTag;
+    }
+
+    QString LibraryUtils::albumsTag() const
+    {
+        return tagutils::AlbumsTag;
+    }
+
+    QString LibraryUtils::yearTag() const
+    {
+        return tagutils::YearTag;
+    }
+
+    QString LibraryUtils::trackNumberTag() const
+    {
+        return tagutils::TrackNumberTag;
+    }
+
+    QString LibraryUtils::genresTag() const
+    {
+        return tagutils::GenresTag;
+    }
+
+    QString LibraryUtils::discNumberTag() const
+    {
+        return tagutils::DiscNumberTag;
+    }
+
+    bool LibraryUtils::isSavingTags() const
+    {
+        return mSavingTags;
+    }
+
+    void LibraryUtils::saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber)
+    {
+        if (mSavingTags) {
+            return;
+        }
+
+        mSavingTags = true;
+        emit savingTagsChanged();
+
+        auto future = QtConcurrent::run([files, tags, incrementTrackNumber]() {
+            qInfo("Start saving tags");
+
+            QElapsedTimer timer;
+            timer.start();
+
+            QMimeDatabase mimeDb;
+            const std::vector<tagutils::Info> infos(incrementTrackNumber ? tagutils::saveTags<true>(files, tags, mimeDb)
+                                                                         : tagutils::saveTags<false>(files, tags, mimeDb));
+            if (!qApp) {
+                return;
+            }
+
+            const DatabaseGuard databaseGuard{saveTagsConnectionName};
+
+            // Open database
+            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, saveTagsConnectionName);
+            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
+            if (!db.open()) {
+                qWarning() << "failed to open database" << db.lastError();
+                return;
+            }
+
+            db.transaction();
+            const CommitGuard commitGuard{db};
+
+            forMaxCountInRange(static_cast<int>(infos.size()), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+                if (!qApp) {
+                    return;
+                }
+
+                QString queryString(QLatin1String("DELETE FROM tracks WHERE "));
+                queryString.push_back(QLatin1String("filePath = ?"));
+                for (int i = first + 1, max = first + count; i < max; ++i) {
+                    queryString.push_back(QLatin1String(" OR filePath = ?"));
+                }
+
+                QSqlQuery query(db);
+                query.prepare(queryString);
+                for (int i = first, max = first + count; i < max; ++i) {
+                    query.addBindValue(emptyIfNull(infos[static_cast<std::vector<tagutils::Info>::size_type>(i)].filePath));
+                }
+                if (!query.exec()) {
+                    qWarning() << "failed to remove tracks:" << query.lastError();
+                }
+            });
+
+            int lastId = -1;
+            {
+                QSqlQuery query(QLatin1String("SELECT MAX(id) FROM tracks"), db);
+                if (query.lastError().type() != QSqlError::NoError) {
+                    qWarning() << "failed to get last id:" << query.lastError();
+                    return;
+                }
+                if (query.next()) {
+                    lastId = query.value(0).toInt();
+                }
+            }
+
+            for (const tagutils::Info& info : infos) {
+                addTrackToDatabase<false>(db, ++lastId, info.filePath, getLastModifiedTime(info.filePath), info);
+            }
+
+            qInfo("Done saving tags, %lldms", timer.elapsed());
+        });
+
+        using Watcher = QFutureWatcher<void>;
+        auto watcher = new Watcher(this);
+        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+            mSavingTags = false;
+            emit savingTagsChanged();
+            emit databaseChanged();
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
+    }
+
     LibraryUtils::LibraryUtils()
         : mDatabaseInitialized(false),
           mCreatedTable(false),
@@ -1405,6 +1538,7 @@ namespace unplayer
           mFoundTracks(0),
           mExtractedTracks(0),
           mRemovingFiles(false),
+          mSavingTags(false),
           mDatabaseFilePath(QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation))),
           mMediaArtDirectory(QString::fromLatin1("%1/media-art").arg(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)))
     {

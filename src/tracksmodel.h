@@ -119,6 +119,7 @@ namespace unplayer
 
         Q_INVOKABLE std::vector<unplayer::LibraryTrack> getTracks(const std::vector<int>& indexes);
         Q_INVOKABLE unplayer::LibraryTrack getTrack(int index);
+        Q_INVOKABLE QStringList getTrackPaths(const std::vector<int>& indexes);
 
         Q_INVOKABLE void removeTrack(int index, bool deleteFile);
         Q_INVOKABLE void removeTracks(const std::vector<int>& indexes, bool deleteFiles);

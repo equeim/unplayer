@@ -535,7 +535,7 @@ namespace unplayer
                     if (url.isLocalFile()) {
                         const QString filePath(url.path());
                         const QFileInfo fileInfo(filePath);
-                        tagutils::Info info(tagutils::getTrackInfo(filePath, mimeDb));
+                        tagutils::Info info(tagutils::getTrackInfo(fileInfo, mimeDb));
                         QString mediaArtFilePath;
                         QByteArray mediaArtData;
                         if (preferDirectoryMediaArt) {
@@ -687,6 +687,29 @@ namespace unplayer
         tracks.reserve(indexes.size());
         for (int index : indexes) {
             tracks.push_back(getTrack(index));
+        }
+        return tracks;
+    }
+
+    bool Queue::hasLocalFileForTracks(const std::vector<int>& indexes) const
+    {
+        for (int index : indexes) {
+            if (mTracks[static_cast<decltype(mTracks)::size_type>(index)]->url.isLocalFile()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    QStringList Queue::getTrackPaths(const std::vector<int>& indexes) const
+    {
+        QStringList tracks;
+        tracks.reserve(static_cast<int>(indexes.size()));
+        for (int index : indexes) {
+            const QueueTrack* track = mTracks[static_cast<decltype(mTracks)::size_type>(index)].get();
+            if (track->url.isLocalFile()) {
+                tracks.push_back(track->url.path());
+            }
         }
         return tracks;
     }

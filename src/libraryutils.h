@@ -68,6 +68,12 @@ namespace unplayer
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)
         Q_PROPERTY(bool createdTable READ isCreatedTable CONSTANT)
 
+        Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
+        Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
+        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY databaseChanged)
+        Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
+        Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
+
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
         Q_PROPERTY(UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
         Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
@@ -75,11 +81,14 @@ namespace unplayer
 
         Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
 
-        Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
-        Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
-        Q_PROPERTY(int tracksCount READ tracksCount NOTIFY databaseChanged)
-        Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
-        Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
+        Q_PROPERTY(QString titleTag READ titleTag CONSTANT)
+        Q_PROPERTY(QString artistsTag READ artistsTag CONSTANT)
+        Q_PROPERTY(QString albumsTag READ albumsTag CONSTANT)
+        Q_PROPERTY(QString yearTag READ yearTag CONSTANT)
+        Q_PROPERTY(QString trackNumberTag READ trackNumberTag CONSTANT)
+        Q_PROPERTY(QString genresTag READ genresTag CONSTANT)
+        Q_PROPERTY(QString discNumberTag READ discNumberTag CONSTANT)
+        Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
         enum UpdateStage {
             NoneStage,
@@ -108,13 +117,6 @@ namespace unplayer
         bool isDatabaseInitialized() const;
         bool isCreatedTable() const;
 
-        bool isUpdating() const;
-        UpdateStage updateStage() const;
-        int foundTracks() const;
-        int extractedTracks() const;
-
-        bool isRemovingFiles() const;
-
         int artistsCount() const;
         int albumsCount() const;
         int tracksCount() const;
@@ -126,10 +128,26 @@ namespace unplayer
 
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
 
+        bool isUpdating() const;
+        UpdateStage updateStage() const;
+        int foundTracks() const;
+        int extractedTracks() const;
+
+        bool isRemovingFiles() const;
         void removeArtists(std::vector<QString>&& artists, bool deleteFiles);
         void removeAlbums(std::vector<Album>&& albums, bool deleteFiles);
         void removeGenres(std::vector<QString>&& genres, bool deleteFiles);
         void removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories);
+
+        QString titleTag() const;
+        QString artistsTag() const;
+        QString albumsTag() const;
+        QString yearTag() const;
+        QString trackNumberTag() const;
+        QString genresTag() const;
+        QString discNumberTag() const;
+        bool isSavingTags() const;
+        Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);
     private:
         LibraryUtils();
 
@@ -142,10 +160,10 @@ namespace unplayer
         int mExtractedTracks;
 
         bool mRemovingFiles;
+        bool mSavingTags;
 
         QString mDatabaseFilePath;
         QString mMediaArtDirectory;
-        QMimeDatabase mMimeDb;
     signals:
         void updatingChanged();
         void updateStageChanged();
@@ -156,6 +174,7 @@ namespace unplayer
         void mediaArtChanged();
 
         void removingFilesChanged();
+        void savingTagsChanged();
     };
 }
 
