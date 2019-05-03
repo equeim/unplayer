@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <random>
 #include <unordered_map>
 
 #include <QCoreApplication>
@@ -47,13 +48,14 @@ namespace unplayer
     {
         const QLatin1String dbConnectionName("unplayer_queue");
 
-        void seedPRNG()
+        int randomIndex(int count)
         {
-            static bool didSeedPRNG = false;
-            if (!didSeedPRNG) {
-                qsrand(QTime::currentTime().msec());
-                didSeedPRNG = true;
-            }
+            static std::default_random_engine random([]() {
+                std::seed_seq seed{std::random_device{}(), static_cast<std::seed_seq::result_type>(QDateTime::currentMSecsSinceEpoch())};
+                return std::default_random_engine(seed);
+            }());
+            std::uniform_int_distribution<> dist(0, count - 1);
+            return dist(random);
         }
 
         QString createTrackId()
@@ -93,7 +95,6 @@ namespace unplayer
           mRepeatMode(NoRepeat),
           mAddingTracks(false)
     {
-        seedPRNG();
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
             QSqlDatabase::database().transaction();
             for (const std::shared_ptr<QueueTrack>& track : mTracks) {
@@ -780,7 +781,7 @@ namespace unplayer
             }
             erase_one(mNotPlayedTracks, mTracks[mCurrentIndex].get());
             mTracks.erase(mTracks.begin() + mCurrentIndex);
-            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[qrand() % mNotPlayedTracks.size()]));
+            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
         } else {
             if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 setCurrentIndex(0);
@@ -810,7 +811,7 @@ namespace unplayer
                     return;
                 }
             }
-            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[qrand() % mNotPlayedTracks.size()]));
+            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
         } else {
             if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 if (mRepeatMode == RepeatAll) {
