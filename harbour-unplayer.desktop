@@ -4,4 +4,4 @@ X-Nemo-Application-Type=silica-qt5
 Icon=harbour-unplayer
 Exec=harbour-unplayer %F
 Name=Unplayer
-MimeType=audio/flac;audio/x-flac;audio/aac;audio/x-aac;audio/mp4;audio/x-m4a;audio/x-m4b;audio/mpeg;audio/x-mp3;audio/x-mpeg;audio/mp3;application/ogg;audio/ogg;audio/x-ogg;audio/x-vorbis+ogg;audio/vorbis;audio/x-vorbis;audio/x-flac+ogg;audio/x-oggflac;audio/x-ape;audio/x-matroska;audio/x-wav;audio/wav;audio/vnd.wave;audio/x-wavpack;audio/x-scpls;audio/x-mpegurl;application/vnd.apple.mpegurl;video/mp4;video/x-m4v;video/mpeg;video/x-mpeg;video/x-mpeg2;video/ogg;video/x-ogg;video/x-theora+ogg;video/x-theora
+MimeType=audio/flac;audio/x-flac;audio/aac;audio/x-aac;audio/mp4;audio/x-m4a;audio/x-m4b;audio/mpeg;audio/x-mp3;audio/x-mpeg;audio/mp3;application/ogg;audio/ogg;audio/x-ogg;audio/x-vorbis+ogg;audio/vorbis;audio/x-vorbis;audio/x-flac+ogg;audio/x-oggflac;audio/x-ape;audio/x-matroska;audio/x-wav;audio/wav;audio/vnd.wave;audio/x-scpls;audio/x-mpegurl;application/vnd.apple.mpegurl;video/mp4;video/x-m4v;video/mpeg;video/ogg;video/x-ogg;video/x-theora+ogg;video/x-theora

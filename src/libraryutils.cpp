@@ -712,8 +712,8 @@ namespace unplayer
 
             {wavSuffix, Extension::WAV},
 
-            {wvSuffix, Extension::WAVPACK},
-            {wvpSuffix, Extension::WAVPACK}
+            //{wvSuffix, Extension::WAVPACK},
+            //{wvpSuffix, Extension::WAVPACK}
         };
         static const auto end(extensions.end());
 
@@ -737,11 +737,11 @@ namespace unplayer
             QLatin1String("f4v"),
             QLatin1String("lrv"),
 
-            QLatin1String("mpeg"),
+            /*QLatin1String("mpeg"),
             QLatin1String("mpg"),
             QLatin1String("mp2"),
             QLatin1String("mpe"),
-            QLatin1String("vob"),
+            QLatin1String("vob"),*/
 
             QLatin1String("mkv"),
 
