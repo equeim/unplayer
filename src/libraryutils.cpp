@@ -18,7 +18,6 @@
 
 #include "libraryutils.h"
 
-#include <atomic>
 #include <functional>
 
 #include <QCoreApplication>
@@ -415,7 +414,7 @@ namespace unplayer
 
                             if (fileInfo.path() != directory) {
                                 directory = fileInfo.path();
-                                directoryMediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, directory);
+                                directoryMediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, directory, mCancel);
 
                                 const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(directory));
                                 if (directoryMediaArtInDb != mediaArtDirectoriesInDbHashEnd) {
@@ -720,7 +719,7 @@ namespace unplayer
         return mDatabaseFilePath;
     }
 
-    QString LibraryUtils::findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath)
+    QString LibraryUtils::findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag)
     {
         {
             const auto found(mediaArtHash.find(directoryPath));
@@ -729,17 +728,24 @@ namespace unplayer
             }
         }
 
-        static const QStringList nameFilters{QLatin1String("*.jpeg"), QLatin1String("*.jpg"), QLatin1String("*.png")};
-        QDirIterator iterator(directoryPath, nameFilters, QDir::Files | QDir::Readable);
+        static const std::unordered_set<QString> suffixes{QLatin1String("jpeg"), QLatin1String("jpg"), QLatin1String("png")};
+        QDirIterator iterator(directoryPath, QDir::Files | QDir::Readable);
         while (iterator.hasNext()) {
+            if (cancelFlag) {
+                return QString();
+            }
             const QString filePath(iterator.next());
-            const QString fileName(iterator.fileName().toLower());
-            if (fileName == QLatin1String("cover") ||
-                    fileName == QLatin1String("front") ||
-                    fileName == QLatin1String("folder") ||
-                    fileName.startsWith(QLatin1String("albumart"))) {
-                mediaArtHash.insert({directoryPath, filePath});
-                return filePath;
+            const QFileInfo fileInfo(iterator.fileInfo());
+            if (contains(suffixes, fileInfo.suffix().toLower())) {
+                const QString baseName(fileInfo.completeBaseName().toLower());
+                if (baseName == QLatin1String("cover") ||
+                        baseName == QLatin1String("front") ||
+                        baseName == QLatin1String("folder") ||
+                        baseName.startsWith(QLatin1String("albumart"))) {
+                    mediaArtHash.insert({directoryPath, filePath});
+                    return filePath;
+                }
+                continue;
             }
         }
 

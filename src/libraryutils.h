@@ -22,6 +22,7 @@
 #include <QMimeDatabase>
 #include <QObject>
 
+#include <atomic>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -106,7 +107,7 @@ namespace unplayer
 
         const QString& databaseFilePath() const;
 
-        static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath);
+        static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
