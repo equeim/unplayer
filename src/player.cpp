@@ -31,8 +31,6 @@ namespace unplayer
 {
     namespace
     {
-        Player* instancePointer = nullptr;
-
         Mpris::LoopStatus loopStatus(Queue::RepeatMode mode) {
             switch (mode) {
             case Queue::NoRepeat:
@@ -55,17 +53,15 @@ namespace unplayer
             case Mpris::Track:
                 return Queue::RepeatOne;
             default:
-                return Queue::NoRepeat;;
+                return Queue::NoRepeat;
             }
         }
     }
 
     Player* Player::instance()
     {
-        if (!instancePointer) {
-            instancePointer = new Player(qApp);
-        }
-        return instancePointer;
+        static const auto p = new Player(qApp);
+        return p;
     }
 
     bool Player::isPlaying() const

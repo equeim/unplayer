@@ -63,16 +63,12 @@ namespace unplayer
         const QLatin1String repeatModeKey("state/repeatMode");
         const QLatin1String playerPositionKey("state/playerPosition");
         const QLatin1String stopAfterEosKey("state/stopAfterEos");
-
-        Settings* instancePointer = nullptr;
     }
 
     Settings* Settings::instance()
     {
-        if (!instancePointer) {
-            instancePointer = new Settings(qApp);
-        }
-        return instancePointer;
+        static const auto p = new Settings(qApp);
+        return p;
     }
 
     bool Settings::hasLibraryDirectories() const

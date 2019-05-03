@@ -20,7 +20,6 @@
 
 #include <atomic>
 #include <functional>
-#include <memory>
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -33,7 +32,6 @@
 #include <QFutureWatcher>
 #include <QMimeDatabase>
 #include <QRunnable>
-#include <QQmlEngine>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlRecord>
@@ -81,9 +79,6 @@ namespace unplayer
 
         //const QLatin1String wvSuffix("wv");
         //const QLatin1String wvpSuffix("wvp");
-
-
-        std::unique_ptr<LibraryUtils> instancePointer;
 
         inline QString emptyIfNull(const QString& string)
         {
@@ -716,11 +711,8 @@ namespace unplayer
 
     LibraryUtils* LibraryUtils::instance()
     {
-        if (!instancePointer) {
-            instancePointer.reset(new LibraryUtils());
-            QQmlEngine::setObjectOwnership(instancePointer.get(), QQmlEngine::CppOwnership);
-        }
-        return instancePointer.get();
+        static auto const p = new LibraryUtils(qApp);
+        return p;
     }
 
     const QString& LibraryUtils::databaseFilePath() const
@@ -1526,8 +1518,9 @@ namespace unplayer
         watcher->setFuture(future);
     }
 
-    LibraryUtils::LibraryUtils()
-        : mDatabaseInitialized(false),
+    LibraryUtils::LibraryUtils(QObject* parent)
+        : QObject(parent),
+          mDatabaseInitialized(false),
           mCreatedTable(false),
           mLibraryUpdateRunnable(nullptr),
           mLibraryUpdateStage(NoneStage),

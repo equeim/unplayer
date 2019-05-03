@@ -148,7 +148,7 @@ namespace unplayer
         bool isSavingTags() const;
         Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);
     private:
-        LibraryUtils();
+        LibraryUtils(QObject* parent = nullptr);
 
         bool mDatabaseInitialized;
         bool mCreatedTable;

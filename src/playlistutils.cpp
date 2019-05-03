@@ -41,8 +41,6 @@ namespace unplayer
 {
     namespace
     {
-        PlaylistUtils* instancePointer = nullptr;
-
         enum class PlaylistType
         {
             Pls,
@@ -451,10 +449,8 @@ namespace unplayer
 
     PlaylistUtils* PlaylistUtils::instance()
     {
-        if (!instancePointer) {
-            instancePointer = new PlaylistUtils(qApp);
-        }
-        return instancePointer;
+        static const auto p = new PlaylistUtils(qApp);
+        return p;
     }
 
     const QString& PlaylistUtils::playlistsDirectoryPath()
