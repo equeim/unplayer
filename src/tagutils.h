@@ -59,6 +59,9 @@ namespace unplayer
 
         template<bool IncrementTrackNumber>
         std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
+
+        extern template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
+        extern template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
     }
 }
 

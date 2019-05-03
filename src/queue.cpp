@@ -365,14 +365,14 @@ namespace unplayer
                                         oldTracks.erase(found);
                                         oldTracksEnd = oldTracks.end();
                                     }
-                                    existingTracks.push_back(std::move(url));
+                                    existingTracks.push_back(url);
                                 }
                             }
                         } else {
                             qWarning() << "file" << fileInfo.filePath() << "is not readable";
                         }
                     } else {
-                        existingTracks.push_back(std::move(url));
+                        existingTracks.push_back(url);
                     }
                 }
             };
@@ -551,7 +551,7 @@ namespace unplayer
                                 mediaArtData = std::move(info.mediaArtData);
                             }
                         }
-                        newTracks.push_back(makeTrack(std::move(url),
+                        newTracks.push_back(makeTrack(url,
                                                       std::move(info.title),
                                                       info.duration,
                                                       std::move(info.artists),

@@ -236,7 +236,7 @@ namespace unplayer
         removeTracks({index}, deleteFile);
     }
 
-    void TracksModel::removeTracks(const std::vector<int>& indexes, bool deleteFiles)
+    void TracksModel::removeTracks(std::vector<int> indexes, bool deleteFiles)
     {
         if (LibraryUtils::instance()->isRemovingFiles()) {
             return;

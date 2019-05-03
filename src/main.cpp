@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
             return 0;
         }
         if (version) {
-            std::cout << cli.m_exeName.name() << ' ' << UNPLAYER_VERSION << std::endl;
+            std::cout << cli.m_exeName.name() << " " UNPLAYER_VERSION << std::endl;
             return 0;
         }
     }
@@ -91,8 +91,8 @@ int main(int argc, char* argv[])
 
     if (resetLibrary || updateLibrary) {
         QCoreApplication app(argc, argv);
-        app.setOrganizationName(app.applicationName());
-        app.setOrganizationDomain(app.applicationName());
+        QCoreApplication::setOrganizationName(QCoreApplication::applicationName());
+        QCoreApplication::setOrganizationDomain(QCoreApplication::applicationName());
 
         if (resetLibrary) {
             LibraryUtils::instance()->resetDatabase();
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
             return 0;
         }
 
-        return app.exec();
+        return QCoreApplication::exec();
     }
 
     {
@@ -163,5 +163,5 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    return app->exec();
+    return QCoreApplication::exec();
 }

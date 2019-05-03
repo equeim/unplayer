@@ -243,7 +243,7 @@ namespace unplayer
                     }
                 }
 
-                void checkMimeType(const QLatin1String& mimeType) const
+                void checkMimeType(QLatin1String mimeType) const
                 {
                     if (mimeDb.mimeTypeForFile(info.filePath, QMimeDatabase::MatchContent).name() == mimeType) {
                         error(errorCauseTagExtractionNotSupported);
@@ -286,7 +286,7 @@ namespace unplayer
                     }
                 }
 
-                void checkMimeType(const QLatin1String&) const
+                void checkMimeType(QLatin1String) const
                 {
                     error(errorCauseTagSavingNotSupported);
                 }
@@ -393,10 +393,11 @@ namespace unplayer
             TagLib::PropertyMap replaceProperties;
             for (auto i = tags.begin(), end = tags.end(); i != end; ++i) {
                 TagLib::StringList values;
-                for (const QString& value : i.value().toStringList()) {
+                const QStringList v(i.value().toStringList());
+                for (const QString& value : v) {
                     values.append(toTString(value));
                 }
-                replaceProperties.insert(toTString(i.key()), std::move(values));
+                replaceProperties.insert(toTString(i.key()), values);
             }
 
             int trackNumber;

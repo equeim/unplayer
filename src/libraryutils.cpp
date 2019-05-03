@@ -82,7 +82,7 @@ namespace unplayer
         inline QString emptyIfNull(const QString& string)
         {
             if (string.isNull()) {
-                return QString("");
+                return QLatin1String("");
             }
             return string;
         }
