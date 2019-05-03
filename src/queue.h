@@ -166,7 +166,7 @@ namespace unplayer
     class QueueImageProvider final : public QQuickImageProvider
     {
     public:
-        static const QString providerId;
+        static const QLatin1String providerId;
         explicit QueueImageProvider(const Queue* queue);
         QueueImageProvider(const QueueImageProvider& other) = delete;
         QueueImageProvider& operator=(const QueueImageProvider& other) = delete;

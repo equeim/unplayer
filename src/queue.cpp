@@ -45,7 +45,7 @@ namespace unplayer
 {
     namespace
     {
-        const QString dbConnectionName(QLatin1String("unplayer_queue"));
+        const QLatin1String dbConnectionName("unplayer_queue");
 
         void seedPRNG()
         {
@@ -329,7 +329,7 @@ namespace unplayer
                     if (url.isLocalFile()) {
                         const QFileInfo fileInfo(url.path());
                         if (fileInfo.isFile() && fileInfo.isReadable()) {
-                            if (contains(PlaylistUtils::playlistsExtensions, fileInfo.suffix()) &&
+                            if (PlaylistUtils::isPlaylistExtension(fileInfo.suffix()) &&
                                     !contains(playlists, fileInfo.absoluteFilePath())) {
                                 playlists.insert(fileInfo.absoluteFilePath());
                                 std::vector<PlaylistTrack> playlistTracks(PlaylistUtils::parsePlaylist(url.path()));
@@ -906,7 +906,7 @@ namespace unplayer
         emit addingTracksChanged();
     }
 
-    const QString QueueImageProvider::providerId(QLatin1String("queue"));
+    const QLatin1String QueueImageProvider::providerId("queue");
 
     QueueImageProvider::QueueImageProvider(const Queue* queue)
         : QQuickImageProvider(QQuickImageProvider::Pixmap),

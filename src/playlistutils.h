@@ -46,8 +46,8 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(int playlistsCount READ playlistsCount NOTIFY playlistsChanged)
     public:
-        static const QStringList playlistsNameFilters;
-        static const std::unordered_set<QString> playlistsExtensions;
+        static const QStringList& playlistsNameFilters();
+        static bool isPlaylistExtension(const QString& suffix);
 
         static PlaylistUtils* instance();
 

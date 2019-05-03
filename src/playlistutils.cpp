@@ -52,16 +52,27 @@ namespace unplayer
 
         const QLatin1String plsExtension("pls");
 
-        const std::unordered_set<QString> m3uExtensions{QLatin1String("m3u"),
-                                                        QLatin1String("m3u8"),
-                                                        QLatin1String("vlc")};
+        const std::unordered_set<QString>& m3uExtensions()
+        {
+            static const std::unordered_set<QString> extensions{
+                QLatin1String("m3u"),
+                QLatin1String("m3u8"),
+                QLatin1String("vlc")
+            };
+            return extensions;
+        }
+
+        inline bool isM3uExtension(const QString& suffix)
+        {
+            return contains(m3uExtensions(), suffix);
+        }
 
         PlaylistType playlistTypeFromExtension(const QString& extension)
         {
             if (extension == plsExtension) {
                 return PlaylistType::Pls;
             }
-            if (contains(m3uExtensions, extension)) {
+            if (isM3uExtension(extension)) {
                 return PlaylistType::M3u;
             }
             return PlaylistType::Other;
@@ -410,21 +421,29 @@ namespace unplayer
         }
     }
 
-    const std::unordered_set<QString> PlaylistUtils::playlistsExtensions([]() {
-        auto extensions(m3uExtensions);
-        extensions.insert(plsExtension);
-        return extensions;
-    }());
-
-    const QStringList PlaylistUtils::playlistsNameFilters([]() {
-        QStringList filters;
-        filters.reserve(m3uExtensions.size() + 1);
-        for (const QString& extension : m3uExtensions) {
-            filters.push_back(QLatin1String("*.") % extension);
-        }
-        filters.push_back(QLatin1String("*.") % plsExtension);
+    const QStringList& PlaylistUtils::playlistsNameFilters()
+    {
+        static const QStringList filters([]() {
+            QStringList f;
+            f.reserve(m3uExtensions().size() + 1);
+            for (const QString& extension : m3uExtensions()) {
+                f.push_back(QLatin1String("*.") % extension);
+            }
+            f.push_back(QLatin1String("*.") % plsExtension);
+            return f;
+        }());
         return filters;
-    }());
+    }
+
+    bool PlaylistUtils::isPlaylistExtension(const QString& suffix)
+    {
+        static const std::unordered_set<QString> extensions([]() {
+            static std::unordered_set<QString> ex(m3uExtensions());
+            ex.insert(plsExtension);
+            return ex;
+        }());
+        return contains(extensions, suffix);
+    }
 
     PlaylistUtils* PlaylistUtils::instance()
     {
@@ -441,7 +460,7 @@ namespace unplayer
 
     int PlaylistUtils::playlistsCount()
     {
-        return QDir(mPlaylistsDirectoryPath).entryList(playlistsNameFilters, QDir::Files).size();
+        return QDir(mPlaylistsDirectoryPath).entryList(playlistsNameFilters(), QDir::Files).size();
     }
 
     void PlaylistUtils::savePlaylist(const QString& filePath, const std::vector<PlaylistTrack> &tracks)

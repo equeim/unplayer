@@ -28,41 +28,41 @@ namespace unplayer
 {
     namespace
     {
-        const QString libraryDirectoriesKey(QLatin1String("libraryDirectories"));
-        const QString openLibraryOnStartupKey(QLatin1String("openLibraryOnStartup"));
-        const QString blacklistedDirectoriesKey(QLatin1String("blacklistedDirectories"));
-        const QString defaultDirectoryKey(QLatin1String("defaultDirectory"));
-        const QString useDirectoryMediaArtKey(QLatin1String("useDirectoryMediaArt"));
-        const QString restorePlayerStateKey(QLatin1String("restorePlayerState"));
-        const QString showVideoFilesKey(QLatin1String("showVideoFiles"));
+        const QLatin1String libraryDirectoriesKey("libraryDirectories");
+        const QLatin1String openLibraryOnStartupKey("openLibraryOnStartup");
+        const QLatin1String blacklistedDirectoriesKey("blacklistedDirectories");
+        const QLatin1String defaultDirectoryKey("defaultDirectory");
+        const QLatin1String useDirectoryMediaArtKey("useDirectoryMediaArt");
+        const QLatin1String restorePlayerStateKey("restorePlayerState");
+        const QLatin1String showVideoFilesKey("showVideoFiles");
 
-        const QString artistsSortDescendingKey(QLatin1String("artistsSortDescending"));
+        const QLatin1String artistsSortDescendingKey("artistsSortDescending");
 
-        const QString albumsSortDescendingKey(QLatin1String("albumsSortDescending"));
-        const QString albumsSortModeKey(QLatin1String("albumsSortMode"));
+        const QLatin1String albumsSortDescendingKey("albumsSortDescending");
+        const QLatin1String albumsSortModeKey("albumsSortMode");
 
-        const QString allAlbumsSortDescendingKey(QLatin1String("allAlbumsSortDescending"));
-        const QString allAlbumsSortModeKey(QLatin1String("allAlbumsSortMode"));
+        const QLatin1String allAlbumsSortDescendingKey("allAlbumsSortDescending");
+        const QLatin1String allAlbumsSortModeKey("allAlbumsSortMode");
 
-        const QString albumTracksSortDescendingKey(QLatin1String("albumTracksSortDescending"));
-        const QString albumTracksSortModeKey(QLatin1String("albumTracksSortMode"));
+        const QLatin1String albumTracksSortDescendingKey("albumTracksSortDescending");
+        const QLatin1String albumTracksSortModeKey("albumTracksSortMode");
 
-        const QString artistTracksSortDescendingKey(QLatin1String("artistTracksSortDescending"));
-        const QString artistTracksSortModeKey(QLatin1String("artistTracksSortMode"));
-        const QString artistTracksInsideAlbumSortModeKey(QLatin1String("artistTracksInsideSortMode"));
+        const QLatin1String artistTracksSortDescendingKey("artistTracksSortDescending");
+        const QLatin1String artistTracksSortModeKey("artistTracksSortMode");
+        const QLatin1String artistTracksInsideAlbumSortModeKey("artistTracksInsideSortMode");
 
-        const QString allTracksSortDescendingKey(QLatin1String("allTracksSortDescending"));
-        const QString allTracksSortModeKey(QLatin1String("allTracksSortMode"));
-        const QString allTracksInsideAlbumSortModeKey(QLatin1String("allTracksInsideSortMode"));
+        const QLatin1String allTracksSortDescendingKey("allTracksSortDescending");
+        const QLatin1String allTracksSortModeKey("allTracksSortMode");
+        const QLatin1String allTracksInsideAlbumSortModeKey("allTracksInsideSortMode");
 
-        const QString genresSortDescendingKey(QLatin1String("genresSortDescending"));
+        const QLatin1String genresSortDescendingKey("genresSortDescending");
 
-        const QString queueTracksKey(QLatin1String("state/queueTracks"));
-        const QString queuePositionKey(QLatin1String("state/queuePosition"));
-        const QString shuffleKey(QLatin1String("state/shuffle"));
-        const QString repeatModeKey(QLatin1String("state/repeatMode"));
-        const QString playerPositionKey(QLatin1String("state/playerPosition"));
-        const QString stopAfterEosKey(QLatin1String("state/stopAfterEos"));
+        const QLatin1String queueTracksKey("state/queueTracks");
+        const QLatin1String queuePositionKey("state/queuePosition");
+        const QLatin1String shuffleKey("state/shuffle");
+        const QLatin1String repeatModeKey("state/repeatMode");
+        const QLatin1String playerPositionKey("state/playerPosition");
+        const QLatin1String stopAfterEosKey("state/stopAfterEos");
 
         Settings* instancePointer = nullptr;
     }

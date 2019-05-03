@@ -113,7 +113,7 @@ namespace unplayer
                 QFileInfo fileInfo(url.path());
                 if (fileInfo.isFile() && fileInfo.isReadable()) {
                     QString filePath(fileInfo.absoluteFilePath());
-                    if (contains(PlaylistUtils::playlistsExtensions, fileInfo.suffix())) {
+                    if (PlaylistUtils::isPlaylistExtension(fileInfo.suffix())) {
                         parsed.push_back(filePath);
                     } else {
                         const QString suffix(fileInfo.suffix());

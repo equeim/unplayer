@@ -192,7 +192,7 @@ namespace unplayer
                                      false});
                 } else {
                     const QString suffix(info.suffix());
-                    const bool isPlaylist = contains(PlaylistUtils::playlistsExtensions, suffix);
+                    const bool isPlaylist = PlaylistUtils::isPlaylistExtension(suffix);
                     if (isPlaylist ||
                             LibraryUtils::isExtensionSupported(suffix) ||
                             (showVideoFiles && LibraryUtils::isVideoExtensionSupported(suffix))) {
