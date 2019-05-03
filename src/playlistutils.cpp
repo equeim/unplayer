@@ -184,6 +184,8 @@ namespace unplayer
                                 case Key::Length:
                                     track.duration = value.toInt();
                                     break;
+                                case Key::Unknown:
+                                    break;
                                 }
                             }
                         }
@@ -280,7 +282,8 @@ namespace unplayer
                             continue;
                         }
 
-                        PlaylistTrack track{std::move(url)};
+                        PlaylistTrack track;
+                        track.url = std::move(url);
                         track.duration = -1;
 
                         const int durationIndex = 8;
@@ -309,7 +312,8 @@ namespace unplayer
                     } else if (!line.startsWith(QLatin1Char('#')) && !line.isEmpty()) {
                         QUrl url(urlFromString(line, playlistFileDir));
                         if (!url.isEmpty()) {
-                            PlaylistTrack track{std::move(url)};
+                            PlaylistTrack track;
+                            track.url = std::move(url);
                             track.duration = -1;
                             tracks.push_back(std::move(track));
                         }

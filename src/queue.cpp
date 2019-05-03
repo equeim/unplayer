@@ -384,7 +384,8 @@ namespace unplayer
                                      tracksMap,
                                      tracksMap.end(),
                                      existingTracks,
-                                     tracksToQuery};
+                                     tracksToQuery,
+                                     {}};
                 for (QString& urlString : trackUrls) {
                     const QUrl url([&urlString]() {
                         if (urlString.startsWith(QLatin1Char('/'))) {
@@ -617,7 +618,7 @@ namespace unplayer
         }
 
         const QUrl setAsCurrentUrl([&]() {
-            if (setAsCurrent < 0 || setAsCurrent >= libraryTracks.size()) {
+            if (setAsCurrent < 0 || setAsCurrent >= static_cast<int>(libraryTracks.size())) {
                 return QUrl();
             }
             return QUrl::fromLocalFile(libraryTracks[setAsCurrent].filePath);
@@ -884,7 +885,9 @@ namespace unplayer
             if (setAsCurrentUrl.isEmpty()) {
                 setCurrentIndex(0);
             } else {
-                if (setAsCurrent >= 0 && setAsCurrent < mTracks.size() && mTracks[setAsCurrent]->url == setAsCurrentUrl) {
+                if (setAsCurrent >= 0 &&
+                        setAsCurrent < static_cast<int>(mTracks.size()) &&
+                        mTracks[setAsCurrent]->url == setAsCurrentUrl) {
                     setCurrentIndex(setAsCurrent);
                     set = true;
                 } else {

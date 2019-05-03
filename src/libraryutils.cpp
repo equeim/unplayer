@@ -79,8 +79,8 @@ namespace unplayer
 
         const QLatin1String wavSuffix("wav");
 
-        const QLatin1String wvSuffix("wv");
-        const QLatin1String wvpSuffix("wvp");
+        //const QLatin1String wvSuffix("wv");
+        //const QLatin1String wvpSuffix("wvp");
 
 
         std::unique_ptr<LibraryUtils> instancePointer;
