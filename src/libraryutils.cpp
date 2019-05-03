@@ -626,42 +626,6 @@ namespace unplayer
         };
     }
 
-    Extension extensionFromSuffux(const QString& suffix)
-    {
-        static const std::unordered_map<QString, Extension> extensions{
-            {flacSuffix, Extension::FLAC},
-            {aacSuffix, Extension::AAC},
-
-            {m4aSuffix, Extension::M4A},
-            {f4aSuffix, Extension::M4A},
-            {m4bSuffix, Extension::M4A},
-            {f4bSuffix, Extension::M4A},
-
-            {mp3Suffix, Extension::MP3},
-            {mpgaSuffix, Extension::MP3},
-
-            {ogaSuffix, Extension::OGG},
-            {oggSuffix, Extension::OGG},
-            {opusSuffix, Extension::OPUS},
-
-            {apeSuffix, Extension::APE},
-
-            {mkaSuffix, Extension::MKA},
-
-            {wavSuffix, Extension::WAV},
-
-            {wvSuffix, Extension::WAVPACK},
-            {wvpSuffix, Extension::WAVPACK}
-        };
-        static const auto end(extensions.end());
-
-        const auto found(extensions.find(suffix));
-        if (found == end) {
-            return Extension::Other;
-        }
-        return found->second;
-    }
-
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField)
     {
         const QString embeddedMediaArt(query.value(embeddedMediaArtField).toString());

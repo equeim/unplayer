@@ -104,8 +104,6 @@ namespace unplayer
         QStringList parsed;
         parsed.reserve(arguments.size());
 
-        const QDir currentDir;
-
         for (const std::string& argument : arguments) {
             const QString argumentString(QString::fromStdString(argument));
             const QUrl url(argumentString);
