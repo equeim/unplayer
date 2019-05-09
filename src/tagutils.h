@@ -44,15 +44,15 @@ namespace unplayer
             QString title;
             QStringList artists;
             QStringList albums;
-            int year = 0;
-            int trackNumber = 0;
+            int year;
+            int trackNumber;
             QStringList genres;
             QString discNumber;
-            int duration = 0;
-            int bitrate = 0;
+            int duration;
+            int bitrate;
             QByteArray mediaArtData;
-            bool fileTypeValid = false;
-            bool canReadTags = false;
+            bool fileTypeValid;
+            bool canReadTags;
         };
 
         Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb);

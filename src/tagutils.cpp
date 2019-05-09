@@ -274,7 +274,7 @@ namespace unplayer
                         file.setProperties(properties);
 
                         if (file.save()) {
-                            Info info;
+                            Info info{};
                             info.filePath = filePath;
                             ExtractProcessor{info, mimeDb}.processFile(std::move(file));
                             infos.push_back(std::move(info));
@@ -374,7 +374,7 @@ namespace unplayer
 
         Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb)
         {
-            Info info;
+            Info info{};
             const QString filePath(fileInfo.filePath());
             info.filePath = filePath;
             processFile(filePath, extension, mimeDb, ExtractProcessor{info, mimeDb});
