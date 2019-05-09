@@ -244,6 +244,7 @@ Page {
                 text: Theme.highlightText(model.fileName, searchPanel.searchText, Theme.highlightColor)
                 color: highlighted || current ? Theme.highlightColor : Theme.primaryColor
                 truncationMode: TruncationMode.Fade
+                textFormat: Text.StyledText
             }
         }
         model: Unplayer.DirectoryTracksProxyModel {

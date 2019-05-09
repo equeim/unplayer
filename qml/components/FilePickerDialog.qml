@@ -153,6 +153,7 @@ Dialog {
                 text: Theme.highlightText(model.name, searchPanel.searchText, Theme.highlightColor)
                 color: highlighted ? Theme.highlightColor : Theme.primaryColor
                 truncationMode: TruncationMode.Fade
+                textFormat: Text.StyledText
             }
         }
 
