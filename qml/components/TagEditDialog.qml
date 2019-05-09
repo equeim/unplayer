@@ -26,6 +26,7 @@ Dialog {
 
     canAccept: titleSwitch.checked ||
                artistsListItem.checked ||
+               albumArtistsListItem.checked ||
                albumsListItem.checked ||
                yearSwitch.checked ||
                trackNumberSwitch.checked ||
@@ -50,6 +51,10 @@ Dialog {
 
         if (artistsListItem.checked) {
             tags[Unplayer.LibraryUtils.artistsTag] = getListItemValues(artistsListItem)
+        }
+
+        if (albumArtistsListItem.checked) {
+            tags[Unplayer.LibraryUtils.albumArtistsTag] = getListItemValues(albumArtistsListItem)
         }
 
         if (albumsListItem.checked) {
@@ -172,6 +177,13 @@ Dialog {
                     switchText: qsTranslate("unplayer", "Artists")
                     textFieldLabel: qsTranslate("unplayer", "Artist")
                     values: trackInfo.artists
+                }
+
+                TagEditDialogListItem {
+                    id: albumArtistsListItem
+                    switchText: qsTranslate("unplayer", "Album artists")
+                    textFieldLabel: qsTranslate("unplayer", "Album artist")
+                    values: trackInfo.albumArtists
                 }
 
                 TagEditDialogListItem {

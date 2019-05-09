@@ -36,6 +36,8 @@ namespace unplayer
         Q_PROPERTY(QString title READ title NOTIFY loaded)
         Q_PROPERTY(QStringList artists READ artists NOTIFY loaded)
         Q_PROPERTY(QString artist READ artist NOTIFY loaded)
+        Q_PROPERTY(QStringList albumArtists READ albumArtists NOTIFY loaded)
+        Q_PROPERTY(QString albumArtist READ albumArtist NOTIFY loaded)
         Q_PROPERTY(QStringList albums READ albums NOTIFY loaded)
         Q_PROPERTY(QString album READ album NOTIFY loaded)
         Q_PROPERTY(QString discNumber READ discNumber NOTIFY loaded)
@@ -57,6 +59,8 @@ namespace unplayer
         const QString& title() const;
         const QStringList& artists() const;
         QString artist() const;
+        const QStringList& albumArtists() const;
+        QString albumArtist() const;
         const QStringList& albums() const;
         QString album() const;
         const QString& discNumber() const;

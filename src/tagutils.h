@@ -32,6 +32,7 @@ namespace unplayer
     {
         extern const QLatin1String TitleTag;
         extern const QLatin1String ArtistsTag;
+        extern const QLatin1String AlbumArtistsTag;
         extern const QLatin1String AlbumsTag;
         extern const QLatin1String YearTag;
         extern const QLatin1String TrackNumberTag;
@@ -43,6 +44,7 @@ namespace unplayer
             QString filePath;
             QString title;
             QStringList artists;
+            QStringList albumArtists;
             QStringList albums;
             int year;
             int trackNumber;

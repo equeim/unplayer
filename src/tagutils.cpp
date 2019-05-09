@@ -115,6 +115,12 @@ namespace unplayer
                         }
                         info.artists.removeDuplicates();
 
+                        const TagLib::StringList& albumArtists = properties[AlbumArtistsTag.data()];
+                        info.albumArtists.reserve(static_cast<int>(albumArtists.size()));
+                        for (const TagLib::String& albumArtist : albumArtists) {
+                            info.albumArtists.push_back(toQString(albumArtist));
+                        }
+
                         const TagLib::StringList& albums = properties[AlbumsTag.data()];
                         info.albums.reserve(static_cast<int>(albums.size()));
                         for (const TagLib::String& album : albums) {
@@ -366,6 +372,7 @@ namespace unplayer
 
         const QLatin1String TitleTag("TITLE");
         const QLatin1String ArtistsTag("ARTIST");
+        const QLatin1String AlbumArtistsTag("ALBUMARTIST");
         const QLatin1String AlbumsTag("ALBUM");
         const QLatin1String YearTag("DATE");
         const QLatin1String TrackNumberTag("TRACKNUMBER");

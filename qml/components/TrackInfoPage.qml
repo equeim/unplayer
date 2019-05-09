@@ -54,6 +54,12 @@ Page {
 
             DetailItem {
                 visible: value
+                label: qsTranslate("unplayer", "Album artist")
+                value: trackInfo.albumArtist
+            }
+
+            DetailItem {
+                visible: value
                 label: qsTranslate("unplayer", "Album")
                 value: trackInfo.album
             }

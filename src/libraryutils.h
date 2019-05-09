@@ -81,6 +81,7 @@ namespace unplayer
 
         Q_PROPERTY(QString titleTag READ titleTag CONSTANT)
         Q_PROPERTY(QString artistsTag READ artistsTag CONSTANT)
+        Q_PROPERTY(QString albumArtistsTag READ albumArtistsTag CONSTANT)
         Q_PROPERTY(QString albumsTag READ albumsTag CONSTANT)
         Q_PROPERTY(QString yearTag READ yearTag CONSTANT)
         Q_PROPERTY(QString trackNumberTag READ trackNumberTag CONSTANT)
@@ -141,6 +142,7 @@ namespace unplayer
 
         QString titleTag() const;
         QString artistsTag() const;
+        QString albumArtistsTag() const;
         QString albumsTag() const;
         QString yearTag() const;
         QString trackNumberTag() const;

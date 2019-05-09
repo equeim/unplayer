@@ -24,6 +24,14 @@
 
 namespace unplayer
 {
+    namespace
+    {
+        inline QString joinList(const QStringList& list)
+        {
+            return list.join(QLatin1String(", "));
+        }
+    }
+
     const QString& TrackInfo::filePath() const
     {
         return mFilePath;
@@ -57,7 +65,17 @@ namespace unplayer
 
     QString TrackInfo::artist() const
     {
-        return mInfo.artists.join(QLatin1String(", "));
+        return joinList(mInfo.artists);
+    }
+
+    const QStringList& TrackInfo::albumArtists() const
+    {
+        return mInfo.albumArtists;
+    }
+
+    QString TrackInfo::albumArtist() const
+    {
+        return joinList(mInfo.albumArtists);
     }
 
     const QStringList& TrackInfo::albums() const
@@ -67,7 +85,7 @@ namespace unplayer
 
     QString TrackInfo::album() const
     {
-        return mInfo.albums.join(QLatin1String(", "));
+        return joinList(mInfo.albums);
     }
 
     const QString& TrackInfo::discNumber() const
@@ -92,7 +110,7 @@ namespace unplayer
 
     QString TrackInfo::genre() const
     {
-        return mInfo.genres.join(QLatin1String(", "));
+        return joinList(mInfo.genres);
     }
 
     long long TrackInfo::fileSize() const

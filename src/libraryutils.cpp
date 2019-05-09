@@ -124,17 +124,17 @@ namespace unplayer
 
                 QSqlQuery query(db);
                 query.prepare([&]() {
-                    QString queryString(SetMediaArt ? QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, album, discNumber, genre, directoryMediaArt, embeddedMediaArt) "
+                    QString queryString(SetMediaArt ? QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, albumArtist, album, discNumber, genre, directoryMediaArt, embeddedMediaArt) "
                                                                      "VALUES ")
-                                                    : QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, album, discNumber, genre) "
+                                                    : QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, albumArtist, album, discNumber, genre) "
                                                                      "VALUES "));
                     const auto sizeOrOne = [](const QStringList& strings) {
                         return strings.empty() ? 1 : strings.size();
                     };
                     const int count = sizeOrOne(info.artists) * sizeOrOne(info.albums) * sizeOrOne(info.genres);
                     for (int i = 0; i < count; ++i) {
-                        queryString.push_back(SetMediaArt ? QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?, ?)")
-                                                          : QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?)"));
+                        queryString.push_back(SetMediaArt ? QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                                                          : QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?)"));
                         if (i != (count - 1)) {
                             queryString.push_back(QLatin1Char(','));
                         }
@@ -144,18 +144,21 @@ namespace unplayer
                 }());
 
                 forEachOrOnce(info.artists, [&](const QString& artist) {
-                    forEachOrOnce(info.albums, [&](const QString& album) {
-                        forEachOrOnce(info.genres, [&](const QString& genre) {
-                            query.addBindValue(filePath);
-                            query.addBindValue(info.title);
-                            query.addBindValue(emptyIfNull(artist));
-                            query.addBindValue(emptyIfNull(album));
-                            query.addBindValue(emptyIfNull(info.discNumber));
-                            query.addBindValue(emptyIfNull(genre));
-                            if (SetMediaArt) {
-                                query.addBindValue(emptyIfNull(directoryMediaArt));
-                                query.addBindValue(emptyIfNull(embeddedMediaArt));
-                            }
+                    forEachOrOnce(info.albumArtists, [&](const QString& albumArtist) {
+                        forEachOrOnce(info.albums, [&](const QString& album) {
+                            forEachOrOnce(info.genres, [&](const QString& genre) {
+                                query.addBindValue(filePath);
+                                query.addBindValue(info.title);
+                                query.addBindValue(emptyIfNull(artist));
+                                query.addBindValue(emptyIfNull(albumArtist));
+                                query.addBindValue(emptyIfNull(album));
+                                query.addBindValue(emptyIfNull(info.discNumber));
+                                query.addBindValue(emptyIfNull(genre));
+                                if (SetMediaArt) {
+                                    query.addBindValue(emptyIfNull(directoryMediaArt));
+                                    query.addBindValue(emptyIfNull(embeddedMediaArt));
+                                }
+                            });
                         });
                     });
                 });
@@ -777,6 +780,7 @@ namespace unplayer
                                                            QLatin1String("modificationTime"),
                                                            QLatin1String("title"),
                                                            QLatin1String("artist"),
+                                                           QLatin1String("albumArtist"),
                                                            QLatin1String("album"),
                                                            QLatin1String("year"),
                                                            QLatin1String("trackNumber"),
@@ -806,12 +810,14 @@ namespace unplayer
         }
 
         if (createTable) {
+            qInfo("Creating table");
             QSqlQuery query(QLatin1String("CREATE TABLE tracks ("
                                           "    id INTEGER,"
                                           "    filePath TEXT,"
                                           "    modificationTime INTEGER,"
                                           "    title TEXT COLLATE NOCASE,"
                                           "    artist TEXT COLLATE NOCASE,"
+                                          "    albumArtist TEXT COLLATE NOCASE,"
                                           "    album TEXT COLLATE NOCASE,"
                                           "    year INTEGER,"
                                           "    trackNumber INTEGER,"
@@ -1406,6 +1412,11 @@ namespace unplayer
     QString LibraryUtils::artistsTag() const
     {
         return tagutils::ArtistsTag;
+    }
+
+    QString LibraryUtils::albumArtistsTag() const
+    {
+        return tagutils::AlbumArtistsTag;
     }
 
     QString LibraryUtils::albumsTag() const
