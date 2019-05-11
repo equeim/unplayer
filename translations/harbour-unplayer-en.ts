@@ -300,10 +300,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Updating library...</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Settings</source>
         <translation></translation>
     </message>
@@ -549,7 +545,7 @@
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation>Removing albums...</translation>
+        <translation type="vanished">Removing albums...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
@@ -609,7 +605,7 @@
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation>Removing tracks...</translation>
+        <translation type="vanished">Removing tracks...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
@@ -653,6 +649,91 @@
     <message>
         <source>Copy</source>
         <translation>Copy</translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preparing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanning filesystem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extracting metadata</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Finishing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new tracks found</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 of %n tracks processed</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Adding tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving tags...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Selected tags will be applied to all %n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Only selected tags will be applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t read tags from this file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increment track number for each file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
