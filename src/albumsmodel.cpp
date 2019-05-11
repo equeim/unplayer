@@ -281,31 +281,30 @@ namespace unplayer
 
     void AlbumsModel::execQuery()
     {
-        QString queryString(QLatin1String("SELECT artist, album, year, COUNT(*), SUM(duration) FROM "
-                                          "(SELECT artist, album, year, duration FROM tracks GROUP BY id, artist, album) "));
+        QString queryString(QLatin1String("SELECT %1, album, year, COUNT(*), SUM(duration) FROM "
+                                          "(SELECT %1, album, year, duration FROM tracks GROUP BY id, %1, album) "));
         if (mAllArtists) {
-            queryString += QLatin1String("GROUP BY album, artist ");
+            queryString += QLatin1String("GROUP BY album, %1 ");
         } else {
-            queryString += QLatin1String("WHERE artist = ? "
-                                   "GROUP BY album ");
+            queryString += QLatin1String("WHERE %1 = ? GROUP BY album ");
         }
 
         switch (mSortMode) {
         case SortAlbum:
-            queryString += QLatin1String("ORDER BY album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY album = '' %2, album %2");
             break;
         case SortYear:
-            queryString += QLatin1String("ORDER BY year %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY year %2, album = '' %2, album %2");
             break;
         case SortArtistAlbum:
-            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, album = '' %2, album %2");
             break;
         case SortArtistYear:
-            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, year %1, album = '' %1, album %1");
+            queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, year %2, album = '' %2, album %2");
         }
 
-        queryString = queryString.arg(mSortDescending ? QLatin1String("DESC")
-                                                      : QLatin1String("ASC"));
+        queryString = queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
+                                      mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
 
 
         QSqlQuery query;

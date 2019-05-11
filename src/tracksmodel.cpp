@@ -272,55 +272,58 @@ namespace unplayer
 
     void TracksModel::execQuery()
     {
-        QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "));
+        QString queryString(QLatin1String("SELECT filePath, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "));
 
         if (mAllArtists) {
             if (!mGenre.isEmpty()) {
                 queryString += QLatin1String("WHERE genre = ? ");
             }
-            queryString += QLatin1String("GROUP BY id, artist, album ");
+            queryString += QLatin1String("GROUP BY id, %1, album ");
         } else {
-            queryString += QLatin1String("WHERE artist = ? ");
+            queryString += QLatin1String("WHERE %1 = ? ");
             if (mAllAlbums) {
                 queryString += QLatin1String("GROUP BY id, album ");
             } else {
-                queryString += QLatin1String("AND album = ? "
-                                       "GROUP BY id ");
+                queryString += QLatin1String("AND album = ? GROUP BY id ");
             }
         }
 
         switch (mSortMode) {
         case SortMode::Title:
-            queryString += QLatin1String("ORDER BY title %1");
+            queryString += QLatin1String("ORDER BY title %2");
             break;
         case SortMode::AddedDate:
-            queryString += QLatin1String("ORDER BY id %1");
+            queryString += QLatin1String("ORDER BY id %2");
             break;
         case SortMode::ArtistAlbumTitle:
-            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, album %1, ");
-            break;
         case SortMode::ArtistAlbumYear:
-            queryString += QLatin1String("ORDER BY artist = '' %1, artist %1, album = '' %1, year %1, album %1, ");
-            break;
-        }
+        {
+            queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, album = '' %2, ");
 
-        if (mSortMode == SortMode::ArtistAlbumTitle ||
-                mSortMode == SortMode::ArtistAlbumYear) {
+            if (mSortMode == SortMode::ArtistAlbumTitle) {
+                queryString += QLatin1String("album %2, ");
+            } else {
+                queryString += QLatin1String("year %2, album %2, ");
+            }
+
             switch (mInsideAlbumSortMode) {
             case InsideAlbumSortMode::Title:
-                queryString += QLatin1String("title %1");
+                queryString += QLatin1String("title %2");
                 break;
             case InsideAlbumSortMode::DiscNumberTitle:
-                queryString += QLatin1String("discNumber = '' %1, discNumber %1, title %1");
+                queryString += QLatin1String("discNumber = '' %2, discNumber %2, title %2");
                 break;
             case InsideAlbumSortMode::DiscNumberTrackNumber:
-                queryString += QLatin1String("discNumber = '' %1, discNumber %1, trackNumber %1, title %1");
+                queryString += QLatin1String("discNumber = '' %2, discNumber %2, trackNumber %2, title %2");
                 break;
             }
+
+            break;
+        }
         }
 
-        queryString = queryString.arg(mSortDescending ? QLatin1String("DESC")
-                                                      : QLatin1String("ASC"));
+        queryString = queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
+                                      mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
 
         QSqlQuery query;
         query.prepare(queryString);

@@ -26,6 +26,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QFutureWatcher>
 #include <QMimeDatabase>
@@ -299,8 +300,8 @@ namespace unplayer
 
         // FIXME: use capture initializers on C++14
         auto future = QtConcurrent::run(std::bind([](QStringList& trackUrls, std::vector<std::shared_ptr<QueueTrack>>& oldTracks) {
-            QTime time;
-            time.start();
+            QElapsedTimer timer;
+            timer.start();
 
             std::vector<std::shared_ptr<QueueTrack>> newTracks;
 
@@ -386,7 +387,7 @@ namespace unplayer
                                      tracksMap.end(),
                                      existingTracks,
                                      tracksToQuery,
-                                     {}};
+                                     std::unordered_set<QString>{}};
                 for (QString& urlString : trackUrls) {
                     const QUrl url([&urlString]() {
                         if (urlString.startsWith(QLatin1Char('/'))) {
@@ -400,6 +401,8 @@ namespace unplayer
                 }
             }
 
+            const bool useAlbumArtist = Settings::instance()->useAlbumArtist();
+
             const auto makeTrack = [](const QUrl& url,
                                       QString&& title,
                                       int duration,
@@ -409,7 +412,6 @@ namespace unplayer
                                       QByteArray&& mediaArtData,
                                       long long modificationTime) {
                 QString artist;
-                artists.removeDuplicates();
                 if (artists.isEmpty()) {
                     artist = qApp->translate("unplayer", "Unknown artist");
                 } else {
@@ -417,7 +419,6 @@ namespace unplayer
                 }
 
                 QString album;
-                albums.removeDuplicates();
                 if (albums.isEmpty()) {
                     album = qApp->translate("unplayer", "Unknown artist");
                 } else {
@@ -445,12 +446,13 @@ namespace unplayer
                 db.transaction();
 
                 forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
-                    QString queryString(QLatin1String("SELECT filePath, modificationTime, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
+                    QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
                     queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
                     for (int j = 1; j < count; ++j) {
                         queryString.push_back(QStringLiteral(",?"));
                     }
                     queryString.push_back(QLatin1Char(')'));
+                    queryString = queryString.arg(useAlbumArtist ? QLatin1String("albumArtist") : QLatin1String("artist"));
 
                     QSqlQuery query(db);
                     query.prepare(queryString);
@@ -471,6 +473,8 @@ namespace unplayer
 
                         const auto insert = [&]() {
                             const QUrl url(QUrl::fromLocalFile(previousFilePath));
+                            artists.removeDuplicates();
+                            albums.removeDuplicates();
                             tracksMap.insert({url, makeTrack(url,
                                                              std::move(title),
                                                              duration,
@@ -505,7 +509,7 @@ namespace unplayer
 
                             if (shouldInsert) {
                                 artists.push_back(query.value(3).toString());
-                                albums.push_back(query.value(4).toString());
+                                albums.push_back(query.value(5).toString());
                             }
 
                             previousFilePath = std::move(filePath);
@@ -552,10 +556,12 @@ namespace unplayer
                                 mediaArtData = std::move(info.mediaArtData);
                             }
                         }
+                        QStringList& artists = useAlbumArtist ? info.albumArtists.isEmpty() ? info.artists : info.albumArtists
+                                                              : info.artists.isEmpty() ? info.albumArtists : info.artists;
                         newTracks.push_back(makeTrack(url,
                                                       std::move(info.title),
                                                       info.duration,
-                                                      std::move(info.artists),
+                                                      std::move(artists),
                                                       std::move(info.albums),
                                                       std::move(mediaArtFilePath),
                                                       std::move(mediaArtData),

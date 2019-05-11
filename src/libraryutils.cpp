@@ -108,7 +108,7 @@ namespace unplayer
                                 int id,
                                 const QString& filePath,
                                 long long modificationTime,
-                                const tagutils::Info& info,
+                                tagutils::Info& info,
                                 const QString& directoryMediaArt = QString(),
                                 const QString& embeddedMediaArt = QString())
             {
@@ -121,6 +121,12 @@ namespace unplayer
                         }
                     }
                 };
+
+                if (info.albumArtists.isEmpty() && !info.artists.isEmpty()) {
+                    info.albumArtists = info.artists;
+                } else if (info.artists.isEmpty() && !info.albumArtists.isEmpty()) {
+                    info.artists = info.albumArtists;
+                }
 
                 QSqlQuery query(db);
                 query.prepare([&]() {
@@ -520,7 +526,7 @@ namespace unplayer
                         }
 
                         QFileInfo fileInfo(file.filePath);
-                        const tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, file.extension, mimeDb));
+                        tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, file.extension, mimeDb));
                         if (trackInfo.fileTypeValid) {
                             ++count;
                             addTrackToDatabase(db,
@@ -912,7 +918,8 @@ namespace unplayer
             return 0;
         }
 
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(artist)) FROM tracks"));
+        QSqlQuery query(Settings::instance()->useAlbumArtist() ? QLatin1String("SELECT COUNT(DISTINCT(albumArtist)) FROM tracks")
+                                                               : QLatin1String("SELECT COUNT(DISTINCT(artist)) FROM tracks"));
         if (query.next()) {
             return query.value(0).toInt();
         }
@@ -1465,8 +1472,8 @@ namespace unplayer
             timer.start();
 
             QMimeDatabase mimeDb;
-            const std::vector<tagutils::Info> infos(incrementTrackNumber ? tagutils::saveTags<true>(files, tags, mimeDb)
-                                                                         : tagutils::saveTags<false>(files, tags, mimeDb));
+            std::vector<tagutils::Info> infos(incrementTrackNumber ? tagutils::saveTags<true>(files, tags, mimeDb)
+                                                                   : tagutils::saveTags<false>(files, tags, mimeDb));
             if (!qApp) {
                 return;
             }
@@ -1517,7 +1524,7 @@ namespace unplayer
                 }
             }
 
-            for (const tagutils::Info& info : infos) {
+            for (tagutils::Info& info : infos) {
                 addTrackToDatabase<false>(db, ++lastId, info.filePath, getLastModifiedTime(info.filePath), info);
             }
 

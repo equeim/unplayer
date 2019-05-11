@@ -86,6 +86,12 @@ Page {
                 Component.onCompleted: checked = Unplayer.Settings.openLibraryOnStartup
             }
 
+            TextSwitch {
+                text: qsTranslate("unplayer", "Use tag \"Album artist\" instead of \"Artist\" if it is available")
+                onCheckedChanged: Unplayer.Settings.useAlbumArtist = checked
+                Component.onCompleted: checked = Unplayer.Settings.useAlbumArtist
+            }
+
             BackgroundItem {
                 id: libraryDirectoriesItem
 
