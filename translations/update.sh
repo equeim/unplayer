@@ -3,7 +3,7 @@
 if command -v lupdate-qt5 > /dev/null 2>&1; then
     _lupdate=lupdate-qt5
 else
-    _kupdate=lupdate
+    _lupdate=lupdate
 fi
 
 _dir="$(realpath $(dirname $0))"
