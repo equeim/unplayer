@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation>Un simple reproductor de música para Sailfish OS</translation>
+        <translation>Un simple reproductor de música para Sailfish SO</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="vanished">Actualizando libreria</translation>
+        <translation>Actualizando libreria</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -549,7 +549,7 @@
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="vanished">Quitando álbumes</translation>
+        <translation>Quitando álbumes</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
@@ -609,7 +609,7 @@
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="vanished">Quitando pistas...</translation>
+        <translation>Quitando pistas...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
@@ -636,7 +636,7 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Flujos</translation>
+        <translation>Secuenciador</translation>
     </message>
     <message>
         <source>Open</source>
@@ -656,88 +656,88 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Editar etiqueta</translation>
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>Preparando</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>Escaneando sistema de archivos</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Extraendo metadatos</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>Finalizando</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n nuevas canciones halladas</numerusform>
+            <numerusform>%n nuevas canciones halladas</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 de %n canciones procesadas</numerusform>
+            <numerusform>%1 de %n canciones procesadas</numerusform>
         </translation>
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Agregando canciones</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardando etiquetas</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar etiqueta &quot;Artista del álbum&quot; en lugar de &quot;Artista&quot; si está disponible</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar</translation>
     </message>
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Las etiquetas seleccionadas se aplicarán a todos los %n archivos</numerusform>
+            <numerusform>Las etiquetas seleccionadas se aplicarán a todos los %n archivos</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo se aplicarán a etiquetas seleccionadas</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation type="unfinished"></translation>
+        <translation>No se pueden leer las etiquetas de este archivo</translation>
     </message>
     <message>
         <source>Album artists</source>
-        <translation type="unfinished"></translation>
+        <translation>artistas del álbum</translation>
     </message>
     <message>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista del álbum</translation>
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation type="unfinished"></translation>
+        <translation>Incrementa el número de canciones para cada archivo</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Agregar</translation>
     </message>
 </context>
 </TS>
