@@ -636,7 +636,7 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Secuenciador</translation>
+        <translation>Retransmisor</translation>
     </message>
     <message>
         <source>Open</source>
