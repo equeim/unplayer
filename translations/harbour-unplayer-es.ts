@@ -355,7 +355,7 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation>Código fuente</translation>
+        <translation>Fuente</translation>
     </message>
     <message>
         <source>Authors</source>
