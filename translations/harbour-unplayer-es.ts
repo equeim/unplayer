@@ -355,7 +355,7 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation>Código fuente</translation>
+        <translation>Fuente</translation>
     </message>
     <message>
         <source>Authors</source>
@@ -636,7 +636,7 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Secuenciador</translation>
+        <translation>Retransmisor</translation>
     </message>
     <message>
         <source>Open</source>
