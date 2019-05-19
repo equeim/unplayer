@@ -127,7 +127,7 @@ namespace unplayer
 
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
             if (!db.isOpen()) {
-                return;
+                return tracks;
             }
 
             db.transaction();

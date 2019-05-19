@@ -439,7 +439,7 @@ namespace unplayer
             const DatabaseGuard databaseGuard{dbConnectionName};
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
             if (!db.isOpen()) {
-                return;
+                return newTracks;
             }
 
             db.transaction();
