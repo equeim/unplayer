@@ -135,7 +135,7 @@
         <location filename="../qml/components/TagEditDialog.qml" line="101"/>
         <location filename="../qml/components/TracksPage.qml" line="74"/>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Редактировать теги</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumDelegate.qml" line="90"/>
@@ -747,42 +747,42 @@
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="100"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/TagEditDialog.qml" line="113"/>
         <source>Selected tags will be applied to all %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Выбранные теги будут применены ко всему %n файлу</numerusform>
+            <numerusform>Выбранные теги будут применены ко всем %n файлам</numerusform>
+            <numerusform>Выбранные теги будут применены ко всем %n файлам</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="114"/>
         <source>Only selected tags will be applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Только выбранные теги будут применены</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="115"/>
         <source>Can&apos;t read tags from this file</source>
-        <translation type="unfinished"></translation>
+        <translation>Невозможно прочитать теги для этого файла</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="184"/>
         <source>Album artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Исполнители альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="185"/>
         <location filename="../qml/components/TrackInfoPage.qml" line="57"/>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Исполнитель альбома</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="242"/>
         <source>Increment track number for each file</source>
-        <translation type="unfinished"></translation>
+        <translation>Увеличивать номер трека для каждого файла на единицу</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="254"/>
@@ -935,7 +935,7 @@
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="90"/>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="unfinished"></translation>
+        <translation>Использовать тег &quot;Исполнитель альбома&quot; вместо &quot;Исполнитель&quot;, если он установлен</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="138"/>
@@ -1039,60 +1039,60 @@
     <message>
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="45"/>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>Подготовка</translation>
     </message>
     <message>
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="47"/>
         <source>Scanning filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>Сканирование файловой системы</translation>
     </message>
     <message>
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="49"/>
         <source>Extracting metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Извлечение метаданных</translation>
     </message>
     <message>
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="51"/>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>Завершение</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="77"/>
         <source>%n new tracks found</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Найден %n новый трек</numerusform>
+            <numerusform>Найдено %n новых трека</numerusform>
+            <numerusform>Найдено %n новых треков</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/components/LibraryUpdateLabels.qml" line="79"/>
         <source>%1 of %n tracks processed</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Обработано %1 из %n трека</numerusform>
+            <numerusform>Обработано %1 из %n треков</numerusform>
+            <numerusform>Обработано %1 из %n треков</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPanel.qml" line="256"/>
         <source>Adding tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавление треков...</translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPanel.qml" line="259"/>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранение тегов...</translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPanel.qml" line="380"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialogListItem.qml" line="99"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить</translation>
     </message>
 </context>
 </TS>
