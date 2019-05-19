@@ -21,6 +21,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFileInfo>
+#include <QMimeDatabase>
 
 #include <apefile.h>
 #include <apetag.h>

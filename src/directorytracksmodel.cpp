@@ -18,6 +18,8 @@
 
 #include "directorytracksmodel.h"
 
+#include <functional>
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>

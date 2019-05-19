@@ -25,6 +25,7 @@
 #include "libraryutils.h"
 
 class QFileInfo;
+class QMimeDatabase;
 
 namespace unplayer
 {
