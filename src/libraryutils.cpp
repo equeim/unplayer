@@ -255,6 +255,19 @@ namespace unplayer
                                 dir.push_back(QLatin1Char('/'));
                             }
                         }
+
+                        for (int i = 0, max = dirs.size(); i < max; ++i) {
+                            const QString& dir = dirs[i];
+                            const auto found(std::find_if(dirs.begin(), dirs.end(), [&](const QString& d) {
+                                return d != dir && dir.startsWith(d);
+                            }));
+                            if (found != dirs.end()) {
+                                dirs.removeAt(i);
+                                --max;
+                                --i;
+                            }
+                        }
+
                         return std::move(dirs);
                     };
 
