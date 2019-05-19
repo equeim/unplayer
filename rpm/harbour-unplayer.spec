@@ -53,7 +53,7 @@ BuildRequires: ninja
 %global qtmpris "%{_builddir}/3rdparty/qtmpris-1.0.0"
 %global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
 
-%global taglib "%{_builddir}/3rdparty/taglib-1.11.1"
+%global taglib "%{_builddir}/3rdparty/taglib-79bb14"
 %global taglib_build "%{build_directory}/3rdparty/build-taglib"
 
 %global thirdparty_install "%{build_directory}/3rdparty/install"
