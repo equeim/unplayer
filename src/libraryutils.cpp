@@ -87,6 +87,18 @@ namespace unplayer
             return string;
         }
 
+        template<typename Function>
+        void forEachOrOnce(const QStringList& strings, const Function& exec)
+        {
+            if (strings.empty()) {
+                exec(QLatin1String(""));
+            } else {
+                for (const QString& string : strings) {
+                    exec(string);
+                }
+            }
+        }
+
         template<bool SetMediaArt = true>
         void addTrackToDatabase(const QSqlDatabase& db,
                                 int id,
@@ -96,16 +108,6 @@ namespace unplayer
                                 const QString& directoryMediaArt = QString(),
                                 const QString& embeddedMediaArt = QString())
             {
-                const auto forEachOrOnce = [](const QStringList& strings, const std::function<void(const QString&)>& exec) {
-                    if (strings.empty()) {
-                        exec(QString());
-                    } else {
-                        for (const QString& string : strings) {
-                            exec(string);
-                        }
-                    }
-                };
-
                 if (info.albumArtists.isEmpty() && !info.artists.isEmpty()) {
                     info.albumArtists = info.artists;
                 } else if (info.artists.isEmpty() && !info.albumArtists.isEmpty()) {
