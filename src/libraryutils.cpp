@@ -843,7 +843,7 @@ namespace unplayer
 
     void LibraryUtils::updateDatabase()
     {
-        if (mLibraryUpdateRunnable) {
+        if (mLibraryUpdateRunnable || !mDatabaseInitialized) {
             return;
         }
 
@@ -888,6 +888,10 @@ namespace unplayer
 
     void LibraryUtils::resetDatabase()
     {
+        if (!mDatabaseInitialized) {
+            return;
+        }
+
         qInfo("Resetting database");
         QSqlQuery query(QLatin1String("DELETE from tracks"));
         if (query.lastError().type() != QSqlError::NoError) {
@@ -1037,6 +1041,10 @@ namespace unplayer
 
     void LibraryUtils::setMediaArt(const QString& artist, const QString& album, const QString& mediaArt)
     {
+        if (!mDatabaseInitialized) {
+            return;
+        }
+
         if (!QDir().mkpath(mMediaArtDirectory)) {
             qWarning() << "failed to create media art directory:" << mMediaArtDirectory;
             return;
@@ -1093,7 +1101,7 @@ namespace unplayer
 
     void LibraryUtils::removeArtists(std::vector<QString>&& artists, bool deleteFiles)
     {
-        if (mRemovingFiles) {
+        if (mRemovingFiles || !mDatabaseInitialized) {
             return;
         }
 
@@ -1168,7 +1176,7 @@ namespace unplayer
 
     void LibraryUtils::removeAlbums(std::vector<Album>&& albums, bool deleteFiles)
     {
-        if (mRemovingFiles) {
+        if (mRemovingFiles || !mDatabaseInitialized) {
             return;
         }
 
@@ -1248,7 +1256,7 @@ namespace unplayer
 
     void LibraryUtils::removeGenres(std::vector<QString>&& genres, bool deleteFiles)
     {
-        if (mRemovingFiles) {
+        if (mRemovingFiles || !mDatabaseInitialized) {
             return;
         }
 
@@ -1323,7 +1331,7 @@ namespace unplayer
 
     void LibraryUtils::removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories)
     {
-        if (mRemovingFiles) {
+        if (mRemovingFiles || !mDatabaseInitialized) {
             return;
         }
 
@@ -1447,7 +1455,7 @@ namespace unplayer
 
     void LibraryUtils::saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber)
     {
-        if (mSavingTags) {
+        if (mSavingTags || !mDatabaseInitialized) {
             return;
         }
 
