@@ -37,6 +37,7 @@ BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
 BuildRequires: pkgconfig(zlib)
 BuildRequires: boost-devel
 
+BuildRequires: ninja
 
 %global build_type debug
 #%%global build_type release
@@ -82,21 +83,24 @@ export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
 if [ ! -d %{thirdparty_install} ] || [ -z "$(ls -A %{thirdparty_install})" ]; then
     %{__mkdir_p} %{qtdbusextended_build}
     cd %{qtdbusextended_build}
-    %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX='%{thirdparty_install}'
-    %{__make} %{?_smp_mflags}
+    %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+    %make_build
+    # not make_install, because we do not want DESTDIR here
     %{__make} install
     cd -
 
     %{__mkdir_p} %{qtmpris_build}
     cd %{qtmpris_build}
-    %qmake5 %{qtmpris} CONFIG+="%{build_type} staticlib" PREFIX='%{thirdparty_install}'
-    %{__make} %{?_smp_mflags}
+    %qmake5 %{qtmpris} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+    %make_build
+    # not make_install, because we do not want DESTDIR here
     %{__make} install
     cd -
 
     %{__mkdir_p} %{taglib_build}
     cd %{taglib_build}
     %cmake %{taglib} \
+        -G Ninja \
         -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
         -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
         -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
@@ -104,23 +108,24 @@ if [ ! -d %{thirdparty_install} ] || [ -z "$(ls -A %{thirdparty_install})" ]; th
         -DCMAKE_CXX_FLAGS="-fPIC" \
         -DBUILD_SHARED_LIBS=OFF \
         -DWITH_MP4=ON
-    %{__make} %{?_smp_mflags}
-    %{__make} install
+    %ninja_build
+    # not ninja_install, because we do not want DESTDIR here
+    %{__ninja} install %{__ninja_common_opts}
     cd -
 fi
 
 cd %{build_directory}
 %cmake .. \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=%{build_type} \
     -DHARBOUR=%{harbour} \
     -DQTMPRIS_STATIC=ON \
     -DTAGLIB_STATIC=ON
-%{__make} %{?_smp_mflags}
-
+%ninja_build
 
 %install
 cd %{build_directory}
-%make_install
+%ninja_install
 desktop-file-install \
     --delete-original \
     --dir %{buildroot}/%{_datadir}/applications \
