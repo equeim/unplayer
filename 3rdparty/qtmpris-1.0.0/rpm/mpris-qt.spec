@@ -35,7 +35,7 @@ QML plugin for %{name}.
 
 %build
 
-%qmake5
+%qmake5 VERSION=`echo %{version} | sed 's/+.*//'`
 
 make %{?_smp_mflags}
 

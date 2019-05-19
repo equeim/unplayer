@@ -49,7 +49,7 @@ BuildRequires: boost-devel
 %global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended-0.0.3"
 %global qtdbusextended_build "%{build_directory}/3rdparty/build-qtdbusextended"
 
-%global qtmpris "%{_builddir}/3rdparty/qtmpris-0.1.0"
+%global qtmpris "%{_builddir}/3rdparty/qtmpris-1.0.0"
 %global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
 
 %global taglib "%{_builddir}/3rdparty/taglib-1.11.1"
