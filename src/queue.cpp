@@ -436,97 +436,93 @@ namespace unplayer
                                                     modificationTime);
             };
 
-            {
-                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, dbConnectionName);
-                db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-                if (!db.open()) {
-                    qWarning() << "failed to open database" << db.lastError();
+            const DatabaseGuard databaseGuard{dbConnectionName};
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
+                return;
+            }
+
+            db.transaction();
+            const CommitGuard commitGuard{db};
+
+            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+                QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
+                queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
+                for (int j = 1; j < count; ++j) {
+                    queryString.push_back(QStringLiteral(",?"));
+                }
+                queryString.push_back(QLatin1Char(')'));
+                queryString = queryString.arg(useAlbumArtist ? QLatin1String("albumArtist") : QLatin1String("artist"));
+
+                QSqlQuery query(db);
+                query.prepare(queryString);
+                for (int j = first, max = first + count; j < max; ++j) {
+                    query.addBindValue(tracksToQuery[j]);
                 }
 
-                db.transaction();
 
-                forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
-                    QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
-                    queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
-                    for (int j = 1; j < count; ++j) {
-                        queryString.push_back(QStringLiteral(",?"));
-                    }
-                    queryString.push_back(QLatin1Char(')'));
-                    queryString = queryString.arg(useAlbumArtist ? QLatin1String("albumArtist") : QLatin1String("artist"));
+                if (query.exec()) {
+                    QString previousFilePath;
+                    QString title;
+                    int duration;
+                    QStringList artists;
+                    QStringList albums;
+                    QString mediaArtFilePath;
+                    long long modificationTime;
+                    bool shouldInsert = false;
 
-                    QSqlQuery query(db);
-                    query.prepare(queryString);
-                    for (int j = first, max = first + count; j < max; ++j) {
-                        query.addBindValue(tracksToQuery[j]);
-                    }
+                    const auto insert = [&]() {
+                        const QUrl url(QUrl::fromLocalFile(previousFilePath));
+                        artists.removeDuplicates();
+                        albums.removeDuplicates();
+                        tracksMap.insert({url, makeTrack(url,
+                                                         std::move(title),
+                                                         duration,
+                                                         std::move(artists),
+                                                         std::move(albums),
+                                                         std::move(mediaArtFilePath),
+                                                         QByteArray(),
+                                                         modificationTime)});
+                    };
 
+                    while (query.next()) {
+                        QString filePath(query.value(0).toString());
 
-                    if (query.exec()) {
-                        QString previousFilePath;
-                        QString title;
-                        int duration;
-                        QStringList artists;
-                        QStringList albums;
-                        QString mediaArtFilePath;
-                        long long modificationTime;
-                        bool shouldInsert = false;
-
-                        const auto insert = [&]() {
-                            const QUrl url(QUrl::fromLocalFile(previousFilePath));
-                            artists.removeDuplicates();
-                            albums.removeDuplicates();
-                            tracksMap.insert({url, makeTrack(url,
-                                                             std::move(title),
-                                                             duration,
-                                                             std::move(artists),
-                                                             std::move(albums),
-                                                             std::move(mediaArtFilePath),
-                                                             QByteArray(),
-                                                             modificationTime)});
-                        };
-
-                        while (query.next()) {
-                            QString filePath(query.value(0).toString());
-
-                            if (filePath != previousFilePath) {
-                                // insert previous
-                                if (!previousFilePath.isEmpty() && shouldInsert) {
-                                    insert();
-                                }
-
-                                const QFileInfo info(filePath);
-                                shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == getLastModifiedTime(filePath));
-
-                                if (shouldInsert) {
-                                    title = query.value(2).toString();
-                                    duration = query.value(5).toInt();
-                                    artists.clear();
-                                    albums.clear();
-                                    mediaArtFilePath = mediaArtFromQuery(query, 6, 7);
-                                    modificationTime = query.value(1).toLongLong();
-                                }
+                        if (filePath != previousFilePath) {
+                            // insert previous
+                            if (!previousFilePath.isEmpty() && shouldInsert) {
+                                insert();
                             }
+
+                            const QFileInfo info(filePath);
+                            shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == getLastModifiedTime(filePath));
 
                             if (shouldInsert) {
-                                artists.push_back(query.value(3).toString());
-                                albums.push_back(query.value(5).toString());
+                                title = query.value(2).toString();
+                                duration = query.value(5).toInt();
+                                artists.clear();
+                                albums.clear();
+                                mediaArtFilePath = mediaArtFromQuery(query, 6, 7);
+                                modificationTime = query.value(1).toLongLong();
                             }
-
-                            previousFilePath = std::move(filePath);
                         }
 
-                        if (shouldInsert && query.previous()) {
-                            // insert last
-                            insert();
+                        if (shouldInsert) {
+                            artists.push_back(query.value(3).toString());
+                            albums.push_back(query.value(5).toString());
                         }
-                    } else {
-                        qWarning() << query.lastError();
+
+                        previousFilePath = std::move(filePath);
                     }
-                });
 
-                db.commit();
-            }
-            QSqlDatabase::removeDatabase(dbConnectionName);
+                    if (shouldInsert && query.previous()) {
+                        // insert last
+                        insert();
+                    }
+                } else {
+                    qWarning() << query.lastError();
+                }
+            });
 
             const QMimeDatabase mimeDb;
 

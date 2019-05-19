@@ -87,22 +87,6 @@ namespace unplayer
             return string;
         }
 
-        struct DatabaseGuard
-        {
-            ~DatabaseGuard() {
-                QSqlDatabase::removeDatabase(connectionName);
-            }
-            const QString connectionName;
-        };
-
-        struct CommitGuard
-        {
-            ~CommitGuard() {
-                db.commit();
-            }
-            QSqlDatabase& db;
-        };
-
         template<bool SetMediaArt = true>
         void addTrackToDatabase(const QSqlDatabase& db,
                                 int id,
@@ -187,10 +171,9 @@ namespace unplayer
         class LibraryUpdateRunnable : public QRunnable
         {
         public:
-            explicit LibraryUpdateRunnable(const QString& databaseFilePath, const QString& mediaArtDirectory)
-                : mCancel(false),
-                  mDatabaseFilePath(databaseFilePath),
-                  mMediaArtDirectory(mediaArtDirectory)
+            explicit LibraryUpdateRunnable(const QString& mediaArtDirectory)
+                : mMediaArtDirectory(mediaArtDirectory),
+                  mCancel(false)
             {
 
             }
@@ -228,10 +211,8 @@ namespace unplayer
                 const DatabaseGuard databaseGuard{rescanConnectionName};
 
                 // Open database
-                auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, rescanConnectionName);
-                db.setDatabaseName(mDatabaseFilePath);
-                if (!db.open()) {
-                    qWarning() << "failed to open database" << db.lastError();
+                QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+                if (!db.isOpen()) {
                     return;
                 }
                 db.transaction();
@@ -620,13 +601,16 @@ namespace unplayer
                 return QString();
             }
         private:
-            std::atomic_bool mCancel;
-
             LibraryUpdateRunnableNotifier mNotifier;
-
-            QString mDatabaseFilePath;
             QString mMediaArtDirectory;
+            std::atomic_bool mCancel;
         };
+
+        const QString& databasePath()
+        {
+            static const QString path(QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation)));
+            return path;
+        }
     }
 
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField)
@@ -650,6 +634,16 @@ namespace unplayer
             return embeddedMediaArt;
         }
         return directoryMediaArt;
+    }
+
+    DatabaseGuard::~DatabaseGuard()
+    {
+        QSqlDatabase::removeDatabase(connectionName);
+    }
+
+    CommitGuard::~CommitGuard()
+    {
+        db.commit();
     }
 
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
@@ -717,15 +711,20 @@ namespace unplayer
         return contains(videoMimeTypesExtensions, suffix);
     }
 
+    QSqlDatabase LibraryUtils::openDatabase(const QString& connectionName)
+    {
+        auto db(QSqlDatabase::addDatabase(databaseType, connectionName));
+        db.setDatabaseName(databasePath());
+        if (!db.open()) {
+            qWarning() << "failed to open database:" << db.lastError();
+        }
+        return db;
+    }
+
     LibraryUtils* LibraryUtils::instance()
     {
         static auto const p = new LibraryUtils(qApp);
         return p;
-    }
-
-    const QString& LibraryUtils::databaseFilePath() const
-    {
-        return mDatabaseFilePath;
     }
 
     QString LibraryUtils::findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag)
@@ -772,10 +771,8 @@ namespace unplayer
             return;
         }
 
-        auto db = QSqlDatabase::addDatabase(databaseType);
-        db.setDatabaseName(mDatabaseFilePath);
-        if (!db.open()) {
-            qWarning() << "failed to open database:" << db.lastError();
+        QSqlDatabase db(openDatabase());
+        if (!db.isOpen()) {
             return;
         }
 
@@ -850,7 +847,7 @@ namespace unplayer
             return;
         }
 
-        auto runnable = new LibraryUpdateRunnable(mDatabaseFilePath, mMediaArtDirectory);
+        auto runnable = new LibraryUpdateRunnable(mMediaArtDirectory);
         QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::stageChanged, this, [this](UpdateStage newStage) {
             mLibraryUpdateStage = newStage;
             emit updateStageChanged();
@@ -1107,10 +1104,8 @@ namespace unplayer
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, removeFilesConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
                 return;
             }
 
@@ -1184,10 +1179,8 @@ namespace unplayer
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, removeFilesConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
                 return;
             }
 
@@ -1266,10 +1259,8 @@ namespace unplayer
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, removeFilesConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
                 return;
             }
 
@@ -1346,10 +1337,8 @@ namespace unplayer
             timer.start();
 
             // Open database
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, removeFilesConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
                 return;
             }
 
@@ -1481,10 +1470,8 @@ namespace unplayer
             const DatabaseGuard databaseGuard{saveTagsConnectionName};
 
             // Open database
-            auto db = QSqlDatabase::addDatabase(LibraryUtils::databaseType, saveTagsConnectionName);
-            db.setDatabaseName(LibraryUtils::instance()->databaseFilePath());
-            if (!db.open()) {
-                qWarning() << "failed to open database" << db.lastError();
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
                 return;
             }
 
@@ -1552,7 +1539,6 @@ namespace unplayer
           mExtractedTracks(0),
           mRemovingFiles(false),
           mSavingTags(false),
-          mDatabaseFilePath(QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation))),
           mMediaArtDirectory(QString::fromLatin1("%1/media-art").arg(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)))
     {
         qRegisterMetaType<UpdateStage>();

@@ -19,8 +19,8 @@
 #ifndef UNPLAYER_LIBRARYUTILS_H
 #define UNPLAYER_LIBRARYUTILS_H
 
-#include <QMimeDatabase>
 #include <QObject>
+#include <QSqlDatabase>
 
 #include <atomic>
 #include <unordered_map>
@@ -59,6 +59,18 @@ namespace unplayer
     };
 
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField);
+
+    struct DatabaseGuard
+    {
+        ~DatabaseGuard();
+        const QString connectionName;
+    };
+
+    struct CommitGuard
+    {
+        ~CommitGuard();
+        QSqlDatabase& db;
+    };
 
     class LibraryUtils final : public QObject
     {
@@ -102,11 +114,11 @@ namespace unplayer
         static bool isExtensionSupported(const QString& suffix);
         static bool isVideoExtensionSupported(const QString& suffix);
 
+        static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
+
         static const QString databaseType;
         static const int maxDbVariableCount;
         static LibraryUtils* instance();
-
-        const QString& databaseFilePath() const;
 
         static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);
 
@@ -164,7 +176,6 @@ namespace unplayer
         bool mRemovingFiles;
         bool mSavingTags;
 
-        QString mDatabaseFilePath;
         QString mMediaArtDirectory;
     signals:
         void updatingChanged();
