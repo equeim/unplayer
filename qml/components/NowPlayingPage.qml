@@ -125,9 +125,8 @@ Page {
 
         PushUpMenu {
             MenuItem {
-                text: Unplayer.Player.stopAfterEos ? qsTranslate("unplayer", "Stop after playing track: <font color=\"%1\">yes</font>")
-                                                   : qsTranslate("unplayer", "Stop after playing track: <font color=\"%1\">no</font>")
-                .arg(Theme.highlightColor)
+                text: Unplayer.Player.stopAfterEos ? qsTranslate("unplayer", "Stop after playing track: <font color=\"%1\">yes</font>").arg(Theme.highlightColor)
+                                                   : qsTranslate("unplayer", "Stop after playing track: <font color=\"%1\">no</font>").arg(Theme.highlightColor)
                 onClicked: Unplayer.Player.stopAfterEos = !Unplayer.Player.stopAfterEos
             }
 
