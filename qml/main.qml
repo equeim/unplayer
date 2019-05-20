@@ -18,7 +18,7 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import org.nemomobile.dbus 2.0
+import Nemo.DBus 2.0
 
 import harbour.unplayer 0.1 as Unplayer
 
