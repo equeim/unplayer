@@ -187,6 +187,7 @@ namespace unplayer
 
             void cancel()
             {
+                qInfo("Cancel updating database");
                 mCancel = true;
             }
 
