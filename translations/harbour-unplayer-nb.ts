@@ -739,5 +739,13 @@
         <source>Add</source>
         <translation>Legg til</translation>
     </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>Actualizando libreria</translation>
+        <translation type="vanished">Actualizando libreria</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -549,7 +549,7 @@
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation>Quitando álbumes</translation>
+        <translation type="vanished">Quitando álbumes</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
@@ -609,7 +609,7 @@
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation>Quitando pistas...</translation>
+        <translation type="vanished">Quitando pistas...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
@@ -738,6 +738,14 @@
     <message>
         <source>Add</source>
         <translation>Agregar</translation>
+    </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
