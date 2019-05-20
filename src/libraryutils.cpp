@@ -1540,7 +1540,12 @@ namespace unplayer
             }
 
             for (tagutils::Info& info : infos) {
-                addTrackToDatabase<false>(db, ++lastId, info.filePath, getLastModifiedTime(info.filePath), info);
+                if (info.fileTypeValid) {
+                    if (info.title.isEmpty()) {
+                        info.title = QFileInfo(info.filePath).fileName();
+                    }
+                    addTrackToDatabase<false>(db, ++lastId, info.filePath, getLastModifiedTime(info.filePath), info);
+                }
             }
 
             qInfo("Done saving tags, %lldms", timer.elapsed());
