@@ -39,6 +39,8 @@ BuildRequires: boost-devel
 
 BuildRequires: ninja
 
+%define __provides_exclude mimehandler
+
 %global build_type debug
 #%%global build_type release
 
