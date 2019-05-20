@@ -62,11 +62,11 @@ ListItem {
         }
 
         Label {
-            visible: model.artist && model.album
+            visible: text
             color: highlighted || current ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             text: {
-                if (showArtistAndAlbum) {
+                if (showArtistAndAlbum && model.artist && model.album) {
                     return qsTranslate("unplayer", "%1 - %2").arg(model.artist).arg(model.album)
                 }
 
