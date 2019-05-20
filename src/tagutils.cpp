@@ -24,9 +24,8 @@
 #include <QMimeDatabase>
 
 #include <apefile.h>
-#include <apetag.h>
 #include <attachedpictureframe.h>
-#include <fileref.h>
+#include <ebmlmatroskafile.h>
 #include <flacfile.h>
 #include <id3v2tag.h>
 #include <mp4file.h>
@@ -38,7 +37,6 @@
 #include <vorbisfile.h>
 #include <wavfile.h>
 #include <wavpackfile.h>
-#include <xiphcomment.h>
 
 namespace unplayer
 {
@@ -242,7 +240,6 @@ namespace unplayer
             const QLatin1String oggVorbisMimeType("audio/x-vorbis+ogg");
             const QLatin1String oggOpusMimeType("audio/x-opus+ogg");
             const QLatin1String oggFlacMimeType("audio/x-flac+ogg");
-            const QLatin1String matroskaMimeType("application/x-matroska");
 
             template<class Processor>
             void processFile(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb, const Processor& processor)
@@ -284,7 +281,7 @@ namespace unplayer
                     processor.processFile(TagLib::APE::File(filePath.toUtf8()));
                     break;
                 case Extension::MKA:
-                    processor.checkMimeType(matroskaMimeType);
+                    processor.processFile(TagLib::EBML::Matroska::File(filePath.toUtf8()));
                     break;
                 case Extension::WAV:
                     processor.processFile(TagLib::RIFF::WAV::File(filePath.toUtf8()));
