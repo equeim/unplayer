@@ -45,7 +45,7 @@ BuildRequires: boost-devel
 %global harbour ON
 #%%global harbour OFF
 
-%global build_directory "%{_builddir}/build-%{_arch}"
+%global build_directory "%{_builddir}/build-%{_target}-$(%{__grep} VERSION_ID /etc/os-release | cut -d '=' -f 2)"
 
 %global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended-0.0.3"
 %global qtdbusextended_build "%{build_directory}/3rdparty/build-qtdbusextended"
