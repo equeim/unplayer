@@ -46,6 +46,7 @@ add_executable("${PROJECT_NAME}"
     queue.cpp
     queuemodel.cpp
     settings.cpp
+    stdutils.cpp
     trackinfo.cpp
     tracksmodel.cpp
     utils.cpp

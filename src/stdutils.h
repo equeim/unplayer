@@ -19,42 +19,32 @@
 #ifndef UNPLAYER_STDUTILS_H
 #define UNPLAYER_STDUTILS_H
 
-#include <functional>
+#include <algorithm>
 #include <memory>
 
-#include <QHash>
-#include <QString>
-#include <QUrl>
+class QByteArray;
+class QString;
+class QUrl;
 
 namespace std {
     template<>
     struct hash<QString> {
     public:
-        size_t operator()(const QString& string) const
-        {
-            return qHash(string);
-        }
+        size_t operator()(const QString& string) const;
     };
 
     template<>
     struct hash<QByteArray> {
     public:
-        size_t operator()(const QByteArray& bytes) const
-        {
-            return qHash(bytes);
-        }
+        size_t operator()(const QByteArray& string) const;
     };
 
     template<>
     struct hash<QUrl> {
     public:
-        size_t operator()(const QUrl& url) const
-        {
-            return qHash(url);
-        }
+        size_t operator()(const QUrl& string) const;
     };
 }
-
 
 namespace unplayer
 {
