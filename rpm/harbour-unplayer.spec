@@ -37,8 +37,6 @@ BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
 BuildRequires: pkgconfig(zlib)
 BuildRequires: boost-devel
 
-BuildRequires: ninja
-
 %define __provides_exclude mimehandler
 
 %global build_type debug
@@ -101,7 +99,6 @@ cd -
 %{__mkdir_p} %{taglib_build}
 cd %{taglib_build}
 %cmake %{taglib} \
-    -G Ninja \
     -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
     -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
     -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
@@ -109,23 +106,22 @@ cd %{taglib_build}
     -DCMAKE_CXX_FLAGS="-fPIC" \
     -DBUILD_SHARED_LIBS=OFF \
     -DWITH_MP4=ON
-%ninja_build
-# not ninja_install, because we do not want DESTDIR here
-%{__ninja} install %{__ninja_common_opts}
+%make_build
+# not make_install, because we do not want DESTDIR here
+%{__make} install
 cd -
 
 cd %{build_directory}
 %cmake .. \
-    -G Ninja \
     -DCMAKE_BUILD_TYPE=%{build_type} \
     -DHARBOUR=%{harbour} \
     -DQTMPRIS_STATIC=ON \
     -DTAGLIB_STATIC=ON
-%ninja_build
+%make_build
 
 %install
 cd %{build_directory}
-%ninja_install
+%make_install
 desktop-file-install \
     --delete-original \
     --dir %{buildroot}/%{_datadir}/applications \
