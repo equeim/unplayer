@@ -80,39 +80,37 @@ fi
 %build
 export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
 
-if [ ! -d %{thirdparty_install} ] || [ -z "$(ls -A %{thirdparty_install})" ]; then
-    %{__mkdir_p} %{qtdbusextended_build}
-    cd %{qtdbusextended_build}
-    %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
-    %make_build
-    # not make_install, because we do not want DESTDIR here
-    %{__make} install
-    cd -
+%{__mkdir_p} %{qtdbusextended_build}
+cd %{qtdbusextended_build}
+%qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+%make_build
+# not make_install, because we do not want DESTDIR here
+%{__make} install
+cd -
 
-    %{__mkdir_p} %{qtmpris_build}
-    cd %{qtmpris_build}
-    %qmake5 %{qtmpris} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
-    %make_build
-    # not make_install, because we do not want DESTDIR here
-    %{__make} install
-    cd -
+%{__mkdir_p} %{qtmpris_build}
+cd %{qtmpris_build}
+%qmake5 %{qtmpris} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+%make_build
+# not make_install, because we do not want DESTDIR here
+%{__make} install
+cd -
 
-    %{__mkdir_p} %{taglib_build}
-    cd %{taglib_build}
-    %cmake %{taglib} \
-        -G Ninja \
-        -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
-        -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
-        -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
-        -DCMAKE_BUILD_TYPE=%{build_type} \
-        -DCMAKE_CXX_FLAGS="-fPIC" \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DWITH_MP4=ON
-    %ninja_build
-    # not ninja_install, because we do not want DESTDIR here
-    %{__ninja} install %{__ninja_common_opts}
-    cd -
-fi
+%{__mkdir_p} %{taglib_build}
+cd %{taglib_build}
+%cmake %{taglib} \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
+    -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
+    -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
+    -DCMAKE_BUILD_TYPE=%{build_type} \
+    -DCMAKE_CXX_FLAGS="-fPIC" \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DWITH_MP4=ON
+%ninja_build
+# not ninja_install, because we do not want DESTDIR here
+%{__ninja} install %{__ninja_common_opts}
+cd -
 
 cd %{build_directory}
 %cmake .. \
