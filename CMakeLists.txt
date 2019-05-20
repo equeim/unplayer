@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
+cmake_policy(SET CMP0071 NEW)
 
 project(harbour-unplayer VERSION 1.4.1 LANGUAGES CXX)
 
