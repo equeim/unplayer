@@ -87,6 +87,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
     -Wall
     -Wextra
     -pedantic
+    -Werror=format
     ${SAILFISHAPP_CFLAGS_OTHER}
     ${QTMPRIS_CFLAGS_OTHER}
     ${TAGLIB_CFLAGS_OTHER}
