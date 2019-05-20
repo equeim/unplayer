@@ -33,6 +33,7 @@
 #include <mpegfile.h>
 #include <oggflacfile.h>
 #include <opusfile.h>
+#include <tpicturemap.h>
 #include <tpropertymap.h>
 #include <vorbisfile.h>
 #include <wavfile.h>
@@ -71,29 +72,6 @@ namespace unplayer
                 inline void setMediaArt(const TagLib::ByteVector& data) const
                 {
                     info.mediaArtData = QByteArray(data.data(), static_cast<int>(data.size()));
-                }
-
-                void getApeMediaArt(const TagLib::APE::Tag* tag) const
-                {
-                    const TagLib::APE::ItemListMap& items = tag->itemListMap();
-                    const auto found(items.find("COVER ART (FRONT)"));
-                    if (found != items.end()) {
-                        const TagLib::ByteVector data(found->second.binaryData());
-                        setMediaArt(data.mid(static_cast<unsigned int>(data.find('\0') + 1)));
-                    }
-                }
-
-                void setFlacPicture(const TagLib::List<TagLib::FLAC::Picture*>& pictures) const
-                {
-                    if (!pictures.isEmpty()) {
-                        for (const TagLib::FLAC::Picture* picture : pictures) {
-                            if (picture->type() == TagLib::FLAC::Picture::FrontCover) {
-                                setMediaArt(picture->data());
-                                return;
-                            }
-                        }
-                        setMediaArt(pictures.front()->data());
-                    }
                 }
 
                 bool processFile(TagLib::File&& file) const
@@ -147,6 +125,27 @@ namespace unplayer
                             }
                         }
 
+                        const TagLib::PictureMap pictures(tag->pictures());
+                        if (!pictures.isEmpty()) {
+                            bool foundFrontCover = false;
+                            for (const auto& i : pictures) {
+                                if (i.first == TagLib::Picture::FrontCover) {
+                                    const TagLib::PictureList& list = i.second;
+                                    if (!list.isEmpty()) {
+                                        setMediaArt(list.front().data());
+                                        foundFrontCover = true;
+                                    }
+                                    break;
+                                }
+                            }
+                            if (!foundFrontCover) {
+                                const TagLib::PictureList& list = pictures.begin()->second;
+                                if (!list.isEmpty()) {
+                                    setMediaArt(list.front().data());
+                                }
+                            }
+                        }
+
                         const TagLib::AudioProperties* audioProperties = file.audioProperties();
                         info.duration = audioProperties->length();
                         info.bitrate = audioProperties->bitrate();
@@ -156,97 +155,26 @@ namespace unplayer
                     return info.fileTypeValid;
                 }
 
-                void processFile(TagLib::FLAC::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file))) {
-                        setFlacPicture(file.pictureList());
-                    }
-                }
-
-                void processFile(TagLib::MP4::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file))) {
-                        const TagLib::MP4::ItemMap& items = file.tag()->itemMap();
-                        const auto found(items.find("covr"));
-                        if (found != items.end()) {
-                            const TagLib::MP4::CoverArtList covers(found->second.toCoverArtList());
-                            if (!covers.isEmpty()) {
-                                setMediaArt(covers.front().data());
-                            }
-                        }
-                    }
-                }
-
                 void processFile(TagLib::MPEG::File&& file) const
                 {
                     if (processFile(static_cast<TagLib::File&&>(file))) {
-                        if (file.hasAPETag()) {
-                            getApeMediaArt(file.APETag());
-                        }
                         if (info.mediaArtData.isEmpty() && file.hasID3v2Tag()) {
-                            const auto set = [&](const TagLib::ID3v2::FrameList& frames) {
-                                if (frames.isEmpty()) {
-                                    return false;
-                                }
-
-                                for (const TagLib::ID3v2::Frame* frame : frames) {
-                                    const auto pictureFrame = static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
-                                    if (pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
-                                        setMediaArt(pictureFrame->picture());
-                                        return true;
-                                    }
-                                }
-                                setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
-                                return true;
-                            };
-
                             const TagLib::ID3v2::FrameListMap& frameListMap = file.ID3v2Tag()->frameListMap();
-                            const auto apicFramesFound(frameListMap.find("APIC"));
-                            if (apicFramesFound != frameListMap.end()) {
-                                if (set(apicFramesFound->second)) {
-                                    return;
-                                }
-                            }
                             const auto picFramesFound(frameListMap.find("PIC"));
                             if (picFramesFound != frameListMap.end()) {
-                                set(picFramesFound->second);
+                                const TagLib::ID3v2::FrameList& frames = picFramesFound->second;
+                                if (!frames.isEmpty()) {
+                                    for (const TagLib::ID3v2::Frame* frame : frames) {
+                                        const auto pictureFrame = static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
+                                        if (pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+                                            setMediaArt(pictureFrame->picture());
+                                            return;
+                                        }
+                                    }
+                                    setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
+                                }
                             }
                         }
-                    }
-                }
-
-                void processFile(TagLib::Ogg::Vorbis::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file))) {
-                        setFlacPicture(file.tag()->pictureList());
-                    }
-                }
-
-                void processFile(TagLib::Ogg::Opus::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file))) {
-                        setFlacPicture(file.tag()->pictureList());
-                    }
-                }
-
-                void processFile(TagLib::Ogg::FLAC::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file))) {
-                        setFlacPicture(file.tag()->pictureList());
-                    }
-                }
-
-                void processFile(TagLib::APE::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && file.hasAPETag()) {
-                        getApeMediaArt(file.APETag());
-                    }
-                }
-
-                void processFile(TagLib::WavPack::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && file.hasAPETag()) {
-                        getApeMediaArt(file.APETag());
                     }
                 }
 
