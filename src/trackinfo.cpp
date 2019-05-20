@@ -41,11 +41,17 @@ namespace unplayer
     {
         mFilePath = filePath;
         const QFileInfo fileInfo(mFilePath);
+        mFileName = fileInfo.fileName();
         const QMimeDatabase mimeDb;
-        mInfo = tagutils::getTrackInfo(fileInfo, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
+        mInfo = tagutils::getTrackInfo(mFilePath, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
         mFileSize = fileInfo.size();
         mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
         emit loaded();
+    }
+
+    const QString& TrackInfo::fileName() const
+    {
+        return mFileName;
     }
 
     bool TrackInfo::canReadTags() const

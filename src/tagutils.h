@@ -20,11 +20,9 @@
 #define UNPLAYER_TAGUTILS_H
 
 #include <QString>
-#include <QPixmap>
 
 #include "libraryutils.h"
 
-class QFileInfo;
 class QMimeDatabase;
 
 namespace unplayer
@@ -58,7 +56,7 @@ namespace unplayer
             bool canReadTags;
         };
 
-        Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb);
+        Info getTrackInfo(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb);
 
         template<bool IncrementTrackNumber>
         std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);

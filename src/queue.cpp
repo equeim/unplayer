@@ -537,7 +537,10 @@ namespace unplayer
                     if (url.isLocalFile()) {
                         const QString filePath(url.path());
                         const QFileInfo fileInfo(filePath);
-                        tagutils::Info info(tagutils::getTrackInfo(fileInfo, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
+                        tagutils::Info info(tagutils::getTrackInfo(filePath, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
+                        if (info.title.isEmpty()) {
+                            info.title = fileInfo.fileName();
+                        }
                         QString mediaArtFilePath;
                         QByteArray mediaArtData;
                         if (preferDirectoryMediaArt) {

@@ -30,6 +30,7 @@ namespace unplayer
         Q_OBJECT
 
         Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY loaded)
+        Q_PROPERTY(QString fileName READ fileName NOTIFY loaded)
 
         Q_PROPERTY(bool canReadTags READ canReadTags NOTIFY loaded)
 
@@ -54,6 +55,8 @@ namespace unplayer
         const QString& filePath() const;
         void setFilePath(const QString& filePath);
 
+        const QString& fileName() const;
+
         bool canReadTags() const;
 
         const QString& title() const;
@@ -75,6 +78,7 @@ namespace unplayer
 
     private:
         QString mFilePath;
+        QString mFileName;
         tagutils::Info mInfo;
         QString mMimeType;
         long long mFileSize;

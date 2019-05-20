@@ -43,7 +43,7 @@ Page {
             DetailItem {
                 visible: value
                 label: qsTranslate("unplayer", "Title")
-                value: trackInfo.title
+                value: trackInfo.title ? trackInfo.title : trackInfo.fileName
             }
 
             DetailItem {

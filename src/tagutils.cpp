@@ -308,15 +308,11 @@ namespace unplayer
         const QLatin1String GenresTag("GENRE");
         const QLatin1String DiscNumberTag("DISCNUMBER");
 
-        Info getTrackInfo(const QFileInfo& fileInfo, Extension extension, const QMimeDatabase& mimeDb)
+        Info getTrackInfo(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb)
         {
             Info info{};
-            const QString filePath(fileInfo.filePath());
             info.filePath = filePath;
             processFile(filePath, extension, mimeDb, ExtractProcessor{info, mimeDb});
-            if (info.fileTypeValid && info.title.isEmpty()) {
-                info.title = fileInfo.fileName();
-            }
             return info;
         }
 

@@ -460,7 +460,7 @@ namespace unplayer
                                 if (modificationTime == file.modificationTime) {
                                     // File has not changed
                                     if (file.embeddedMediaArtDeleted) {
-                                        const QString embeddedMediaArt(saveEmbeddedMediaArt(tagutils::getTrackInfo(fileInfo, extension, mimeDb).mediaArtData,
+                                        const QString embeddedMediaArt(saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mimeDb).mediaArtData,
                                                                                             embeddedMediaArtFiles,
                                                                                             mimeDb));
                                         QSqlQuery query(db);
@@ -521,10 +521,14 @@ namespace unplayer
                             return;
                         }
 
-                        QFileInfo fileInfo(file.filePath);
-                        tagutils::Info trackInfo(tagutils::getTrackInfo(fileInfo, file.extension, mimeDb));
+                        tagutils::Info trackInfo(tagutils::getTrackInfo(file.filePath, file.extension, mimeDb));
                         if (trackInfo.fileTypeValid) {
                             ++count;
+
+                            if (trackInfo.title.isEmpty()) {
+                                trackInfo.title = QFileInfo(file.filePath).fileName();
+                            }
+
                             addTrackToDatabase(db,
                                                file.id,
                                                file.filePath,
