@@ -446,6 +446,17 @@ namespace unplayer
             const CommitGuard commitGuard{db};
 
             forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+                enum {
+                    FilePathField,
+                    ModificationTimeField,
+                    TitleField,
+                    ArtistField,
+                    AlbumField,
+                    DurationField,
+                    DirectoryMediaArtField,
+                    EmbeddedMediaArtField
+                };
+
                 QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
                 queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
                 for (int j = 1; j < count; ++j) {
@@ -486,7 +497,7 @@ namespace unplayer
                     };
 
                     while (query.next()) {
-                        QString filePath(query.value(0).toString());
+                        QString filePath(query.value(FilePathField).toString());
 
                         if (filePath != previousFilePath) {
                             // insert previous
@@ -495,21 +506,21 @@ namespace unplayer
                             }
 
                             const QFileInfo info(filePath);
-                            shouldInsert = info.isFile() && info.isReadable() && (query.value(1).toLongLong() == getLastModifiedTime(filePath));
+                            modificationTime = query.value(ModificationTimeField).toLongLong();
+                            shouldInsert = info.isFile() && info.isReadable() && (modificationTime == getLastModifiedTime(filePath));
 
                             if (shouldInsert) {
-                                title = query.value(2).toString();
-                                duration = query.value(5).toInt();
+                                title = query.value(TitleField).toString();
+                                duration = query.value(DurationField).toInt();
                                 artists.clear();
                                 albums.clear();
-                                mediaArtFilePath = mediaArtFromQuery(query, 6, 7);
-                                modificationTime = query.value(1).toLongLong();
+                                mediaArtFilePath = mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField);
                             }
                         }
 
                         if (shouldInsert) {
-                            artists.push_back(query.value(3).toString());
-                            albums.push_back(query.value(5).toString());
+                            artists.push_back(query.value(ArtistField).toString());
+                            albums.push_back(query.value(AlbumField).toString());
                         }
 
                         previousFilePath = std::move(filePath);
