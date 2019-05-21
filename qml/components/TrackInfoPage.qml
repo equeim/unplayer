@@ -32,6 +32,15 @@ Page {
         anchors.fill: parent
         contentHeight: column.height
 
+        PullDownMenu {
+            visible: trackInfo.canReadTags
+
+            MenuItem {
+                text: qsTranslate("unplayer", "Edit tags")
+                onClicked: pageStack.push("TagEditDialog.qml", { files: [filePath] })
+            }
+        }
+
         Column {
             id: column
             width: parent.width
