@@ -905,12 +905,12 @@
     <message>
         <location filename="../qml/components/NowPlayingPage.qml" line="128"/>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Останавливаться после воспр.: &lt;font color=&quot;%1&quot;&gt;да&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPage.qml" line="129"/>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Останавливаться после воспр.: &lt;font color=&quot;%1&quot;&gt;нет&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPage.qml" line="135"/>
