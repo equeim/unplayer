@@ -2,21 +2,28 @@
 
 ## [Unreleased]
 ### Added
+- Added tag editor
+- Added support of ALBUMARTIST tag
+- Added option to use ALBUMARTIST tag instead of ALBUM (with fallback to ARTIST if ALBUMARTIST is not set)
 - Added option to stop after end of track instead of playing next track in queue
-- Library scanning is now cancellable
 - Added indication of library scanning progress
+- Library scanning is now cancellable
 - Added command line option to update library without launching GUI
 
 ### Changed
-- Library scanning and removing of files doesn't block user interaction anymore
+- Library scanning and removing files doesn't block user interaction anymore
 - Improved performance and reduced memory usage of library scanning
 - Embedded media art files are now always saved to the cache directory regardless of "Prefer directory media art" setting.
 Now there is no need rescan library after changing this setting.
 - Command line options that do not launch GUI now doesn't require OS graphical session
+- Disabled detection of WavPack and MPEG-1/2 Video formats (they are not supported in Sailfish OS)
 
 ### Fixed
+- Fixed selecting incorrect tracks in multi selection mode when using search or from Directories view
 - Fixed not starting playback the first time if "Restore player state on startup" is enabled and saved queue is empty
 - Unplayer now doesn't restore track position if current track wasn't added to queue when restoring player state
+- Fixed extraction of ID3v2 media art if APE tag is also present
+- Fixed incorrect display of ampersand symbol in list items
 
 ## [1.4.1] - 2018-10-16
 ### Changed
