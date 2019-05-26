@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0] - 2019-05-27
 ### Added
 - Added tag editor
 - Added support of ALBUMARTIST tag
