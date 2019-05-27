@@ -125,21 +125,24 @@ namespace unplayer
 
                         const TagLib::PictureMap pictures(tag->pictures());
                         if (!pictures.isEmpty()) {
-                            bool foundFrontCover = false;
+                            const TagLib::Picture* backCover = nullptr;
                             for (const auto& i : pictures) {
-                                if (i.first == TagLib::Picture::FrontCover) {
-                                    const TagLib::PictureList& list = i.second;
-                                    if (!list.isEmpty()) {
-                                        setMediaArt(list.front().data());
-                                        foundFrontCover = true;
-                                    }
+                                if (i.first == TagLib::Picture::FrontCover && !i.second.isEmpty()) {
+                                    setMediaArt(i.second.front().data());
                                     break;
                                 }
+                                if (!backCover && i.first == TagLib::Picture::BackCover && !i.second.isEmpty()) {
+                                    backCover = &i.second.front();
+                                }
                             }
-                            if (!foundFrontCover) {
-                                const TagLib::PictureList& list = pictures.begin()->second;
-                                if (!list.isEmpty()) {
-                                    setMediaArt(list.front().data());
+                            if (info.mediaArtData.isEmpty()) {
+                                if (backCover) {
+                                    setMediaArt(backCover->data());
+                                } else {
+                                    const TagLib::PictureList& first = pictures.begin()->second;
+                                    if (!first.isEmpty()) {
+                                        setMediaArt(first.front().data());
+                                    }
                                 }
                             }
                         }
@@ -162,14 +165,22 @@ namespace unplayer
                             if (picFramesFound != frameListMap.end()) {
                                 const TagLib::ID3v2::FrameList& frames = picFramesFound->second;
                                 if (!frames.isEmpty()) {
+                                    const TagLib::ID3v2::AttachedPictureFrame* backCover = nullptr;
                                     for (const TagLib::ID3v2::Frame* frame : frames) {
                                         const auto pictureFrame = static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
                                         if (pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
                                             setMediaArt(pictureFrame->picture());
                                             return;
                                         }
+                                        if (!backCover && pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::BackCover) {
+                                            backCover = pictureFrame;
+                                        }
                                     }
-                                    setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
+                                    if (backCover) {
+                                        setMediaArt(backCover->picture());
+                                    } else {
+                                        setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
+                                    }
                                 }
                             }
                         }
