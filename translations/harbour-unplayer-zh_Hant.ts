@@ -25,7 +25,7 @@
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translatio type="unfinished">
+        <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
     </message>
