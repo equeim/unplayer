@@ -741,11 +741,11 @@
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation>Parar después de reproducir la pista: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation>Parar después de reproducir la pista: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
 </context>
 </TS>
