@@ -176,6 +176,55 @@ namespace unplayer
                     }
                 }
 
+                void setFlacPicture(const TagLib::List<TagLib::FLAC::Picture*>& pictures) const
+                {
+                    if (!pictures.isEmpty()) {
+                        const TagLib::FLAC::Picture* backCover = nullptr;
+                        for (const TagLib::FLAC::Picture* picture : pictures) {
+                            if (picture->type() == TagLib::FLAC::Picture::FrontCover) {
+                                setMediaArt(picture->data());
+                                return;
+                            }
+                            if (!backCover && picture->type() == TagLib::FLAC::Picture::BackCover) {
+                                backCover = picture;
+                            }
+                        }
+                        if (backCover) {
+                            setMediaArt(backCover->data());
+                        } else {
+                            setMediaArt(pictures.front()->data());
+                        }
+                    }
+                }
+
+                void processFile(TagLib::FLAC::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
+                        setFlacPicture(file.pictureList());
+                    }
+                }
+
+                void processFile(TagLib::Ogg::Vorbis::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
+                        setFlacPicture(file.tag()->pictureList());
+                    }
+                }
+
+                void processFile(TagLib::Ogg::Opus::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
+                        setFlacPicture(file.tag()->pictureList());
+                    }
+                }
+
+                void processFile(TagLib::Ogg::FLAC::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
+                        setFlacPicture(file.tag()->pictureList());
+                    }
+                }
+
                 void checkMimeType(QLatin1String mimeType) const
                 {
                     if (mimeDb.mimeTypeForFile(info.filePath, QMimeDatabase::MatchContent).name() == mimeType) {
