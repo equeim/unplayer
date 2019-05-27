@@ -269,7 +269,7 @@
     </message>
     <message>
         <source>Artist</source>
-        <translatio>艺人</translation>
+        <translation>艺人</translation>
     </message>
     <message>
         <source>Album</source>
