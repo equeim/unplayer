@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.1] - 2019-05-30
+### Changed
+- Unplayer now uses back cover art if there is not front cover (only for embedded media art)
+- Updated translations
+
+### Fixed
+- Fix extracting media art from FLAC and Ogg files
+- Fixed Chinese and Polish translation not being included in package
+
 ## [2.0.0] - 2019-05-27
 ### Added
 - Added tag editor
