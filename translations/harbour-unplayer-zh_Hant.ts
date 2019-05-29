@@ -293,7 +293,7 @@
     </message>
     <message>
         <source>MIME type</source>
-         <translation>MIME 类型</translation>
+        <translation>MIME 类型</translation>
     </message>
     <message>
         <source>Duration</source>
@@ -421,7 +421,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>正在更新曲库</translation>
+        <translation type="vanished">正在更新曲库</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -525,11 +525,11 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-    <translation>是否移除此专辑？</translation> 
+        <translation>是否移除此专辑？</translation>
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation>正在移除专辑</translation>
+        <translation type="vanished">正在移除专辑</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
@@ -585,7 +585,7 @@
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation>正在移除歌曲</translation>
+        <translation type="vanished">正在移除歌曲</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
@@ -628,6 +628,100 @@
     <message>
         <source>Copy</source>
         <translation>拷贝</translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preparing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanning filesystem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extracting metadata</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Finishing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n new tracks found</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 of %n tracks processed</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adding tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving tags...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>Selected tags will be applied to all %n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Only selected tags will be applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t read tags from this file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increment track number for each file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 PiB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

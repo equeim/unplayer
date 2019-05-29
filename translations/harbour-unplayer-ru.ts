@@ -133,6 +133,7 @@
         <location filename="../qml/components/QueuePage.qml" line="82"/>
         <location filename="../qml/components/QueuePage.qml" line="134"/>
         <location filename="../qml/components/TagEditDialog.qml" line="101"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="39"/>
         <location filename="../qml/components/TracksPage.qml" line="74"/>
         <source>Edit tags</source>
         <translation>Редактировать теги</translation>
@@ -358,7 +359,7 @@
         <location filename="../qml/components/NowPlayingPage.qml" line="121"/>
         <location filename="../qml/components/PlaylistPage.qml" line="87"/>
         <location filename="../qml/components/QueuePage.qml" line="123"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="40"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="49"/>
         <source>Track information</source>
         <translation>Информация о треке</translation>
     </message>
@@ -702,7 +703,7 @@
         <location filename="../qml/components/AllTracksSortPage.qml" line="106"/>
         <location filename="../qml/components/TagEditDialog.qml" line="158"/>
         <location filename="../qml/components/TagEditDialog.qml" line="167"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="45"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="54"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
@@ -720,27 +721,27 @@
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="178"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="51"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="60"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="192"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="63"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="72"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="217"/>
         <location filename="../qml/components/TagEditDialog.qml" line="226"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="81"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="90"/>
         <source>Track number</source>
         <translation>Номер трека</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="198"/>
         <location filename="../qml/components/TagEditDialog.qml" line="207"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="75"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="84"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
@@ -775,7 +776,7 @@
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="185"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="57"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="66"/>
         <source>Album artist</source>
         <translation>Исполнитель альбома</translation>
     </message>
@@ -787,43 +788,43 @@
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="254"/>
         <location filename="../qml/components/TagEditDialog.qml" line="263"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="69"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="78"/>
         <source>Disc number</source>
         <translation>Номер диска</translation>
     </message>
     <message>
         <location filename="../qml/components/TagEditDialog.qml" line="248"/>
-        <location filename="../qml/components/TrackInfoPage.qml" line="87"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="96"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="96"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="105"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="104"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="113"/>
         <source>File path</source>
         <translation>Путь к файлу</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="110"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="119"/>
         <source>File size</source>
         <translation>Размер файла</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="115"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="124"/>
         <source>MIME type</source>
         <translation>MIME-тип</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="121"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="130"/>
         <source>Duration</source>
         <translation>Длительность</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="128"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="137"/>
         <source>Bitrate</source>
         <translation>Битрейт</translation>
     </message>
@@ -913,7 +914,7 @@
         <translation>Останавливаться после воспр.: &lt;font color=&quot;%1&quot;&gt;нет&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPage.qml" line="135"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="134"/>
         <source>Clear Queue</source>
         <translation>Очистить очередь</translation>
     </message>

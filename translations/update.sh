@@ -20,4 +20,5 @@ QT_SELECT=5 $_lupdate ../src ../qml -ts harbour-unplayer-en.ts \
                                         harbour-unplayer-nl_BE.ts \
                                         harbour-unplayer-pl.ts \
                                         harbour-unplayer-ru.ts \
-                                        harbour-unplayer-sv.ts
+                                        harbour-unplayer-sv.ts \
+                                        harbour-unplayer-zh_Hant.ts

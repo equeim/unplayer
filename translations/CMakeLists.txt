@@ -10,8 +10,10 @@ qt5_add_translation(qm_files
     harbour-unplayer-nb.ts
     harbour-unplayer-nl_BE.ts
     harbour-unplayer-nl.ts
+    harbour-unplayer-pl.ts
     harbour-unplayer-ru.ts
     harbour-unplayer-sv.ts
+    harbour-unplayer-zh_Hant.ts
 )
 
 add_custom_target(translations ALL DEPENDS ${qm_files})
