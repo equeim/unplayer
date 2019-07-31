@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.2] - 2019-08-01
+### Changed
+- Disabled opening of video files in Unplayer from other apps (you can still
+open them from directories view if corresponding switch in settings is enabled)
+
+### Fixed
+- Fixed loading of Chinese (Simplified) translation
+
 ## [2.0.1] - 2019-05-30
 ### Changed
 - Unplayer now uses back cover art if there is not front cover (only for embedded media art)
