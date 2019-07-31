@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.3] - 2019-08-01
+### Changed
+- Updated translations
+
 ## [2.0.2] - 2019-08-01
 ### Changed
 - Disabled opening of video files in Unplayer from other apps (you can still
