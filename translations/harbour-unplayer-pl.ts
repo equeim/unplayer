@@ -25,10 +25,10 @@
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n utwór</numerusform>
+            <numerusform>%n utwory</numerusform>
+            <numerusform>%n utworów</numerusform>
         </translation>
     </message>
     <message>
@@ -57,10 +57,10 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n wybranych utwór</numerusform>
+            <numerusform>%n wybrane utwory</numerusform>
+            <numerusform>%n wybranych utworów</numerusform>
         </translation>
     </message>
     <message>
@@ -85,10 +85,10 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n wybrany album</numerusform>
+            <numerusform>%n wybrane albumy</numerusform>
+            <numerusform>%n wybranych albumów</numerusform>
         </translation>
     </message>
     <message>
@@ -97,10 +97,10 @@
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albumy</numerusform>
+            <numerusform>%n albumów</numerusform>
         </translation>
     </message>
     <message>
@@ -677,15 +677,15 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Edytuj tagi</translation>
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>Przygotowywanie</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanowanie systemu plików</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
@@ -721,15 +721,15 @@
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodawanie utworó</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisywanie tagów...</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
@@ -769,7 +769,7 @@
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj</translation>
     </message>
 </context>
 </TS>
