@@ -25,7 +25,7 @@
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished">
+        <translation>%n 首音乐
             <numerusform></numerusform>
         </translation>
     </message>
@@ -55,7 +55,7 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 首音乐
             <numerusform></numerusform>
         </translation>
     </message>
@@ -81,7 +81,7 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 个专辑已选择
             <numerusform></numerusform>
         </translation>
     </message>
@@ -91,7 +91,7 @@
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished">
+        <translation>%n 个专辑
             <numerusform></numerusform>
         </translation>
     </message>
@@ -109,7 +109,7 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 位艺人已选择
             <numerusform></numerusform>
         </translation>
     </message>
@@ -139,7 +139,7 @@
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 个曲风已选择
             <numerusform></numerusform>
         </translation>
     </message>
@@ -149,7 +149,7 @@
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation type="unfinished">
+        <translation>%n 首音乐, %1
             <numerusform></numerusform>
         </translation>
     </message>
@@ -167,25 +167,25 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation type="unfinished">
+        <translation>%n 位艺人
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation type="unfinished">
+        <translation>%n 个专辑
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation type="unfinished">
+        <translation>%n 首音乐
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation type="unfinished">
+        <translation>%n 个播放列表
             <numerusform></numerusform>
         </translation>
     </message>
@@ -223,7 +223,7 @@
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation type="unfinished">
+        <translation>正在移出 %n 首音乐
             <numerusform></numerusform>
         </translation>
     </message>
@@ -233,13 +233,13 @@
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 个播放列表已选择
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation type="unfinished">
+        <translation>正在移出 %n 个播放列表
             <numerusform></numerusform>
         </translation>
     </message>
@@ -361,7 +361,7 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
+        <translation>%n 个文件已选择
             <numerusform></numerusform>
         </translation>
     </message>
@@ -379,7 +379,7 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation type="unfinished">
+        <translation>%n 个目录已选择
             <numerusform></numerusform>
         </translation>
     </message>
@@ -421,7 +421,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation type="vanished">正在更新曲库</translation>
+        <translation>正在更新曲库</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -529,11 +529,11 @@
     </message>
     <message>
         <source>Removing albums...</source>
-        <translation type="vanished">正在移除专辑</translation>
+        <translation>正在移除专辑</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
+        <translation>是否确定想要移出 %n 个所选专辑?
             <numerusform></numerusform>
         </translation>
     </message>
@@ -547,19 +547,19 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
+        <translation>是否确定想要移出 %n 个所选艺人?
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
+        <translation>正在移出 %n 个文件
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
+        <translation>是否确定想要移出 %n 个所选曲风?
             <numerusform></numerusform>
         </translation>
     </message>
@@ -585,11 +585,11 @@
     </message>
     <message>
         <source>Removing tracks...</source>
-        <translation type="vanished">正在移除歌曲</translation>
+        <translation>正在移除歌曲</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
+        <translation>是否确定想要移出 %n 个所选音乐?
             <numerusform></numerusform>
         </translation>
     </message>
@@ -631,97 +631,97 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑标签</translation>
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>匹配中</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>正在扫描文件系统</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>正在抽取文件系统</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>完成</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
-        <translation type="unfinished">
+        <translation>找到 %n 首新歌
             <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
-        <translation type="unfinished">
+        <translation>%1 of %n 首音乐已处理
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>播放音乐后停止: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>播放音乐后停止Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;<</translation>
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在添加音乐……</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在保存标签……</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="unfinished"></translation>
+        <translation>使用标签及引用;专辑艺人及引用;而非引用及艺人。</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存</translation>
     </message>
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
-        <translation type="unfinished">
+        <translation>所选标签会应用到全部 %n 个文件
             <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation type="unfinished"></translation>
+        <translation>只应用所选标签</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation type="unfinished"></translation>
+        <translation>无法从该文件读取标签</translation>
     </message>
     <message>
         <source>Album artists</source>
-        <translation type="unfinished"></translation>
+        <translation>专辑艺人</translation>
     </message>
     <message>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>专辑艺人</translation>
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation type="unfinished"></translation>
+        <translation>为每个文件增加音乐编号</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>添加</translation>
     </message>
     <message>
         <source>%1 PiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 PiB</translation>
     </message>
 </context>
 </TS>
