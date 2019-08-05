@@ -91,8 +91,8 @@
     </message>
     <message numerus="yes">
         <source>%n album(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n个专辑</numerusform>
         </translation>
     </message>
     <message>
