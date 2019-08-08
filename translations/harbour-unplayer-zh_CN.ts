@@ -167,14 +167,14 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n个艺人</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n个专辑</numerusform>
         </translation>
     </message>
     <message numerus="yes">
