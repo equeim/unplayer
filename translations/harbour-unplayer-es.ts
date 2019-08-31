@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation>Agregar a reproducción</translation>
+        <translation>Añadir a lista</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
@@ -32,11 +32,11 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Nueva reproducción</translation>
+        <translation>Lista nueva…</translation>
     </message>
     <message>
         <source>No playlists</source>
-        <translation>No hay reproducciones</translation>
+        <translation>No hay listas</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -192,8 +192,8 @@
     <message numerus="yes">
         <source>%n playlist(s)</source>
         <translation>
-            <numerusform>%n reproducción</numerusform>
-            <numerusform>%n reproducciones</numerusform>
+            <numerusform>%n lista</numerusform>
+            <numerusform>%n listas</numerusform>
         </translation>
     </message>
     <message>
@@ -202,19 +202,19 @@
     </message>
     <message>
         <source>Playlists</source>
-        <translation>Reproducciones</translation>
+        <translation>Listas</translation>
     </message>
     <message>
         <source>Add playlist</source>
-        <translation>Añadir a reproducción</translation>
+        <translation>Añadir lista</translation>
     </message>
     <message>
         <source>Playlist name</source>
-        <translation>Nombre de la reproducción</translation>
+        <translation>Nombre de la lista</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
-        <translation>Quitar reproducción</translation>
+        <translation>Quitar de lista</translation>
     </message>
     <message>
         <source>Removing</source>
@@ -242,20 +242,20 @@
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
         <translation>
-            <numerusform>%n reproducción seleccionada</numerusform>
-            <numerusform>%n reproducciones seleccionadas</numerusform>
+            <numerusform>%n lista seleccionada</numerusform>
+            <numerusform>%n listas seleccionadas</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
         <translation>
-            <numerusform>Quitando %n reproducción</numerusform>
-            <numerusform>Quitando %n reproducciones</numerusform>
+            <numerusform>Quitando %n lista</numerusform>
+            <numerusform>Quitando %n listas</numerusform>
         </translation>
     </message>
     <message>
         <source>Select playlists</source>
-        <translation>Seleccionar reproducciones</translation>
+        <translation>Seleccionar listas</translation>
     </message>
     <message>
         <source>Queue</source>
@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Bitrate</source>
-        <translation>Tasa de bit</translation>
+        <translation>Tasa de bits</translation>
     </message>
     <message>
         <source>%1 s</source>
@@ -355,7 +355,7 @@
     </message>
     <message>
         <source>Source Code</source>
-        <translation>Fuente</translation>
+        <translation>Código fuente</translation>
     </message>
     <message>
         <source>Authors</source>
@@ -376,8 +376,8 @@
     <message numerus="yes">
         <source>%n file(s) selected</source>
         <translation>
-            <numerusform>%n Archivo seleccionado</numerusform>
-            <numerusform>%n Archivos seleccionados</numerusform>
+            <numerusform>%n archivo seleccionado</numerusform>
+            <numerusform>%n archivos seleccionados</numerusform>
         </translation>
     </message>
     <message>
@@ -395,13 +395,13 @@
     <message numerus="yes">
         <source>%n directories selected</source>
         <translation>
-            <numerusform>%n Directorios seleccionados</numerusform>
-            <numerusform>%n Directorios seleccionados</numerusform>
+            <numerusform>%n directorio seleccionado</numerusform>
+            <numerusform>%n directorios seleccionados</numerusform>
         </translation>
     </message>
     <message>
         <source>Library Directories</source>
-        <translation>Ruta de directorios</translation>
+        <translation>Directorios de fonoteca</translation>
     </message>
     <message>
         <source>Select</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Añadir directorio</translation>
+        <translation>Añadir directorio…</translation>
     </message>
     <message>
         <source>Select directory</source>
@@ -421,15 +421,15 @@
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Reiniciar</translation>
+        <translation>Restablecer fonoteca</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Actualizar</translation>
+        <translation>Actualizar fonoteca</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation>Libreria</translation>
+        <translation>Fonoteca</translation>
     </message>
     <message>
         <source>%1, %2</source>
@@ -445,7 +445,7 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation>Error inicializando base de datos</translation>
+        <translation>Error al inicializar la base de datos</translation>
     </message>
     <message>
         <source>No selected directories</source>
@@ -465,7 +465,7 @@
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation>Abrir libreria al inicio</translation>
+        <translation>Abrir fonoteca al inicio</translation>
     </message>
     <message>
         <source>%1 kB/s</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Restaurar el reproductor al iniciar</translation>
+        <translation>Restaurar estado del reproductor al iniciar</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -501,11 +501,11 @@
     </message>
     <message>
         <source>Ascending</source>
-        <translation>Ascendiendo</translation>
+        <translation>Ascendente</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation>Descendiendo</translation>
+        <translation>Descendente</translation>
     </message>
     <message>
         <source>Album title</source>
@@ -525,7 +525,7 @@
     </message>
     <message>
         <source>Added date</source>
-        <translation>Fecha añadida</translation>
+        <translation>Fecha de adición</translation>
     </message>
     <message>
         <source>Inside Album</source>
@@ -533,11 +533,11 @@
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation>Ordenar descendiendo</translation>
+        <translation>Orden descendente</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation>Ordenar ascendiendo</translation>
+        <translation>Orden ascendente</translation>
     </message>
     <message>
         <source>Year</source>
@@ -545,7 +545,7 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation>Seguro que quieres quitar este álbum?</translation>
+        <translation>¿Confirma que quiere quitar este álbum?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
@@ -554,13 +554,13 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
         <translation>
-            <numerusform>Seguro que quieres quitar este álbumes?</numerusform>
-            <numerusform>Seguro que quieres quitar este álbumes?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n álbum seleccionado?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n álbumes seleccionados?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation>Seguro que quieres quitar este artista?</translation>
+        <translation>¿Confirma que quiere quitar este artista?</translation>
     </message>
     <message>
         <source>Removing files...</source>
@@ -569,31 +569,31 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
         <translation>
-            <numerusform>Seguro que quieres quitar a estos artistas?</numerusform>
-            <numerusform>Seguro que quieres quitar a estos artistas?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n artista seleccionado?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n artistas seleccionados?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
         <translation>
-            <numerusform>Quitando %n archivos</numerusform>
+            <numerusform>Quitando %n archivo</numerusform>
             <numerusform>Quitando %n archivos</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
         <translation>
-            <numerusform>Seguro que quieres quitar estos %n géneros?</numerusform>
-            <numerusform>Seguro que quieres quitar estos %n géneros?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n género seleccionado?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n géneros seleccionados?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation>Seguro que quieres quitar este género?</translation>
+        <translation>¿Confirma que quiere quitar este género?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation>Seguro que quieres quitar esta pista?</translation>
+        <translation>¿Confirma que quiere quitar esta pista?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
@@ -614,8 +614,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
         <translation>
-            <numerusform>Seguro que quieres quitar las %n pistas?</numerusform>
-            <numerusform>Seguro que quieres quitar las %n pistas?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n pista seleccionada?</numerusform>
+            <numerusform>¿Confirma que quiere quitar %n pistas seleccionadas?</numerusform>
         </translation>
     </message>
     <message>
@@ -636,15 +636,15 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Retransmisor</translation>
+        <translation>Abrir URL</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Aceptar</translation>
+        <translation>Abrir</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation>introducir l.u.r</translation>
+        <translation>URL</translation>
     </message>
     <message>
         <source>Disc number</source>
@@ -656,7 +656,7 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Editar etiqueta</translation>
+        <translation>Editar etiquetas</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -664,11 +664,11 @@
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation>Escaneando sistema de archivos</translation>
+        <translation>Analizando sistema de archivos</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation>Extraendo metadatos</translation>
+        <translation>Extrayendo metadatos</translation>
     </message>
     <message>
         <source>Finishing</source>
@@ -677,24 +677,24 @@
     <message numerus="yes">
         <source>%n new tracks found</source>
         <translation>
-            <numerusform>%n nuevas canciones halladas</numerusform>
-            <numerusform>%n nuevas canciones halladas</numerusform>
+            <numerusform>Se halló %n canción nueva</numerusform>
+            <numerusform>Se hallaron %n canciones nuevas</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
         <translation>
-            <numerusform>%1 de %n canciones procesadas</numerusform>
-            <numerusform>%1 de %n canciones procesadas</numerusform>
+            <numerusform>Se procesó %1 de %n canciones</numerusform>
+            <numerusform>Se procesaron %1 de %n canciones</numerusform>
         </translation>
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation>Agregando canciones</translation>
+        <translation>Añadiendo canciones…</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Guardando etiquetas</translation>
+        <translation>Guardando etiquetas…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Usar etiqueta &quot;Artista del álbum&quot; en lugar de &quot;Artista&quot; si está disponible</translation>
+        <translation>Usar etiqueta «Artista del álbum» en lugar de «Artista» si está disponible</translation>
     </message>
     <message>
         <source>Save</source>
@@ -711,8 +711,8 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>Las etiquetas seleccionadas se aplicarán a todos los %n archivos</numerusform>
-            <numerusform>Las etiquetas seleccionadas se aplicarán a todos los %n archivos</numerusform>
+            <numerusform>Las etiquetas seleccionadas se aplicarán a %n archivo</numerusform>
+            <numerusform>Las etiquetas seleccionadas se aplicarán a los %n archivos</numerusform>
         </translation>
     </message>
     <message>
@@ -725,7 +725,7 @@
     </message>
     <message>
         <source>Album artists</source>
-        <translation>artistas del álbum</translation>
+        <translation>Artistas del álbum</translation>
     </message>
     <message>
         <source>Album artist</source>
@@ -737,15 +737,15 @@
     </message>
     <message>
         <source>Add</source>
-        <translation>Agregar</translation>
+        <translation>Añadir</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>Detener tras reproducir pista: &lt;font color=&quot;%1&quot;&gt;sí&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>Detener tras reproducir pista: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
 </context>
 </TS>
