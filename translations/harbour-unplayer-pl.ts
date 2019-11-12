@@ -117,10 +117,10 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n artysta wybrany</numerusform>
+            <numerusform>%n artystów wybranych</numerusform>
+            <numerusform>%n artystów wybranych</numerusform>
         </translation>
     </message>
     <message>
@@ -149,10 +149,10 @@
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n gatunek wybrany</numerusform>
+            <numerusform>%n gatunki wybrane</numerusform>
+            <numerusform>%n gatunków wybranych</numerusform>
         </translation>
     </message>
     <message>
@@ -161,10 +161,10 @@
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n utwór, %1</numerusform>
+            <numerusform>%n utwory, %1</numerusform>
+            <numerusform>%n utworów, %1</numerusform>
         </translation>
     </message>
     <message>
@@ -181,34 +181,34 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n artysta</numerusform>
+            <numerusform>%n artystów</numerusform>
+            <numerusform>%n artystów</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albumy</numerusform>
+            <numerusform>%n albumów</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n utwór</numerusform>
+            <numerusform>%n utwory</numerusform>
+            <numerusform>%n utworów</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n playlista</numerusform>
+            <numerusform>%n playlisty</numerusform>
+            <numerusform>%n playlist</numerusform>
         </translation>
     </message>
     <message>
@@ -245,10 +245,10 @@
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Usuwanie %n utworu</numerusform>
+            <numerusform>Usuwanie %n utworów</numerusform>
+            <numerusform>Usuwanie %n utworów</numerusform>
         </translation>
     </message>
     <message>
@@ -257,18 +257,18 @@
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n playlista wybrana</numerusform>
+            <numerusform>%n playlisty wybrane</numerusform>
+            <numerusform>%n playlist wybranych</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Usuwanie %n playlisty</numerusform>
+            <numerusform>Usuwanie %n playlist</numerusform>
+            <numerusform>Usuwanie %n playlist</numerusform>
         </translation>
     </message>
     <message>
@@ -393,10 +393,10 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n plik wybrany</numerusform>
+            <numerusform>%n pliki wybrane</numerusform>
+            <numerusform>%n plików wybranych</numerusform>
         </translation>
     </message>
     <message>
@@ -413,10 +413,10 @@
     </message>
     <message numerus="yes">
         <source>%n directories selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n katalog wybrany</numerusform>
+            <numerusform>%n katalogi wybrane</numerusform>
+            <numerusform>%n katalogów wybranych</numerusform>
         </translation>
     </message>
     <message>
@@ -569,10 +569,10 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrany album?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrane albumy?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranych albumów?</numerusform>
         </translation>
     </message>
     <message>
@@ -585,26 +585,26 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranego artystę?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranych artystów?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranych artystów?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Usuwanie %n pliku</numerusform>
+            <numerusform>Usuwanie %n plików</numerusform>
+            <numerusform>Usuwanie %n plików</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrany gatunek?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrane gatunki?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranych gatunków?</numerusform>
         </translation>
     </message>
     <message>
@@ -633,10 +633,10 @@
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrany utwór?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybrane utwory?</numerusform>
+            <numerusform>Czy jesteś pewny, że chcesz usunąć %n wybranych utworów?</numerusform>
         </translation>
     </message>
     <message>
@@ -689,39 +689,39 @@
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyodrębnianie metadanych</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>Kończenie</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Znaleziono %n nowy utwór</numerusform>
+            <numerusform>Znaleziono %n nowe utwory</numerusform>
+            <numerusform>Znaleziono %n nowych utworów</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 z %n utworów przetworzony</numerusform>
+            <numerusform>%1 z %n utworów przetworzone</numerusform>
+            <numerusform>%1 z %n utworów przetworzone</numerusform>
         </translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Zatrzymaj po odtworzeniu utworu:&lt;font color=&quot;%1&quot;&gt;tak&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Zatrzymaj po odtworzeniu utworu:&lt;font color=&quot;%1&quot;&gt;nie&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation>Dodawanie utworó</translation>
+        <translation>Dodawanie utworów...</translation>
     </message>
     <message>
         <source>Saving tags...</source>
@@ -733,39 +733,39 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="unfinished"></translation>
+        <translation>Użyj tagu „Album artystów” zamiast „Artysta”, jeśli jest dostępny</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisz</translation>
     </message>
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Wybrane tagi zostaną użyte do %n pliku</numerusform>
+            <numerusform>Wybrane tagi zostaną użyte do wszystkich %n plików</numerusform>
+            <numerusform>Wybrane tagi zostaną użyte do wszystkich %n plików</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Zostaną zastosowane tylko wybrane tagi</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można odczytać tagów z tego pliku</translation>
     </message>
     <message>
         <source>Album artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Album artystów</translation>
     </message>
     <message>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Album artystów</translation>
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwiększ numer ścieżki dla każdego pliku</translation>
     </message>
     <message>
         <source>Add</source>
