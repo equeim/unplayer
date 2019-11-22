@@ -25,8 +25,8 @@
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 条音轨</numerusform>
         </translation>
     </message>
     <message>
@@ -55,8 +55,8 @@
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>已选择％n条曲目</numerusform>
         </translation>
     </message>
     <message>
@@ -81,8 +81,8 @@
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n张专辑</numerusform>
         </translation>
     </message>
     <message>
@@ -110,7 +110,7 @@
     <message numerus="yes">
         <source>%n artist(s) selected</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
+            <numerusform>已选择％n个艺术家</numerusform>
         </translation>
     </message>
     <message>
@@ -257,7 +257,7 @@
     </message>
     <message>
         <source>All</source>
-        <translation>全部</translation>
+        <translation>所有</translation>
     </message>
     <message>
         <source>None</source>
