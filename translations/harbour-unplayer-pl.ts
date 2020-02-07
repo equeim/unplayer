@@ -771,5 +771,9 @@
         <source>Add</source>
         <translation>Dodaj</translation>
     </message>
+    <message>
+        <source>Replace queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

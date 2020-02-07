@@ -43,6 +43,15 @@ Page {
         PushUpMenu {
             MenuItem {
                 enabled: tracksProxyModel.hasSelection
+                text: qsTranslate("unplayer", "Replace queue")
+                onClicked: {
+                    Unplayer.Player.queue.addTracksFromLibrary(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes), true)
+                    selectionPanel.showPanel = false
+                }
+            }
+
+            MenuItem {
+                enabled: tracksProxyModel.hasSelection
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: {
                     Unplayer.Player.queue.addTracksFromLibrary(tracksModel.getTracks(tracksProxyModel.selectedSourceIndexes))

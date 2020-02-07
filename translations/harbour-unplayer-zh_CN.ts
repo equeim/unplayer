@@ -723,5 +723,9 @@
         <source>%1 PiB</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Replace queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
