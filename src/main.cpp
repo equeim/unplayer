@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <atomic>
-#include <csignal>
 #include <iostream>
 #include <memory>
 
@@ -39,23 +37,14 @@
 #include "player.h"
 #include "queue.h"
 #include "settings.h"
+#include "signalhandler.h"
 #include "utils.h"
-
-static std::atomic_bool exitRequested;
-void signalHandler(int)
-{
-    exitRequested = true;
-    QCoreApplication::quit();
-}
 
 using namespace unplayer;
 
 int main(int argc, char* argv[])
 {
-    std::signal(SIGQUIT, signalHandler);
-    std::signal(SIGINT, signalHandler);
-    std::signal(SIGTERM, signalHandler);
-    std::signal(SIGHUP, signalHandler);
+    SignalHandler::setupHandlers();
 
     bool updateLibrary = false;
     bool resetLibrary = false;
@@ -85,7 +74,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    if (exitRequested) {
+    if (SignalHandler::exitRequested) {
         return 0;
     }
 
@@ -103,7 +92,7 @@ int main(int argc, char* argv[])
 
         Settings::instance();
 
-        if (exitRequested) {
+        if (SignalHandler::exitRequested) {
             return 0;
         }
 
@@ -115,7 +104,7 @@ int main(int argc, char* argv[])
 
         LibraryUtils::instance()->updateDatabase();
 
-        if (exitRequested) {
+        if (SignalHandler::exitRequested) {
             return 0;
         }
 
@@ -138,7 +127,7 @@ int main(int argc, char* argv[])
     const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
-    if (exitRequested) {
+    if (SignalHandler::exitRequested) {
         return 0;
     }
 
@@ -152,16 +141,17 @@ int main(int argc, char* argv[])
 
     view->engine()->addImageProvider(QueueImageProvider::providerId, new QueueImageProvider(Player::instance()->queue()));
 
-    if (exitRequested) {
+    if (SignalHandler::exitRequested) {
         return 0;
     }
 
     view->setSource(SailfishApp::pathTo(QLatin1String("qml/main.qml")));
     view->show();
 
-    if (exitRequested) {
+    if (SignalHandler::exitRequested) {
         return 0;
     }
+    SignalHandler::setupNotifier();
 
     return QCoreApplication::exec();
 }
