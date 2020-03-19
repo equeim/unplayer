@@ -88,7 +88,14 @@ target_compile_definitions("${PROJECT_NAME}" PRIVATE
 target_compile_options("${PROJECT_NAME}" PRIVATE
     -Wall
     -Wextra
-    -pedantic
+    -Wpedantic
+    -Wshadow
+    -Wnon-virtual-dtor
+    -Wcast-align
+    -Woverloaded-virtual
+    -Wlogical-op
+    -Wdouble-promotion
+    -Wformat=2
     -Werror=format
     ${SAILFISHAPP_CFLAGS_OTHER}
     ${QTMPRIS_CFLAGS_OTHER}
