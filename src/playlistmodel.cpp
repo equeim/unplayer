@@ -121,8 +121,6 @@ namespace unplayer
                 }
             }
 
-            const QString dbConnectionName(QLatin1String("playlistmodel"));
-
             const DatabaseGuard databaseGuard{dbConnectionName};
 
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
