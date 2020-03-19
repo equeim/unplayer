@@ -698,7 +698,7 @@ namespace unplayer
         };
         static const auto end(extensions.end());
 
-        const auto found(extensions.find(suffix));
+        const auto found(extensions.find(suffix.toLower()));
         if (found == end) {
             return Extension::Other;
         }
@@ -728,7 +728,7 @@ namespace unplayer
 
             QLatin1String("ogv")
         };
-        return contains(videoMimeTypesExtensions, suffix);
+        return contains(videoMimeTypesExtensions, suffix.toLower());
     }
 
     QSqlDatabase LibraryUtils::openDatabase(const QString& connectionName)

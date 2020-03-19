@@ -67,10 +67,11 @@ namespace unplayer
 
         PlaylistType playlistTypeFromExtension(const QString& extension)
         {
-            if (extension == plsExtension) {
+            const QString lower(extension.toLower());
+            if (lower == plsExtension) {
                 return PlaylistType::Pls;
             }
-            if (isM3uExtension(extension)) {
+            if (isM3uExtension(lower)) {
                 return PlaylistType::M3u;
             }
             return PlaylistType::Other;
@@ -444,7 +445,7 @@ namespace unplayer
             ex.insert(plsExtension);
             return ex;
         }());
-        return contains(extensions, suffix);
+        return contains(extensions, suffix.toLower());
     }
 
     PlaylistUtils* PlaylistUtils::instance()
