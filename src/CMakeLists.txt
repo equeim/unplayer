@@ -92,6 +92,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
     -Wcast-align
     -Woverloaded-virtual
     -Wconversion
+    -Wsign-conversion
     -Wlogical-op
     -Wdouble-promotion
     -Wformat=2
