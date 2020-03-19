@@ -92,6 +92,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
     -Wnon-virtual-dtor
     -Wcast-align
     -Woverloaded-virtual
+    -Wconversion
     -Wlogical-op
     -Wdouble-promotion
     -Wformat=2
