@@ -220,7 +220,7 @@ namespace unplayer
                         }
                     }
                 }
-                tracks.reserve(tracksMap.size());
+                tracks.reserve(static_cast<int>(tracksMap.size()));
                 for (auto&& i : tracksMap) {
                     tracks.push_back(std::move(i).second);
                 }
@@ -242,16 +242,16 @@ namespace unplayer
                         }
                     }
                 }
-                return files.size();
+                return static_cast<int>(files.size());
             }
 
             void save(QTextStream& stream, const std::vector<PlaylistTrack>& tracks)
             {
                 stream << "[playlist]" << endl;
 
-                for (int i = 0, max = tracks.size(); i < max; ++i) {
+                for (size_t i = 0, max = tracks.size(); i < max; ++i) {
                     const PlaylistTrack& track = tracks[i];
-                    const int number = i + 1;
+                    const size_t number = i + 1;
                     stream << "File" << number << '=';
                     if (track.url.isLocalFile()) {
                         stream << track.url.path();
@@ -428,7 +428,7 @@ namespace unplayer
     {
         static const QStringList filters([]() {
             QStringList f;
-            f.reserve(m3uExtensions().size() + 1);
+            f.reserve(static_cast<int>(m3uExtensions().size() + 1));
             for (const QString& extension : m3uExtensions()) {
                 f.push_back(QLatin1String("*.") % extension);
             }

@@ -49,14 +49,14 @@ namespace unplayer
     {
         const QLatin1String dbConnectionName("unplayer_queue");
 
-        int randomIndex(int count)
+        size_t randomIndex(size_t count)
         {
             static std::default_random_engine random([]() {
                 std::seed_seq seed{std::random_device{}(), static_cast<std::seed_seq::result_type>(QDateTime::currentMSecsSinceEpoch())};
                 return std::default_random_engine(seed);
             }());
-            std::uniform_int_distribution<> dist(0, count - 1);
-            return dist(random);
+            std::uniform_int_distribution<> dist(0, static_cast<int>(count) - 1);
+            return static_cast<size_t>(dist(random));
         }
 
         QString createTrackId()
@@ -444,7 +444,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 enum {
                     FilePathField,
                     ModificationTimeField,
@@ -457,8 +457,8 @@ namespace unplayer
                 };
 
                 QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
-                queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
-                for (int j = 1; j < count; ++j) {
+                queryString.reserve(queryString.size() + static_cast<int>(count - 1) * 2 + 1);
+                for (size_t j = 1; j < count; ++j) {
                     queryString.push_back(QStringLiteral(",?"));
                 }
                 queryString.push_back(QLatin1Char(')'));
@@ -466,7 +466,7 @@ namespace unplayer
 
                 QSqlQuery query(db);
                 query.prepare(queryString);
-                for (int j = first, max = first + count; j < max; ++j) {
+                for (size_t j = first, max = first + count; j < max; ++j) {
                     query.addBindValue(tracksToQuery[j]);
                 }
 
@@ -749,7 +749,7 @@ namespace unplayer
             }
             emit currentTrackChanged();
         } else {
-            setCurrentIndex(index_of(mTracks, current));
+            setCurrentIndex(index_of_i(mTracks, current));
         }
     }
 
@@ -767,11 +767,11 @@ namespace unplayer
 
         if (contains(indexes, mCurrentIndex)) {
             if (mCurrentIndex >= static_cast<int>(mTracks.size())) {
-                setCurrentIndex(mTracks.size() - 1);
+                setCurrentIndex(static_cast<int>(mTracks.size()) - 1);
             }
             emit currentTrackChanged();
         } else {
-            setCurrentIndex(index_of(mTracks, current));
+            setCurrentIndex(index_of_i(mTracks, current));
         }
     }
 
@@ -795,7 +795,7 @@ namespace unplayer
             }
             erase_one(mNotPlayedTracks, mTracks[mCurrentIndex].get());
             mTracks.erase(mTracks.begin() + mCurrentIndex);
-            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
+            setCurrentIndex(index_of_i(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
         } else {
             if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 setCurrentIndex(0);
@@ -825,7 +825,7 @@ namespace unplayer
                     return;
                 }
             }
-            setCurrentIndex(index_of(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
+            setCurrentIndex(index_of_i(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
         } else {
             if (mCurrentIndex == static_cast<int>(mTracks.size() - 1)) {
                 if (mRepeatMode == RepeatAll) {
@@ -848,7 +848,7 @@ namespace unplayer
         }
 
         if (mCurrentIndex == 0) {
-            setCurrentIndex(mTracks.size() - 1);
+            setCurrentIndex(static_cast<int>(mTracks.size()) - 1);
         } else {
             setCurrentIndex(mCurrentIndex - 1);
         }
@@ -882,9 +882,9 @@ namespace unplayer
 
     void Queue::addingTracksCallback(std::vector<std::shared_ptr<QueueTrack>>&& tracks, int setAsCurrent, const QUrl& setAsCurrentUrl)
     {
-        emit tracksAboutToBeAdded(tracks.size());
+        emit tracksAboutToBeAdded(static_cast<int>(tracks.size()));
 
-        setAsCurrent += mTracks.size();
+        setAsCurrent += static_cast<int>(mTracks.size());
 
         mNotPlayedTracks.reserve(mNotPlayedTracks.size() + tracks.size());
         mTracks.reserve(mTracks.size() + tracks.size());
@@ -912,7 +912,7 @@ namespace unplayer
                     if (found == mTracks.end()) {
                         setCurrentIndex(0);
                     } else {
-                        setCurrentIndex(found - mTracks.begin());
+                        setCurrentIndex(static_cast<int>(found - mTracks.begin()));
                         set = true;
                     }
                 }

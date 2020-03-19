@@ -102,7 +102,7 @@ namespace unplayer
     QStringList Utils::processArguments(const std::vector<std::string>& arguments)
     {
         QStringList parsed;
-        parsed.reserve(arguments.size());
+        parsed.reserve(static_cast<int>(arguments.size()));
 
         for (const std::string& argument : arguments) {
             const QString argumentString(QString::fromStdString(argument));

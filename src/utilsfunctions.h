@@ -37,17 +37,17 @@ namespace unplayer
     }
 
     template<typename Function>
-    inline void forMaxCountInRange(int max, int maxCount, Function call)
+    inline void forMaxCountInRange(size_t count, size_t batchSize, Function call)
     {
-        for (int i = 0; i < max; i += maxCount) {
-            const int count = [&]() {
-                const int left = max - i;
-                if (left > maxCount) {
-                    return maxCount;
+        for (size_t i = 0; i < count; i += batchSize) {
+            const size_t nextCount = [&]() {
+                const size_t left = count - i;
+                if (left > batchSize) {
+                    return batchSize;
                 }
                 return left;
             }();
-            call(i, count);
+            call(i, nextCount);
         }
     }
 }

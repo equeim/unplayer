@@ -62,7 +62,7 @@ namespace unplayer
 
     int DirectoryContentModel::rowCount(const QModelIndex&) const
     {
-        return mFiles.size();
+        return static_cast<int>(mFiles.size());
     }
 
     const QString& DirectoryContentModel::directory() const
@@ -136,7 +136,7 @@ namespace unplayer
         mLoading = true;
         emit loadingChanged();
 
-        beginRemoveRows(QModelIndex(), 0, mFiles.size() - 1);
+        beginRemoveRows(QModelIndex(), 0, static_cast<int>(mFiles.size()) - 1);
         mFiles.clear();
         endRemoveRows();
 
@@ -163,7 +163,7 @@ namespace unplayer
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             std::vector<DirectoryContentFile> files(watcher->result());
-            beginInsertRows(QModelIndex(), 0, files.size() - 1);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(files.size()) - 1);
             mFiles = std::move(files);
             endInsertRows();
 

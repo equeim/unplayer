@@ -112,7 +112,7 @@ namespace unplayer
 
     int TracksModel::rowCount(const QModelIndex&) const
     {
-        return mTracks.size();
+        return static_cast<int>(mTracks.size());
     }
 
     bool TracksModel::allArtists() const
@@ -224,7 +224,7 @@ namespace unplayer
     QStringList TracksModel::getTrackPaths(const std::vector<int>& indexes) const
     {
         QStringList tracks;
-        tracks.reserve(indexes.size());
+        tracks.reserve(static_cast<int>(indexes.size()));
         for (int index : indexes) {
             tracks.push_back(mTracks[index].filePath);
         }
@@ -249,7 +249,7 @@ namespace unplayer
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                for (int i = indexes.size() - 1; i >= 0; --i) {
+                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
                     const int index = indexes[i];
                     beginRemoveRows(QModelIndex(), index, index);
                     mTracks.erase(mTracks.begin() + index);

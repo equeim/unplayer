@@ -65,7 +65,7 @@ namespace unplayer
 
     int PlaylistModel::rowCount(const QModelIndex&) const
     {
-        return mTracks.size();
+        return static_cast<int>(mTracks.size());
     }
 
     bool PlaylistModel::isLoaded() const
@@ -133,17 +133,17 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
-                queryString.reserve(queryString.size() + (count - 1) * 2 + 1);
-                for (int j = 1; j < count; ++j) {
+                queryString.reserve(static_cast<int>(queryString.size() + (count - 1) * 2 + 1));
+                for (size_t j = 1; j < count; ++j) {
                     queryString.push_back(QStringLiteral(",?"));
                 }
                 queryString.push_back(QLatin1Char(')'));
 
                 QSqlQuery query(db);
                 query.prepare(queryString);
-                for (int j = first, max = first + count; j < max; ++j) {
+                for (size_t j = first, max = first + count; j < max; ++j) {
                     query.addBindValue(tracksToQuery[j]);
                 }
 
@@ -202,7 +202,7 @@ namespace unplayer
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             auto tracks(watcher->result());
-            beginInsertRows(QModelIndex(), 0, tracks.size() - 1);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(tracks.size() - 1));
             mTracks = std::move(tracks);
             endInsertRows();
             mLoaded = true;
@@ -214,7 +214,7 @@ namespace unplayer
     QStringList PlaylistModel::getTracks(const std::vector<int>& indexes)
     {
         QStringList tracks;
-        tracks.reserve(mTracks.size());
+        tracks.reserve(static_cast<int>(mTracks.size()));
         for (int index : indexes) {
             tracks.push_back(mTracks[index].url.toString());
         }

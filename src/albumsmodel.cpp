@@ -106,7 +106,7 @@ namespace unplayer
 
     int AlbumsModel::rowCount(const QModelIndex&) const
     {
-        return mAlbums.size();
+        return static_cast<int>(mAlbums.size());
     }
 
     bool AlbumsModel::allArtists() const
@@ -254,8 +254,8 @@ namespace unplayer
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                for (int i = indexes.size() - 1; i >= 0; --i) {
-                    const int index = indexes[i];
+                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
+                    const int index = indexes[static_cast<size_t>(i)];
                     beginRemoveRows(QModelIndex(), index, index);
                     mAlbums.erase(mAlbums.begin() + index);
                     endRemoveRows();

@@ -117,7 +117,7 @@ namespace unplayer
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
 
         static const QString databaseType;
-        static const int maxDbVariableCount;
+        static const size_t maxDbVariableCount;
         static LibraryUtils* instance();
 
         static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);

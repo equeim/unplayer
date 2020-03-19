@@ -90,7 +90,7 @@ namespace unplayer
     void Player::saveState() const
     {
         QStringList tracks;
-        tracks.reserve(mQueue->tracks().size());
+        tracks.reserve(static_cast<int>(mQueue->tracks().size()));
         for (const auto& track : mQueue->tracks()) {
             tracks.push_back(track->url.toString());
         }

@@ -71,7 +71,7 @@ namespace unplayer
 
     int DirectoryTracksModel::rowCount(const QModelIndex&) const
     {
-        return mFiles.size();
+        return static_cast<int>(mFiles.size());
     }
 
     const std::vector<DirectoryTrackFile>& DirectoryTracksModel::files() const
@@ -146,7 +146,7 @@ namespace unplayer
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                for (int i = indexes.size() - 1; i >= 0; --i) {
+                for (int i = static_cast<int>(indexes.size() - 1); i >= 0; --i) {
                     const int index = indexes[i];
                     beginRemoveRows(QModelIndex(), index, index);
                     mFiles.erase(mFiles.begin() + index);
@@ -176,7 +176,7 @@ namespace unplayer
         mLoaded = false;
         emit loadedChanged();
 
-        beginRemoveRows(QModelIndex(), 0, mFiles.size() - 1);
+        beginRemoveRows(QModelIndex(), 0, static_cast<int>(mFiles.size()) - 1);
         mFiles.clear();
         endRemoveRows();
 
@@ -213,7 +213,7 @@ namespace unplayer
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             auto result(watcher->result());
-            beginInsertRows(QModelIndex(), 0, result.first.size() - 1);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(result.first.size()) - 1);
             mFiles = std::move(result.first);
             endInsertRows();
             mTracksCount = result.second;
@@ -273,7 +273,7 @@ namespace unplayer
     {
         const std::vector<int> indexes(selectedSourceIndexes());
         QStringList tracks;
-        tracks.reserve(indexes.size());
+        tracks.reserve(static_cast<int>(indexes.size()));
         auto model = static_cast<const DirectoryTracksModel*>(sourceModel());
         for (int index : indexes) {
             tracks.push_back(model->getTrack(index));

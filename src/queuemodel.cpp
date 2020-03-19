@@ -54,10 +54,7 @@ namespace unplayer
 
     int QueueModel::rowCount(const QModelIndex&) const
     {
-        if (mQueue) {
-            return mQueue->tracks().size();
-        }
-        return 0;
+        return mQueue ? static_cast<int>(mQueue->tracks().size()) : 0;
     }
 
     Queue* QueueModel::queue() const

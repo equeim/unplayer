@@ -56,7 +56,7 @@ namespace unplayer
 
     int PlaylistsModel::rowCount(const QModelIndex&) const
     {
-        return mPlaylists.size();
+        return static_cast<int>(mPlaylists.size());
     }
 
     void PlaylistsModel::removePlaylists(const std::vector<int>& indexes) const
@@ -105,7 +105,7 @@ namespace unplayer
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             std::vector<PlaylistsModelItem> playlists(watcher->result());
 
-            for (int i = 0, max = mPlaylists.size(); i < max; ++i) {
+            for (int i = 0, max = static_cast<int>(mPlaylists.size()); i < max; ++i) {
                 if (!contains(playlists, mPlaylists[i])) {
                     beginRemoveRows(QModelIndex(), i, i);
                     mPlaylists.erase(mPlaylists.begin() + i);
@@ -118,7 +118,8 @@ namespace unplayer
             for (PlaylistsModelItem& playlist : playlists) {
                 auto found(std::find(mPlaylists.begin(), mPlaylists.end(), playlist));
                 if (found == mPlaylists.cend()) {
-                    beginInsertRows(QModelIndex(), mPlaylists.size(), mPlaylists.size());
+                    const int row = static_cast<int>(mPlaylists.size());
+                    beginInsertRows(QModelIndex(), row, row);
                     mPlaylists.push_back(std::move(playlist));
                     endInsertRows();
                 } else {
@@ -126,7 +127,7 @@ namespace unplayer
                 }
             }
 
-            emit dataChanged(index(0), index(mPlaylists.size() - 1));
+            emit dataChanged(index(0), index(static_cast<int>(mPlaylists.size()) - 1));
         });
         watcher->setFuture(future);
     }

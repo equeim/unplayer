@@ -386,7 +386,7 @@ namespace unplayer
                     const auto filesInDbEnd(filesInDb.end());
                     const auto mediaArtDirectoriesInDbHashEnd(mediaArtDirectoriesInDbHash.end());
 
-                    qInfo("Files in database: %zd (took %.3f s)", filesInDb.size(), stageTimer.restart() / 1000.0);
+                    qInfo("Files in database: %zd (took %.3f s)", filesInDb.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
                     qInfo("Files to remove: %zd", filesToRemove.size());
 
                     std::unordered_map<QString, QString> mediaArtDirectoriesHash;
@@ -483,10 +483,10 @@ namespace unplayer
                         }
                     }
 
-                    qInfo("End scanning filesystem (took %.3f s), need to extract tags from %d files", stageTimer.restart() / 1000.0, foundFiles);
+                    qInfo("End scanning filesystem (took %.3f s), need to extract tags from %d files", static_cast<double>(stageTimer.restart()) / 1000.0, foundFiles);
 
                     if (!filesToRemove.empty()) {
-                        forMaxCountInRange(filesToRemove.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+                        forMaxCountInRange(filesToRemove.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                             if (mCancel) {
                                 return;
                             }
@@ -504,7 +504,7 @@ namespace unplayer
                             }
                         });
 
-                        qInfo("Removed %zd tracks from database (took %.3f s)", filesToRemove.size(), stageTimer.restart() / 1000.0);
+                        qInfo("Removed %zd tracks from database (took %.3f s)", filesToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
                     }
                 }
 
@@ -542,7 +542,7 @@ namespace unplayer
                             emit mNotifier.extractedFilesChanged(count);
                         }
                     }
-                    qInfo("Added %d tracks to database (took %.3f s)", count, stageTimer.restart() / 1000.0);
+                    qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(stageTimer.restart()) / 1000.0);
                 }
 
                 if (mCancel) {
@@ -586,8 +586,8 @@ namespace unplayer
                     }
                 }
 
-                qInfo("End updating database (last stage took %.3f s)", stageTimer.elapsed() / 1000.0);
-                qInfo("Total time: %.3f s", timer.elapsed() / 1000.0);
+                qInfo("End updating database (last stage took %.3f s)", static_cast<double>(stageTimer.elapsed()) / 1000.0);
+                qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
             }
 
             QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles, const QMimeDatabase& mimeDb)
@@ -667,7 +667,7 @@ namespace unplayer
     }
 
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
-    const int LibraryUtils::maxDbVariableCount = 999; // SQLITE_MAX_VARIABLE_NUMBER
+    const size_t LibraryUtils::maxDbVariableCount = 999; // SQLITE_MAX_VARIABLE_NUMBER
 
     Extension LibraryUtils::extensionFromSuffix(const QString& suffix)
     {
@@ -1140,21 +1140,21 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(artists.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(artists.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
 
                 QString whereString(QLatin1String("WHERE artist = ?"));
                 const QLatin1String wherePush(" OR artist = ?");
-                whereString.reserve(whereString.size() + wherePush.size() * (count - 1));
-                for (int i = 1; i < count; ++i) {
+                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
+                for (size_t i = 1; i < count; ++i) {
                     whereString.push_back(wherePush);
                 }
                 if (deleteFiles) {
                     QSqlQuery query(db);
                     query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (int i = first, max = first + count; i < max; ++i) {
+                    for (size_t i = first, max = first + count; i < max; ++i) {
                         query.addBindValue(artists[i]);
                     }
                     if (query.exec()) {
@@ -1174,7 +1174,7 @@ namespace unplayer
 
                 QSqlQuery query(db);
                 query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (int i = first, max = first + count; i < max; ++i) {
+                for (size_t i = first, max = first + count; i < max; ++i) {
                     query.addBindValue(artists[i]);
                 }
                 if (!query.exec()) {
@@ -1215,21 +1215,21 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](int first, int count) {
+            forMaxCountInRange(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
 
                 QString whereString(QLatin1String("WHERE (artist = ? AND album = ?)"));
                 const QLatin1String wherePush(" OR (artist = ? AND album = ?)");
-                whereString.reserve(whereString.size() + wherePush.size() * (count - 1));
-                for (int i = 1; i < count; ++i) {
+                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
+                for (size_t i = 1; i < count; ++i) {
                     whereString.push_back(wherePush);
                 }
                 if (deleteFiles) {
                     QSqlQuery query(db);
                     query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (int i = first, max = first + count; i < max; ++i) {
+                    for (size_t i = first, max = first + count; i < max; ++i) {
                         const Album& album = albums[i];
                         query.addBindValue(album.artist);
                         query.addBindValue(album.album);
@@ -1252,7 +1252,7 @@ namespace unplayer
 
                 QSqlQuery query(db);
                 query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (int i = first, max = first + count; i < max; ++i) {
+                for (size_t i = first, max = first + count; i < max; ++i) {
                     const Album& album = albums[i];
                     query.addBindValue(album.artist);
                     query.addBindValue(album.album);
@@ -1295,21 +1295,21 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(genres.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(genres.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
 
                 QString whereString(QLatin1String("WHERE genre = ?"));
                 const QLatin1String wherePush(" OR genre = ?");
-                whereString.reserve(whereString.size() + wherePush.size() * (count - 1));
-                for (int i = 1; i < count; ++i) {
+                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
+                for (size_t i = 1; i < count; ++i) {
                     whereString.push_back(wherePush);
                 }
                 if (deleteFiles) {
                     QSqlQuery query(db);
                     query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (int i = first, max = first + count; i < max; ++i) {
+                    for (size_t i = first, max = first + count; i < max; ++i) {
                         query.addBindValue(genres[i]);
                     }
                     if (query.exec()) {
@@ -1329,7 +1329,7 @@ namespace unplayer
 
                 QSqlQuery query(db);
                 query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (int i = first, max = first + count; i < max; ++i) {
+                for (size_t i = first, max = first + count; i < max; ++i) {
                     query.addBindValue(genres[i]);
                 }
                 if (!query.exec()) {
@@ -1375,7 +1375,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(files.size(), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(files.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
@@ -1399,14 +1399,14 @@ namespace unplayer
                 };
 
                 queryString.push_back(handleFile(files.front()));
-                for (int i = first + 1, max = first + count; i < max; ++i) {
+                for (size_t i = first + 1, max = first + count; i < max; ++i) {
                     queryString.push_back(QLatin1String("OR "));
                     queryString.push_back(handleFile(files[i]));
                 }
 
                 QSqlQuery query(db);
                 query.prepare(queryString);
-                for (int i = first, max = first + count; i < max; ++i) {
+                for (size_t i = first, max = first + count; i < max; ++i) {
                     query.addBindValue(files[i]);
                 }
                 if (!query.exec()) {
@@ -1506,20 +1506,20 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(static_cast<int>(infos.size()), LibraryUtils::maxDbVariableCount, [&](int first, int count) {
+            forMaxCountInRange(infos.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
 
                 QString queryString(QLatin1String("DELETE FROM tracks WHERE "));
                 queryString.push_back(QLatin1String("filePath = ?"));
-                for (int i = first + 1, max = first + count; i < max; ++i) {
+                for (size_t i = first + 1, max = first + count; i < max; ++i) {
                     queryString.push_back(QLatin1String(" OR filePath = ?"));
                 }
 
                 QSqlQuery query(db);
                 query.prepare(queryString);
-                for (int i = first, max = first + count; i < max; ++i) {
+                for (size_t i = first, max = first + count; i < max; ++i) {
                     query.addBindValue(emptyIfNull(infos[static_cast<std::vector<tagutils::Info>::size_type>(i)].filePath));
                 }
                 if (!query.exec()) {
