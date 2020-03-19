@@ -1128,7 +1128,7 @@ namespace unplayer
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run(std::bind([deleteFiles](std::vector<QString>& artists) {
+        auto future = QtConcurrent::run([deleteFiles, artists = std::move(artists)] {
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
@@ -1181,7 +1181,7 @@ namespace unplayer
                     qWarning() << "failed to remove artists:" << query.lastError();
                 }
             });
-        }, std::move(artists)));
+        });
 
         using Watcher = QFutureWatcher<void>;
         auto watcher = new Watcher(this);
@@ -1203,7 +1203,7 @@ namespace unplayer
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run(std::bind([deleteFiles](std::vector<Album>& albums) {
+        auto future = QtConcurrent::run([deleteFiles, albums = std::move(albums)] {
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
@@ -1261,7 +1261,7 @@ namespace unplayer
                     qWarning() << "failed to remove albums:" << query.lastError();
                 }
             });
-        }, std::move(albums)));
+        });
 
         using Watcher = QFutureWatcher<void>;
         auto watcher = new Watcher(this);
@@ -1283,7 +1283,7 @@ namespace unplayer
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run(std::bind([deleteFiles](std::vector<QString>& genres) {
+        auto future = QtConcurrent::run([deleteFiles, genres = std::move(genres)] {
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
@@ -1336,7 +1336,7 @@ namespace unplayer
                     qWarning() << "failed to remove artists:" << query.lastError();
                 }
             });
-        }, std::move(genres)));
+        });
 
         using Watcher = QFutureWatcher<void>;
         auto watcher = new Watcher(this);
@@ -1358,7 +1358,7 @@ namespace unplayer
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run(std::bind([deleteFiles, canHaveDirectories](std::vector<QString>& files) {
+        auto future = QtConcurrent::run([deleteFiles, canHaveDirectories, files = std::move(files)]() mutable {
             const DatabaseGuard databaseGuard{removeFilesConnectionName};
 
             QElapsedTimer timer;
@@ -1415,7 +1415,7 @@ namespace unplayer
             });
 
             qInfo() << "file removing time:" << timer.elapsed();
-        }, std::move(files)));
+        });
 
         using Watcher = QFutureWatcher<void>;
         auto watcher = new Watcher(this);

@@ -169,7 +169,7 @@ namespace unplayer
         removeArtists({index}, deleteFiles);
     }
 
-    void ArtistsModel::removeArtists(std::vector<int> indexes, bool deleteFiles)
+    void ArtistsModel::removeArtists(const std::vector<int>& indexes, bool deleteFiles)
     {
         if (LibraryUtils::instance()->isRemovingFiles()) {
             return;
@@ -180,7 +180,7 @@ namespace unplayer
         for (int index : indexes) {
             artists.push_back(mArtists[index].artist);
         }
-        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, std::bind([this](std::vector<int>& indexes) {
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = indexes.size() - 1; i >= 0; --i) {
                     const int index = indexes[i];
@@ -190,7 +190,7 @@ namespace unplayer
                 }
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
-        }, std::move(indexes)));
+        });
         LibraryUtils::instance()->removeArtists(std::move(artists), deleteFiles);
     }
 

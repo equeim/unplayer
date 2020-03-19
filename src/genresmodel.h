@@ -52,7 +52,7 @@ namespace unplayer
         Q_INVOKABLE QStringList getTrackPathsForGenres(const std::vector<int>& indexes) const;
 
         Q_INVOKABLE void removeGenre(int index, bool deleteFiles);
-        Q_INVOKABLE void removeGenres(std::vector<int> indexes, bool deleteFiles);
+        Q_INVOKABLE void removeGenres(const std::vector<int>& indexes, bool deleteFiles);
     protected:
         QHash<int, QByteArray> roleNames() const override;
 

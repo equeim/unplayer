@@ -236,7 +236,7 @@ namespace unplayer
         removeTracks({index}, deleteFile);
     }
 
-    void TracksModel::removeTracks(std::vector<int> indexes, bool deleteFiles)
+    void TracksModel::removeTracks(const std::vector<int>& indexes, bool deleteFiles)
     {
         if (LibraryUtils::instance()->isRemovingFiles()) {
             return;
@@ -247,7 +247,7 @@ namespace unplayer
         for (int index : indexes) {
             files.push_back(mTracks[index].filePath);
         }
-        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, std::bind([this](std::vector<int>& indexes) {
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = indexes.size() - 1; i >= 0; --i) {
                     const int index = indexes[i];
@@ -257,7 +257,7 @@ namespace unplayer
                 }
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
-        }, std::move(indexes)));
+        });
         LibraryUtils::instance()->removeFiles(std::move(files), deleteFiles, false);
     }
 

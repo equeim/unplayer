@@ -298,8 +298,7 @@ namespace unplayer
             return url;
         }());
 
-        // FIXME: use capture initializers on C++14
-        auto future = QtConcurrent::run(std::bind([](QStringList& trackUrls, std::vector<std::shared_ptr<QueueTrack>>& oldTracks) {
+        auto future = QtConcurrent::run([trackUrls, oldTracks = std::move(oldTracks)]() mutable {
             QElapsedTimer timer;
             timer.start();
 
@@ -388,7 +387,7 @@ namespace unplayer
                                      existingTracks,
                                      tracksToQuery,
                                      std::unordered_set<QString>{}};
-                for (QString& urlString : trackUrls) {
+                for (const QString& urlString : trackUrls) {
                     const QUrl url([&urlString]() {
                         if (urlString.startsWith(QLatin1Char('/'))) {
                             return QUrl::fromLocalFile(urlString);
@@ -602,7 +601,7 @@ namespace unplayer
             }
 
             return newTracks;
-        }, trackUrls, std::move(oldTracks)));
+        });
 
         using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
         auto watcher = new FutureWatcher(this);
@@ -641,13 +640,12 @@ namespace unplayer
             return QUrl::fromLocalFile(libraryTracks[setAsCurrent].filePath);
         }());
 
-        // FIXME: use capture initializers on C++14
-        auto future = QtConcurrent::run(std::bind([](std::vector<LibraryTrack>& libraryTracks) {
+        auto future = QtConcurrent::run([libraryTracks]() {
             std::vector<std::shared_ptr<QueueTrack>> newTracks;
             newTracks.reserve(libraryTracks.size());
 
-            for (auto& libraryTrack : libraryTracks) {
-                QString& filePath = libraryTrack.filePath;
+            for (const LibraryTrack& libraryTrack : libraryTracks) {
+                const QString& filePath = libraryTrack.filePath;
 
                 const QFileInfo info(filePath);
 
@@ -673,7 +671,7 @@ namespace unplayer
             }
 
             return newTracks;
-        }, libraryTracks));
+        });
 
         using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
         auto watcher = new FutureWatcher(this);

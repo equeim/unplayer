@@ -95,7 +95,7 @@ namespace unplayer
         Q_INVOKABLE QStringList getTrackPathsForAlbums(const std::vector<int>& indexes) const;
 
         Q_INVOKABLE void removeAlbum(int index, bool deleteFiles);
-        Q_INVOKABLE void removeAlbums(std::vector<int> indexes, bool deleteFiles);
+        Q_INVOKABLE void removeAlbums(const std::vector<int>& indexes, bool deleteFiles);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

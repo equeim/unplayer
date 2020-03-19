@@ -69,7 +69,7 @@ namespace unplayer
         Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes, bool includePlaylists = true) const;
 
         Q_INVOKABLE void removeTrack(int index);
-        Q_INVOKABLE void removeTracks(std::vector<int> indexes);
+        Q_INVOKABLE void removeTracks(const std::vector<int>& indexes);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
