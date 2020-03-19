@@ -359,8 +359,8 @@ namespace unplayer
                                 remove = true;
                             } else {
                                 remove = true;
-                                for (const QString& directory : libraryDirectories) {
-                                    if (filePath.startsWith(directory)) {
+                                for (const QString& dir : libraryDirectories) {
+                                    if (filePath.startsWith(dir)) {
                                         remove = false;
                                         break;
                                     }

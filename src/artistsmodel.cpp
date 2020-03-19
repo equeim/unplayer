@@ -207,12 +207,12 @@ namespace unplayer
     {
         beginResetModel();
         mArtists.clear();
-        const QLatin1String artist(Settings::instance()->useAlbumArtist() ? "albumArtist" : "artist");
+        const QLatin1String artistType(Settings::instance()->useAlbumArtist() ? "albumArtist" : "artist");
         QSqlQuery query(QString::fromLatin1("SELECT %1, COUNT(DISTINCT(album)), COUNT(*), SUM(duration) FROM "
                                             "(SELECT %1, album, duration FROM tracks GROUP BY id, %1, album) "
                                             "GROUP BY %1 "
-                                            "ORDER BY %1 = '' %2, %1 %2").arg(artist, mSortDescending ? QLatin1String("DESC")
-                                                                                                      : QLatin1String("ASC")));
+                                            "ORDER BY %1 = '' %2, %1 %2").arg(artistType, mSortDescending ? QLatin1String("DESC")
+                                                                                                          : QLatin1String("ASC")));
         if (query.lastError().type() == QSqlError::NoError) {
             while (query.next()) {
                 const QString artist(query.value(ArtistField).toString());

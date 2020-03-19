@@ -50,7 +50,7 @@ namespace unplayer
         bool isLoaded() const;
 
         const QString& filePath() const;
-        void setFilePath(const QString& filePath);
+        void setFilePath(const QString& playlistFilePath);
 
         Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes);
         Q_INVOKABLE void removeTrack(int index);

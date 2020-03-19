@@ -95,8 +95,8 @@ namespace unplayer
                 void setMediaArtFromIDv2Tag(const TagLib::ID3v2::Tag* tag) const
                 {
                     const TagLib::ID3v2::FrameListMap& frameListMap = tag->frameListMap();
-                    const auto setFromFrames = [&](const char* tag) {
-                        const auto framesFound(frameListMap.find(tag));
+                    const auto setFromFrames = [&](const char* framesTag) {
+                        const auto framesFound(frameListMap.find(framesTag));
                         if (framesFound != frameListMap.end()) {
                             const TagLib::ID3v2::FrameList& frames = framesFound->second;
                             if (!frames.isEmpty()) {
@@ -128,8 +128,8 @@ namespace unplayer
                 void setMediaArtFromApeTag(const TagLib::APE::Tag* tag) const
                 {
                     const TagLib::APE::ItemListMap& items = tag->itemListMap();
-                    const auto setFromTag = [&](const char* tag) {
-                        const auto found(items.find(tag));
+                    const auto setFromItem = [&](const char* itemTag) {
+                        const auto found(items.find(itemTag));
                         if (found != items.end()) {
                             const auto& item = found->second;
                             if (item.type() == TagLib::APE::Item::Binary) {
@@ -138,9 +138,9 @@ namespace unplayer
                             }
                         }
                     };
-                    setFromTag("COVER ART (FRONT)");
+                    setFromItem("COVER ART (FRONT)");
                     if (info.mediaArtData.isEmpty()) {
-                        setFromTag("COVER ART (BACK)");
+                        setFromItem("COVER ART (BACK)");
                     }
                 }
 

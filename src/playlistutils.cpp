@@ -165,9 +165,9 @@ namespace unplayer
                                 PlaylistTrack& track = [&number, &tracksMap]() {
                                     const auto found(tracksMap.find(number));
                                     if (found == tracksMap.end()) {
-                                        PlaylistTrack track;
-                                        track.duration = -1;
-                                        return tracksMap.insert({number, std::move(track)}).first;
+                                        PlaylistTrack t{};
+                                        t.duration = -1;
+                                        return tracksMap.insert({number, std::move(t)}).first;
                                     }
                                     return found;
                                 }()->second;

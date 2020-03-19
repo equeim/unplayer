@@ -89,17 +89,17 @@ namespace unplayer
         return mFilePath;
     }
 
-    void PlaylistModel::setFilePath(const QString& filePath)
+    void PlaylistModel::setFilePath(const QString& playlistFilePath)
     {
-        mFilePath = filePath;
+        mFilePath = playlistFilePath;
 
         if (mLoaded) {
             mLoaded = false;
             emit loadedChanged();
         }
 
-        auto future = QtConcurrent::run([filePath]() {
-            std::vector<PlaylistTrack> tracks(PlaylistUtils::parsePlaylist(filePath));
+        auto future = QtConcurrent::run([playlistFilePath]() {
+            std::vector<PlaylistTrack> tracks(PlaylistUtils::parsePlaylist(playlistFilePath));
 
             std::vector<QString> tracksToQuery;
             tracksToQuery.reserve(tracks.size());
