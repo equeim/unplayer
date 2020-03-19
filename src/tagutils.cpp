@@ -24,15 +24,14 @@
 #include <QMimeDatabase>
 
 #include <apefile.h>
+#include <apetag.h>
 #include <attachedpictureframe.h>
-//#include <ebmlmatroskafile.h>
 #include <flacfile.h>
 #include <id3v2tag.h>
 #include <mp4file.h>
 #include <mpegfile.h>
 #include <oggflacfile.h>
 #include <opusfile.h>
-#include <tpicturemap.h>
 #include <tpropertymap.h>
 #include <vorbisfile.h>
 #include <wavfile.h>
@@ -70,6 +69,79 @@ namespace unplayer
                 inline void setMediaArt(const TagLib::ByteVector& data) const
                 {
                     info.mediaArtData = QByteArray(data.data(), static_cast<int>(data.size()));
+                }
+
+                void setMediaArtFromFlacPictures(const TagLib::List<TagLib::FLAC::Picture*>& pictures) const
+                {
+                    if (!pictures.isEmpty()) {
+                        const TagLib::FLAC::Picture* backCover = nullptr;
+                        for (const TagLib::FLAC::Picture* picture : pictures) {
+                            if (picture->type() == TagLib::FLAC::Picture::FrontCover) {
+                                setMediaArt(picture->data());
+                                return;
+                            }
+                            if (!backCover && picture->type() == TagLib::FLAC::Picture::BackCover) {
+                                backCover = picture;
+                            }
+                        }
+                        if (backCover) {
+                            setMediaArt(backCover->data());
+                        } else {
+                            setMediaArt(pictures.front()->data());
+                        }
+                    }
+                }
+
+                void setMediaArtFromIDv2Tag(const TagLib::ID3v2::Tag* tag) const
+                {
+                    const TagLib::ID3v2::FrameListMap& frameListMap = tag->frameListMap();
+                    const auto setFromFrames = [&](const char* tag) {
+                        const auto framesFound(frameListMap.find(tag));
+                        if (framesFound != frameListMap.end()) {
+                            const TagLib::ID3v2::FrameList& frames = framesFound->second;
+                            if (!frames.isEmpty()) {
+                                const TagLib::ID3v2::AttachedPictureFrame* backCover = nullptr;
+                                for (const TagLib::ID3v2::Frame* frame : frames) {
+                                    const auto pictureFrame = static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
+                                    if (pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+                                        setMediaArt(pictureFrame->picture());
+                                        return;
+                                    }
+                                    if (!backCover && pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::BackCover) {
+                                        backCover = pictureFrame;
+                                    }
+                                }
+                                if (backCover) {
+                                    setMediaArt(backCover->picture());
+                                } else {
+                                    setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
+                                }
+                            }
+                        }
+                    };
+                    setFromFrames("APIC");
+                    if (info.mediaArtData.isEmpty()) {
+                        setFromFrames("PIC");
+                    }
+                }
+
+                void setMediaArtFromApeTag(const TagLib::APE::Tag* tag) const
+                {
+                    const TagLib::APE::ItemListMap& items = tag->itemListMap();
+                    const auto setFromTag = [&](const char* tag) {
+                        const auto found(items.find(tag));
+                        if (found != items.end()) {
+                            const auto& item = found->second;
+                            if (item.type() == TagLib::APE::Item::Binary) {
+                                const TagLib::ByteVector data(found->second.binaryData());
+                                setMediaArt(data.mid(static_cast<unsigned int>(data.find('\0') + 1)));
+                            }
+                        }
+                    };
+                    setFromTag("COVER ART (FRONT)");
+                    if (info.mediaArtData.isEmpty()) {
+                        setFromTag("COVER ART (BACK)");
+                    }
                 }
 
                 bool processFile(TagLib::File&& file) const
@@ -123,30 +195,6 @@ namespace unplayer
                             }
                         }
 
-                        const TagLib::PictureMap pictures(tag->pictures());
-                        if (!pictures.isEmpty()) {
-                            const TagLib::Picture* backCover = nullptr;
-                            for (const auto& i : pictures) {
-                                if (i.first == TagLib::Picture::FrontCover && !i.second.isEmpty()) {
-                                    setMediaArt(i.second.front().data());
-                                    break;
-                                }
-                                if (!backCover && i.first == TagLib::Picture::BackCover && !i.second.isEmpty()) {
-                                    backCover = &i.second.front();
-                                }
-                            }
-                            if (info.mediaArtData.isEmpty()) {
-                                if (backCover) {
-                                    setMediaArt(backCover->data());
-                                } else {
-                                    const TagLib::PictureList& first = pictures.begin()->second;
-                                    if (!first.isEmpty()) {
-                                        setMediaArt(first.front().data());
-                                    }
-                                }
-                            }
-                        }
-
                         const TagLib::AudioProperties* audioProperties = file.audioProperties();
                         info.duration = audioProperties->length();
                         info.bitrate = audioProperties->bitrate();
@@ -156,83 +204,89 @@ namespace unplayer
                     return info.fileTypeValid;
                 }
 
+                void processFile(TagLib::FLAC::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        setMediaArtFromFlacPictures(file.pictureList());
+                        if (info.mediaArtData.isEmpty() && file.hasID3v2Tag()) {
+                            setMediaArtFromIDv2Tag(file.ID3v2Tag());
+                        }
+                    }
+                }
+
+                void processFile(TagLib::MP4::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        const TagLib::MP4::ItemMap& items = file.tag()->itemMap();
+                        const auto found(items.find("covr"));
+                        if (found != items.end()) {
+                            const TagLib::MP4::CoverArtList covers(found->second.toCoverArtList());
+                            if (!covers.isEmpty()) {
+                                setMediaArt(covers.front().data());
+                            }
+                        }
+                    }
+                }
+
                 void processFile(TagLib::MPEG::File&& file) const
                 {
                     if (processFile(static_cast<TagLib::File&&>(file))) {
-                        if (info.mediaArtData.isEmpty() && file.hasID3v2Tag()) {
-                            const TagLib::ID3v2::FrameListMap& frameListMap = file.ID3v2Tag()->frameListMap();
-                            const auto picFramesFound(frameListMap.find("PIC"));
-                            if (picFramesFound != frameListMap.end()) {
-                                const TagLib::ID3v2::FrameList& frames = picFramesFound->second;
-                                if (!frames.isEmpty()) {
-                                    const TagLib::ID3v2::AttachedPictureFrame* backCover = nullptr;
-                                    for (const TagLib::ID3v2::Frame* frame : frames) {
-                                        const auto pictureFrame = static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frame);
-                                        if (pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
-                                            setMediaArt(pictureFrame->picture());
-                                            return;
-                                        }
-                                        if (!backCover && pictureFrame->type() == TagLib::ID3v2::AttachedPictureFrame::BackCover) {
-                                            backCover = pictureFrame;
-                                        }
-                                    }
-                                    if (backCover) {
-                                        setMediaArt(backCover->picture());
-                                    } else {
-                                        setMediaArt(static_cast<const TagLib::ID3v2::AttachedPictureFrame*>(frames.front())->picture());
-                                    }
-                                }
-                            }
+                        if (file.hasID3v2Tag()) {
+                            setMediaArtFromIDv2Tag(file.ID3v2Tag());
                         }
-                    }
-                }
-
-                void setFlacPicture(const TagLib::List<TagLib::FLAC::Picture*>& pictures) const
-                {
-                    if (!pictures.isEmpty()) {
-                        const TagLib::FLAC::Picture* backCover = nullptr;
-                        for (const TagLib::FLAC::Picture* picture : pictures) {
-                            if (picture->type() == TagLib::FLAC::Picture::FrontCover) {
-                                setMediaArt(picture->data());
-                                return;
-                            }
-                            if (!backCover && picture->type() == TagLib::FLAC::Picture::BackCover) {
-                                backCover = picture;
-                            }
+                        if (info.mediaArtData.isEmpty() && file.hasAPETag()) {
+                            setMediaArtFromApeTag(file.APETag());
                         }
-                        if (backCover) {
-                            setMediaArt(backCover->data());
-                        } else {
-                            setMediaArt(pictures.front()->data());
-                        }
-                    }
-                }
-
-                void processFile(TagLib::FLAC::File&& file) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
-                        setFlacPicture(file.pictureList());
                     }
                 }
 
                 void processFile(TagLib::Ogg::Vorbis::File&& file) const
                 {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
-                        setFlacPicture(file.tag()->pictureList());
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        setMediaArtFromFlacPictures(file.tag()->pictureList());
                     }
                 }
 
                 void processFile(TagLib::Ogg::Opus::File&& file) const
                 {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
-                        setFlacPicture(file.tag()->pictureList());
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        setMediaArtFromFlacPictures(file.tag()->pictureList());
                     }
                 }
 
                 void processFile(TagLib::Ogg::FLAC::File&& file) const
                 {
-                    if (processFile(static_cast<TagLib::File&&>(file)) && info.mediaArtData.isEmpty()) {
-                        setFlacPicture(file.tag()->pictureList());
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        if (file.hasXiphComment()) {
+                            setMediaArtFromFlacPictures(file.tag()->pictureList());
+                        }
+                    }
+                }
+
+                void processFile(TagLib::APE::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        if (file.hasAPETag()) {
+                            setMediaArtFromApeTag(file.APETag());
+                        }
+                    }
+                }
+
+                void processFile(TagLib::RIFF::WAV::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        if (file.hasID3v2Tag()) {
+                            setMediaArtFromIDv2Tag(file.ID3v2Tag());
+                        }
+                    }
+                }
+
+                void processFile(TagLib::WavPack::File&& file) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file))) {
+                        if (file.hasAPETag()) {
+                            setMediaArtFromApeTag(file.APETag());
+                        }
                     }
                 }
 
@@ -342,8 +396,6 @@ namespace unplayer
                     processor.processFile(TagLib::APE::File(filePath.toUtf8()));
                     break;
                 case Extension::MKA:
-                    //processor.processFile(TagLib::EBML::Matroska::File(filePath.toUtf8()));
-                    // Matroska support in TagLib seems to be buggy/incomplete
                     processor.checkMimeType(matroskaMimeType);
                     break;
                 case Extension::WAV:
