@@ -486,7 +486,7 @@ namespace unplayer
                     qInfo("End scanning filesystem (took %.3f s), need to extract tags from %d files", static_cast<double>(stageTimer.restart()) / 1000.0, foundFiles);
 
                     if (!filesToRemove.empty()) {
-                        forMaxCountInRange(filesToRemove.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+                        batchedCount(filesToRemove.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                             if (mCancel) {
                                 return;
                             }
@@ -1140,7 +1140,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(artists.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(artists.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
@@ -1215,7 +1215,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](size_t first, size_t count) {
+            batchedCount(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
@@ -1295,7 +1295,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(genres.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(genres.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
@@ -1375,7 +1375,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(files.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(files.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }
@@ -1506,7 +1506,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(infos.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(infos.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
                     return;
                 }

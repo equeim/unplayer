@@ -37,7 +37,7 @@ namespace unplayer
     }
 
     template<typename Function>
-    inline void forMaxCountInRange(size_t count, size_t batchSize, Function call)
+    inline void batchedCount(size_t count, size_t batchSize, Function call)
     {
         for (size_t i = 0; i < count; i += batchSize) {
             const size_t nextCount = [&]() {

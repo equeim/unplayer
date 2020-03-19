@@ -133,7 +133,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
                 queryString.reserve(static_cast<int>(queryString.size() + (count - 1) * 2 + 1));
                 for (size_t j = 1; j < count; ++j) {

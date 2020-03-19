@@ -444,7 +444,7 @@ namespace unplayer
             db.transaction();
             const CommitGuard commitGuard{db};
 
-            forMaxCountInRange(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 enum {
                     FilePathField,
                     ModificationTimeField,
