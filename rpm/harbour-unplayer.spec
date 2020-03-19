@@ -9,7 +9,6 @@ URL:        https://github.com/equeim/unplayer
 Source0:    https://github.com/equeim/unplayer/archive/%{version}.tar.gz
 Patch0:     qtdbusextended.patch
 Patch1:     qtmpris.patch
-Patch2:     taglib.patch
 
 Requires:      sailfishsilica-qt5
 Requires:      nemo-qml-plugin-dbus-qt5
@@ -53,7 +52,7 @@ BuildRequires: boost-devel
 %global qtmpris "%{_builddir}/3rdparty/qtmpris-1.0.0"
 %global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
 
-%global taglib "%{_builddir}/3rdparty/taglib-79bb14"
+%global taglib "%{_builddir}/3rdparty/taglib-54508df3"
 %global taglib_build "%{build_directory}/3rdparty/build-taglib"
 
 %global thirdparty_install "%{build_directory}/3rdparty/install"
@@ -71,9 +70,6 @@ if ! %{__patch} -p0 -R --dry-run -f -i "%{P:0}"; then
 fi
 if ! %{__patch} -p0 -R --dry-run -f -i "%{P:1}"; then
 %patch1
-fi
-if ! %{__patch} -p0 -R --dry-run -f -i "%{P:2}"; then
-%patch2
 fi
 
 
