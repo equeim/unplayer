@@ -47,7 +47,6 @@ add_executable("${PROJECT_NAME}"
     queuemodel.cpp
     settings.cpp
     signalhandler.cpp
-    stdutils.cpp
     trackinfo.cpp
     tracksmodel.cpp
     utils.cpp

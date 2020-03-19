@@ -22,53 +22,76 @@
 #include <algorithm>
 #include <memory>
 
-class QByteArray;
-class QString;
-class QUrl;
+#include <iterator>
+#include <type_traits>
 
-namespace std {
-    template<>
-    struct hash<QString> {
-    public:
-        size_t operator()(const QString& string) const;
-    };
+#include <QtGlobal>
+#include <QHashFunctions>
+#include <QUrl>
 
-    template<>
-    struct hash<QByteArray> {
-    public:
-        size_t operator()(const QByteArray& string) const;
-    };
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+/*
+** Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Marc Mutz <marc.mutz@kdab.com>
+*/
+#define QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH(Class, Arguments)      \
+    QT_BEGIN_INCLUDE_NAMESPACE                                      \
+    namespace std {                                                 \
+        template <>                                                 \
+        struct hash< QT_PREPEND_NAMESPACE(Class) > {                \
+            using argument_type = QT_PREPEND_NAMESPACE(Class);      \
+            using result_type = size_t;                             \
+            size_t operator()(Arguments s) const                    \
+                noexcept(noexcept(QT_PREPEND_NAMESPACE(qHash)(s)))  \
+            {                                                       \
+                /* this seeds qHash with the result of */           \
+                /* std::hash applied to an int, to reap */          \
+                /* any protection against predictable hash */       \
+                /* values the std implementation may provide */     \
+                return QT_PREPEND_NAMESPACE(qHash)(s,               \
+                           QT_PREPEND_NAMESPACE(qHash)(             \
+                                      std::hash<int>{}(0)));        \
+            }                                                       \
+        };                                                          \
+    }                                                               \
+    QT_END_INCLUDE_NAMESPACE                                        \
+    /*end*/
 
-    template<>
-    struct hash<QUrl> {
-    public:
-        size_t operator()(const QUrl& string) const;
-    };
-}
+#define QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(Class) \
+    QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH(Class, const argument_type &)
+
+QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QString)
+QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QByteArray)
+QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QUrl)
+#endif
 
 namespace unplayer
 {
     template<class C, class V>
     inline auto contains_impl(const C& container, const V& value, int) -> decltype(container.find(value), true)
     {
-        return container.find(value) != end(container);
+        return container.find(value) != std::end(container);
     }
 
     template<class C, class V>
     inline bool contains_impl(const C& container, const V& value, long)
     {
-        return std::find(begin(container), end(container), value) != end(container);
+        return std::find(std::begin(container), std::end(container), value) != std::end(container);
     }
 
     template<class C, class V>
-    bool contains(const C& container, const V& value)
+    inline bool contains(const C& container, const V& value)
     {
         return contains_impl(container, value, 0);
     }
 
     template<class C, class V>
-    inline typename C::difference_type index_of(const C& container, const V& value) {
-        return std::find(container.cbegin(), container.cend(), value) - container.cbegin();
+    inline size_t index_of(const C& container, const V& value) {
+        return static_cast<size_t>(std::find(std::begin(container), std::end(container), value) - std::begin(container));
+    }
+
+    template<class C, class V>
+    inline int index_of_i(const C& container, const V& value) {
+        return static_cast<int>(std::find(std::begin(container), std::end(container), value) - std::begin(container));
     }
 
     template<class C, class V>
