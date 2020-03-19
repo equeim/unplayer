@@ -3,9 +3,8 @@ Name:       mpris-qt5
 Summary:    Qt and QML MPRIS interface and adaptor
 Version:    0.0.5
 Release:    1
-Group:      Development/Libraries
-License:    LGPLv2.1
-URL:        https://github.com/nemomobile/qtmpris
+License:    LGPLv2
+URL:        https://git.sailfishos.org/mer-core/qtmpris
 Source0:    %{name}-%{version}.tar.bz2
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -50,6 +49,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%license COPYING
 %{_libdir}/lib*.so.*
 
 %files devel
