@@ -41,7 +41,7 @@ namespace unplayer
 
     QVariant PlaylistsModel::data(const QModelIndex& index, int role) const
     {
-        const PlaylistsModelItem& playlist = mPlaylists.at(index.row());
+        const PlaylistsModelItem& playlist = mPlaylists[static_cast<size_t>(index.row())];
         switch (role) {
         case FilePathRole:
             return playlist.filePath;
@@ -64,7 +64,7 @@ namespace unplayer
         std::vector<QString> paths;
         paths.reserve(indexes.size());
         for (int index : indexes) {
-            paths.push_back(mPlaylists[index].filePath);
+            paths.push_back(mPlaylists[static_cast<size_t>(index)].filePath);
         }
         PlaylistUtils::instance()->removePlaylists(paths);
     }
@@ -73,7 +73,7 @@ namespace unplayer
     {
         QStringList tracks;
         for (int index : indexes) {
-            tracks.append(PlaylistUtils::getPlaylistTracks(mPlaylists[index].filePath));
+            tracks.append(PlaylistUtils::getPlaylistTracks(mPlaylists[static_cast<size_t>(index)].filePath));
         }
         return tracks;
     }
@@ -91,7 +91,7 @@ namespace unplayer
             std::vector<PlaylistsModelItem> playlists;
             const QList<QFileInfo> files(QDir(PlaylistUtils::instance()->playlistsDirectoryPath())
                                          .entryInfoList(PlaylistUtils::playlistsNameFilters(), QDir::Files));
-            playlists.reserve(files.size());
+            playlists.reserve(static_cast<size_t>(files.size()));
             for (const QFileInfo& fileInfo : files) {
                 playlists.push_back(PlaylistsModelItem{fileInfo.filePath(),
                                                        fileInfo.completeBaseName(),
@@ -106,7 +106,7 @@ namespace unplayer
             std::vector<PlaylistsModelItem> playlists(watcher->result());
 
             for (int i = 0, max = static_cast<int>(mPlaylists.size()); i < max; ++i) {
-                if (!contains(playlists, mPlaylists[i])) {
+                if (!contains(playlists, mPlaylists[static_cast<size_t>(i)])) {
                     beginRemoveRows(QModelIndex(), i, i);
                     mPlaylists.erase(mPlaylists.begin() + i);
                     endRemoveRows();

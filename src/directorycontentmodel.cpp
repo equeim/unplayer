@@ -48,7 +48,7 @@ namespace unplayer
 
     QVariant DirectoryContentModel::data(const QModelIndex& index, int role) const
     {
-        const DirectoryContentFile& file = mFiles.at(index.row());
+        const DirectoryContentFile& file = mFiles[static_cast<size_t>(index.row())];
         switch (role) {
         case FilePathRole:
             return file.filePath;
@@ -150,7 +150,7 @@ namespace unplayer
         auto future = QtConcurrent::run([=]() {
             std::vector<DirectoryContentFile> files;
             const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(nameFilters, filters));
-            files.reserve(fileInfos.size());
+            files.reserve(static_cast<size_t>(fileInfos.size()));
             for (const QFileInfo& info : fileInfos) {
                 files.push_back({info.filePath(),
                                  info.fileName(),

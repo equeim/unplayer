@@ -42,7 +42,7 @@ namespace unplayer
 
     QVariant PlaylistModel::data(const QModelIndex& index, int role) const
     {
-        const PlaylistTrack& track = mTracks[index.row()];
+        const PlaylistTrack& track = mTracks[static_cast<size_t>(index.row())];
         switch (role) {
         case UrlRole:
             return track.url;
@@ -135,7 +135,7 @@ namespace unplayer
 
             batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
-                queryString.reserve(static_cast<int>(queryString.size() + (count - 1) * 2 + 1));
+                queryString.reserve(queryString.size() + static_cast<int>(count - 1) * 2 + 1);
                 for (size_t j = 1; j < count; ++j) {
                     queryString.push_back(QStringLiteral(",?"));
                 }
@@ -216,7 +216,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(static_cast<int>(mTracks.size()));
         for (int index : indexes) {
-            tracks.push_back(mTracks[index].url.toString());
+            tracks.push_back(mTracks[static_cast<size_t>(index)].url.toString());
         }
         return tracks;
     }

@@ -192,7 +192,7 @@ namespace unplayer
                 mpris->setCanSeek(false);
                 mpris->setMetadata(QVariantMap());
             } else {
-                const QueueTrack* track = mQueue->tracks().at(mQueue->currentIndex()).get();
+                const QueueTrack* track = mQueue->tracks()[static_cast<size_t>(mQueue->currentIndex())].get();
 
                 mSettingNewTrack = true;
                 setMedia(track->url);
@@ -236,7 +236,7 @@ namespace unplayer
         QObject::connect(mpris, &MprisPlayer::setPositionRequested, this, [=](const QDBusObjectPath& trackId, qint64 position) {
             if (state() != StoppedState &&
                     mQueue->currentIndex() != -1 &&
-                    trackId.path() == mQueue->tracks()[mQueue->currentIndex()]->trackId) {
+                    trackId.path() == mQueue->tracks()[static_cast<size_t>(mQueue->currentIndex())]->trackId) {
                 setPosition(position / 1000);
             }
         });

@@ -46,7 +46,7 @@ namespace unplayer
     std::vector<int> FilterProxyModel::sourceIndexes() const
     {
         std::vector<int> indexes;
-        indexes.reserve(rowCount());
+        indexes.reserve(static_cast<size_t>(rowCount()));
         for (int i = 0, max = rowCount(); i < max; ++i) {
             indexes.push_back(sourceIndex(i));
         }
@@ -94,7 +94,7 @@ namespace unplayer
         std::sort(modelIndexes.begin(), modelIndexes.end());
 
         std::vector<int> indexes;
-        indexes.reserve(modelIndexes.size());
+        indexes.reserve(static_cast<size_t>(modelIndexes.size()));
         for (const QModelIndex& index : modelIndexes) {
             indexes.push_back(mapToSource(index).row());
         }

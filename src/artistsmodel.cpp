@@ -52,7 +52,7 @@ namespace unplayer
 
     QVariant ArtistsModel::data(const QModelIndex& index, int role) const
     {
-        const Artist& artist = mArtists[index.row()];
+        const Artist& artist = mArtists[static_cast<size_t>(index.row())];
 
         switch (role) {
         case ArtistRole:
@@ -94,12 +94,12 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
                                      "WHERE artist = ? "
                                      "ORDER BY album = '', year, album, trackNumber, title"));
-        query.addBindValue(mArtists[index].artist);
+        query.addBindValue(mArtists[static_cast<size_t>(index)].artist);
         if (query.exec()) {
             std::vector<LibraryTrack> tracks;
             query.last();
             if (query.at() >= 0) {
-                tracks.reserve(query.at() + 1);
+                tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
             }
             while (query.next()) {
@@ -135,7 +135,7 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath FROM tracks "
                                      "WHERE artist = ? "
                                      "ORDER BY album = '', year, album, trackNumber, title"));
-        query.addBindValue(mArtists[index].artist);
+        query.addBindValue(mArtists[static_cast<size_t>(index)].artist);
         if (query.exec()) {
             QStringList tracks;
             query.last();
@@ -178,12 +178,12 @@ namespace unplayer
         std::vector<QString> artists;
         artists.reserve(indexes.size());
         for (int index : indexes) {
-            artists.push_back(mArtists[index].artist);
+            artists.push_back(mArtists[static_cast<size_t>(index)].artist);
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    const int index = indexes[i];
+                    const int index = indexes[static_cast<size_t>(i)];
                     beginRemoveRows(QModelIndex(), index, index);
                     mArtists.erase(mArtists.begin() + index);
                     endRemoveRows();

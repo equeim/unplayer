@@ -140,7 +140,7 @@ namespace unplayer
     QUrl Queue::currentUrl() const
     {
         if (mCurrentIndex >= 0) {
-            return mTracks[mCurrentIndex]->url;
+            return mTracks[static_cast<size_t>(mCurrentIndex)]->url;
         }
         return QUrl();
     }
@@ -148,7 +148,7 @@ namespace unplayer
     bool Queue::isCurrentLocalFile() const
     {
         if (mCurrentIndex >= 0) {
-            return mTracks[mCurrentIndex]->url.isLocalFile();
+            return mTracks[static_cast<size_t>(mCurrentIndex)]->url.isLocalFile();
         }
         return false;
     }
@@ -156,7 +156,7 @@ namespace unplayer
     QString Queue::currentFilePath() const
     {
         if (mCurrentIndex >= 0) {
-            const QUrl& url = mTracks[mCurrentIndex]->url;
+            const QUrl& url = mTracks[static_cast<size_t>(mCurrentIndex)]->url;
             if (url.isLocalFile()) {
                 return url.path();
             }
@@ -167,7 +167,7 @@ namespace unplayer
     QString Queue::currentTitle() const
     {
         if (mCurrentIndex >= 0) {
-            return mTracks[mCurrentIndex]->title;
+            return mTracks[static_cast<size_t>(mCurrentIndex)]->title;
         }
         return QString();
     }
@@ -175,7 +175,7 @@ namespace unplayer
     QString Queue::currentArtist() const
     {
         if (mCurrentIndex >= 0) {
-            return mTracks[mCurrentIndex]->artist;
+            return mTracks[static_cast<size_t>(mCurrentIndex)]->artist;
         }
         return QString();
     }
@@ -183,7 +183,7 @@ namespace unplayer
     QString Queue::currentAlbum() const
     {
         if (mCurrentIndex >= 0) {
-            return mTracks[mCurrentIndex]->album;
+            return mTracks[static_cast<size_t>(mCurrentIndex)]->album;
         }
         return QString();
     }
@@ -191,7 +191,7 @@ namespace unplayer
     QString Queue::currentMediaArt() const
     {
         if (mCurrentIndex >= 0) {
-            const QueueTrack* track = mTracks[mCurrentIndex].get();
+            const QueueTrack* track = mTracks[static_cast<size_t>(mCurrentIndex)].get();
             if (track->url.isLocalFile()) {
                 if (!track->mediaArtFilePath.isEmpty()) {
                     return track->mediaArtFilePath;
@@ -305,9 +305,9 @@ namespace unplayer
             std::vector<std::shared_ptr<QueueTrack>> newTracks;
 
             std::vector<QUrl> existingTracks;
-            existingTracks.reserve(trackUrls.size());
+            existingTracks.reserve(static_cast<size_t>(trackUrls.size()));
             std::vector<QString> tracksToQuery;
-            tracksToQuery.reserve(trackUrls.size());
+            tracksToQuery.reserve(static_cast<size_t>(trackUrls.size()));
 
             std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> tracksMap;
 
@@ -637,7 +637,7 @@ namespace unplayer
             if (setAsCurrent < 0 || setAsCurrent >= static_cast<int>(libraryTracks.size())) {
                 return QUrl();
             }
-            return QUrl::fromLocalFile(libraryTracks[setAsCurrent].filePath);
+            return QUrl::fromLocalFile(libraryTracks[static_cast<size_t>(setAsCurrent)].filePath);
         }());
 
         auto future = QtConcurrent::run([libraryTracks]() {
@@ -688,7 +688,7 @@ namespace unplayer
 
     LibraryTrack Queue::getTrack(int index) const
     {
-        const QueueTrack* track = mTracks[index].get();
+        const QueueTrack* track = mTracks[static_cast<size_t>(index)].get();
         return {track->url.toString(),
                 track->title,
                 track->artist,
@@ -732,11 +732,11 @@ namespace unplayer
 
     void Queue::removeTrack(int index)
     {
-        const std::shared_ptr<QueueTrack> current(mTracks[mCurrentIndex]);
+        const std::shared_ptr<QueueTrack> current(mTracks[static_cast<size_t>(mCurrentIndex)]);
 
         emit trackAboutToBeRemoved(index);
 
-        erase_one(mNotPlayedTracks, mTracks[index].get());
+        erase_one(mNotPlayedTracks, mTracks[static_cast<size_t>(index)].get());
         mTracks.erase(mTracks.begin() + index);
 
         emit trackRemoved();
@@ -755,12 +755,12 @@ namespace unplayer
 
     void Queue::removeTracks(std::vector<int> indexes)
     {
-        const std::shared_ptr<QueueTrack> current(mTracks[mCurrentIndex]);
+        const std::shared_ptr<QueueTrack> current(mTracks[static_cast<size_t>(mCurrentIndex)]);
 
         std::sort(indexes.begin(), indexes.end(), std::greater<int>());
         for (int index : indexes) {
             emit trackAboutToBeRemoved(index);
-            erase_one(mNotPlayedTracks, mTracks[index].get());
+            erase_one(mNotPlayedTracks, mTracks[static_cast<size_t>(index)].get());
             mTracks.erase(mTracks.begin() + index);
             emit trackRemoved();
         }
@@ -793,7 +793,7 @@ namespace unplayer
             if (mNotPlayedTracks.size() == 1) {
                 resetNotPlayedTracks();
             }
-            erase_one(mNotPlayedTracks, mTracks[mCurrentIndex].get());
+            erase_one(mNotPlayedTracks, mTracks[static_cast<size_t>(mCurrentIndex)].get());
             mTracks.erase(mTracks.begin() + mCurrentIndex);
             setCurrentIndex(index_of_i(mTracks, mNotPlayedTracks[randomIndex(mNotPlayedTracks.size())]));
         } else {
@@ -815,7 +815,7 @@ namespace unplayer
         }
 
         if (mShuffle) {
-            const std::shared_ptr<QueueTrack>& track = mTracks[mCurrentIndex];
+            const std::shared_ptr<QueueTrack>& track = mTracks[static_cast<size_t>(mCurrentIndex)];
             erase_one(mNotPlayedTracks, track.get());
             if (mNotPlayedTracks.empty()) {
                 if (mRepeatMode == RepeatAll) {
@@ -902,7 +902,7 @@ namespace unplayer
             } else {
                 if (setAsCurrent >= 0 &&
                         setAsCurrent < static_cast<int>(mTracks.size()) &&
-                        mTracks[setAsCurrent]->url == setAsCurrentUrl) {
+                        mTracks[static_cast<size_t>(setAsCurrent)]->url == setAsCurrentUrl) {
                     setCurrentIndex(setAsCurrent);
                     set = true;
                 } else {

@@ -128,7 +128,7 @@ namespace unplayer
         return parsed;
     }
 
-    QString Utils::formatDuration(uint seconds)
+    QString Utils::formatDuration(int seconds)
     {
         const int hours = seconds / 3600;
         seconds %= 3600;

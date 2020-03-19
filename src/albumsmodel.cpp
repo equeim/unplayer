@@ -78,7 +78,7 @@ namespace unplayer
 
     QVariant AlbumsModel::data(const QModelIndex& index, int role) const
     {
-        const Album& album = mAlbums[index.row()];
+        const Album& album = mAlbums[static_cast<size_t>(index.row())];
 
         switch (role) {
         case ArtistRole:
@@ -163,14 +163,14 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
                                      "WHERE artist = ? AND album = ? "
                                      "ORDER BY trackNumber, title"));
-        const Album& album = mAlbums[index];
+        const Album& album = mAlbums[static_cast<size_t>(index)];
         query.addBindValue(album.artist);
         query.addBindValue(album.album);
         if (query.exec()) {
             std::vector<LibraryTrack> tracks;
             query.last();
             if (query.at() >= 0) {
-                tracks.reserve(query.at() + 1);
+                tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
             }
             while (query.next()) {
@@ -205,7 +205,7 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath FROM tracks "
                                      "WHERE artist = ? AND album = ? "
                                      "ORDER BY trackNumber, title"));
-        const Album& album = mAlbums[index];
+        const Album& album = mAlbums[static_cast<size_t>(index)];
         query.addBindValue(album.artist);
         query.addBindValue(album.album);
         if (query.exec()) {
@@ -250,7 +250,7 @@ namespace unplayer
         std::vector<Album> albums;
         albums.reserve(indexes.size());
         for (int index : indexes) {
-            albums.push_back(mAlbums[index]);
+            albums.push_back(mAlbums[static_cast<size_t>(index)]);
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {

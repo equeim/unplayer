@@ -38,7 +38,7 @@ namespace unplayer
 
         static QStringList processArguments(const std::vector<std::string>& arguments);
 
-        Q_INVOKABLE static QString formatDuration(uint seconds);
+        Q_INVOKABLE static QString formatDuration(int seconds);
         Q_INVOKABLE static QString formatByteSize(double size);
 
         Q_INVOKABLE static QString escapeRegExp(const QString& string);

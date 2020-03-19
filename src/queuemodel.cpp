@@ -26,7 +26,7 @@ namespace unplayer
             return QVariant();
         }
 
-        const QueueTrack* track = mQueue->tracks()[index.row()].get();
+        const QueueTrack* track = mQueue->tracks()[static_cast<size_t>(index.row())].get();
 
         switch (role) {
         case UrlRole:

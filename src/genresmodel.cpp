@@ -57,7 +57,7 @@ namespace unplayer
 
     QVariant GenresModel::data(const QModelIndex& index, int role) const
     {
-        const Genre& genre = mGenres[index.row()];
+        const Genre& genre = mGenres[static_cast<size_t>(index.row())];
         switch (role) {
         case GenreRole:
             return genre.genre;
@@ -94,12 +94,12 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
                                      "WHERE genre = ?  "
                                      "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
-        query.addBindValue(mGenres[index].genre);
+        query.addBindValue(mGenres[static_cast<size_t>(index)].genre);
         if (query.exec()) {
             std::vector<LibraryTrack> tracks;
             query.last();
             if (query.at() >= 0) {
-                tracks.reserve(query.at() + 1);
+                tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
             }
             while (query.next()) {
@@ -135,7 +135,7 @@ namespace unplayer
         query.prepare(QStringLiteral("SELECT filePath FROM tracks "
                                      "WHERE genre = ?  "
                                      "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
-        query.addBindValue(mGenres[index].genre);
+        query.addBindValue(mGenres[static_cast<size_t>(index)].genre);
         if (query.exec()) {
             QStringList tracks;
             query.last();
@@ -178,12 +178,12 @@ namespace unplayer
         std::vector<QString> genres;
         genres.reserve(indexes.size());
         for (int index : indexes) {
-            genres.push_back(mGenres[index].genre);
+            genres.push_back(mGenres[static_cast<size_t>(index)].genre);
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    const int index = indexes[i];
+                    const int index = indexes[static_cast<size_t>(i)];
                     beginRemoveRows(QModelIndex(), index, index);
                     mGenres.erase(mGenres.begin() + index);
                     endRemoveRows();

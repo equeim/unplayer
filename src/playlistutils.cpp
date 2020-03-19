@@ -402,7 +402,7 @@ namespace unplayer
         std::vector<PlaylistTrack> tracksFromUrls(const QStringList& trackUrls)
         {
             std::vector<PlaylistTrack> tracks;
-            tracks.reserve(trackUrls.size());
+            tracks.reserve(static_cast<size_t>(trackUrls.size()));
             for (const QString& urlString : trackUrls) {
                 tracks.push_back(trackFromUrlString(urlString));
             }

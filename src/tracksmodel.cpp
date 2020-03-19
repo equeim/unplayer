@@ -92,7 +92,7 @@ namespace unplayer
 
     QVariant TracksModel::data(const QModelIndex& index, int role) const
     {
-        const LibraryTrack& track = mTracks[index.row()];
+        const LibraryTrack& track = mTracks[static_cast<size_t>(index.row())];
 
         switch (role) {
         case FilePathRole:
@@ -211,14 +211,14 @@ namespace unplayer
         std::vector<LibraryTrack> tracks;
         tracks.reserve(indexes.size());
         for (int index : indexes) {
-            tracks.push_back(mTracks[index]);
+            tracks.push_back(mTracks[static_cast<size_t>(index)]);
         }
         return tracks;
     }
 
     LibraryTrack TracksModel::getTrack(int index) const
     {
-        return mTracks[index];
+        return mTracks[static_cast<size_t>(index)];
     }
 
     QStringList TracksModel::getTrackPaths(const std::vector<int>& indexes) const
@@ -226,7 +226,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(static_cast<int>(indexes.size()));
         for (int index : indexes) {
-            tracks.push_back(mTracks[index].filePath);
+            tracks.push_back(mTracks[static_cast<size_t>(index)].filePath);
         }
         return tracks;
     }
@@ -245,12 +245,12 @@ namespace unplayer
         std::vector<QString> files;
         files.reserve(indexes.size());
         for (int index : indexes) {
-            files.push_back(mTracks[index].filePath);
+            files.push_back(mTracks[static_cast<size_t>(index)].filePath);
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    const int index = indexes[i];
+                    const int index = indexes[static_cast<size_t>(i)];
                     beginRemoveRows(QModelIndex(), index, index);
                     mTracks.erase(mTracks.begin() + index);
                     endRemoveRows();
@@ -344,7 +344,7 @@ namespace unplayer
         if (query.exec()) {
             query.last();
             if (query.at() > 0) {
-                mTracks.reserve(query.at() + 1);
+                mTracks.reserve(static_cast<size_t>(query.at() + 1));
             }
             query.seek(QSql::BeforeFirstRow);
             while (query.next()) {

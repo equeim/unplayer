@@ -239,7 +239,7 @@ namespace unplayer
                 std::unordered_map<QByteArray, QString> embeddedMediaArtFiles;
                 {
                     const QFileInfoList files(QDir(mMediaArtDirectory).entryInfoList({QLatin1String("*-embedded.*")}, QDir::Files));
-                    embeddedMediaArtFiles.reserve(files.size());
+                    embeddedMediaArtFiles.reserve(static_cast<size_t>(files.size()));
                     for (const QFileInfo& info : files) {
                         const QString baseName(info.baseName());
                         const int index = baseName.indexOf(QStringLiteral("-embedded"));
@@ -557,7 +557,7 @@ namespace unplayer
                     if (query.lastError().type() == QSqlError::NoError) {
                         if (query.last()) {
                             if (query.at() > 0) {
-                                allEmbeddedMediaArt.reserve(query.at() + 1);
+                                allEmbeddedMediaArt.reserve(static_cast<size_t>(query.at() + 1));
                             }
                             query.seek(QSql::BeforeFirstRow);
                             while (query.next()) {

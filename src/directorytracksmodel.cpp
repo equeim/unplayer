@@ -53,7 +53,7 @@ namespace unplayer
             return QVariant();
         }
 
-        const DirectoryTrackFile& file = mFiles[index.row()];
+        const DirectoryTrackFile& file = mFiles[static_cast<size_t>(index.row())];
 
         switch (role) {
         case FilePathRole:
@@ -112,7 +112,7 @@ namespace unplayer
 
     QString DirectoryTracksModel::getTrack(int index) const
     {
-        return mFiles[index].filePath;
+        return mFiles[static_cast<size_t>(index)].filePath;
     }
 
     QStringList DirectoryTracksModel::getTracks(const std::vector<int>& indexes, bool includePlaylists) const
@@ -120,7 +120,7 @@ namespace unplayer
         QStringList tracks;
         tracks.reserve(mTracksCount);
         for (int index : indexes) {
-            const DirectoryTrackFile& file = mFiles[index];
+            const DirectoryTrackFile& file = mFiles[static_cast<size_t>(index)];
             if (!file.isDirectory && (!file.isPlaylist || includePlaylists)) {
                 tracks.push_back(getTrack(index));
             }
@@ -142,12 +142,12 @@ namespace unplayer
         std::vector<QString> files;
         files.reserve(indexes.size());
         for (int index : indexes) {
-            files.push_back(mFiles[index].filePath);
+            files.push_back(mFiles[static_cast<size_t>(index)].filePath);
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 for (int i = static_cast<int>(indexes.size() - 1); i >= 0; --i) {
-                    const int index = indexes[i];
+                    const int index = indexes[static_cast<size_t>(i)];
                     beginRemoveRows(QModelIndex(), index, index);
                     mFiles.erase(mFiles.begin() + index);
                     endRemoveRows();
@@ -241,7 +241,7 @@ namespace unplayer
             mTracksCount = 0;
             const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
             for (int i = 0, max = rowCount(); i < max; ++i) {
-                if (files.at(sourceIndex(i)).isDirectory) {
+                if (files[static_cast<size_t>(sourceIndex(i))].isDirectory) {
                     mDirectoriesCount++;
                 } else {
                     mTracksCount++;
@@ -286,7 +286,7 @@ namespace unplayer
         const std::vector<DirectoryTrackFile>& files = static_cast<const DirectoryTracksModel*>(sourceModel())->files();
         int firstFileIndex = -1;
         for (int i = 0, max = rowCount(); i < max; ++i) {
-            if (!files[sourceIndex(i)].isDirectory) {
+            if (!files[static_cast<size_t>(sourceIndex(i))].isDirectory) {
                 firstFileIndex = i;
                 break;
             }
