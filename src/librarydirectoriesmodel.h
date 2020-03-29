@@ -43,6 +43,7 @@ namespace unplayer
 
         QVariant data(const QModelIndex& index, int role) const override;
         int rowCount(const QModelIndex& parent) const override;
+        bool removeRows(int row, int count, const QModelIndex& parent) override;
 
         Type type() const;
         void setType(Type type);

@@ -32,6 +32,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "modelutils.h"
 #include "playlistutils.h"
 #include "settings.h"
 
@@ -72,6 +73,15 @@ namespace unplayer
     int DirectoryTracksModel::rowCount(const QModelIndex&) const
     {
         return static_cast<int>(mFiles.size());
+    }
+
+    bool DirectoryTracksModel::removeRows(int row, int count, const QModelIndex& parent)
+    {
+        beginRemoveRows(parent, row, row + count - 1);
+        const auto first(mFiles.begin() + row);
+        mFiles.erase(first, first + count);
+        endRemoveRows();
+        return true;
     }
 
     const std::vector<DirectoryTrackFile>& DirectoryTracksModel::files() const
@@ -146,12 +156,11 @@ namespace unplayer
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                for (int i = static_cast<int>(indexes.size() - 1); i >= 0; --i) {
-                    const int index = indexes[static_cast<size_t>(i)];
-                    beginRemoveRows(QModelIndex(), index, index);
-                    mFiles.erase(mFiles.begin() + index);
-                    endRemoveRows();
+                ModelBatchRemover remover(this);
+                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
+                    remover.remove(indexes[static_cast<size_t>(i)]);
                 }
+                remover.remove();
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
         });

@@ -29,6 +29,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "modelutils.h"
 #include "playlistutils.h"
 #include "stdutils.h"
 #include "utilsfunctions.h"
@@ -66,6 +67,15 @@ namespace unplayer
     int PlaylistModel::rowCount(const QModelIndex&) const
     {
         return static_cast<int>(mTracks.size());
+    }
+
+    bool PlaylistModel::removeRows(int row, int count, const QModelIndex& parent)
+    {
+        beginRemoveRows(parent, row, row + count - 1);
+        const auto first(mTracks.begin() + row);
+        mTracks.erase(first, first + count);
+        endRemoveRows();
+        return true;
     }
 
     bool PlaylistModel::isLoaded() const
@@ -229,12 +239,11 @@ namespace unplayer
 
     void PlaylistModel::removeTracks(std::vector<int> indexes)
     {
-        std::sort(indexes.begin(), indexes.end(), std::greater<int>());
-        for (int index : indexes) {
-            beginRemoveRows(QModelIndex(), index, index);
-            mTracks.erase(mTracks.begin() + index);
-            endRemoveRows();
+        ModelBatchRemover remover(this);
+        for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
+            remover.remove(indexes[static_cast<size_t>(i)]);
         }
+        remover.remove();
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);
     }
 }

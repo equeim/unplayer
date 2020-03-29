@@ -23,6 +23,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
 
+#include "modelutils.h"
 #include "playlistutils.h"
 #include "stdutils.h"
 
@@ -57,6 +58,15 @@ namespace unplayer
     int PlaylistsModel::rowCount(const QModelIndex&) const
     {
         return static_cast<int>(mPlaylists.size());
+    }
+
+    bool PlaylistsModel::removeRows(int row, int count, const QModelIndex& parent)
+    {
+        beginRemoveRows(parent, row, row + count - 1);
+        const auto first(mPlaylists.begin() + row);
+        mPlaylists.erase(first, first + count);
+        endRemoveRows();
+        return true;
     }
 
     void PlaylistsModel::removePlaylists(const std::vector<int>& indexes) const
@@ -104,30 +114,35 @@ namespace unplayer
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
             std::vector<PlaylistsModelItem> playlists(watcher->result());
-
-            for (int i = 0, max = static_cast<int>(mPlaylists.size()); i < max; ++i) {
+            ModelBatchRemover remover(this);
+            for (int i = static_cast<int>(mPlaylists.size()) - 1; i >= 0; --i) {
                 if (!contains(playlists, mPlaylists[static_cast<size_t>(i)])) {
-                    beginRemoveRows(QModelIndex(), i, i);
-                    mPlaylists.erase(mPlaylists.begin() + i);
-                    endRemoveRows();
-                    i--;
-                    max--;
+                    remover.remove(i);
                 }
             }
+            remover.remove();
 
+            bool inserting = false;
+            const size_t oldSize = mPlaylists.size();
+            if (playlists.size() > oldSize) {
+                inserting = true;
+                mPlaylists.reserve(playlists.size());
+                beginInsertRows(QModelIndex(), static_cast<int>(oldSize), static_cast<int>(playlists.size()) - 1);
+            }
             for (PlaylistsModelItem& playlist : playlists) {
                 auto found(std::find(mPlaylists.begin(), mPlaylists.end(), playlist));
                 if (found == mPlaylists.cend()) {
-                    const int row = static_cast<int>(mPlaylists.size());
-                    beginInsertRows(QModelIndex(), row, row);
                     mPlaylists.push_back(std::move(playlist));
-                    endInsertRows();
                 } else {
                     *found = std::move(playlist);
                 }
             }
 
-            emit dataChanged(index(0), index(static_cast<int>(mPlaylists.size()) - 1));
+            if (inserting) {
+                endInsertRows();
+            }
+
+            emit dataChanged(index(0), index(static_cast<int>(oldSize) - 1));
         });
         watcher->setFuture(future);
     }

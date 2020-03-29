@@ -77,6 +77,7 @@ namespace unplayer
 
         QVariant data(const QModelIndex& index, int role) const override;
         int rowCount(const QModelIndex& parent) const override;
+        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
         bool allArtists() const;
         void setAllArtists(bool allArtists);

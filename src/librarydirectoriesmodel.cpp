@@ -20,6 +20,7 @@
 
 #include <algorithm>
 
+#include "modelutils.h"
 #include "settings.h"
 
 namespace unplayer
@@ -54,6 +55,15 @@ namespace unplayer
     int LibraryDirectoriesModel::rowCount(const QModelIndex&) const
     {
         return mDirectories.size();
+    }
+
+    bool LibraryDirectoriesModel::removeRows(int row, int count, const QModelIndex& parent)
+    {
+        beginRemoveRows(parent, row, row + count - 1);
+        const auto first(mDirectories.begin() + row);
+        mDirectories.erase(first, first + count);
+        endRemoveRows();
+        return true;
     }
 
     LibraryDirectoriesModel::Type LibraryDirectoriesModel::type() const
@@ -104,12 +114,11 @@ namespace unplayer
 
     void LibraryDirectoriesModel::removeDirectories(std::vector<int> indexes)
     {
-        std::sort(indexes.begin(), indexes.end(), std::greater<int>());
-        for (int index : indexes) {
-            beginRemoveRows(QModelIndex(), index, index);
-            mDirectories.removeAt(index);
-            endRemoveRows();
+        ModelBatchRemover remover(this);
+        for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
+            remover.remove(indexes[static_cast<size_t>(i)]);
         }
+        remover.remove();
 
         switch (mType) {
         case Library:

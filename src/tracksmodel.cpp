@@ -30,6 +30,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "modelutils.h"
 #include "settings.h"
 
 namespace unplayer
@@ -113,6 +114,15 @@ namespace unplayer
     int TracksModel::rowCount(const QModelIndex&) const
     {
         return static_cast<int>(mTracks.size());
+    }
+
+    bool TracksModel::removeRows(int row, int count, const QModelIndex& parent)
+    {
+        beginRemoveRows(parent, row, row + count - 1);
+        const auto first(mTracks.begin() + row);
+        mTracks.erase(first, first + count);
+        endRemoveRows();
+        return true;
     }
 
     bool TracksModel::allArtists() const
@@ -249,12 +259,11 @@ namespace unplayer
         }
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
+                ModelBatchRemover remover(this);
                 for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    const int index = indexes[static_cast<size_t>(i)];
-                    beginRemoveRows(QModelIndex(), index, index);
-                    mTracks.erase(mTracks.begin() + index);
-                    endRemoveRows();
+                    remover.remove(indexes[static_cast<size_t>(i)]);
                 }
+                remover.remove();
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
         });
