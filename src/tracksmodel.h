@@ -29,9 +29,9 @@
 
 namespace unplayer
 {
-    class TracksModelSortMode final : public QObject
+    struct TracksModelSortMode
     {
-        Q_OBJECT
+        Q_GADGET
     public:
         enum Mode
         {
@@ -43,9 +43,9 @@ namespace unplayer
         Q_ENUM(Mode)
     };
 
-    class TracksModelInsideAlbumSortMode final : public QObject
+    struct TracksModelInsideAlbumSortMode
     {
-        Q_OBJECT
+        Q_GADGET
     public:
         enum Mode
         {
