@@ -33,6 +33,8 @@
 #include "modelutils.h"
 #include "settings.h"
 
+#include "abstractlibrarymodel.cpp"
+
 namespace unplayer
 {
     namespace
@@ -109,20 +111,6 @@ namespace unplayer
         default:
             return QVariant();
         }
-    }
-
-    int TracksModel::rowCount(const QModelIndex&) const
-    {
-        return static_cast<int>(mTracks.size());
-    }
-
-    bool TracksModel::removeRows(int row, int count, const QModelIndex& parent)
-    {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mTracks.begin() + row);
-        mTracks.erase(first, first + count);
-        endRemoveRows();
-        return true;
     }
 
     bool TracksModel::allArtists() const
@@ -276,24 +264,27 @@ namespace unplayer
                 {TitleRole, "title"},
                 {ArtistRole, "artist"},
                 {AlbumRole, "album"},
-            {DurationRole, "duration"}};
+                {DurationRole, "duration"}};
     }
 
-    void TracksModel::execQuery()
+    QString TracksModel::makeQueryString(std::vector<QVariant>& bindValues) const
     {
         QString queryString(QLatin1String("SELECT filePath, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "));
 
         if (mAllArtists) {
             if (!mGenre.isEmpty()) {
                 queryString += QLatin1String("WHERE genre = ? ");
+                bindValues.push_back(mGenre);
             }
             queryString += QLatin1String("GROUP BY id, %1, album ");
         } else {
             queryString += QLatin1String("WHERE %1 = ? ");
+            bindValues.push_back(mArtist);
             if (mAllAlbums) {
                 queryString += QLatin1String("GROUP BY id, album ");
             } else {
                 queryString += QLatin1String("AND album = ? GROUP BY id ");
+                bindValues.push_back(mAlbum);
             }
         }
 
@@ -334,41 +325,18 @@ namespace unplayer
         queryString = queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
                                       mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
 
-        QSqlQuery query;
-        query.prepare(queryString);
+        return queryString;
+    }
 
-        if (mAllArtists) {
-            if (!mGenre.isEmpty()) {
-                query.addBindValue(mGenre);
-            }
-        } else {
-            query.addBindValue(mArtist);
-            if (!mAllAlbums) {
-                query.addBindValue(mAlbum);
-            }
-        }
-
-        beginResetModel();
-        mTracks.clear();
-        if (query.exec()) {
-            query.last();
-            if (query.at() > 0) {
-                mTracks.reserve(static_cast<size_t>(query.at() + 1));
-            }
-            query.seek(QSql::BeforeFirstRow);
-            while (query.next()) {
-                const QString artist(query.value(ArtistField).toString());
-                const QString album(query.value(AlbumField).toString());
-                mTracks.push_back({query.value(FilePathField).toString(),
-                                   query.value(TitleField).toString(),
-                                   artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
-                                   album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
-                                   query.value(DurationField).toInt(),
-                                   mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)});
-            }
-        } else {
-            qWarning() << query.lastError();
-        }
-        endResetModel();
+    LibraryTrack TracksModel::itemFromQuery(const QSqlQuery& query)
+    {
+        const QString artist(query.value(ArtistField).toString());
+        const QString album(query.value(AlbumField).toString());
+        return {query.value(FilePathField).toString(),
+                query.value(TitleField).toString(),
+                artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
+                album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
+                query.value(DurationField).toInt(),
+                mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)};
     }
 }

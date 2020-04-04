@@ -34,6 +34,8 @@
 #include "settings.h"
 #include "utils.h"
 
+#include "abstractlibrarymodel.cpp"
+
 namespace unplayer
 {
     namespace
@@ -103,20 +105,6 @@ namespace unplayer
         default:
             return QVariant();
         }
-    }
-
-    int AlbumsModel::rowCount(const QModelIndex&) const
-    {
-        return static_cast<int>(mAlbums.size());
-    }
-
-    bool AlbumsModel::removeRows(int row, int count, const QModelIndex& parent)
-    {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mAlbums.begin() + row);
-        mAlbums.erase(first, first + count);
-        endRemoveRows();
-        return true;
     }
 
     bool AlbumsModel::allArtists() const
@@ -285,10 +273,10 @@ namespace unplayer
                 {UnknownAlbumRole, "unknownAlbum"},
                 {YearRole, "year"},
                 {TracksCountRole, "tracksCount"},
-            {DurationRole, "duration"}};
+                {DurationRole, "duration"}};
     }
 
-    void AlbumsModel::execQuery()
+    QString AlbumsModel::makeQueryString(std::vector<QVariant>& bindValues) const
     {
         QString queryString(QLatin1String("SELECT %1, album, year, COUNT(*), SUM(duration) FROM "
                                           "(SELECT %1, album, year, duration FROM tracks GROUP BY id, %1, album) "));
@@ -296,6 +284,7 @@ namespace unplayer
             queryString += QLatin1String("GROUP BY album, %1 ");
         } else {
             queryString += QLatin1String("WHERE %1 = ? GROUP BY album ");
+            bindValues.push_back(mArtist);
         }
 
         switch (mSortMode) {
@@ -312,33 +301,20 @@ namespace unplayer
             queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, year %2, album = '' %2, album %2");
         }
 
-        queryString = queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
-                                      mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
+        return queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
+                               mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
+    }
 
-
-        QSqlQuery query;
-        query.prepare(queryString);
-        if (!mAllArtists) {
-            query.addBindValue(mArtist);
-        }
-
-        beginResetModel();
-        mAlbums.clear();
-        if (query.exec()) {
-            while (query.next()) {
-                const QString artist(query.value(ArtistField).toString());
-                const QString album(query.value(AlbumField).toString());
-                mAlbums.push_back({artist,
-                                   artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
-                                   album,
-                                   album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
-                                   query.value(YearField).toInt(),
-                                   query.value(TracksCountField).toInt(),
-                                   query.value(DurationField).toInt()});
-            }
-        } else {
-            qWarning() << query.lastError();
-        }
-        endResetModel();
+    Album AlbumsModel::itemFromQuery(const QSqlQuery& query)
+    {
+        const QString artist(query.value(ArtistField).toString());
+        const QString album(query.value(AlbumField).toString());
+        return {artist,
+                artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
+                album,
+                album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
+                query.value(YearField).toInt(),
+                query.value(TracksCountField).toInt(),
+                query.value(DurationField).toInt()};
     }
 }

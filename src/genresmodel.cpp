@@ -31,6 +31,8 @@
 #include "modelutils.h"
 #include "settings.h"
 
+#include "abstractlibrarymodel.cpp"
+
 namespace unplayer
 {
     namespace
@@ -69,20 +71,6 @@ namespace unplayer
         default:
             return QVariant();
         }
-    }
-
-    int GenresModel::rowCount(const QModelIndex&) const
-    {
-        return static_cast<int>(mGenres.size());
-    }
-
-    bool GenresModel::removeRows(int row, int count, const QModelIndex& parent)
-    {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mGenres.begin() + row);
-        mGenres.erase(first, first + count);
-        endRemoveRows();
-        return true;
     }
 
     bool GenresModel::sortDescending() const
@@ -207,29 +195,22 @@ namespace unplayer
     {
         return {{GenreRole, "genre"},
                 {TracksCountRole, "tracksCount"},
-            {DurationRole, "duration"}};
+                {DurationRole, "duration"}};
     }
 
-    void GenresModel::execQuery()
+    QString GenresModel::makeQueryString(std::vector<QVariant>&) const
     {
-        beginResetModel();
-        mGenres.clear();
-        QSqlQuery query(QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
+        return QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
                                             "WHERE genre != '' "
                                             "GROUP BY genre "
                                             "ORDER BY genre %1").arg(mSortDescending ? QLatin1String("DESC")
-                                                                                     : QLatin1String("ASC")));
+                                                                                     : QLatin1String("ASC"));
+    }
 
-        if (query.lastError().type() == QSqlError::NoError) {
-            while (query.next()) {
-                mGenres.push_back({query.value(GenreField).toString(),
-                                   query.value(TracksCountField).toInt(),
-                                   query.value(DurationField).toInt()});
-            }
-
-        } else {
-            qWarning() << query.lastError();
-        }
-        endResetModel();
+    Genre GenresModel::itemFromQuery(const QSqlQuery& query)
+    {
+        return {query.value(GenreField).toString(),
+                query.value(TracksCountField).toInt(),
+                query.value(DurationField).toInt()};
     }
 }

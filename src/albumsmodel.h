@@ -24,6 +24,7 @@
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
 
+#include "abstractlibrarymodel.h"
 #include "librarytrack.h"
 
 namespace unplayer
@@ -39,7 +40,7 @@ namespace unplayer
         int duration;
     };
 
-    class AlbumsModel : public QAbstractListModel, public QQmlParserStatus
+    class AlbumsModel : public AbstractLibraryModel<Album>, public QQmlParserStatus
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
@@ -76,8 +77,6 @@ namespace unplayer
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role) const override;
-        int rowCount(const QModelIndex& parent) const override;
-        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
         bool allArtists() const;
         void setAllArtists(bool allArtists);
@@ -101,10 +100,11 @@ namespace unplayer
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
-    private:
-        void execQuery();
+        QString makeQueryString(std::vector<QVariant>& bindValues) const override;
+        Album itemFromQuery(const QSqlQuery& query) override;
 
-        std::vector<Album> mAlbums;
+    private:
+        std::vector<Album>& mAlbums = mItems;
 
         bool mAllArtists = true;
         QString mArtist;

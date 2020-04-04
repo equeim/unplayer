@@ -22,6 +22,7 @@
 #include <vector>
 #include <QAbstractListModel>
 
+#include "abstractlibrarymodel.h"
 #include "librarytrack.h"
 
 namespace unplayer
@@ -35,7 +36,7 @@ namespace unplayer
         int duration;
     };
 
-    class ArtistsModel : public QAbstractListModel
+    class ArtistsModel : public AbstractLibraryModel<Artist>
     {
         Q_OBJECT
         Q_PROPERTY(bool sortDescending READ sortDescending NOTIFY sortDescendingChanged)
@@ -53,8 +54,6 @@ namespace unplayer
         ArtistsModel();
 
         QVariant data(const QModelIndex& index, int role) const override;
-        int rowCount(const QModelIndex& parent) const override;
-        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
         bool sortDescending() const;
 
@@ -70,11 +69,13 @@ namespace unplayer
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
-    private:
-        void execQuery();
+        QString makeQueryString(std::vector<QVariant>& bindValues) const override;
+        Artist itemFromQuery(const QSqlQuery& query) override;
 
-        std::vector<Artist> mArtists;
+    private:
+        std::vector<Artist>& mArtists = mItems;
         bool mSortDescending;
+
     signals:
         void sortDescendingChanged();
     };

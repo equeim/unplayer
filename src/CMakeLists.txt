@@ -29,6 +29,7 @@ endif()
 qt5_add_resources(resources resources.qrc)
 
 add_executable("${PROJECT_NAME}"
+    abstractlibrarymodel.cpp
     albumsmodel.cpp
     artistsmodel.cpp
     directorycontentmodel.cpp
