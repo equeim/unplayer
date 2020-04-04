@@ -55,8 +55,8 @@ namespace unplayer
         void componentComplete() override;
 
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-        int rowCount(const QModelIndex& parent) const override;
-        bool removeRows(int row, int count, const QModelIndex& parent) override;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
         const std::vector<DirectoryTrackFile>& files() const;
 

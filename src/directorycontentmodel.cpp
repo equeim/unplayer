@@ -136,9 +136,14 @@ namespace unplayer
         mLoading = true;
         emit loadingChanged();
 
-        beginRemoveRows(QModelIndex(), 0, static_cast<int>(mFiles.size()) - 1);
-        mFiles.clear();
-        endRemoveRows();
+        auto clear = [=] {
+            if (!mFiles.empty()) {
+                beginRemoveRows(QModelIndex(), 0, static_cast<int>(mFiles.size()) - 1);
+                mFiles.clear();
+                endRemoveRows();
+            }
+        };
+        clear();
 
         const QString directory(mDirectory);
         const QStringList nameFilters(mNameFilters);
@@ -162,7 +167,9 @@ namespace unplayer
         using FutureWatcher = QFutureWatcher<std::vector<DirectoryContentFile>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            std::vector<DirectoryContentFile> files(watcher->result());
+            clear();
+
+            auto files(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(files.size()) - 1);
             mFiles = std::move(files);
             endInsertRows();

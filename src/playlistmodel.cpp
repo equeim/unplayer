@@ -111,6 +111,8 @@ namespace unplayer
             emit loadedChanged();
         }
 
+        removeRows(0, rowCount());
+
         auto future = QtConcurrent::run([playlistFilePath]() {
             std::vector<PlaylistTrack> tracks(PlaylistUtils::parsePlaylist(playlistFilePath));
 
@@ -212,10 +214,13 @@ namespace unplayer
         using FutureWatcher = QFutureWatcher<std::vector<PlaylistTrack>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+            removeRows(0, rowCount());
+
             auto tracks(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(tracks.size() - 1));
             mTracks = std::move(tracks);
             endInsertRows();
+
             mLoaded = true;
             emit loadedChanged();
         });

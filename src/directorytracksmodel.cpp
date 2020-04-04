@@ -184,9 +184,7 @@ namespace unplayer
         mLoaded = false;
         emit loadedChanged();
 
-        beginRemoveRows(QModelIndex(), 0, static_cast<int>(mFiles.size()) - 1);
-        mFiles.clear();
-        endRemoveRows();
+        removeRows(0, rowCount());
 
         const QString directory(mDirectory);
         const bool showVideoFiles = mShowVideoFiles;
@@ -220,6 +218,8 @@ namespace unplayer
         using FutureWatcher = QFutureWatcher<std::pair<std::vector<DirectoryTrackFile>, int>>;
         auto watcher = new FutureWatcher(this);
         QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+            removeRows(0, rowCount());
+
             auto result(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(result.first.size()) - 1);
             mFiles = std::move(result.first);
