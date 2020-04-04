@@ -26,6 +26,17 @@ namespace unplayer
     class ModelBatchRemover
     {
     public:
+        inline static void removeIndexes(QAbstractItemModel* model, const std::vector<int>& indexes)
+        {
+            if (!indexes.empty()) {
+                ModelBatchRemover remover(model);
+                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
+                    remover.remove(indexes[static_cast<size_t>(i)]);
+                }
+                remover.remove();
+            }
+        }
+
         inline explicit ModelBatchRemover(QAbstractItemModel* model)
             : model(model) {}
 

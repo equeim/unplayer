@@ -250,17 +250,13 @@ namespace unplayer
         for (int index : indexes) {
             albums.push_back(mAlbums[static_cast<size_t>(index)]);
         }
+        LibraryUtils::instance()->removeAlbums(std::move(albums), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                ModelBatchRemover remover(this);
-                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    remover.remove(indexes[static_cast<size_t>(i)]);
-                }
-                remover.remove();
+                ModelBatchRemover::removeIndexes(this, indexes);
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
         });
-        LibraryUtils::instance()->removeAlbums(std::move(albums), deleteFiles);
     }
 
     QHash<int, QByteArray> AlbumsModel::roleNames() const

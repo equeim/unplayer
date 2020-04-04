@@ -239,11 +239,7 @@ namespace unplayer
 
     void PlaylistModel::removeTracks(std::vector<int> indexes)
     {
-        ModelBatchRemover remover(this);
-        for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-            remover.remove(indexes[static_cast<size_t>(i)]);
-        }
-        remover.remove();
+        ModelBatchRemover::removeIndexes(this, indexes);
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);
     }
 }

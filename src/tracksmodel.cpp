@@ -245,17 +245,13 @@ namespace unplayer
         for (int index : indexes) {
             files.push_back(mTracks[static_cast<size_t>(index)].filePath);
         }
+        LibraryUtils::instance()->removeFiles(std::move(files), deleteFiles, false);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                ModelBatchRemover remover(this);
-                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    remover.remove(indexes[static_cast<size_t>(i)]);
-                }
-                remover.remove();
+                ModelBatchRemover::removeIndexes(this, indexes);
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
         });
-        LibraryUtils::instance()->removeFiles(std::move(files), deleteFiles, false);
     }
 
     QHash<int, QByteArray> TracksModel::roleNames() const

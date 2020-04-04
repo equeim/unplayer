@@ -178,17 +178,13 @@ namespace unplayer
         for (int index : indexes) {
             artists.push_back(mArtists[static_cast<size_t>(index)].artist);
         }
+        LibraryUtils::instance()->removeArtists(std::move(artists), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
-                ModelBatchRemover remover(this);
-                for (int i = static_cast<int>(indexes.size()) - 1; i >= 0; --i) {
-                    remover.remove(indexes[static_cast<size_t>(i)]);
-                }
-                remover.remove();
+                ModelBatchRemover::removeIndexes(this, indexes);
                 QObject::disconnect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, nullptr);
             }
         });
-        LibraryUtils::instance()->removeArtists(std::move(artists), deleteFiles);
     }
 
     QHash<int, QByteArray> ArtistsModel::roleNames() const
