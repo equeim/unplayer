@@ -71,11 +71,14 @@ namespace unplayer
 
     bool PlaylistModel::removeRows(int row, int count, const QModelIndex& parent)
     {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mTracks.begin() + row);
-        mTracks.erase(first, first + count);
-        endRemoveRows();
-        return true;
+        if (count > 0 && (row + count) <= static_cast<int>(mTracks.size())) {
+            beginRemoveRows(parent, row, row + count - 1);
+            const auto first(mTracks.begin() + row);
+            mTracks.erase(first, first + count);
+            endRemoveRows();
+            return true;
+        }
+        return false;
     }
 
     bool PlaylistModel::isLoaded() const

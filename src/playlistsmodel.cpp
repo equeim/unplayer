@@ -62,11 +62,14 @@ namespace unplayer
 
     bool PlaylistsModel::removeRows(int row, int count, const QModelIndex& parent)
     {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mPlaylists.begin() + row);
-        mPlaylists.erase(first, first + count);
-        endRemoveRows();
-        return true;
+        if (count > 0 && (row + count) <= static_cast<int>(mPlaylists.size())) {
+            beginRemoveRows(parent, row, row + count - 1);
+            const auto first(mPlaylists.begin() + row);
+            mPlaylists.erase(first, first + count);
+            endRemoveRows();
+            return true;
+        }
+        return false;
     }
 
     void PlaylistsModel::removePlaylists(const std::vector<int>& indexes) const

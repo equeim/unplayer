@@ -77,11 +77,14 @@ namespace unplayer
 
     bool DirectoryTracksModel::removeRows(int row, int count, const QModelIndex& parent)
     {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mFiles.begin() + row);
-        mFiles.erase(first, first + count);
-        endRemoveRows();
-        return true;
+        if (count > 0 && (row + count) <= static_cast<int>(mFiles.size())) {
+            beginRemoveRows(parent, row, row + count - 1);
+            const auto first(mFiles.begin() + row);
+            mFiles.erase(first, first + count);
+            endRemoveRows();
+            return true;
+        }
+        return false;
     }
 
     const std::vector<DirectoryTrackFile>& DirectoryTracksModel::files() const

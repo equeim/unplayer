@@ -59,11 +59,14 @@ namespace unplayer
 
     bool LibraryDirectoriesModel::removeRows(int row, int count, const QModelIndex& parent)
     {
-        beginRemoveRows(parent, row, row + count - 1);
-        const auto first(mDirectories.begin() + row);
-        mDirectories.erase(first, first + count);
-        endRemoveRows();
-        return true;
+        if (count > 0 && (row + count) <= static_cast<int>(mDirectories.size())) {
+            beginRemoveRows(parent, row, row + count - 1);
+            const auto first(mDirectories.begin() + row);
+            mDirectories.erase(first, first + count);
+            endRemoveRows();
+            return true;
+        }
+        return false;
     }
 
     LibraryDirectoriesModel::Type LibraryDirectoriesModel::type() const
