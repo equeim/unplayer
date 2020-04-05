@@ -99,35 +99,6 @@ namespace unplayer
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
     }
 
-    QStringList Utils::processArguments(const std::vector<std::string>& arguments)
-    {
-        QStringList parsed;
-        parsed.reserve(static_cast<int>(arguments.size()));
-
-        for (const std::string& argument : arguments) {
-            const QString argumentString(QString::fromStdString(argument));
-            const QUrl url(argumentString);
-            if (url.isRelative() || url.isLocalFile()) {
-                QFileInfo fileInfo(url.path());
-                if (fileInfo.isFile() && fileInfo.isReadable()) {
-                    QString filePath(fileInfo.absoluteFilePath());
-                    if (PlaylistUtils::isPlaylistExtension(fileInfo.suffix())) {
-                        parsed.push_back(filePath);
-                    } else {
-                        const QString suffix(fileInfo.suffix());
-
-                        if (LibraryUtils::isExtensionSupported(suffix) || LibraryUtils::isVideoExtensionSupported(suffix)) {
-                            parsed.push_back(filePath);
-                        }
-                    }
-                }
-            } else {
-                parsed.push_back(argumentString);
-            }
-        }
-        return parsed;
-    }
-
     QString Utils::formatDuration(int seconds)
     {
         const int hours = seconds / 3600;

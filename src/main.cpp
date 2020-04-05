@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <memory>
 
 #include <QCommandLineParser>
@@ -31,8 +30,7 @@
 
 #include <sailfishapp.h>
 
-#include "clara.hpp"
-
+#include "commandlineparser.h"
 #include "libraryutils.h"
 #include "player.h"
 #include "queue.h"
@@ -46,46 +44,23 @@ int main(int argc, char* argv[])
 {
     SignalHandler::setupHandlers();
 
-    bool updateLibrary = false;
-    bool resetLibrary = false;
-    std::vector<std::string> files;
-    {
-        using namespace clara;
-
-        bool version = false;
-        bool help = false;
-        auto cli = Opt(updateLibrary)["-u"]["--update-library"]("update music library and exit") |
-                   Opt(resetLibrary)["-r"]["--reset-library"]("reset music library and exit") |
-                   Opt(version)["-v"]["--version"]("display version information") |
-                   Help(help) |
-                   Arg(files, "files");
-        auto result = cli.parse(Args(argc, argv));
-        if (!result) {
-            std::cerr << result.errorMessage() << std::endl;
-            return 1;
-        }
-        if (help) {
-            std::cout << cli << std::endl;
-            return 0;
-        }
-        if (version) {
-            std::cout << cli.m_exeName.name() << " " UNPLAYER_VERSION << std::endl;
-            return 0;
-        }
+    const auto args(CommandLineArgs::parse(argc, argv));
+    if (args.exit) {
+        return args.returnCode;
     }
 
     if (SignalHandler::exitRequested) {
         return 0;
     }
 
-    if (resetLibrary || updateLibrary) {
+    if (args.resetLibrary || args.updateLibrary) {
         QCoreApplication app(argc, argv);
         QCoreApplication::setOrganizationName(QCoreApplication::applicationName());
         QCoreApplication::setOrganizationDomain(QCoreApplication::applicationName());
 
-        if (resetLibrary) {
+        if (args.resetLibrary) {
             LibraryUtils::instance()->resetDatabase();
-            if (!updateLibrary) {
+            if (!args.updateLibrary) {
                 return 0;
             }
         }
@@ -133,7 +108,7 @@ int main(int argc, char* argv[])
 
     const std::unique_ptr<QQuickView> view(SailfishApp::createView());
 
-    view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), Utils::processArguments(files));
+    view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), args.files);
 
     Settings::instance();
     LibraryUtils::instance();
