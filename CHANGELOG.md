@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+### Changed
+- Tracks are now added to the end of playlist rather than beginning
+
+### Fixed
+- Fixed indexing files with uppercase extensions
+- Fixed removing playlist from its page
+
 ## [2.0.3] - 2019-08-01
 ### Changed
 - Updated translations
