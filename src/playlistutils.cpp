@@ -653,7 +653,7 @@ namespace unplayer
     void PlaylistUtils::addTracksToPlaylist(const QString& filePath, std::vector<PlaylistTrack>&& tracks)
     {
         std::vector<PlaylistTrack> playlistTracks(parsePlaylist(filePath));
-        playlistTracks.insert(playlistTracks.begin(), std::make_move_iterator(tracks.begin()), std::make_move_iterator(tracks.end()));
+        playlistTracks.insert(playlistTracks.end(), std::make_move_iterator(tracks.begin()), std::make_move_iterator(tracks.end()));
         savePlaylist(filePath, playlistTracks);
     }
 }
