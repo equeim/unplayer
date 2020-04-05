@@ -71,8 +71,8 @@ namespace unplayer
         mQueue = queue;
 
         QObject::connect(mQueue, &Queue::tracksAboutToBeAdded, this, [=](int count) {
-            const int fisrt = rowCount();
-            beginInsertRows(QModelIndex(), fisrt, fisrt + count);
+            const int first = rowCount();
+            beginInsertRows(QModelIndex(), first, first + count - 1);
         });
 
         QObject::connect(mQueue, &Queue::tracksAdded, this, [=]() {
