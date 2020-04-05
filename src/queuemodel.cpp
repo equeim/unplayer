@@ -64,6 +64,10 @@ namespace unplayer
 
     void QueueModel::setQueue(Queue* queue)
     {
+        if (queue == mQueue || !queue) {
+            return;
+        }
+
         mQueue = queue;
 
         QObject::connect(mQueue, &Queue::tracksAboutToBeAdded, this, [=](int count) {

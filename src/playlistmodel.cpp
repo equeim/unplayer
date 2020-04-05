@@ -104,6 +104,10 @@ namespace unplayer
 
     void PlaylistModel::setFilePath(const QString& playlistFilePath)
     {
+        if (playlistFilePath == mFilePath) {
+            return;
+        }
+
         mFilePath = playlistFilePath;
 
         if (mLoaded) {

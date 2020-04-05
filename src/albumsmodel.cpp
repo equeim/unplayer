@@ -114,8 +114,10 @@ namespace unplayer
 
     void AlbumsModel::setAllArtists(bool allArtists)
     {
-        mAllArtists = allArtists;
-        emit allArtistsChanged();
+        if (allArtists != mAllArtists) {
+            mAllArtists = allArtists;
+            emit allArtistsChanged();
+        }
     }
 
     const QString& AlbumsModel::artist() const
