@@ -19,8 +19,7 @@
 #include <memory>
 
 #include <QCommandLineParser>
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
+#include <QDBusInterface>
 #include <QDBusMessage>
 #include <QGuiApplication>
 #include <QQuickView>
@@ -87,14 +86,14 @@ int main(int argc, char* argv[])
     }
 
     {
-        const QDBusConnection connection(QDBusConnection::sessionBus());
-        if (connection.interface()->isServiceRegistered(QLatin1String("org.equeim.unplayer"))) {
-            QDBusMessage message(QDBusMessage::createMethodCall(QLatin1String("org.equeim.unplayer"),
-                                                                QLatin1String("/org/equeim/unplayer"),
-                                                                QLatin1String("org.equeim.unplayer"),
-                                                                QLatin1String("addTracksToQueue")));
-            message.setArguments({Utils::processArguments(files)});
-            connection.call(message);
+        QDBusInterface interface(QLatin1String("org.equeim.unplayer"),
+                                 QLatin1String("/org/equeim/unplayer"),
+                                 QLatin1String("org.equeim.unplayer"));
+        if (interface.isValid()) {
+            const QDBusMessage reply(interface.call(QLatin1String("addTracksToQueue"), args.files));
+            if (reply.type() != QDBusMessage::ReplyMessage) {
+                qWarning() << "D-Bus method call failed, error string:" << reply.errorMessage();
+            }
             return 0;
         }
     }
