@@ -94,15 +94,7 @@ Page {
                 if (selectionPanel.showPanel) {
                     playlistsProxyModel.select(model.index)
                 } else {
-                    pageStack.push(playlistPageComponent)
-                }
-            }
-
-            Component {
-                id: playlistPageComponent
-                PlaylistPage {
-                    pageTitle: model.name
-                    filePath: model.filePath
+                    pageStack.push("PlaylistPage.qml", {pageTitle: model.name, filePath: model.filePath})
                 }
             }
         }
