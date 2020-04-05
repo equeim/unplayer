@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: queuePage
+
     function positionViewAtCurrentIndex() {
         listView.positionViewAtIndex(listView.currentIndex, ListView.Center)
     }
@@ -42,7 +44,7 @@ Page {
     Connections {
         target: Unplayer.Player.queue
         onCurrentTrackChanged: {
-            if (Unplayer.Player.queue.currentIndex === -1) {
+            if (Unplayer.Player.queue.currentIndex === -1 && pageStack.currentPage === queuePage) {
                 pageStack.pop(pageStack.previousPage(pageStack.previousPage()))
             }
         }

@@ -148,10 +148,10 @@ Page {
             }
 
             onClicked: {
-                var page = pageStack.push(queuePageComponent)
-                if (page) {
-                    page.positionViewAtCurrentIndex()
-                }
+                queuePageLoader.active = true
+                var page = queuePageLoader.item
+                pageStack.push(page)
+                page.positionViewAtCurrentIndex()
             }
 
             Rectangle {
@@ -192,9 +192,10 @@ Page {
                 }
             }
 
-            Component {
-                id: queuePageComponent
-                QueuePage { }
+            Loader {
+                id: queuePageLoader
+                active: false
+                sourceComponent: Component { QueuePage {} }
             }
         }
 
