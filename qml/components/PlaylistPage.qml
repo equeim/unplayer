@@ -131,7 +131,7 @@ Page {
             MenuItem {
                 text: qsTranslate("unplayer", "Remove playlist")
                 onClicked: remorsePopup.execute(qsTranslate("unplayer", "Removing playlist"), function() {
-                    Unplayer.PlaylistUtils.removePlaylist(playlistModel.url)
+                    Unplayer.PlaylistUtils.removePlaylist(filePath)
                     pageStack.pop()
                 })
             }
