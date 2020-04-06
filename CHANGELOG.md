@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.4] - 2020-04-06
 ### Changed
 - Tracks are now added to the end of playlist rather than beginning
 
