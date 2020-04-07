@@ -721,7 +721,7 @@
     </message>
     <message>
         <source>%1 PiB</source>
-        <translation type="unfinished">%1 PiB</translation>
+        <translation>%1 PiB</translation>
     </message>
 </context>
 </TS>
