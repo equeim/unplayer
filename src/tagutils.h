@@ -19,6 +19,7 @@
 #ifndef UNPLAYER_TAGUTILS_H
 #define UNPLAYER_TAGUTILS_H
 
+#include <functional>
 #include <QString>
 
 #include "libraryutils.h"
@@ -59,10 +60,10 @@ namespace unplayer
         Info getTrackInfo(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb);
 
         template<bool IncrementTrackNumber>
-        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
+        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
 
-        extern template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
-        extern template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
+        extern template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
+        extern template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
     }
 }
 

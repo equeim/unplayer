@@ -19,6 +19,7 @@
 #include "tagutils.h"
 
 #include <QCoreApplication>
+#include <QCryptographicHash>
 #include <QDebug>
 #include <QFileInfo>
 #include <QMimeDatabase>
@@ -66,7 +67,7 @@ namespace unplayer
 
             struct ExtractProcessor
             {
-                inline void setMediaArt(const TagLib::ByteVector& data) const
+                void setMediaArt(const TagLib::ByteVector& data) const
                 {
                     info.mediaArtData = QByteArray(data.data(), static_cast<int>(data.size()));
                 }
@@ -311,7 +312,15 @@ namespace unplayer
 
             struct SaveProcessor
             {
-                void processFile(TagLib::File&& file) const
+                template<typename File>
+                void processFile(File&& file) const
+                {
+                    if (saveProperties(std::forward<File>(file))) {
+                        ExtractProcessor{info, mimeDb}.processFile(std::forward<File>(file));
+                    }
+                }
+
+                bool saveProperties(TagLib::File&& file) const
                 {
                     if (file.isValid()) {
                         TagLib::PropertyMap properties(file.properties());
@@ -319,18 +328,14 @@ namespace unplayer
                             properties.replace(i.first, i.second);
                         }
                         file.setProperties(properties);
-
                         if (file.save()) {
-                            Info info{};
-                            info.filePath = filePath;
-                            ExtractProcessor{info, mimeDb}.processFile(std::move(file));
-                            infos.push_back(std::move(info));
-                        } else {
-                            error("error when saving file");
+                            return true;
                         }
+                        error("error when saving file");
                     } else {
                         error(errorCauseExtensionDoesntMatch);
                     }
+                    return false;
                 }
 
                 void checkMimeType(QLatin1String) const
@@ -340,12 +345,11 @@ namespace unplayer
 
                 void error(const char* errorCause) const
                 {
-                    qWarning().nospace() << "Warning: can't save tags for file " << filePath << ": " << errorCause;
+                    qWarning().nospace() << "Warning: can't save tags for file " << info.filePath << ": " << errorCause;
                 }
 
-                const QString& filePath;
+                Info& info;
                 const TagLib::PropertyMap& replaceProperties;
-                std::vector<Info>& infos;
                 const QMimeDatabase& mimeDb;
             };
 
@@ -429,7 +433,7 @@ namespace unplayer
         }
 
         template<bool IncrementTrackNumber>
-        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb)
+        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback)
         {
             std::vector<Info> infos;
             infos.reserve(static_cast<std::vector<Info>::size_type>(files.size()));
@@ -455,17 +459,25 @@ namespace unplayer
                 if (!qApp) {
                     break;
                 }
-                processFile(filePath, LibraryUtils::extensionFromSuffix(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{filePath, replaceProperties, infos, mimeDb});
-                if (IncrementTrackNumber) {
-                    ++trackNumber;
-                    *trackNumberString = TagLib::String::number(trackNumber);
+                Info info{};
+                info.filePath = filePath;
+                processFile(filePath, LibraryUtils::extensionFromSuffix(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{info, replaceProperties, mimeDb});
+
+                if (info.canReadTags) {
+                    callback(info);
+                    infos.push_back(std::move(info));
+
+                    if (IncrementTrackNumber) {
+                        ++trackNumber;
+                        *trackNumberString = TagLib::String::number(trackNumber);
+                    }
                 }
             }
 
             return infos;
         }
 
-        template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
-        template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb);
+        template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
+        template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
     }
 }

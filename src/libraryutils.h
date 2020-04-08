@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+class QMimeDatabase;
 class QRunnable;
 class QSqlQuery;
 
@@ -162,6 +163,9 @@ namespace unplayer
         QString discNumberTag() const;
         bool isSavingTags() const;
         Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);
+
+        std::unordered_map<QByteArray, QString> getEmbeddedMediaArt();
+        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles, const QMimeDatabase& mimeDb);
     private:
         LibraryUtils(QObject* parent = nullptr);
 
