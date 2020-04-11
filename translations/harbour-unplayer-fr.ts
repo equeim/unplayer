@@ -699,8 +699,8 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>Les tags sélectionnés vont être appliqués a %n fichier</numerusform>
-            <numerusform>Les tags sélectionnés vont être appliqués a %n fichiers</numerusform>
+            <numerusform>Les tags sélectionnés vont être appliqués à %n fichier</numerusform>
+            <numerusform>Les tags sélectionnés vont être appliqués à %n fichiers</numerusform>
         </translation>
     </message>
     <message>
