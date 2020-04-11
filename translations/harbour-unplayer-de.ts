@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Tags speichern...</translation>
+        <translation>Tags werden gespeichert …</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Verwenden Sie den Tag &quot;Album-Interpret&quot; anstelle von &quot;Künstler&quot;, wenn er verfügbar ist</translation>
+        <translation>Verwenden Sie den Tag „Album-Interpret“ anstelle von „Künstler“, wenn er verfügbar ist</translation>
     </message>
     <message>
         <source>Save</source>
