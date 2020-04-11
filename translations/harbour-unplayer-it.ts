@@ -545,132 +545,132 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere questo album?</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sei sicuro di voler rimuovere %n album selezionato?</numerusform>
+            <numerusform>Sei sicuro di voler rimuovere %n album selezionati?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere questo artista?</translation>
     </message>
     <message>
         <source>Removing files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimozione di file...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sei sicuro di voler rimuovere %n artista selezionato?</numerusform>
+            <numerusform>Sei sicuro di voler rimuovere %n artisti selezionati?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Rimozione di %n file</numerusform>
+            <numerusform>Rimozione di %n file</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sei sicuro di voler rimuovere %n genere selezionato?</numerusform>
+            <numerusform>Sei sicuro di voler rimuovere %n generi selezionati?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere questo genere?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere questo brano?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina i file dal dispositivo</translation>
     </message>
     <message>
         <source>Show video files</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra i file video</translation>
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Elenchi nella lista nera</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Sei sicuro di voler rimuovere i %n brano selezionato?</numerusform>
+            <numerusform>Sei sicuro di voler rimuovere i %n brani selezionati?</numerusform>
         </translation>
     </message>
     <message>
         <source>Donate</source>
-        <translation type="unfinished"></translation>
+        <translation>Dona</translation>
     </message>
     <message>
         <source>Contributor</source>
-        <translation type="unfinished"></translation>
+        <translation>Contributore</translation>
     </message>
     <message>
         <source>Disc number - Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero del disco — Titolo</translation>
     </message>
     <message>
         <source>Disc number - Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero del disco — Numero del brano</translation>
     </message>
     <message>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri l&apos;URL</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero del disco</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica i tag</translation>
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>In preparazione</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>Scansione del sistema di file</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Estrazione dei metadati</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>Finitura</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n nuovo brano trovato</numerusform>
+            <numerusform>%n nuovi brani trovati</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -682,62 +682,62 @@
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiunta dei brani...</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvando i tag…</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa il tag «Artista dell&apos;album» invece di «Artista», se disponibile</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva</translation>
     </message>
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>I tag selezionati verranno applicati a %n file</numerusform>
+            <numerusform>I tag selezionati verranno applicati ai %n file</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation type="unfinished"></translation>
+        <translation>Verranno applicati solo i tag selezionati</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile leggere i tag da questo file</translation>
     </message>
     <message>
         <source>Album artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Artisti dell&apos;album</translation>
     </message>
     <message>
         <source>Album artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista dell&apos;album</translation>
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation type="unfinished"></translation>
+        <translation>Incrementa il numero del brano per ogni file</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermati dopo la riproduzione del brano: &lt;font color=&quot;%1&quot;&gt;sì&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermati dopo la riproduzione del brano: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
 </context>
 </TS>
