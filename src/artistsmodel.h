@@ -29,6 +29,7 @@ namespace unplayer
 {
     struct Artist
     {
+        int id;
         QString artist;
         QString displayedArtist;
         int albumsCount;
@@ -43,7 +44,8 @@ namespace unplayer
     public:
         enum Role
         {
-            ArtistRole = Qt::UserRole,
+            ArtistIdRole = Qt::UserRole,
+            ArtistRole,
             DisplayedArtistRole,
             AlbumsCountRole,
             TracksCountRole,
