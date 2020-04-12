@@ -59,7 +59,8 @@ namespace unplayer
         Other
     };
 
-    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField);
+    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, const QString& userMediaArt);
+    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, int userMediaArtField);
 
     struct DatabaseGuard
     {
@@ -77,7 +78,7 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)
-        Q_PROPERTY(bool createdTable READ isCreatedTable CONSTANT)
+        Q_PROPERTY(bool createdTablse READ isCreatedTables CONSTANT)
 
         Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
@@ -129,7 +130,7 @@ namespace unplayer
         Q_INVOKABLE void resetDatabase();
 
         bool isDatabaseInitialized() const;
-        bool isCreatedTable() const;
+        bool isCreatedTables() const;
 
         int artistsCount() const;
         int albumsCount() const;
@@ -170,7 +171,7 @@ namespace unplayer
         LibraryUtils(QObject* parent = nullptr);
 
         bool mDatabaseInitialized;
-        bool mCreatedTable;
+        bool mCreatedTables;
 
         QRunnable* mLibraryUpdateRunnable;
         UpdateStage mLibraryUpdateStage;

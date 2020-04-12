@@ -47,6 +47,9 @@
 #include "tagutils.h"
 #include "utilsfunctions.h"
 
+using QStringIntPair = QPair<QString, int>;
+QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QStringIntPair)
+
 namespace unplayer
 {
     namespace
@@ -87,72 +90,240 @@ namespace unplayer
             return string;
         }
 
-        template<typename Function>
-        void forEachOrOnce(const QStringList& strings, const Function& exec)
+        inline QVariant nullIfEmpty(const QString& string)
         {
-            if (strings.empty()) {
-                exec(QLatin1String(""));
-            } else {
-                for (const QString& string : strings) {
-                    exec(string);
-                }
+            if (string.isEmpty()) {
+                return {};
             }
+            return string;
         }
 
-        void addTrackToDatabase(const QSqlDatabase& db,
-                                int id,
-                                const QString& filePath,
-                                long long modificationTime,
-                                tagutils::Info& info,
-                                const QString& directoryMediaArt,
-                                const QString& embeddedMediaArt)
+        const int databaseVersion = 1;
+
+        class TracksAdder {
+        public:
+            explicit TracksAdder(const QSqlDatabase& db) : mDb(db)
             {
-                if (info.albumArtists.isEmpty() && !info.artists.isEmpty()) {
-                    info.albumArtists = info.artists;
-                } else if (info.artists.isEmpty() && !info.albumArtists.isEmpty()) {
-                    info.artists = info.albumArtists;
+                if (mQuery.exec(QLatin1String("SELECT id FROM tracks ORDER BY id DESC LIMIT 1"))) {
+                    if (mQuery.next()) {
+                        mLastTrackId = mQuery.value(0).toInt();
+                    } else {
+                        mLastTrackId = 0;
+                    }
+                } else {
+                    qWarning() << __func__ << "failed to get last track id" << mQuery.lastError();
                 }
 
-                QSqlQuery query(db);
-                query.prepare([&]() {
-                    QString queryString(QStringLiteral("INSERT INTO tracks (id, modificationTime, year, trackNumber, duration, filePath, title, artist, albumArtist, album, discNumber, genre, directoryMediaArt, embeddedMediaArt) "
-                                                       "VALUES "));
-                    const auto sizeOrOne = [](const QStringList& strings) {
-                        return strings.empty() ? 1 : strings.size();
-                    };
-                    const int count = sizeOrOne(info.artists) * sizeOrOne(info.albums) * sizeOrOne(info.genres);
-                    for (int i = 0; i < count; ++i) {
-                        queryString.push_back(QStringLiteral("(%1, %2, %3, %4, %5, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
-                        if (i != (count - 1)) {
-                            queryString.push_back(QLatin1Char(','));
-                        }
-                    }
-                    queryString = queryString.arg(id).arg(modificationTime).arg(info.year).arg(info.trackNumber).arg(info.duration);
+                getArtists();
+                getAlbums();
+                getGenres();
+            }
+
+            void addTrackToDatabase(const QString& filePath,
+                                    long long modificationTime,
+                                    tagutils::Info& info,
+                                    const QString& directoryMediaArt,
+                                    const QString& embeddedMediaArt)
+            {
+                mQuery.prepare([&]() {
+                    QString queryString(QStringLiteral("INSERT INTO tracks (modificationTime, year, trackNumber, duration, filePath, title, discNumber, directoryMediaArt, embeddedMediaArt) "
+                                                       "VALUES (%1, %2, %3, %4, ?, ?, ?, ?, ?)"));
+                    queryString = queryString.arg(modificationTime).arg(info.year).arg(info.trackNumber).arg(info.duration);
                     return queryString;
                 }());
 
-                forEachOrOnce(info.artists, [&](const QString& artist) {
-                    forEachOrOnce(info.albumArtists, [&](const QString& albumArtist) {
-                        forEachOrOnce(info.albums, [&](const QString& album) {
-                            forEachOrOnce(info.genres, [&](const QString& genre) {
-                                query.addBindValue(filePath);
-                                query.addBindValue(info.title);
-                                query.addBindValue(emptyIfNull(artist));
-                                query.addBindValue(emptyIfNull(albumArtist));
-                                query.addBindValue(emptyIfNull(album));
-                                query.addBindValue(emptyIfNull(info.discNumber));
-                                query.addBindValue(emptyIfNull(genre));
-                                query.addBindValue(emptyIfNull(directoryMediaArt));
-                                query.addBindValue(emptyIfNull(embeddedMediaArt));
-                            });
-                        });
-                    });
-                });
+                mQuery.addBindValue(filePath);
+                mQuery.addBindValue(info.title);
+                mQuery.addBindValue(nullIfEmpty(info.discNumber));
+                mQuery.addBindValue(nullIfEmpty(directoryMediaArt));
+                mQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
 
-                if (!query.exec()) {
-                    qWarning() << "failed to insert track in the database" << query.lastError();
+                if (!mQuery.exec()) {
+                    qWarning() << __func__ << "failed to insert track in the database" << mQuery.lastError();
+                    return;
+                }
+
+                const int trackId = ++mLastTrackId;
+
+                for (const QString& artist : (info.artists + info.albumArtists)) {
+                    const int artistId = getArtistId(artist);
+                    if (artistId != 0) {
+                        addRelationship(trackId, artistId, "tracks_artists");
+                    }
+                }
+
+                if (!info.albums.isEmpty()) {
+                    QString albumArtist;
+                    if (!info.albumArtists.isEmpty()) {
+                        albumArtist = info.albumArtists.front();
+                    } else if (!info.artists.isEmpty()) {
+                        albumArtist = info.artists.front();
+                    }
+                    const int artistId = getArtistId(albumArtist);
+                    for (const QString& album : info.albums) {
+                        const int albumId = getAlbumId(album, artistId);
+                        if (albumId != 0) {
+                            addRelationship(trackId, albumId, "tracks_albums");
+                        }
+                    }
+                }
+
+                for (const QString& genre : info.genres) {
+                    const int genreId = getGenreId(genre);
+                    if (genreId != 0) {
+                        addRelationship(trackId, genreId, "tracks_genres");
+                    }
                 }
             }
+
+        private:
+            struct ArtistsOrGenres
+            {
+                explicit ArtistsOrGenres(QLatin1String table) : table(table) {}
+                QLatin1String table;
+                std::unordered_map<QString, int> ids{};
+                int lastId = 0;
+            };
+
+            void getArtistsOrGenres(ArtistsOrGenres& ids)
+            {
+                QString queryString(QLatin1String("SELECT id, title FROM "));
+                queryString.push_back(ids.table);
+                if (mQuery.exec(queryString)) {
+                    if (mQuery.last()) {
+                        ids.ids.reserve(static_cast<size_t>(mQuery.at() + 1));
+                        mQuery.seek(QSql::BeforeFirstRow);
+                        while (mQuery.next()) {
+                            ids.lastId = mQuery.value(0).toInt();
+                            ids.ids.emplace(mQuery.value(1).toString(), ids.lastId);
+                        }
+                    }
+                } else {
+                    qWarning() << __func__ << mQuery.lastError();
+                }
+            }
+
+            void getArtists()
+            {
+                getArtistsOrGenres(mArtists);
+            }
+
+            void getAlbums()
+            {
+                if (mQuery.exec(QLatin1String("SELECT id, title, artistId FROM albums"))) {
+                    if (mQuery.last()) {
+                        mAlbums.ids.reserve(static_cast<size_t>(mQuery.at() + 1));
+                        mQuery.seek(QSql::BeforeFirstRow);
+                        while (mQuery.next()) {
+                            mAlbums.lastId = mQuery.value(0).toInt();
+                            mAlbums.ids.emplace(QPair<QString, int>(mQuery.value(1).toString(), mQuery.value(2).toInt()), mAlbums.lastId);
+                        }
+                    }
+                } else {
+                    qWarning() << __func__ << mQuery.lastError();
+                }
+            }
+
+            void getGenres()
+            {
+                getArtistsOrGenres(mGenres);
+            }
+
+            int getArtistId(const QString& title)
+            {
+                return getArtistOrGenreId(title, mArtists);
+            }
+
+            int getAlbumId(const QString& title, int artistId)
+            {
+                if (title.isEmpty()) {
+                    return 0;
+                }
+                const auto& map = mAlbums.ids;
+                const auto found(map.find(QPair<QString, int>(title, artistId)));
+                if (found == map.end()) {
+                    return addAlbum(title, artistId);
+                }
+                return found->second;
+            }
+
+            int getGenreId(const QString& title)
+            {
+                return getArtistOrGenreId(title, mGenres);
+            }
+
+            void addRelationship(int trackId, int otherId, const char* table)
+            {
+                if (!mQuery.prepare(QStringLiteral("INSERT INTO %1 VALUES (%2, %3)").arg(QLatin1String(table)).arg(trackId).arg(otherId))) {
+                    qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
+                }
+                if (!mQuery.exec()) {
+                    qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
+                }
+            }
+
+            int addArtistOrGenre(const QString& title, ArtistsOrGenres& ids)
+            {
+                if (!mQuery.prepare(QStringLiteral("INSERT INTO %1 (title) VALUES (?)").arg(ids.table))) {
+                    qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
+                    return 0;
+                }
+                mQuery.addBindValue(title);
+                if (!mQuery.exec()) {
+                    qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
+                    return 0;
+                }
+                ++ids.lastId;
+                ids.ids.emplace(title, ids.lastId);
+                return ids.lastId;
+            }
+
+            int addAlbum(const QString& title, int artistId)
+            {
+                if (!mQuery.prepare(QStringLiteral("INSERT INTO albums (title, artistId) VALUES (?, ?)"))) {
+                    qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
+                    return 0;
+                }
+                mQuery.addBindValue(title);
+                if (artistId == 0) {
+                    mQuery.addBindValue(QVariant());
+                } else {
+                    mQuery.addBindValue(artistId);
+                }
+                if (!mQuery.exec()) {
+                    qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
+                    return 0;
+                }
+                ++mAlbums.lastId;
+                mAlbums.ids.emplace(QPair<QString, int>(title, artistId), mAlbums.lastId);
+                return mAlbums.lastId;
+            }
+
+            int getArtistOrGenreId(const QString& title, ArtistsOrGenres& ids)
+            {
+                if (title.isEmpty()) {
+                    return 0;
+                }
+                const auto& map = ids.ids;
+                const auto found(map.find(title));
+                if (found == map.end()) {
+                    return addArtistOrGenre(title, ids);
+                }
+                return found->second;
+            }
+
+            int mLastTrackId;
+            const QSqlDatabase& mDb;
+            QSqlQuery mQuery{mDb};
+
+            ArtistsOrGenres mArtists{QLatin1String("artists")};
+            struct
+            {
+                std::unordered_map<QPair<QString, int>, int> ids{};
+                int lastId = 0;
+            } mAlbums{};
+            ArtistsOrGenres mGenres{QLatin1String("genres")};
+        };
 
         class LibraryUpdateRunnableNotifier : public QObject
         {
@@ -227,7 +398,6 @@ namespace unplayer
                     QString filePath;
                     QString directoryMediaArt;
                     Extension extension;
-                    int id;
                 };
                 std::vector<FileToAdd> filesToAdd;
 
@@ -279,7 +449,6 @@ namespace unplayer
 
                     std::unordered_map<QString, FileInDb> filesInDb;
                     std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
-                    int lastId = -1;
                     std::vector<int> filesToRemove;
 
                     std::unordered_map<QString, bool> noMediaDirectories;
@@ -320,7 +489,7 @@ namespace unplayer
                             return found->second;
                         };
 
-                        QSqlQuery query(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks GROUP BY id ORDER BY id"), db);
+                        QSqlQuery query(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"), db);
                         if (query.lastError().type() != QSqlError::NoError) {
                             qWarning() << "failed to get files from database" << query.lastError();
                             return;
@@ -335,8 +504,6 @@ namespace unplayer
                             QString filePath(query.value(1).toString());
                             const QFileInfo fileInfo(filePath);
                             QString directory(fileInfo.path());
-
-                            lastId = id;
 
                             bool remove = false;
                             if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
@@ -433,7 +600,7 @@ namespace unplayer
                                     continue;
                                 }
 
-                                filesToAdd.push_back({std::move(filePath), directoryMediaArt, extension, ++lastId});
+                                filesToAdd.push_back({std::move(filePath), directoryMediaArt, extension});
                                 ++foundFiles;
                                 emit mNotifier.foundFilesChanged(foundFiles);
                             } else {
@@ -459,7 +626,7 @@ namespace unplayer
                                 } else {
                                     // File has changed
                                     filesToRemove.push_back(file.id);
-                                    filesToAdd.push_back({foundInDb->first, directoryMediaArt, extension, file.id});
+                                    filesToAdd.push_back({foundInDb->first, directoryMediaArt, extension});
                                     ++foundFiles;
                                     emit mNotifier.foundFilesChanged(foundFiles);
                                 }
@@ -500,6 +667,8 @@ namespace unplayer
                     qInfo("Start extracting tags from files");
                     emit mNotifier.stageChanged(LibraryUtils::ExtractingStage);
 
+                    TracksAdder adder(db);
+
                     int count = 0;
                     for (FileToAdd& file : filesToAdd) {
                         if (mCancel) {
@@ -514,15 +683,13 @@ namespace unplayer
                                 trackInfo.title = QFileInfo(file.filePath).fileName();
                             }
 
-                            addTrackToDatabase(db,
-                                               file.id,
-                                               file.filePath,
-                                               getLastModifiedTime(file.filePath),
-                                               trackInfo,
-                                               file.directoryMediaArt,
-                                               LibraryUtils::instance()->saveEmbeddedMediaArt(trackInfo.mediaArtData,
-                                                                                              embeddedMediaArtFiles,
-                                                                                              mimeDb));
+                            adder.addTrackToDatabase(file.filePath,
+                                                     getLastModifiedTime(file.filePath),
+                                                     trackInfo,
+                                                     file.directoryMediaArt,
+                                                     LibraryUtils::instance()->saveEmbeddedMediaArt(trackInfo.mediaArtData,
+                                                                                                    embeddedMediaArtFiles,
+                                                                                                    mimeDb));
                             emit mNotifier.extractedFilesChanged(count);
                         }
                     }
@@ -586,16 +753,14 @@ namespace unplayer
         }
     }
 
-    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField)
+    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, const QString& userMediaArt)
     {
-        const QString embeddedMediaArt(query.value(embeddedMediaArtField).toString());
-
-        if (!embeddedMediaArt.isEmpty() && !embeddedMediaArt.contains(QLatin1String("-embedded"))) {
-            // Manual
-            return embeddedMediaArt;
+        if (!userMediaArt.isEmpty()) {
+            return userMediaArt;
         }
 
         const QString directoryMediaArt(query.value(directoryMediaArtField).toString());
+        const QString embeddedMediaArt(query.value(embeddedMediaArtField).toString());
 
         if (Settings::instance()->useDirectoryMediaArt()) {
             if (!directoryMediaArt.isEmpty()) {
@@ -607,6 +772,11 @@ namespace unplayer
             return embeddedMediaArt;
         }
         return directoryMediaArt;
+    }
+
+    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, int userMediaArtField)
+    {
+        return mediaArtFromQuery(query, directoryMediaArtField, embeddedMediaArtField, query.value(userMediaArtField).toString());
     }
 
     DatabaseGuard::~DatabaseGuard()
@@ -689,7 +859,11 @@ namespace unplayer
         auto db(QSqlDatabase::addDatabase(databaseType, connectionName));
         db.setDatabaseName(databasePath());
         if (!db.open()) {
-            qWarning() << "failed to open database:" << db.lastError();
+            qWarning() << "Failed to open database:" << db.lastError();
+        }
+        QSqlQuery query(db);
+        if (!query.exec(QLatin1String("PRAGMA foreign_keys = ON"))) {
+            qWarning() << "Failed to enable foreign keys:" << query.lastError();
         }
         return db;
     }
@@ -736,7 +910,7 @@ namespace unplayer
 
     void LibraryUtils::initDatabase()
     {
-        qDebug() << "init db";
+        qDebug() << "Initializing database";
 
         const QString dataDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
         if (!QDir().mkpath(dataDir)) {
@@ -749,67 +923,92 @@ namespace unplayer
             return;
         }
 
-        bool createTable = !db.tables().contains(QLatin1String("tracks"));
-        if (!createTable) {
-            static const std::vector<QLatin1String> fields{QLatin1String("id"),
-                                                           QLatin1String("filePath"),
-                                                           QLatin1String("modificationTime"),
-                                                           QLatin1String("title"),
-                                                           QLatin1String("artist"),
-                                                           QLatin1String("albumArtist"),
-                                                           QLatin1String("album"),
-                                                           QLatin1String("year"),
-                                                           QLatin1String("trackNumber"),
-                                                           QLatin1String("discNumber"),
-                                                           QLatin1String("genre"),
-                                                           QLatin1String("duration"),
-                                                           QLatin1String("directoryMediaArt"),
-                                                           QLatin1String("embeddedMediaArt")};
+        QSqlQuery query(db);
 
-            const QSqlRecord record(db.record(QLatin1String("tracks")));
-            if (record.count() == static_cast<int>(fields.size())) {
-                for (int i = 0, max = record.count(); i < max; ++i) {
-                    if (!contains(fields, record.fieldName(i))) {
-                        createTable = true;
-                    }
+        if (db.tables().isEmpty()) {
+            qInfo("Creating tables");
+
+            const auto exec = [&](const char* string) {
+                if (!query.exec(QLatin1String(string))) {
+                    qWarning() << "initDatabase" << query.lastError();
+                    return false;
                 }
-            } else {
-                createTable = true;
-            }
+                return true;
+            };
 
-            if (createTable) {
-                QSqlQuery query(QLatin1String("DROP TABLE tracks"));
-                if (query.lastError().type() != QSqlError::NoError) {
-                    qWarning() << "failed to remove table:" << query.lastError();
-                }
-            }
-        }
-
-        if (createTable) {
-            qInfo("Creating table");
-            QSqlQuery query(QLatin1String("CREATE TABLE tracks ("
-                                          "    id INTEGER,"
-                                          "    filePath TEXT,"
-                                          "    modificationTime INTEGER,"
-                                          "    title TEXT COLLATE NOCASE,"
-                                          "    artist TEXT COLLATE NOCASE,"
-                                          "    albumArtist TEXT COLLATE NOCASE,"
-                                          "    album TEXT COLLATE NOCASE,"
-                                          "    year INTEGER,"
-                                          "    trackNumber INTEGER,"
-                                          "    discNumber TEXT,"
-                                          "    genre TEXT,"
-                                          "    duration INTEGER,"
-                                          "    directoryMediaArt TEXT,"
-                                          "    embeddedMediaArt TEXT"
-                                          ")"));
-            if (query.lastError().type() != QSqlError::NoError) {
-                qWarning() << "failed to create table:" << query.lastError();
+            if (!exec("CREATE TABLE tracks ("
+                      "    id INTEGER PRIMARY KEY,"
+                      "    filePath TEXT NOT NULL,"
+                      "    modificationTime INTEGER NOT NULL,"
+                      "    title TEXT COLLATE NOCASE,"
+                      "    year INTEGER,"
+                      "    trackNumber INTEGER,"
+                      "    discNumber TEXT,"
+                      "    duration INTEGER NOT NULL,"
+                      "    directoryMediaArt TEXT,"
+                      "    embeddedMediaArt TEXT"
+                      ")")) {
                 return;
             }
 
-            mCreatedTable = true;
+            if (!exec("CREATE TABLE artists ("
+                      "    id INTEGER PRIMARY KEY,"
+                      "    title TEXT NOT NULL COLLATE NOCASE"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE albums ("
+                      "    id INTEGER PRIMARY KEY,"
+                      "    title TEXT NOT NULL COLLATE NOCASE,"
+                      "    artistId INTEGER REFERENCES artists(id) ON DELETE CASCADE,"
+                      "    userMediaArt TEXT"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE genres ("
+                      "    id INTEGER PRIMARY KEY,"
+                      "    title TEXT NOT NULL COLLATE NOCASE"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE tracks_artists ("
+                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                      "    artistId INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE tracks_albums ("
+                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE tracks_genres ("
+                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                      "    genreId INTEGER NOT NULL REFERENCES genres(id) ON DELETE CASCADE"
+                      ")")) {
+                return;
+            }
+
+            query.exec(QString::fromLatin1("PRAGMA user_version = %1").arg(databaseVersion));
+
+            mCreatedTables = true;
+        } else {
+            query.exec(QLatin1String("PRAGMA user_version"));
+            query.next();
+            const int currentVersion = query.value(0).toInt();
+            if (currentVersion != databaseVersion) {
+                // TODO: migration
+                return;
+            }
         }
+
+        qInfo() << "Database initialized, file path:" << databasePath();
 
         mDatabaseInitialized = true;
     }
@@ -866,13 +1065,26 @@ namespace unplayer
         }
 
         qInfo("Resetting database");
-        QSqlQuery query(QLatin1String("DELETE from tracks"));
-        if (query.lastError().type() != QSqlError::NoError) {
-            qWarning() << "failed to reset database";
+
+        const QStringList connections(QSqlDatabase::connectionNames());
+        if (!connections.isEmpty()) {
+            if (connections.size() > 1 || connections.first() != QSqlDatabase::defaultConnection) {
+                qWarning() << "There should be only default connection in resetDatabase(), connections:" << connections;
+                return;
+            }
+            QSqlDatabase::database(QSqlDatabase::defaultConnection, false).close();
+            QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
         }
+
+        if (!QFile::remove(databasePath())) {
+            qWarning() << "Failed to remove database file:" << databasePath();
+        }
+        initDatabase();
+
         if (!QDir(mMediaArtDirectory).removeRecursively()) {
-            qWarning() << "failed to remove media art directory";
+            qWarning() << "Failed to remove media art directory:" << mMediaArtDirectory;
         }
+
         emit databaseChanged();
     }
 
@@ -881,9 +1093,9 @@ namespace unplayer
         return mDatabaseInitialized;
     }
 
-    bool LibraryUtils::isCreatedTable() const
+    bool LibraryUtils::isCreatedTables() const
     {
-        return mCreatedTable;
+        return mCreatedTables;
     }
 
     int LibraryUtils::artistsCount() const
@@ -1496,19 +1708,9 @@ namespace unplayer
                 }
             });
 
-            int lastId = -1;
-            {
-                QSqlQuery query(QLatin1String("SELECT MAX(id) FROM tracks"), db);
-                if (query.lastError().type() != QSqlError::NoError) {
-                    qWarning() << "failed to get last id:" << query.lastError();
-                    return;
-                }
-                if (query.next()) {
-                    lastId = query.value(0).toInt();
-                }
-            }
-
             std::unordered_map<QString, QString> mediaArtDirectoriesHash;
+
+            TracksAdder adder(db);
 
             for (size_t i = 0, max = infos.size(); i < max; ++i) {
                 tagutils::Info& info = infos[i];
@@ -1517,7 +1719,7 @@ namespace unplayer
                     info.title = fileInfo.fileName();
                 }
                 const QString directoryMediaArt(findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path(), false));
-                addTrackToDatabase(db, ++lastId, info.filePath, getLastModifiedTime(info.filePath), info, directoryMediaArt, embeddedMediaArt[i]);
+                adder.addTrackToDatabase(info.filePath, getLastModifiedTime(info.filePath), info, directoryMediaArt, embeddedMediaArt[i]);
             }
 
             qInfo("Done saving tags, %lldms", timer.elapsed());
@@ -1581,7 +1783,7 @@ namespace unplayer
     LibraryUtils::LibraryUtils(QObject* parent)
         : QObject(parent),
           mDatabaseInitialized(false),
-          mCreatedTable(false),
+          mCreatedTables(false),
           mLibraryUpdateRunnable(nullptr),
           mLibraryUpdateStage(NoneStage),
           mFoundTracks(0),
