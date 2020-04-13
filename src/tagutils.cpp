@@ -53,11 +53,20 @@ namespace unplayer
                 return str;
             }
 
+            inline QString unquote(QString str) {
+                static const QLatin1Char quoteChar('"');
+                if (str.startsWith(quoteChar) && str.endsWith(quoteChar) && str.size() > 1) {
+                    str.chop(1);
+                    str.remove(0, 1);
+                }
+                return str;
+            }
+
             inline QString toQString(const TagLib::String& string)
             {
                 QString str(static_cast<int>(string.size()), QChar());
                 std::copy(string.begin(), string.end(), str.begin());
-                return str;
+                return str.trimmed();
             }
 
             const char* errorCauseTagExtractionNotSupported = "tag extraction for this file format is not supported";
@@ -161,27 +170,40 @@ namespace unplayer
                         const TagLib::StringList& artists = properties[ArtistsTag.data()];
                         info.artists.reserve(static_cast<int>(artists.size()));
                         for (const TagLib::String& artist : artists) {
-                            info.artists.push_back(toQString(artist));
+                            const QString a(toQString(artist));
+                            if (!a.isEmpty()) {
+                                info.artists.push_back(a);
+                            }
                         }
                         info.artists.removeDuplicates();
 
                         const TagLib::StringList& albumArtists = properties[AlbumArtistsTag.data()];
                         info.albumArtists.reserve(static_cast<int>(albumArtists.size()));
                         for (const TagLib::String& albumArtist : albumArtists) {
-                            info.albumArtists.push_back(toQString(albumArtist));
+                            const QString a(toQString(albumArtist));
+                            if (!a.isEmpty()) {
+                                info.albumArtists.push_back(a);
+                            }
                         }
+                        info.albumArtists.removeDuplicates();
 
                         const TagLib::StringList& albums = properties[AlbumsTag.data()];
                         info.albums.reserve(static_cast<int>(albums.size()));
                         for (const TagLib::String& album : albums) {
-                            info.albums.push_back(toQString(album));
+                            const QString a(toQString(album));
+                            if (!a.isEmpty()) {
+                                info.albums.push_back(a);
+                            }
                         }
                         info.albums.removeDuplicates();
 
                         const TagLib::StringList& genres = properties[GenresTag.data()];
                         info.genres.reserve(static_cast<int>(genres.size()));
                         for (const TagLib::String& genre : genres) {
-                            info.genres.push_back(toQString(genre));
+                            const QString g(unquote(toQString(genre)));
+                            if (!g.isEmpty()) {
+                                info.genres.push_back(g);
+                            }
                         }
                         info.genres.removeDuplicates();
 
