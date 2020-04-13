@@ -47,8 +47,8 @@
 #include "tagutils.h"
 #include "utilsfunctions.h"
 
-using QStringIntPair = QPair<QString, int>;
-QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QStringIntPair)
+using QStringIntVectorPair = QPair<QString, QVector<int>>;
+QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QStringIntVectorPair)
 
 namespace unplayer
 {
@@ -145,7 +145,10 @@ namespace unplayer
 
                 const int trackId = ++mLastTrackId;
 
-                for (const QString& artist : (info.artists + info.albumArtists)) {
+                info.artists.append(info.albumArtists);
+                info.artists.removeDuplicates();
+
+                for (const QString& artist : info.artists) {
                     const int artistId = getArtistId(artist);
                     if (artistId != 0) {
                         addRelationship(trackId, artistId, "tracks_artists");
@@ -153,15 +156,21 @@ namespace unplayer
                 }
 
                 if (!info.albums.isEmpty()) {
-                    QString albumArtist;
-                    if (!info.albumArtists.isEmpty()) {
-                        albumArtist = info.albumArtists.front();
-                    } else if (!info.artists.isEmpty()) {
-                        albumArtist = info.artists.front();
+                    if (info.albumArtists.isEmpty() && !info.artists.isEmpty()) {
+                        info.albumArtists.push_back(info.artists.front());
                     }
-                    const int artistId = getArtistId(albumArtist);
+
+                    QVector<int> artistIds;
+                    artistIds.reserve(info.albumArtists.size());
+                    for (const QString& albumArtist : info.albumArtists) {
+                        const int artistId = getArtistId(albumArtist);
+                        if (artistId != 0) {
+                            artistIds.push_back(artistId);
+                        }
+                    }
+
                     for (const QString& album : info.albums) {
-                        const int albumId = getAlbumId(album, artistId);
+                        const int albumId = getAlbumId(album, std::move(artistIds));
                         if (albumId != 0) {
                             addRelationship(trackId, albumId, "tracks_albums");
                         }
@@ -210,14 +219,29 @@ namespace unplayer
 
             void getAlbums()
             {
-                if (mQuery.exec(QLatin1String("SELECT id, title, artistId FROM albums"))) {
-                    if (mQuery.last()) {
-                        mAlbums.ids.reserve(static_cast<size_t>(mQuery.at() + 1));
-                        mQuery.seek(QSql::BeforeFirstRow);
-                        while (mQuery.next()) {
-                            mAlbums.lastId = mQuery.value(0).toInt();
-                            mAlbums.ids.emplace(QPair<QString, int>(mQuery.value(1).toString(), mQuery.value(2).toInt()), mAlbums.lastId);
+                enum
+                {
+                    IdField,
+                    TitleField,
+                    ArtistIdField
+                };
+                if (mQuery.exec(QLatin1String("SELECT id, title, artistId "
+                                              "FROM albums "
+                                              "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id"))) {
+                    int prevId = 0;
+                    QVector<int> artistIds;
+                    while (mQuery.next()) {
+                        const int artistId = mQuery.value(ArtistIdField).toInt();
+                        if (artistId != 0) {
+                            artistIds.push_back(artistId);
                         }
+                        const int id = mQuery.value(IdField).toInt();
+                        if (id != prevId && prevId != 0) {
+                            mAlbums.lastId = id;
+                            mAlbums.ids.emplace(QPair<QString, QVector<int>>(mQuery.value(TitleField).toString(), artistIds), mAlbums.lastId);
+                            artistIds.clear();
+                        }
+                        prevId = id;
                     }
                 } else {
                     qWarning() << __func__ << mQuery.lastError();
@@ -234,15 +258,15 @@ namespace unplayer
                 return getArtistOrGenreId(title, mArtists);
             }
 
-            int getAlbumId(const QString& title, int artistId)
+            int getAlbumId(const QString& title, QVector<int>&& artistIds)
             {
                 if (title.isEmpty()) {
                     return 0;
                 }
                 const auto& map = mAlbums.ids;
-                const auto found(map.find(QPair<QString, int>(title, artistId)));
+                const auto found(map.find(QPair<QString, QVector<int>>(title, artistIds)));
                 if (found == map.end()) {
-                    return addAlbum(title, artistId);
+                    return addAlbum(title, std::move(artistIds));
                 }
                 return found->second;
             }
@@ -252,9 +276,9 @@ namespace unplayer
                 return getArtistOrGenreId(title, mGenres);
             }
 
-            void addRelationship(int trackId, int otherId, const char* table)
+            void addRelationship(int firstId, int secondId, const char* table)
             {
-                if (!mQuery.prepare(QStringLiteral("INSERT INTO %1 VALUES (%2, %3)").arg(QLatin1String(table)).arg(trackId).arg(otherId))) {
+                if (!mQuery.prepare(QStringLiteral("INSERT INTO %1 VALUES (%2, %3)").arg(QLatin1String(table)).arg(firstId).arg(secondId))) {
                     qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
                 }
                 if (!mQuery.exec()) {
@@ -278,24 +302,25 @@ namespace unplayer
                 return ids.lastId;
             }
 
-            int addAlbum(const QString& title, int artistId)
+            int addAlbum(const QString& title, QVector<int>&& artistIds)
             {
-                if (!mQuery.prepare(QStringLiteral("INSERT INTO albums (title, artistId) VALUES (?, ?)"))) {
+                if (!mQuery.prepare(QStringLiteral("INSERT INTO albums (title) VALUES (?)"))) {
                     qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
                     return 0;
                 }
                 mQuery.addBindValue(title);
-                if (artistId == 0) {
-                    mQuery.addBindValue(QVariant());
-                } else {
-                    mQuery.addBindValue(artistId);
-                }
                 if (!mQuery.exec()) {
                     qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
                     return 0;
                 }
+
                 ++mAlbums.lastId;
-                mAlbums.ids.emplace(QPair<QString, int>(title, artistId), mAlbums.lastId);
+
+                for (int artistId : artistIds) {
+                    addRelationship(mAlbums.lastId, artistId, "albums_artists");
+                }
+
+                mAlbums.ids.emplace(QPair<QString, QVector<int>>(title, std::move(artistIds)), mAlbums.lastId);
                 return mAlbums.lastId;
             }
 
@@ -319,7 +344,7 @@ namespace unplayer
             ArtistsOrGenres mArtists{QLatin1String("artists")};
             struct
             {
-                std::unordered_map<QPair<QString, int>, int> ids{};
+                std::unordered_map<QPair<QString, QVector<int>>, int> ids{};
                 int lastId = 0;
             } mAlbums{};
             ArtistsOrGenres mGenres{QLatin1String("genres")};
@@ -961,7 +986,6 @@ namespace unplayer
             if (!exec("CREATE TABLE albums ("
                       "    id INTEGER PRIMARY KEY,"
                       "    title TEXT NOT NULL COLLATE NOCASE,"
-                      "    artistId INTEGER REFERENCES artists(id) ON DELETE CASCADE,"
                       "    userMediaArt TEXT"
                       ")")) {
                 return;
@@ -984,6 +1008,13 @@ namespace unplayer
             if (!exec("CREATE TABLE tracks_albums ("
                       "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
                       "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE"
+                      ")")) {
+                return;
+            }
+
+            if (!exec("CREATE TABLE albums_artists ("
+                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
+                      "    artistId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE"
                       ")")) {
                 return;
             }
