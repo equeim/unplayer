@@ -168,6 +168,7 @@ namespace unplayer
                             artistIds.push_back(artistId);
                         }
                     }
+                    std::sort(artistIds.begin(), artistIds.end());
 
                     for (const QString& album : info.albums) {
                         const int albumId = getAlbumId(album, std::move(artistIds));
@@ -228,20 +229,21 @@ namespace unplayer
                 if (mQuery.exec(QLatin1String("SELECT id, title, artistId "
                                               "FROM albums "
                                               "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id"))) {
-                    int prevId = 0;
                     QVector<int> artistIds;
                     while (mQuery.next()) {
-                        const int artistId = mQuery.value(ArtistIdField).toInt();
-                        if (artistId != 0) {
-                            artistIds.push_back(artistId);
+                        {
+                            const int artistId = mQuery.value(ArtistIdField).toInt();
+                            if (artistId != 0) {
+                                artistIds.push_back(artistId);
+                            }
                         }
                         const int id = mQuery.value(IdField).toInt();
-                        if (id != prevId && prevId != 0) {
-                            mAlbums.lastId = id;
+                        if (id != mAlbums.lastId && mAlbums.lastId != 0) {
+                            std::sort(artistIds.begin(), artistIds.end());
                             mAlbums.ids.emplace(QPair<QString, QVector<int>>(mQuery.value(TitleField).toString(), artistIds), mAlbums.lastId);
                             artistIds.clear();
                         }
-                        prevId = id;
+                        mAlbums.lastId = id;
                     }
                 } else {
                     qWarning() << __func__ << mQuery.lastError();
