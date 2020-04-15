@@ -56,7 +56,7 @@ namespace unplayer
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
-        QString makeQueryString(std::vector<QVariant>& bindValues) const override;
+        QString makeQueryString(std::vector<QVariant>& bindValues) override;
         Genre itemFromQuery(const QSqlQuery& query) override;
 
     private:

@@ -274,7 +274,7 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString AlbumsModel::makeQueryString(std::vector<QVariant>& bindValues) const
+    QString AlbumsModel::makeQueryString(std::vector<QVariant>& bindValues)
     {
         QString queryString(QLatin1String("SELECT %1, album, year, COUNT(*), SUM(duration) FROM "
                                           "(SELECT %1, album, year, duration FROM tracks GROUP BY id, %1, album) "));

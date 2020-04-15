@@ -62,11 +62,10 @@ namespace unplayer
 
         Q_INTERFACES(QQmlParserStatus)
 
-        Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists)
-        Q_PROPERTY(bool allAlbums READ allAlbums WRITE setAllAlbums)
-        Q_PROPERTY(QString artist READ artist WRITE setArtist)
-        Q_PROPERTY(QString album READ album WRITE setAlbum)
-        Q_PROPERTY(QString genre READ genre WRITE setGenre)
+        Q_PROPERTY(Mode mode READ mode WRITE setMode)
+        Q_PROPERTY(int artistId READ artistId WRITE setArtistId)
+        Q_PROPERTY(int albumId READ albumId WRITE setAlbumId)
+        Q_PROPERTY(int genreId READ genreId WRITE setGenreId)
 
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
         Q_PROPERTY(unplayer::TracksModelSortMode::Mode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
@@ -82,6 +81,27 @@ namespace unplayer
         };
         Q_ENUM(Role)
 
+        enum Mode
+        {
+            AllTracksMode,
+            ArtistMode,
+            AlbumAllArtistsMode,
+            AlbumSingleArtistMode,
+            GenreMode
+        };
+        Q_ENUM(Mode)
+
+        enum QueryField
+        {
+            FilePathField,
+            TitleField,
+            DurationField,
+            DirectoryMediaArtField,
+            EmbeddedMediaArtField,
+            ArtistField,
+            AlbumField
+        };
+
         using SortMode = TracksModelSortMode::Mode;
         using InsideAlbumSortMode = TracksModelInsideAlbumSortMode::Mode;
 
@@ -91,20 +111,17 @@ namespace unplayer
 
         QVariant data(const QModelIndex& index, int role) const override;
 
-        bool allArtists() const;
-        void setAllArtists(bool allArtists);
+        Mode mode() const;
+        void setMode(Mode mode);
 
-        bool allAlbums() const;
-        void setAllAlbums(bool allAlbums);
+        int artistId() const;
+        void setArtistId(int id);
 
-        const QString& artist() const;
-        void setArtist(const QString& artist);
+        int albumId() const;
+        void setAlbumId(int id);
 
-        const QString& album() const;
-        void setAlbum(const QString& album);
-
-        const QString& genre() const;
-        void setGenre(const QString& genre);
+        int genreId() const;
+        void setGenreId(int id);
 
         bool sortDescending() const;
         void setSortDescending(bool descending);
@@ -124,24 +141,35 @@ namespace unplayer
         Q_INVOKABLE void removeTrack(int index, bool deleteFile);
         Q_INVOKABLE void removeTracks(const std::vector<int>& indexes, bool deleteFiles);
 
+        static QString makeQueryString(Mode mode,
+                                       SortMode sortMode,
+                                       InsideAlbumSortMode insideAlbumSortMode,
+                                       bool sortDescending,
+                                       int artistId,
+                                       int albumId,
+                                       int genreId,
+                                       bool& groupTracks);
+        static LibraryTrack trackFromQuery(const QSqlQuery& query, bool groupTracks);
+
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
-        QString makeQueryString(std::vector<QVariant>& bindValues) const override;
+        QString makeQueryString(std::vector<QVariant>& bindValues) override;
         LibraryTrack itemFromQuery(const QSqlQuery& query) override;
 
     private:
         std::vector<LibraryTrack>& mTracks = mItems;
 
-        bool mAllArtists = true;
-        bool mAllAlbums = true;
-        QString mArtist;
-        QString mAlbum;
-        QString mGenre;
+        Mode mMode = AllTracksMode;
+        int mArtistId = 0;
+        int mAlbumId = 0;
+        int mGenreId = 0;
 
         bool mSortDescending = false;
         SortMode mSortMode = SortMode::ArtistAlbumYear;
         InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumberTrackNumber;
+
+        bool mGroupTracks;
 
     signals:
         void sortModeChanged();
