@@ -31,6 +31,7 @@ namespace unplayer
 {
     struct Album
     {
+        int id;
         QString artist;
         QString displayedArtist;
         QString album;
@@ -45,13 +46,14 @@ namespace unplayer
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
         Q_PROPERTY(bool allArtists READ allArtists WRITE setAllArtists NOTIFY allArtistsChanged)
-        Q_PROPERTY(QString artist READ artist WRITE setArtist)
+        Q_PROPERTY(int artistId READ artistId WRITE setArtistId)
         Q_PROPERTY(bool sortDescending READ sortDescending WRITE setSortDescending)
         Q_PROPERTY(SortMode sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
     public:
         enum Role
         {
-            ArtistRole = Qt::UserRole,
+            AlbumIdRole = Qt::UserRole,
+            ArtistRole,
             DisplayedArtistRole,
             UnknownArtistRole,
             AlbumRole,
@@ -81,8 +83,8 @@ namespace unplayer
         bool allArtists() const;
         void setAllArtists(bool allArtists);
 
-        const QString& artist() const;
-        void setArtist(const QString& artist);
+        int artistId() const;
+        void setArtistId(int id);
 
         bool sortDescending() const;
         void setSortDescending(bool descending);
@@ -107,7 +109,7 @@ namespace unplayer
         std::vector<Album>& mAlbums = mItems;
 
         bool mAllArtists = true;
-        QString mArtist;
+        int mArtistId = 0;
 
         bool mSortDescending = false;
         SortMode mSortMode = SortAlbum;

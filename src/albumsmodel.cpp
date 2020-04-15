@@ -32,6 +32,7 @@
 #include "libraryutils.h"
 #include "modelutils.h"
 #include "settings.h"
+#include "tracksmodel.h"
 #include "utils.h"
 
 #include "abstractlibrarymodel.cpp"
@@ -42,6 +43,7 @@ namespace unplayer
     {
         enum Field
         {
+            IdField,
             ArtistField,
             AlbumField,
             YearField,
@@ -84,6 +86,8 @@ namespace unplayer
         const Album& album = mAlbums[static_cast<size_t>(index.row())];
 
         switch (role) {
+        case AlbumIdRole:
+            return album.id;
         case ArtistRole:
             return album.artist;
         case DisplayedArtistRole:
@@ -102,9 +106,9 @@ namespace unplayer
             return album.tracksCount;
         case DurationRole:
             return album.duration;
-        default:
-            return QVariant();
         }
+
+        return QVariant();
     }
 
     bool AlbumsModel::allArtists() const
@@ -120,14 +124,14 @@ namespace unplayer
         }
     }
 
-    const QString& AlbumsModel::artist() const
+    int AlbumsModel::artistId() const
     {
-        return mArtist;
+        return mArtistId;
     }
 
-    void AlbumsModel::setArtist(const QString& artist)
+    void AlbumsModel::setArtistId(int id)
     {
-        mArtist = artist;
+        mArtistId = id;
     }
 
     bool AlbumsModel::sortDescending() const
@@ -159,32 +163,31 @@ namespace unplayer
 
     std::vector<LibraryTrack> AlbumsModel::getTracksForAlbum(int index) const
     {
-        QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
-                                     "WHERE artist = ? AND album = ? "
-                                     "ORDER BY trackNumber, title"));
+        std::vector<LibraryTrack> tracks;
+
         const Album& album = mAlbums[static_cast<size_t>(index)];
-        query.addBindValue(album.artist);
-        query.addBindValue(album.album);
-        if (query.exec()) {
-            std::vector<LibraryTrack> tracks;
-            query.last();
-            if (query.at() >= 0) {
+        bool groupTracks = false;
+        QSqlQuery query;
+        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::AlbumAllArtistsMode : TracksModel::AlbumSingleArtistMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    mArtistId,
+                                                    album.id,
+                                                    0,
+                                                    groupTracks))) {
+            if (query.last()) {
                 tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
+                while (query.next()) {
+                    tracks.push_back(TracksModel::trackFromQuery(query, groupTracks));
+                }
             }
-            while (query.next()) {
-                tracks.push_back({query.value(0).toString(),
-                                  query.value(1).toString(),
-                                  query.value(2).toString(),
-                                  query.value(3).toString(),
-                                  query.value(4).toInt(),
-                                  mediaArtFromQuery(query, 5, 6)});
-            }
-            return tracks;
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
-        qWarning() << "failed to get tracks from database" << query.lastError();
-        return {};
+
+        return tracks;
     }
 
     std::vector<LibraryTrack> AlbumsModel::getTracksForAlbums(const std::vector<int>& indexes) const
@@ -201,32 +204,37 @@ namespace unplayer
 
     QStringList AlbumsModel::getTrackPathsForAlbum(int index) const
     {
-        QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath FROM tracks "
-                                     "WHERE artist = ? AND album = ? "
-                                     "ORDER BY trackNumber, title"));
+        QStringList tracks;
+
         const Album& album = mAlbums[static_cast<size_t>(index)];
-        query.addBindValue(album.artist);
-        query.addBindValue(album.album);
-        if (query.exec()) {
-            QStringList tracks;
-            query.last();
-            if (query.at() >= 0) {
+        bool groupTracks = false;
+        QSqlQuery query;
+        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::AlbumAllArtistsMode : TracksModel::AlbumSingleArtistMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    mArtistId,
+                                                    album.id,
+                                                    0,
+                                                    groupTracks))) {
+            if (query.last()) {
                 tracks.reserve(query.at() + 1);
                 query.seek(QSql::BeforeFirstRow);
+                while (query.next()) {
+                    tracks.push_back(query.value(TracksModel::FilePathField).toString());
+                }
             }
-            while (query.next()) {
-                tracks.push_back(query.value(0).toString());
-            }
-            return tracks;
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
-        qWarning() << "failed to get tracks from database" << query.lastError();
-        return {};
+
+        return tracks;
     }
 
     QStringList AlbumsModel::getTrackPathsForAlbums(const std::vector<int>& indexes) const
     {
         QStringList tracks;
+
         QSqlDatabase::database().transaction();
         for (int index : indexes) {
             QStringList albumTracks(getTrackPathsForAlbum(index));
@@ -263,7 +271,8 @@ namespace unplayer
 
     QHash<int, QByteArray> AlbumsModel::roleNames() const
     {
-        return {{ArtistRole, "artist"},
+        return {{AlbumIdRole, "albumId"},
+                {ArtistRole, "artist"},
                 {DisplayedArtistRole, "displayedArtist"},
                 {UnknownArtistRole, "unknownArtist"},
                 {AlbumRole, "album"},
@@ -274,40 +283,60 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString AlbumsModel::makeQueryString(std::vector<QVariant>& bindValues)
+    QString AlbumsModel::makeQueryString(std::vector<QVariant>&)
     {
-        QString queryString(QLatin1String("SELECT %1, album, year, COUNT(*), SUM(duration) FROM "
-                                          "(SELECT %1, album, year, duration FROM tracks GROUP BY id, %1, album) "));
+        QString queryString;
         if (mAllArtists) {
-            queryString += QLatin1String("GROUP BY album, %1 ");
+            queryString = QLatin1String("SELECT albumId, group_concat(artistTitle0, ', ') as artistTitle, albumTitle, year, tracksCount, duration "
+                                        "FROM ("
+                                            "SELECT albums.id AS albumId, artists.title AS artistTitle0, albums.title AS albumTitle, year, COUNT(tracks.id) AS tracksCount, SUM(duration) AS duration "
+                                            "FROM tracks "
+                                            "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                            "LEFT JOIN albums ON albums.id = tracks_albums.albumId "
+                                            "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id "
+                                            "LEFT JOIN artists ON artists.id = albums_artists.artistId "
+                                            "GROUP BY artists.id, albums.id"
+                                        ") "
+                                        "GROUP BY albumId ");
         } else {
-            queryString += QLatin1String("WHERE %1 = ? GROUP BY album ");
-            bindValues.push_back(mArtist);
+            queryString = QLatin1String("SELECT albums.id AS albumId, artists.title AS artistTitle, albums.title AS albumTitle, year, COUNT(tracks.id) AS tracksCount, SUM(duration) AS duration "
+                                        "FROM tracks "
+                                        "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
+                                        "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
+                                        "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                        "LEFT JOIN albums ON albums.id = tracks_albums.albumId ");
+            if (mArtistId == 0) {
+                queryString += QLatin1String("WHERE artists.id IS NULL ");
+            } else {
+                queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(mArtistId);
+            }
+
+            queryString += QLatin1String("GROUP BY albums.id ");
         }
 
         switch (mSortMode) {
         case SortAlbum:
-            queryString += QLatin1String("ORDER BY album = '' %2, album %2");
+            queryString += QLatin1String("ORDER BY albumTitle IS NULL %1, albumTitle %1");
             break;
         case SortYear:
-            queryString += QLatin1String("ORDER BY year %2, album = '' %2, album %2");
+            queryString += QLatin1String("ORDER BY year %1, albumTitle IS NULL %1, albumTitle %1");
             break;
         case SortArtistAlbum:
-            queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, album = '' %2, album %2");
+            queryString += QLatin1String("ORDER BY artistTitle IS NULL %1, artistTitle %1, albumTitle IS NULL %1, albumTitle %1");
             break;
         case SortArtistYear:
-            queryString += QLatin1String("ORDER BY %1 = '' %2, %1 %2, year %2, album = '' %2, album %2");
+            queryString += QLatin1String("ORDER BY artistTitle IS NULL %1, artistTitle %1, year %1, albumTitle IS NULL %1, albumTitle %1");
         }
 
-        return queryString.arg(Settings::instance()->useAlbumArtist() ? QLatin1String("albumArtist") : QLatin1String("artist"),
-                               mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
+        return queryString.arg(mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
     }
 
     Album AlbumsModel::itemFromQuery(const QSqlQuery& query)
     {
         const QString artist(query.value(ArtistField).toString());
         const QString album(query.value(AlbumField).toString());
-        return {artist,
+        return {query.value(IdField).toInt(),
+                artist,
                 artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
                 album,
                 album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
