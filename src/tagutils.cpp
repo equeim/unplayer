@@ -64,7 +64,7 @@ namespace unplayer
 
             inline QString toQString(const TagLib::String& string)
             {
-                if (string[0] == QChar::ByteOrderMark) {
+                if (!string.isEmpty() && string[0] == QChar::ByteOrderMark) {
                     std::vector<char16_t> vec(string.begin(), string.end());
                     QString str(QString::fromUtf16(vec.data(), static_cast<int>(vec.size())));
                     return str.trimmed();
