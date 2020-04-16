@@ -21,12 +21,15 @@
 
 #include <unordered_map>
 
+#include <QMimeDatabase>
 #include <QObject>
 #include <QPair>
 #include <QRunnable>
 #include <QSqlQuery>
 #include <QVector>
 
+#include "fileutils.h"
+#include "sqlutils.h"
 #include "stdutils.h"
 
 
@@ -121,9 +124,54 @@ namespace unplayer
 
         void run() override;
     private:
+        struct TrackInDb
+        {
+            int id;
+            bool embeddedMediaArtDeleted;
+            long long modificationTime;
+        };
+
+        struct TracksInDbResult
+        {
+            std::unordered_map<QString, TrackInDb> tracksInDb;
+            std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
+        };
+
+        static const QLatin1String databaseConnectionName;
+
+        TracksInDbResult getTracksFromDatabase(std::vector<int>& tracksToRemove, std::unordered_map<QString, bool>& noMediaDirectories);
+
+        struct TrackToAdd
+        {
+            QString filePath;
+            QString directoryMediaArt;
+            fileutils::Extension extension;
+        };
+
+        std::vector<TrackToAdd> scanFilesystem(TracksInDbResult& tracksInDbResult,
+                                               std::vector<int>& tracksToRemove,
+                                               std::unordered_map<QString, bool>& noMediaDirectories,
+                                               std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
+
+        void removeTracks(const std::vector<int>& tracksToRemove);
+
+        int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
+                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
+
+        void removeUnusedCategories();
+
+        bool isBlacklisted(const QString& path);
+
         LibraryUpdateRunnableNotifier mNotifier;
         QString mMediaArtDirectory;
         std::atomic_bool mCancel;
+
+        QStringList mLibraryDirectories;
+        QStringList mBlacklistedDirectories;
+        DatabaseGuard databaseGuard{databaseConnectionName};
+        QSqlDatabase mDb;
+        QSqlQuery mQuery;
+        QMimeDatabase mMimeDb;
     };
 }
 

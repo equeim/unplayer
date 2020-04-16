@@ -40,40 +40,8 @@ namespace unplayer
         struct Info;
     }
 
-    enum class Extension
-    {
-        FLAC,
-        AAC,
-
-        M4A,
-        MP3,
-
-        OGG,
-        OPUS,
-
-        APE,
-        MKA,
-
-        WAV,
-        WAVPACK,
-
-        Other
-    };
-
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, const QString& userMediaArt);
     QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, int userMediaArtField);
-
-    struct DatabaseGuard
-    {
-        ~DatabaseGuard();
-        const QString connectionName;
-    };
-
-    struct CommitGuard
-    {
-        ~CommitGuard();
-        QSqlDatabase& db;
-    };
 
     class LibraryUtils final : public QObject
     {
@@ -104,10 +72,6 @@ namespace unplayer
         Q_PROPERTY(QString discNumberTag READ discNumberTag CONSTANT)
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
-        static Extension extensionFromSuffix(const QString& suffix);
-        static bool isExtensionSupported(const QString& suffix);
-        static bool isVideoExtensionSupported(const QString& suffix);
-
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
 
         static const QString databaseType;

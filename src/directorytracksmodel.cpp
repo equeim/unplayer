@@ -31,6 +31,7 @@
 #include <QSqlQuery>
 #include <QtConcurrentRun>
 
+#include "fileutils.h"
 #include "libraryutils.h"
 #include "modelutils.h"
 #include "playlistutils.h"
@@ -202,8 +203,8 @@ namespace unplayer
                     const QString suffix(info.suffix());
                     const bool isPlaylist = PlaylistUtils::isPlaylistExtension(suffix);
                     if (isPlaylist ||
-                            LibraryUtils::isExtensionSupported(suffix) ||
-                            (showVideoFiles && LibraryUtils::isVideoExtensionSupported(suffix))) {
+                            fileutils::isExtensionSupported(suffix) ||
+                            (showVideoFiles && fileutils::isVideoExtensionSupported(suffix))) {
                         files.push_back({info.filePath(),
                                          info.fileName(),
                                          false,

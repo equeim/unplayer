@@ -25,7 +25,7 @@
 
 #include "clara.hpp"
 
-#include "libraryutils.h"
+#include "fileutils.h"
 #include "playlistutils.h"
 
 namespace unplayer
@@ -42,8 +42,8 @@ namespace unplayer
                     if (info.isFile()) {
                         const QString suffix(info.suffix());
                         if (PlaylistUtils::isPlaylistExtension(suffix) ||
-                            LibraryUtils::isExtensionSupported(suffix) ||
-                            LibraryUtils::isVideoExtensionSupported(suffix)) {
+                            fileutils::isExtensionSupported(suffix) ||
+                            fileutils::isVideoExtensionSupported(suffix)) {
 
                             args.files.push_back(info.absoluteFilePath());
                         }

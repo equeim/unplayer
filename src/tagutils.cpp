@@ -388,8 +388,9 @@ namespace unplayer
             const QLatin1String matroskaMimeType("application/x-matroska");
 
             template<class Processor>
-            void processFile(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb, const Processor& processor)
+            void processFile(const QString& filePath, fileutils::Extension extension, const QMimeDatabase& mimeDb, const Processor& processor)
             {
+                using namespace fileutils;
                 switch (extension) {
                 case Extension::FLAC:
                     processor.processFile(TagLib::FLAC::File(filePath.toUtf8()));
@@ -451,7 +452,7 @@ namespace unplayer
         const QLatin1String GenresTag("GENRE");
         const QLatin1String DiscNumberTag("DISCNUMBER");
 
-        Info getTrackInfo(const QString& filePath, Extension extension, const QMimeDatabase& mimeDb)
+        Info getTrackInfo(const QString& filePath, fileutils::Extension extension, const QMimeDatabase& mimeDb)
         {
             Info info{};
             info.filePath = filePath;
@@ -488,7 +489,7 @@ namespace unplayer
                 }
                 Info info{};
                 info.filePath = filePath;
-                processFile(filePath, LibraryUtils::extensionFromSuffix(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{info, replaceProperties, mimeDb});
+                processFile(filePath, fileutils::extensionFromSuffix(QFileInfo(filePath).suffix()), mimeDb, SaveProcessor{info, replaceProperties, mimeDb});
 
                 if (info.canReadTags) {
                     callback(info);

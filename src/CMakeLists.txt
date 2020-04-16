@@ -36,9 +36,11 @@ add_executable("${PROJECT_NAME}"
     directorycontentmodel.cpp
     directorycontentproxymodel.cpp
     directorytracksmodel.cpp
+    fileutils.cpp
     filterproxymodel.cpp
     genresmodel.cpp
     librarydirectoriesmodel.cpp
+    libraryupdaterunnable.cpp
     libraryutils.cpp
     main.cpp
     player.cpp

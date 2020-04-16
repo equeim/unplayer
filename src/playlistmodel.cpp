@@ -31,6 +31,7 @@
 #include "libraryutils.h"
 #include "modelutils.h"
 #include "playlistutils.h"
+#include "sqlutils.h"
 #include "stdutils.h"
 #include "utilsfunctions.h"
 

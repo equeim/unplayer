@@ -41,6 +41,7 @@
 
 #include "albumsmodel.h"
 #include "settings.h"
+#include "sqlutils.h"
 #include "stdutils.h"
 #include "tagutils.h"
 #include "utilsfunctions.h"
@@ -51,30 +52,6 @@ namespace unplayer
     {
         const QLatin1String removeFilesConnectionName("unplayer_remove");
         const QLatin1String saveTagsConnectionName("unplayer_save");
-
-        const QLatin1String flacSuffix("flac");
-        const QLatin1String aacSuffix("aac");
-
-        const QLatin1String m4aSuffix("m4a");
-        const QLatin1String f4aSuffix("f4a");
-        const QLatin1String m4bSuffix("m4b");
-        const QLatin1String f4bSuffix("f4b");
-
-        const QLatin1String mp3Suffix("mp3");
-        const QLatin1String mpgaSuffix("mpga");
-
-        const QLatin1String ogaSuffix("oga");
-        const QLatin1String oggSuffix("ogg");
-        const QLatin1String opusSuffix("opus");
-
-        const QLatin1String apeSuffix("ape");
-
-        const QLatin1String mkaSuffix("mka");
-
-        const QLatin1String wavSuffix("wav");
-
-        //const QLatin1String wvSuffix("wv");
-        //const QLatin1String wvpSuffix("wvp");
 
         inline QString emptyIfNull(const QString& string)
         {
@@ -120,80 +97,8 @@ namespace unplayer
         return mediaArtFromQuery(query, directoryMediaArtField, embeddedMediaArtField, query.value(userMediaArtField).toString());
     }
 
-    DatabaseGuard::~DatabaseGuard()
-    {
-        QSqlDatabase::removeDatabase(connectionName);
-    }
-
-    CommitGuard::~CommitGuard()
-    {
-        db.commit();
-    }
-
     const QString LibraryUtils::databaseType(QLatin1String("QSQLITE"));
     const size_t LibraryUtils::maxDbVariableCount = 999; // SQLITE_MAX_VARIABLE_NUMBER
-
-    Extension LibraryUtils::extensionFromSuffix(const QString& suffix)
-    {
-        static const std::unordered_map<QString, Extension> extensions{
-            {flacSuffix, Extension::FLAC},
-            {aacSuffix, Extension::AAC},
-
-            {m4aSuffix, Extension::M4A},
-            {f4aSuffix, Extension::M4A},
-            {m4bSuffix, Extension::M4A},
-            {f4bSuffix, Extension::M4A},
-
-            {mp3Suffix, Extension::MP3},
-            {mpgaSuffix, Extension::MP3},
-
-            {ogaSuffix, Extension::OGG},
-            {oggSuffix, Extension::OGG},
-            {opusSuffix, Extension::OPUS},
-
-            {apeSuffix, Extension::APE},
-
-            {mkaSuffix, Extension::MKA},
-
-            {wavSuffix, Extension::WAV},
-
-            //{wvSuffix, Extension::WAVPACK},
-            //{wvpSuffix, Extension::WAVPACK}
-        };
-        static const auto end(extensions.end());
-
-        const auto found(extensions.find(suffix.toLower()));
-        if (found == end) {
-            return Extension::Other;
-        }
-        return found->second;
-    }
-
-    bool LibraryUtils::isExtensionSupported(const QString& suffix)
-    {
-        return extensionFromSuffix(suffix) != Extension::Other;
-    }
-
-    bool LibraryUtils::isVideoExtensionSupported(const QString& suffix)
-    {
-        static const std::unordered_set<QString> videoMimeTypesExtensions{
-            QLatin1String("mp4"),
-            QLatin1String("m4v"),
-            QLatin1String("f4v"),
-            QLatin1String("lrv"),
-
-            /*QLatin1String("mpeg"),
-            QLatin1String("mpg"),
-            QLatin1String("mp2"),
-            QLatin1String("mpe"),
-            QLatin1String("vob"),*/
-
-            QLatin1String("mkv"),
-
-            QLatin1String("ogv")
-        };
-        return contains(videoMimeTypesExtensions, suffix.toLower());
-    }
 
     QSqlDatabase LibraryUtils::openDatabase(const QString& connectionName)
     {

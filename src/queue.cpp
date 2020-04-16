@@ -40,6 +40,7 @@
 #include "libraryutils.h"
 #include "playlistutils.h"
 #include "settings.h"
+#include "sqlutils.h"
 #include "tagutils.h"
 #include "utilsfunctions.h"
 
@@ -550,7 +551,7 @@ namespace unplayer
                     if (url.isLocalFile()) {
                         const QString filePath(url.path());
                         const QFileInfo fileInfo(filePath);
-                        tagutils::Info info(tagutils::getTrackInfo(filePath, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
+                        tagutils::Info info(tagutils::getTrackInfo(filePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
                         if (info.title.isEmpty()) {
                             info.title = fileInfo.fileName();
                         }

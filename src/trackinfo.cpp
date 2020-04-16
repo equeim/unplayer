@@ -44,7 +44,7 @@ namespace unplayer
             const QFileInfo fileInfo(mFilePath);
             mFileName = fileInfo.fileName();
             const QMimeDatabase mimeDb;
-            mInfo = tagutils::getTrackInfo(mFilePath, LibraryUtils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
+            mInfo = tagutils::getTrackInfo(mFilePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
             mFileSize = fileInfo.size();
             mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
             emit loaded();
