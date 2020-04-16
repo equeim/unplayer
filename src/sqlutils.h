@@ -24,9 +24,9 @@
 
 namespace unplayer
 {
-    struct DatabaseGuard
+    struct DatabaseConnectionGuard
     {
-        inline ~DatabaseGuard()
+        inline ~DatabaseConnectionGuard()
         {
             QSqlDatabase::removeDatabase(connectionName);
         }

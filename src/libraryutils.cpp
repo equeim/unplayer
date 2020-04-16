@@ -546,7 +546,7 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run([deleteFiles, artists = std::move(artists)] {
-            const DatabaseGuard databaseGuard{removeFilesConnectionName};
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
@@ -621,7 +621,7 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run([deleteFiles, albums = std::move(albums)] {
-            const DatabaseGuard databaseGuard{removeFilesConnectionName};
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
@@ -701,7 +701,7 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run([deleteFiles, genres = std::move(genres)] {
-            const DatabaseGuard databaseGuard{removeFilesConnectionName};
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
 
             // Open database
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
@@ -776,7 +776,7 @@ namespace unplayer
         emit removingFilesChanged();
 
         auto future = QtConcurrent::run([deleteFiles, canHaveDirectories, files = std::move(files)]() mutable {
-            const DatabaseGuard databaseGuard{removeFilesConnectionName};
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
 
             QElapsedTimer timer;
             timer.start();
@@ -928,7 +928,7 @@ namespace unplayer
                 return;
             }
 
-            const DatabaseGuard databaseGuard{saveTagsConnectionName};
+            const DatabaseConnectionGuard databaseGuard{saveTagsConnectionName};
 
             // Open database
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));

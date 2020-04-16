@@ -168,7 +168,7 @@ namespace unplayer
 
         QStringList mLibraryDirectories;
         QStringList mBlacklistedDirectories;
-        DatabaseGuard databaseGuard{databaseConnectionName};
+        DatabaseConnectionGuard databaseGuard{databaseConnectionName};
         QSqlDatabase mDb;
         QSqlQuery mQuery;
         QMimeDatabase mMimeDb;

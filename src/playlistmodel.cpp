@@ -141,7 +141,7 @@ namespace unplayer
                 }
             }
 
-            const DatabaseGuard databaseGuard{dbConnectionName};
+            const DatabaseConnectionGuard databaseGuard{dbConnectionName};
 
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
             if (!db.isOpen()) {
