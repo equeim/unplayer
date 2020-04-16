@@ -30,6 +30,7 @@
 #include "libraryutils.h"
 #include "modelutils.h"
 #include "settings.h"
+#include "tracksmodel.h"
 
 #include "abstractlibrarymodel.cpp"
 
@@ -39,6 +40,7 @@ namespace unplayer
     {
         enum Field
         {
+            GenreIdField,
             GenreField,
             TracksCountField,
             DurationField
@@ -46,7 +48,8 @@ namespace unplayer
 
         enum Role
         {
-            GenreRole = Qt::UserRole,
+            GenreIdRole = Qt::UserRole,
+            GenreRole,
             TracksCountRole,
             DurationRole
         };
@@ -62,6 +65,8 @@ namespace unplayer
     {
         const Genre& genre = mGenres[static_cast<size_t>(index.row())];
         switch (role) {
+        case GenreIdRole:
+            return genre.id;
         case GenreRole:
             return genre.genre;
         case TracksCountRole:
@@ -88,31 +93,31 @@ namespace unplayer
 
     std::vector<LibraryTrack> GenresModel::getTracksForGenre(int index) const
     {
+        std::vector<LibraryTrack> tracks;
+
+        const Genre& genre = mGenres[static_cast<size_t>(index)];
+        bool groupTracks = false;
         QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath, title, artist, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks "
-                                     "WHERE genre = ?  "
-                                     "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
-        query.addBindValue(mGenres[static_cast<size_t>(index)].genre);
-        if (query.exec()) {
-            std::vector<LibraryTrack> tracks;
-            query.last();
-            if (query.at() >= 0) {
+        if (query.exec(TracksModel::makeQueryString(TracksModel::GenreMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    0,
+                                                    0,
+                                                    genre.id,
+                                                    groupTracks))) {
+            if (query.last()) {
                 tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
+                while (query.next()) {
+                    tracks.push_back(TracksModel::trackFromQuery(query, groupTracks));
+                }
             }
-            while (query.next()) {
-                tracks.push_back({query.value(0).toString(),
-                                  query.value(1).toString(),
-                                  query.value(2).toString(),
-                                  query.value(3).toString(),
-                                  query.value(4).toInt(),
-                                  mediaArtFromQuery(query, 5, 6)});
-            }
-            return tracks;
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
 
-        qWarning() << "failed to get tracks from database";
-        return {};
+        return tracks;
     }
 
     std::vector<LibraryTrack> GenresModel::getTracksForGenres(const std::vector<int>& indexes) const
@@ -129,26 +134,31 @@ namespace unplayer
 
     QStringList GenresModel::getTrackPathsForGenre(int index) const
     {
+        QStringList tracks;
+
+        const Genre& genre = mGenres[static_cast<size_t>(index)];
+        bool groupTracks = false;
         QSqlQuery query;
-        query.prepare(QStringLiteral("SELECT filePath FROM tracks "
-                                     "WHERE genre = ?  "
-                                     "ORDER BY artist = '', artist, album = '', year, album, trackNumber, title"));
-        query.addBindValue(mGenres[static_cast<size_t>(index)].genre);
-        if (query.exec()) {
-            QStringList tracks;
-            query.last();
-            if (query.at() >= 0) {
+        if (query.exec(TracksModel::makeQueryString(TracksModel::GenreMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    0,
+                                                    0,
+                                                    genre.id,
+                                                    groupTracks))) {
+            if (query.last()) {
                 tracks.reserve(query.at() + 1);
                 query.seek(QSql::BeforeFirstRow);
+                while (query.next()) {
+                    tracks.push_back(query.value(TracksModel::FilePathField).toString());
+                }
             }
-            while (query.next()) {
-                tracks.push_back(query.value(0).toString());
-            }
-            return tracks;
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
 
-        qWarning() << "failed to get tracks from database";
-        return {};
+        return tracks;
     }
 
     QStringList GenresModel::getTrackPathsForGenres(const std::vector<int>& indexes) const
@@ -189,23 +199,27 @@ namespace unplayer
 
     QHash<int, QByteArray> GenresModel::roleNames() const
     {
-        return {{GenreRole, "genre"},
+        return {{GenreIdRole, "genreId"},
+                {GenreRole, "genre"},
                 {TracksCountRole, "tracksCount"},
                 {DurationRole, "duration"}};
     }
 
     QString GenresModel::makeQueryString(std::vector<QVariant>&)
     {
-        return QString::fromLatin1("SELECT genre, COUNT(*), SUM(duration) FROM tracks "
-                                            "WHERE genre != '' "
-                                            "GROUP BY genre "
-                                            "ORDER BY genre %1").arg(mSortDescending ? QLatin1String("DESC")
-                                                                                     : QLatin1String("ASC"));
+        return QString::fromLatin1("SELECT genres.id, genres.title, COUNT(tracks.id), SUM(tracks.duration) "
+                                   "FROM genres "
+                                   "JOIN tracks_genres ON tracks_genres.genreId = genres.id "
+                                   "JOIN tracks ON tracks.id = tracks_genres.trackId "
+                                   "GROUP BY genres.id "
+                                   "ORDER BY genres.title %1").arg(mSortDescending ? QLatin1String("DESC")
+                                                                                   : QLatin1String("ASC"));
     }
 
     Genre GenresModel::itemFromQuery(const QSqlQuery& query)
     {
-        return {query.value(GenreField).toString(),
+        return {query.value(GenreIdField).toInt(),
+                query.value(GenreField).toString(),
                 query.value(TracksCountField).toInt(),
                 query.value(DurationField).toInt()};
     }

@@ -29,6 +29,7 @@ namespace unplayer
 {
     struct Genre
     {
+        int id;
         QString genre;
         int tracksCount;
         int duration;
