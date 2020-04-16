@@ -389,7 +389,7 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString TracksModel::makeQueryString(std::vector<QVariant>&)
+    QString TracksModel::makeQueryString()
     {
         return makeQueryString(mMode,
                                mSortMode,

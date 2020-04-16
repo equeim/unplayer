@@ -205,7 +205,7 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString GenresModel::makeQueryString(std::vector<QVariant>&)
+    QString GenresModel::makeQueryString()
     {
         return QString::fromLatin1("SELECT genres.id, genres.title, COUNT(tracks.id), SUM(tracks.duration) "
                                    "FROM genres "

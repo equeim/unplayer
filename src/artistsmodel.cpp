@@ -206,7 +206,7 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString ArtistsModel::makeQueryString(std::vector<QVariant>&)
+    QString ArtistsModel::makeQueryString()
     {
         const QLatin1String artistType(Settings::instance()->useAlbumArtist() ? "albumArtist" : "artist");
 

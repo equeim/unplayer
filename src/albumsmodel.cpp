@@ -283,7 +283,7 @@ namespace unplayer
                 {DurationRole, "duration"}};
     }
 
-    QString AlbumsModel::makeQueryString(std::vector<QVariant>&)
+    QString AlbumsModel::makeQueryString()
     {
         QString queryString;
         if (mAllArtists) {

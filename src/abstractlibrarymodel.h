@@ -35,7 +35,7 @@ namespace unplayer
     protected:
         void execQuery();
 
-        virtual QString makeQueryString(std::vector<QVariant>& bindValues) = 0;
+        virtual QString makeQueryString() = 0;
         virtual Item itemFromQuery(const QSqlQuery& query) = 0;
 
         std::vector<Item> mItems;

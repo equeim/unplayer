@@ -49,15 +49,9 @@ namespace unplayer
         removeRows(0, rowCount());
 
         QSqlQuery query;
-        std::vector<QVariant> bindValues;
-
-        if (!query.prepare(makeQueryString(bindValues))) {
+        if (!query.prepare(makeQueryString())) {
             qWarning() << __func__ << "prepare failed:" << query.lastError();
             return;
-        }
-
-        for (const QVariant& value : bindValues) {
-            query.addBindValue(value);
         }
 
         if (query.exec()) {
