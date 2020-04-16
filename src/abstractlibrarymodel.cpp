@@ -50,7 +50,12 @@ namespace unplayer
 
         QSqlQuery query;
         std::vector<QVariant> bindValues;
-        query.prepare(makeQueryString(bindValues));
+
+        if (!query.prepare(makeQueryString(bindValues))) {
+            qWarning() << __func__ << "prepare failed:" << query.lastError();
+            return;
+        }
+
         for (const QVariant& value : bindValues) {
             query.addBindValue(value);
         }
