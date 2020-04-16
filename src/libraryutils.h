@@ -26,8 +26,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "libraryupdaterunnable.h"
+
 class QMimeDatabase;
-class QRunnable;
 class QSqlQuery;
 
 namespace unplayer
@@ -87,7 +88,7 @@ namespace unplayer
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
 
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
-        Q_PROPERTY(UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
+        Q_PROPERTY(unplayer::LibraryUpdateRunnableNotifier::UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
         Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
         Q_PROPERTY(int extractedTracks READ extractedTracks NOTIFY extractedTracksChanged)
 
@@ -103,15 +104,6 @@ namespace unplayer
         Q_PROPERTY(QString discNumberTag READ discNumberTag CONSTANT)
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
-        enum UpdateStage {
-            NoneStage,
-            PreparingStage,
-            ScanningStage,
-            ExtractingStage,
-            FinishingStage
-        };
-        Q_ENUM(UpdateStage)
-
         static Extension extensionFromSuffix(const QString& suffix);
         static bool isExtensionSupported(const QString& suffix);
         static bool isVideoExtensionSupported(const QString& suffix);
@@ -144,7 +136,7 @@ namespace unplayer
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
 
         bool isUpdating() const;
-        UpdateStage updateStage() const;
+        LibraryUpdateRunnableNotifier::UpdateStage updateStage() const;
         int foundTracks() const;
         int extractedTracks() const;
 
@@ -174,7 +166,7 @@ namespace unplayer
         bool mCreatedTables;
 
         QRunnable* mLibraryUpdateRunnable;
-        UpdateStage mLibraryUpdateStage;
+        LibraryUpdateRunnableNotifier::UpdateStage mLibraryUpdateStage;
         int mFoundTracks;
         int mExtractedTracks;
 
