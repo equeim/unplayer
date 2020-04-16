@@ -1016,7 +1016,7 @@ namespace unplayer
 
             if (!exec("CREATE TABLE albums_artists ("
                       "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
-                      "    artistId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE"
+                      "    artistId INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE"
                       ")")) {
                 return;
             }
