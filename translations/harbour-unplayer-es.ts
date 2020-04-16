@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Usar etiqueta «Artista del álbum» en lugar de «Artista» si está disponible</translation>
+        <translation>Etiquetar «Artista del álbum» en vez de «Artista»</translation>
     </message>
     <message>
         <source>Save</source>
