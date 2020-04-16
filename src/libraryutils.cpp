@@ -554,8 +554,7 @@ namespace unplayer
                 return;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
+            const TransactionGuard transactionGuard(db);
 
             batchedCount(artists.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
@@ -629,8 +628,7 @@ namespace unplayer
                 return;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
+            const TransactionGuard transactionGuard(db);
 
             batchedCount(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](size_t first, size_t count) {
                 if (!qApp) {
@@ -709,8 +707,7 @@ namespace unplayer
                 return;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
+            const TransactionGuard transactionGuard(db);
 
             batchedCount(genres.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
@@ -789,8 +786,7 @@ namespace unplayer
 
             qInfo() << "db opening time:" << timer.restart();
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
+            const TransactionGuard transactionGuard(db);
 
             batchedCount(files.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
@@ -936,8 +932,7 @@ namespace unplayer
                 return;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
+            const TransactionGuard transactionGuard(db);
 
             batchedCount(infos.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {

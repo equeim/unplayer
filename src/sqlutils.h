@@ -33,9 +33,14 @@ namespace unplayer
         const QString connectionName;
     };
 
-    struct CommitGuard
+    struct TransactionGuard
     {
-        inline ~CommitGuard()
+        inline TransactionGuard(QSqlDatabase& db) : db(db)
+        {
+            db.transaction();
+        }
+
+        inline ~TransactionGuard()
         {
             db.commit();
         }

@@ -352,10 +352,9 @@ namespace unplayer
         if (!mDb.isOpen()) {
             return;
         }
-        mDb.transaction();
         mQuery = QSqlQuery(mDb);
 
-        const CommitGuard commitGuard{mDb};
+        const TransactionGuard transactionGuard(mDb);
 
         // Create media art directory
         if (!QDir().mkpath(mMediaArtDirectory)) {

@@ -148,9 +148,6 @@ namespace unplayer
                 return tracks;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
-
             batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 QString queryString(QLatin1String("SELECT filePath, title, artist, album, duration FROM tracks WHERE filePath IN (?"));
                 queryString.reserve(queryString.size() + static_cast<int>(count - 1) * 2 + 1);

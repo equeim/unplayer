@@ -445,9 +445,6 @@ namespace unplayer
                 return newTracks;
             }
 
-            db.transaction();
-            const CommitGuard commitGuard{db};
-
             batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 enum {
                     FilePathField,
