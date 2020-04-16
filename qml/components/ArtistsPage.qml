@@ -109,8 +109,8 @@ Page {
                     MenuItem {
                         text: qsTranslate("unplayer", "All tracks")
                         onClicked: pageStack.push("TracksPage.qml", {pageTitle: model.displayedArtist,
-                                                                     allArtists: false,
-                                                                     artist: model.artist})
+                                                                     mode: Unplayer.TracksModel.ArtistMode,
+                                                                     artistId: model.artistId})
                     }
 
                     MenuItem {
@@ -147,7 +147,7 @@ Page {
                 id: artistPageComponent
                 ArtistPage {
                     displayedArtist: model.displayedArtist
-                    artist: model.artist
+                    artistId: model.artistId
                     albumsCount: model.albumsCount
                     tracksCount: model.tracksCount
                     duration: model.duration

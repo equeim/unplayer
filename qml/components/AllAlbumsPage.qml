@@ -99,6 +99,7 @@ Page {
             title: qsTranslate("unplayer", "Albums")
         }
         delegate: AlbumDelegate {
+            allArtists: true
             description: model.displayedArtist
         }
         model: Unplayer.FilterProxyModel {

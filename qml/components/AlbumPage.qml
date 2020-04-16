@@ -24,13 +24,15 @@ import harbour.unplayer 0.1 as Unplayer
 Page {
     id: albumPage
 
-    property string artist
     property string displayedArtist
-    property string album
     property string displayedAlbum
     property int tracksCount
     property int duration
     property string mediaArt
+
+    property int albumId
+    property bool allArtists
+    property int singleArtistId
 
     SearchPanel {
         id: searchPanel
@@ -83,7 +85,9 @@ Page {
         clip: true
 
         header: AlbumPageHeader { }
-        delegate: LibraryTrackDelegate { }
+        delegate: LibraryTrackDelegate {
+            showArtist: allArtists
+        }
         model: Unplayer.FilterProxyModel {
             id: tracksProxyModel
 
@@ -91,11 +95,9 @@ Page {
             sourceModel: Unplayer.TracksModel {
                 id: tracksModel
 
-                allArtists: false
-                allAlbums: false
-
-                artist: albumPage.artist
-                album: albumPage.album
+                mode: allArtists ? Unplayer.TracksModel.AlbumAllArtistsMode : Unplayer.TracksModel.AlbumSingleArtistMode
+                albumId: albumPage.albumId
+                artistId: singleArtistId
             }
         }
 

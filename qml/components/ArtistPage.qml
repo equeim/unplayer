@@ -25,7 +25,7 @@ Page {
     id: artistPage
 
     property string displayedArtist
-    property string artist
+    property int artistId
     property int albumsCount
     property int tracksCount
     property int duration
@@ -106,6 +106,8 @@ Page {
 
         header: ArtistPageHeader { }
         delegate: AlbumDelegate {
+            allArtists: false
+            singleArtistId: artistPage.artistId
             description: qsTranslate("unplayer", "%n track(s)", String(), tracksCount)
         }
         model: Unplayer.FilterProxyModel {
@@ -115,7 +117,7 @@ Page {
             sourceModel: Unplayer.AlbumsModel {
                 id: albumsModel
                 allArtists: false
-                artist: artistPage.artist
+                artistId: artistPage.artistId
             }
         }
 
@@ -146,8 +148,8 @@ Page {
                     id: tracksPageComponent
                     TracksPage {
                         pageTitle: displayedArtist
-                        allArtists: false
-                        artist: artistPage.artist
+                        mode: Unplayer.TracksModel.ArtistMode
+                        artistId: artistPage.artistId
                     }
                 }
             }

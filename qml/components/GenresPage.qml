@@ -138,8 +138,8 @@ Page {
                 id: tracksPageComponent
                 TracksPage {
                     pageTitle: model.genre
-                    allArtists: true
-                    genre: model.genre
+                    mode: Unplayer.TracksModel.GenreMode
+                    genreId: model.genreId
                 }
             }
 

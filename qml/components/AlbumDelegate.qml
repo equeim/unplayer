@@ -24,6 +24,9 @@ import harbour.unplayer 0.1 as Unplayer
 MediaContainerSelectionDelegate {
     id: albumDelegate
 
+    property bool allArtists
+    property int singleArtistId
+
     title: Theme.highlightText(model.displayedAlbum, searchPanel.searchText, Theme.highlightColor)
     secondDescription: model.year
     mediaArt: Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
@@ -74,13 +77,15 @@ MediaContainerSelectionDelegate {
     Component {
         id: albumPageComponent
         AlbumPage {
-            artist: model.artist
             displayedArtist: model.displayedArtist
-            album: model.album
             displayedAlbum: model.displayedAlbum
             tracksCount: model.tracksCount
             duration: model.duration
             mediaArt: albumDelegate.mediaArt
+
+            albumId: model.albumId
+            allArtists: albumDelegate.allArtists
+            singleArtistId: albumDelegate.singleArtistId
         }
     }
 

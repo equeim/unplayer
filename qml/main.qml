@@ -44,7 +44,7 @@ ApplicationWindow
         nowPlayingPanel.parent.z = 99
 
         if (Unplayer.LibraryUtils.databaseInitialized) {
-            if (Unplayer.LibraryUtils.createdTable && Unplayer.Settings.hasLibraryDirectories) {
+            if (Unplayer.LibraryUtils.createdTables && Unplayer.Settings.hasLibraryDirectories) {
                 Unplayer.LibraryUtils.updateDatabase()
             }
             if (Unplayer.Settings.openLibraryOnStartup && Unplayer.Settings.hasLibraryDirectories) {
