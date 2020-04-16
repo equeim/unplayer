@@ -31,6 +31,7 @@
 #include "libraryutils.h"
 #include "modelutils.h"
 #include "settings.h"
+#include "tracksmodel.h"
 
 #include "abstractlibrarymodel.cpp"
 
@@ -91,51 +92,31 @@ namespace unplayer
 
     std::vector<LibraryTrack> ArtistsModel::getTracksForArtist(int index) const
     {
-        enum {
-            FilePathField,
-            TitleField,
-            DurationField,
-            DirectoryMediaArtField,
-            EmbeddedMediaArtField,
-            AlbumField,
-            UserMediaArtField
-        };
-        QString queryString(QLatin1String("SELECT filePath, tracks.title, duration, directoryMediaArt, embeddedMediaArt, albums.title, albums.userMediaArt "
-                                          "FROM tracks "
-                                          "LEFT JOIN tracks_artists ON tracks.id = tracks_artists.trackId "
-                                          "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
-                                          "LEFT JOIN tracks_albums ON tracks.id = tracks_albums.trackId "
-                                          "LEFT JOIN albums ON albums.id = tracks_albums.albumId "));
+        std::vector<LibraryTrack> tracks;
+
         const Artist& artist = mArtists[static_cast<size_t>(index)];
-        if (artist.id == 0) {
-            queryString += QLatin1String("WHERE artists.id IS NULL ");
-        } else {
-            queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artist.id);
-        }
-        queryString += QLatin1String("ORDER BY albums.id IS NULL, year, albums.title, trackNumber, tracks.title");
+        bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(queryString)) {
+        if (query.exec(TracksModel::makeQueryString(TracksModel::ArtistMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    artist.id,
+                                                    0,
+                                                    0,
+                                                    groupTracks))) {
             if (query.last()) {
-                std::vector<LibraryTrack> tracks;
                 tracks.reserve(static_cast<size_t>(query.at() + 1));
                 query.seek(QSql::BeforeFirstRow);
                 while (query.next()) {
-                    tracks.push_back({query.value(FilePathField).toString(),
-                                      query.value(TitleField).toString(),
-                                      artist.artist,
-                                      query.value(AlbumField).toString(),
-                                      query.value(DurationField).toInt(),
-                                      mediaArtFromQuery(query,
-                                                        DirectoryMediaArtField,
-                                                        EmbeddedMediaArtField,
-                                                        UserMediaArtField)});
+                    tracks.push_back(TracksModel::trackFromQuery(query, groupTracks));
                 }
-                return tracks;
             }
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
 
-        qWarning() << __func__ << "failed to get tracks from database" << query.lastError();
-        return {};
+        return tracks;
     }
 
     std::vector<LibraryTrack> ArtistsModel::getTracksForArtists(const std::vector<int>& indexes) const
@@ -152,33 +133,31 @@ namespace unplayer
 
     QStringList ArtistsModel::getTrackPathsForArtist(int index) const
     {
-        QString queryString(QLatin1String("SELECT filePath "
-                                          "FROM tracks "
-                                          "LEFT JOIN tracks_artists ON tracks.id = tracks_artists.trackId "
-                                          "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
-                                          "LEFT JOIN tracks_albums ON tracks.id = tracks_albums.trackId "
-                                          "LEFT JOIN albums ON albums.id = tracks_albums.albumId "));
+        QStringList tracks;
+
         const Artist& artist = mArtists[static_cast<size_t>(index)];
-        if (artist.id == 0) {
-            queryString += QLatin1String("WHERE artists.id IS NULL ");
-        } else {
-            queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artist.id);
-        }
-        queryString += QLatin1String("ORDER BY albums.id IS NULL, year, albums.title, trackNumber, tracks.title");
+        bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(queryString)) {
+        if (query.exec(TracksModel::makeQueryString(TracksModel::ArtistMode,
+                                                    TracksModel::SortMode::ArtistAlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+                                                    false,
+                                                    artist.id,
+                                                    0,
+                                                    0,
+                                                    groupTracks))) {
             if (query.last()) {
-                QStringList tracks;
                 tracks.reserve(query.at() + 1);
                 query.seek(QSql::BeforeFirstRow);
                 while (query.next()) {
-                    tracks.push_back(query.value(0).toString());
+                    tracks.push_back(query.value(TracksModel::FilePathField).toString());
                 }
-                return tracks;
             }
+        } else {
+            qWarning() << __func__ << query.lastError();
         }
-        qWarning() << __func__ << "failed to get tracks from database" << query.lastError();
-        return {};
+
+        return tracks;
     }
 
     QStringList ArtistsModel::getTrackPathsForArtists(const std::vector<int>& indexes) const
