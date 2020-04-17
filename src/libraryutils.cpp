@@ -841,46 +841,6 @@ namespace unplayer
         watcher->setFuture(future);
     }
 
-    QString LibraryUtils::titleTag() const
-    {
-        return tagutils::TitleTag;
-    }
-
-    QString LibraryUtils::artistsTag() const
-    {
-        return tagutils::ArtistsTag;
-    }
-
-    QString LibraryUtils::albumArtistsTag() const
-    {
-        return tagutils::AlbumArtistsTag;
-    }
-
-    QString LibraryUtils::albumsTag() const
-    {
-        return tagutils::AlbumsTag;
-    }
-
-    QString LibraryUtils::yearTag() const
-    {
-        return tagutils::YearTag;
-    }
-
-    QString LibraryUtils::trackNumberTag() const
-    {
-        return tagutils::TrackNumberTag;
-    }
-
-    QString LibraryUtils::genresTag() const
-    {
-        return tagutils::GenresTag;
-    }
-
-    QString LibraryUtils::discNumberTag() const
-    {
-        return tagutils::DiscNumberTag;
-    }
-
     bool LibraryUtils::isSavingTags() const
     {
         return mSavingTags;

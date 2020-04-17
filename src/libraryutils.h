@@ -62,14 +62,6 @@ namespace unplayer
 
         Q_PROPERTY(bool removingFiles READ isRemovingFiles NOTIFY removingFilesChanged)
 
-        Q_PROPERTY(QString titleTag READ titleTag CONSTANT)
-        Q_PROPERTY(QString artistsTag READ artistsTag CONSTANT)
-        Q_PROPERTY(QString albumArtistsTag READ albumArtistsTag CONSTANT)
-        Q_PROPERTY(QString albumsTag READ albumsTag CONSTANT)
-        Q_PROPERTY(QString yearTag READ yearTag CONSTANT)
-        Q_PROPERTY(QString trackNumberTag READ trackNumberTag CONSTANT)
-        Q_PROPERTY(QString genresTag READ genresTag CONSTANT)
-        Q_PROPERTY(QString discNumberTag READ discNumberTag CONSTANT)
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
@@ -110,14 +102,6 @@ namespace unplayer
         void removeGenres(std::vector<QString>&& genres, bool deleteFiles);
         void removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories);
 
-        QString titleTag() const;
-        QString artistsTag() const;
-        QString albumArtistsTag() const;
-        QString albumsTag() const;
-        QString yearTag() const;
-        QString trackNumberTag() const;
-        QString genresTag() const;
-        QString discNumberTag() const;
         bool isSavingTags() const;
         Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);
 

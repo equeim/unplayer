@@ -45,6 +45,7 @@
 #include "queue.h"
 #include "queuemodel.h"
 #include "settings.h"
+#include "tagutils.h"
 #include "trackinfo.h"
 #include "tracksmodel.h"
 
@@ -97,6 +98,8 @@ namespace unplayer
         qmlRegisterSingletonType<Utils>(url, major, minor, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils(); });
         qmlRegisterType<TrackInfo>(url, major, minor, "TrackInfo");
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
+
+        qmlRegisterSingletonType<Tags>(url, major, minor, "Tags", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Tags(); });
     }
 
     QString Utils::formatDuration(int seconds)

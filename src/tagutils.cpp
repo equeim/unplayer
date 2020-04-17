@@ -40,6 +40,46 @@
 
 namespace unplayer
 {
+    QLatin1String Tags::title()
+    {
+        return QLatin1String("TITLE");
+    }
+
+    QLatin1String Tags::artists()
+    {
+        return QLatin1String("ARTIST");
+    }
+
+    QLatin1String Tags::albumArtists()
+    {
+        return QLatin1String("ALBUMARTIST");
+    }
+
+    QLatin1String Tags::albums()
+    {
+        return QLatin1String("ALBUM");
+    }
+
+    QLatin1String Tags::year()
+    {
+        return QLatin1String("DATE");
+    }
+
+    QLatin1String Tags::trackNumber()
+    {
+        return QLatin1String("TRACKNUMBER");
+    }
+
+    QLatin1String Tags::genres()
+    {
+        return QLatin1String("GENRE");
+    }
+
+    QLatin1String Tags::discNumber()
+    {
+        return QLatin1String("DISCNUMBER");
+    }
+
     namespace tagutils
     {
         namespace
@@ -172,7 +212,7 @@ namespace unplayer
                         info.year = static_cast<int>(tag->year());
                         info.trackNumber = static_cast<int>(tag->track());
 
-                        const TagLib::StringList& artists = properties[ArtistsTag.data()];
+                        const TagLib::StringList& artists = properties[Tags::artists().data()];
                         info.artists.reserve(static_cast<int>(artists.size()));
                         for (const TagLib::String& artist : artists) {
                             const QString a(toQString(artist));
@@ -182,7 +222,7 @@ namespace unplayer
                         }
                         info.artists.removeDuplicates();
 
-                        const TagLib::StringList& albumArtists = properties[AlbumArtistsTag.data()];
+                        const TagLib::StringList& albumArtists = properties[Tags::albumArtists().data()];
                         info.albumArtists.reserve(static_cast<int>(albumArtists.size()));
                         for (const TagLib::String& albumArtist : albumArtists) {
                             const QString a(toQString(albumArtist));
@@ -192,7 +232,7 @@ namespace unplayer
                         }
                         info.albumArtists.removeDuplicates();
 
-                        const TagLib::StringList& albums = properties[AlbumsTag.data()];
+                        const TagLib::StringList& albums = properties[Tags::albums().data()];
                         info.albums.reserve(static_cast<int>(albums.size()));
                         for (const TagLib::String& album : albums) {
                             const QString a(toQString(album));
@@ -202,7 +242,7 @@ namespace unplayer
                         }
                         info.albums.removeDuplicates();
 
-                        const TagLib::StringList& genres = properties[GenresTag.data()];
+                        const TagLib::StringList& genres = properties[Tags::genres().data()];
                         info.genres.reserve(static_cast<int>(genres.size()));
                         for (const TagLib::String& genre : genres) {
                             const QString g(unquote(toQString(genre)));
@@ -213,7 +253,7 @@ namespace unplayer
                         info.genres.removeDuplicates();
 
                         {
-                            const auto found = properties.find(DiscNumberTag.data());
+                            const auto found = properties.find(Tags::discNumber().data());
                             if (found != properties.end()) {
                                 const TagLib::StringList& list = found->second;
                                 if (!list.isEmpty()) {
@@ -443,15 +483,6 @@ namespace unplayer
             }
         }
 
-        const QLatin1String TitleTag("TITLE");
-        const QLatin1String ArtistsTag("ARTIST");
-        const QLatin1String AlbumArtistsTag("ALBUMARTIST");
-        const QLatin1String AlbumsTag("ALBUM");
-        const QLatin1String YearTag("DATE");
-        const QLatin1String TrackNumberTag("TRACKNUMBER");
-        const QLatin1String GenresTag("GENRE");
-        const QLatin1String DiscNumberTag("DISCNUMBER");
-
         Info getTrackInfo(const QString& filePath, fileutils::Extension extension, const QMimeDatabase& mimeDb)
         {
             Info info{};
@@ -479,7 +510,7 @@ namespace unplayer
             int trackNumber;
             TagLib::String* trackNumberString;
             if (IncrementTrackNumber) {
-                trackNumberString = &(replaceProperties[TrackNumberTag.data()][0]);
+                trackNumberString = &(replaceProperties[Tags::trackNumber().data()][0]);
                 trackNumber = trackNumberString->toInt();
             }
 

@@ -46,35 +46,35 @@ Dialog {
         }
 
         if (titleSwitch.checked) {
-            tags[Unplayer.LibraryUtils.titleTag] = titleTextField.text
+            tags[Unplayer.Tags.title] = titleTextField.text
         }
 
         if (artistsListItem.checked) {
-            tags[Unplayer.LibraryUtils.artistsTag] = getListItemValues(artistsListItem)
+            tags[Unplayer.Tags.artists] = getListItemValues(artistsListItem)
         }
 
         if (albumArtistsListItem.checked) {
-            tags[Unplayer.LibraryUtils.albumArtistsTag] = getListItemValues(albumArtistsListItem)
+            tags[Unplayer.Tags.albumArtists] = getListItemValues(albumArtistsListItem)
         }
 
         if (albumsListItem.checked) {
-            tags[Unplayer.LibraryUtils.albumsTag] = getListItemValues(albumsListItem)
+            tags[Unplayer.Tags.albums] = getListItemValues(albumsListItem)
         }
 
         if (yearSwitch.checked) {
-            tags[Unplayer.LibraryUtils.yearTag] = yearTextField.text
+            tags[Unplayer.Tags.year] = yearTextField.text
         }
 
         if (trackNumberSwitch.checked) {
-            tags[Unplayer.LibraryUtils.trackNumberTag] = trackNumberTextField.text
+            tags[Unplayer.Tags.trackNumber] = trackNumberTextField.text
         }
 
         if (genresListItem.checked) {
-            tags[Unplayer.LibraryUtils.genresTag] = getListItemValues(genresListItem)
+            tags[Unplayer.Tags.genres] = getListItemValues(genresListItem)
         }
 
         if (discNumberSwitch.checked) {
-            tags[Unplayer.LibraryUtils.discNumberTag] = discNumberTextField.text
+            tags[Unplayer.Tags.discNumber] = discNumberTextField.text
         }
 
         Unplayer.LibraryUtils.saveTags(files, tags, incrementTrackNumberSwitch.checked)

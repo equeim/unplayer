@@ -21,6 +21,7 @@
 
 #include <functional>
 
+#include <QObject>
 #include <QString>
 #include <QStringList>
 
@@ -33,17 +34,30 @@ typedef QMap<QString, QVariant> QVariantMap;
 
 namespace unplayer
 {
+    class Tags : public QObject
+    {
+        Q_OBJECT
+        Q_PROPERTY(QString title READ title CONSTANT)
+        Q_PROPERTY(QString artists READ artists CONSTANT)
+        Q_PROPERTY(QString albumArtists READ albumArtists CONSTANT)
+        Q_PROPERTY(QString albums READ albums CONSTANT)
+        Q_PROPERTY(QString year READ year CONSTANT)
+        Q_PROPERTY(QString trackNumber READ trackNumber CONSTANT)
+        Q_PROPERTY(QString genres READ genres CONSTANT)
+        Q_PROPERTY(QString discNumber READ discNumber CONSTANT)
+    public:
+        static QLatin1String title();
+        static QLatin1String artists();
+        static QLatin1String albumArtists();
+        static QLatin1String albums();
+        static QLatin1String year();
+        static QLatin1String trackNumber();
+        static QLatin1String genres();
+        static QLatin1String discNumber();
+    };
+
     namespace tagutils
     {
-        extern const QLatin1String TitleTag;
-        extern const QLatin1String ArtistsTag;
-        extern const QLatin1String AlbumArtistsTag;
-        extern const QLatin1String AlbumsTag;
-        extern const QLatin1String YearTag;
-        extern const QLatin1String TrackNumberTag;
-        extern const QLatin1String GenresTag;
-        extern const QLatin1String DiscNumberTag;
-
         struct Info
         {
             QString filePath;
