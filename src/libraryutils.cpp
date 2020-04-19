@@ -221,29 +221,45 @@ namespace unplayer
 
             if (!exec("CREATE TABLE tracks_artists ("
                       "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    artistId INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE"
+                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
                       ")")) {
+                return;
+            }
+
+            if (!exec("CREATE INDEX tracks_artists_trackIndex ON tracks_artists(trackId)")) {
                 return;
             }
 
             if (!exec("CREATE TABLE tracks_albums ("
                       "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE"
+                      "    albumId INTEGER NOT NULL REFERENCES albums(id)"
                       ")")) {
+                return;
+            }
+
+            if (!exec("CREATE INDEX tracks_albums_trackIndex ON tracks_albums(trackId)")) {
                 return;
             }
 
             if (!exec("CREATE TABLE albums_artists ("
                       "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
-                      "    artistId INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE"
+                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
                       ")")) {
+                return;
+            }
+
+            if (!exec("CREATE INDEX albums_artists_albumIndex ON albums_artists(albumId)")) {
                 return;
             }
 
             if (!exec("CREATE TABLE tracks_genres ("
                       "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    genreId INTEGER NOT NULL REFERENCES genres(id) ON DELETE CASCADE"
+                      "    genreId INTEGER NOT NULL REFERENCES genres(id)"
                       ")")) {
+                return;
+            }
+
+            if (!exec("CREATE INDEX tracks_genres_trackIndex ON tracks_genres(trackId)")) {
                 return;
             }
 
