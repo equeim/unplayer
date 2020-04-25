@@ -48,7 +48,7 @@ namespace unplayer
     {
         Q_OBJECT
         Q_PROPERTY(bool databaseInitialized READ isDatabaseInitialized CONSTANT)
-        Q_PROPERTY(bool createdTablse READ isCreatedTables CONSTANT)
+        Q_PROPERTY(bool createdTables READ isCreatedTables CONSTANT)
 
         Q_PROPERTY(int artistsCount READ artistsCount NOTIFY databaseChanged)
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
