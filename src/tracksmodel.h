@@ -93,6 +93,7 @@ namespace unplayer
 
         enum QueryField
         {
+            IdField,
             FilePathField,
             TitleField,
             DurationField,

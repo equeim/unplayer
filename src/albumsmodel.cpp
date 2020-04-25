@@ -255,10 +255,10 @@ namespace unplayer
             return;
         }
 
-        std::vector<Album> albums;
+        std::vector<int> albums;
         albums.reserve(indexes.size());
         for (int index : indexes) {
-            albums.push_back(mAlbums[static_cast<size_t>(index)]);
+            albums.push_back(mAlbums[static_cast<size_t>(index)].id);
         }
         LibraryUtils::instance()->removeAlbums(std::move(albums), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {

@@ -690,7 +690,8 @@ namespace unplayer
     LibraryTrack Queue::getTrack(int index) const
     {
         const QueueTrack* track = mTracks[static_cast<size_t>(index)].get();
-        return {track->url.toString(),
+        return {0,
+                track->url.toString(),
                 track->title,
                 track->artist,
                 track->album,

@@ -183,12 +183,12 @@ namespace unplayer
             return;
         }
 
-        std::vector<QString> genres;
+        std::vector<int> genres;
         genres.reserve(indexes.size());
         for (int index : indexes) {
-            genres.push_back(mGenres[static_cast<size_t>(index)].genre);
+            genres.push_back(mGenres[static_cast<size_t>(index)].id);
         }
-        LibraryUtils::instance()->removeArtists(std::move(genres), deleteFiles);
+        LibraryUtils::instance()->removeGenres(std::move(genres), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 ModelBatchRemover::removeIndexes(this, indexes);

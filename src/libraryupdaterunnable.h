@@ -153,12 +153,8 @@ namespace unplayer
                                                std::unordered_map<QString, bool>& noMediaDirectories,
                                                std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
-        void removeTracks(const std::vector<int>& tracksToRemove);
-
         int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
                       std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
-
-        void removeUnusedCategories();
 
         bool isBlacklisted(const QString& path);
 

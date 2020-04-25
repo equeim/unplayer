@@ -34,6 +34,7 @@ class QSqlQuery;
 namespace unplayer
 {
     struct Album;
+    struct LibraryTrack;
 
     namespace tagutils
     {
@@ -64,6 +65,8 @@ namespace unplayer
 
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
+        using UpdateStage = LibraryUpdateRunnableNotifier::UpdateStage;
+
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
 
         static const QString databaseType;
@@ -71,6 +74,10 @@ namespace unplayer
         static LibraryUtils* instance();
 
         static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);
+
+        static bool removeTracksFromDbByIds(const std::vector<int>& ids, const QSqlDatabase& db, const std::atomic_bool& cancel = false);
+        static void removeUnusedCategories(const QSqlDatabase& db);
+        static void removeUnusedMediaArt(const QSqlDatabase& db, const QString& mediaArtDirectory, const std::atomic_bool& cancel = false);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
@@ -92,15 +99,17 @@ namespace unplayer
         Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
 
         bool isUpdating() const;
-        LibraryUpdateRunnableNotifier::UpdateStage updateStage() const;
+        UpdateStage updateStage() const;
         int foundTracks() const;
         int extractedTracks() const;
 
         bool isRemovingFiles() const;
-        void removeArtists(std::vector<QString>&& artists, bool deleteFiles);
-        void removeAlbums(std::vector<Album>&& albums, bool deleteFiles);
-        void removeGenres(std::vector<QString>&& genres, bool deleteFiles);
-        void removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories);
+        void removeArtists(std::vector<int>&& artists, bool deleteFiles);
+        void removeAlbums(std::vector<int>&& albums, bool deleteFiles);
+        void removeGenres(std::vector<int>&& genres, bool deleteFiles);
+
+        void removeTracks(std::vector<LibraryTrack>&& tracks, bool deleteFiles);
+        void removeTracksByPaths(std::vector<QString>&& paths, bool deleteFiles, bool deleteDirectories);
 
         bool isSavingTags() const;
         Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);

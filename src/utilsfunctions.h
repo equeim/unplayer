@@ -23,6 +23,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QString>
 
 namespace unplayer
@@ -49,6 +51,28 @@ namespace unplayer
             }();
             call(i, nextCount);
         }
+    }
+
+    template<typename T, typename Func>
+    inline void onFutureFinished(const QFuture<T>& future, QObject* parent, const Func& func)
+    {
+        auto watcher = new QFutureWatcher<T>(parent);
+        QObject::connect(watcher, &QFutureWatcher<T>::finished, parent, [watcher, func]() {
+            func(watcher->result());
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
+    }
+
+    template<typename Func>
+    inline void onFutureFinished(const QFuture<void>& future, QObject* parent, const Func& func)
+    {
+        auto watcher = new QFutureWatcher<void>(parent);
+        QObject::connect(watcher, &QFutureWatcher<void>::finished, parent, [watcher, func]() {
+            func();
+            watcher->deleteLater();
+        });
+        watcher->setFuture(future);
     }
 }
 

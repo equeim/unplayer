@@ -28,7 +28,6 @@
 #include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
-#include <QFutureWatcher>
 #include <QMimeDatabase>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -63,11 +62,145 @@ namespace unplayer
 
         const int databaseVersion = 1;
 
-
         const QString& databasePath()
         {
             static const QString path(QString::fromLatin1("%1/library.sqlite").arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation)));
             return path;
+        }
+
+        void deleteFilesFromFilesystem(const std::vector<QString>& paths)
+        {
+            for (const QString& path : paths) {
+                if (!QFile::remove(path)) {
+                    qWarning() << "Failed to remove file:" << path;
+                }
+            }
+        }
+
+        void deleteDirectoriesFromFilesystem(const std::vector<QString>& paths)
+        {
+            for (const QString& path : paths) {
+                QDir dir(path);
+                if (dir.exists()) {
+                    if (!dir.removeRecursively()) {
+                        qWarning() << "Failed to remove directory:" << path;
+                    }
+                } else {
+                    qWarning() << "Path is not directory:" << path;
+                }
+            }
+        }
+
+        bool removeTracksFromDbByPaths(const std::vector<QString>& filePaths, const QSqlDatabase& db)
+        {
+            if (!filePaths.empty()) {
+                bool abort = false;
+
+                batchedCount(filePaths.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+                    if (abort) {
+                        return;
+                    }
+                    if (!qApp) {
+                        abort = true;
+                        return;
+                    }
+
+                    QString queryString(QLatin1String("DELETE FROM tracks WHERE filePath IN (?"));
+                    const QLatin1String add(",?");
+                    queryString.reserve(queryString.size() + (static_cast<int>(count) - 1) * add.size() + 1);
+                    for (size_t i = 1; i < count; ++i) {
+                        queryString += add;
+                    }
+                    queryString += QLatin1Char(')');
+
+                    QSqlQuery query(db);
+                    if (query.prepare(queryString)) {
+                        for (size_t i = first, max = first + count; i < max; ++i) {
+                            query.addBindValue(filePaths[i]);
+                        }
+                        if (!query.exec()) {
+                            qWarning() << "Failed to remove tracks from database" << query.lastError();
+                            abort = true;
+                        }
+                    } else {
+                        qWarning() << "Failed to remove tracks from database" << query.lastError();
+                        abort = true;
+                    }
+                });
+
+                return !abort;
+            }
+
+            return false;
+        }
+
+        bool removeTracksFromDbByDirectories(const std::vector<QString>& paths, const QSqlDatabase& db)
+        {
+            if (!paths.empty()) {
+                const auto addTrailingSeparator = [](const QString& path) -> QString {
+                    return path.endsWith(QLatin1Char('/')) ? path : path % QLatin1Char('/');
+                };
+
+                bool abort = false;
+
+                batchedCount(paths.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+                    if (abort) {
+                        return;
+                    }
+                    if (!qApp) {
+                        abort = true;
+                        return;
+                    }
+
+                    QString queryString(QLatin1String("DELETE FROM tracks WHERE instr(filePath, ?) = 1"));
+                    const QLatin1String add(" OR instr(filePath, ?) = 1");
+                    queryString.reserve(queryString.size() + (static_cast<int>(count) - 1) * add.size() + 1);
+                    for (size_t i = 1; i < count; ++i) {
+                        queryString += add;
+                    }
+                    queryString += QLatin1Char(')');
+
+                    QSqlQuery query(db);
+                    if (query.prepare(queryString)) {
+                        for (size_t i = first, max = first + count; i < max; ++i) {
+                            query.addBindValue(addTrailingSeparator(paths[i]));
+                        }
+                        if (!query.exec()) {
+                            qWarning() << "Failed to remove tracks from database" << query.lastError();
+                            abort = true;
+                        }
+                    } else {
+                        qWarning() << "Failed to remove tracks from database" << query.lastError();
+                        abort = true;
+                    }
+                });
+
+                return !abort;
+            }
+
+            return false;
+        }
+
+        QString makeInStringFromIds(const std::vector<int>& ids, size_t first, size_t count, bool& addNull)
+        {
+            QString str(QString::number(ids[first]));
+            for (size_t i = first + 1, max = first + count; i <= max; ++i) {
+                const int id = ids[i];
+                if (id > 0) {
+                    str += QLatin1Char(',');
+                    str += QString::number(id);
+                } else {
+                    addNull = true;
+                }
+            }
+            str += QLatin1Char(')');
+            return str;
+        }
+
+        QString makeInStringFromIds(const std::vector<int>& ids, size_t first, size_t count)
+        {
+            bool addNull;
+            return makeInStringFromIds(ids, first, count, addNull);
         }
     }
 
@@ -152,6 +285,137 @@ namespace unplayer
 
         mediaArtHash.insert({directoryPath, QString()});
         return QString();
+    }
+
+    bool LibraryUtils::removeTracksFromDbByIds(const std::vector<int>& ids, const QSqlDatabase& db, const std::atomic_bool& cancel)
+    {
+        if (!ids.empty()) {
+            bool abort = false;
+            batchedCount(ids.size(), maxDbVariableCount, [&](size_t first, size_t count) {
+                if (abort) {
+                    return;
+                }
+                if (cancel) {
+                    abort = true;
+                    return;
+                }
+                if (!qApp) {
+                    abort = true;
+                    return;
+                }
+                QSqlQuery query(db);
+                if (!query.exec(QLatin1String("DELETE FROM tracks WHERE id IN (") % makeInStringFromIds(ids, first, count))) {
+                    qWarning() << "Failed to remove tracks from database" << query.lastError();
+                    abort = true;
+                }
+            });
+            return !abort;
+        }
+
+        return false;
+    }
+
+    void LibraryUtils::removeUnusedCategories(const QSqlDatabase& db)
+    {
+        QSqlQuery query(db);
+
+        const auto removed = [&] {
+            if (query.exec(QLatin1String("SELECT changes()"))) {
+                query.next();
+                return query.value(0).toInt();
+            }
+            return -1;
+        };
+
+        if (query.exec(QLatin1String("DELETE FROM albums "
+                                     "WHERE id IN ("
+                                       "SELECT id FROM albums "
+                                       "LEFT JOIN tracks_albums ON albumId = id "
+                                       "WHERE trackId IS NULL"
+                                     ")"))) {
+            const int count = removed();
+            if (count != 0) {
+                qInfo("Removed %d albums", count);
+            }
+        } else {
+            qWarning() << query.lastError();
+        }
+        if (query.exec(QLatin1String("DELETE FROM artists "
+                                     "WHERE id IN ("
+                                       "SELECT id FROM artists "
+                                       "LEFT JOIN tracks_artists ON artistId = id "
+                                       "WHERE trackId IS NULL"
+                                     ")"))) {
+            const int count = removed();
+            if (count != 0) {
+                qInfo("Removed %d artists", count);
+            }
+        } else {
+            qWarning() << query.lastError();
+        }
+        if (query.exec(QLatin1String("DELETE FROM genres "
+                                     "WHERE id IN ("
+                                       "SELECT id FROM genres "
+                                       "LEFT JOIN tracks_genres ON genreId = id "
+                                       "WHERE trackId IS NULL"
+                                     ")"))) {
+            const int count = removed();
+            if (count != 0) {
+                qInfo("Removed %d genres", count);
+            }
+        } else {
+            qWarning() << query.lastError();
+        }
+    }
+
+    void LibraryUtils::removeUnusedMediaArt(const QSqlDatabase& db, const QString& mediaArtDirectory, const std::atomic_bool& cancel)
+    {
+        QSqlQuery query(db);
+
+        std::unordered_set<QString> allEmbeddedMediaArt;
+        if (query.exec(QLatin1String("SELECT DISTINCT embeddedMediaArt FROM tracks WHERE embeddedMediaArt IS NOT NULL"))) {
+            if (reserveFromQuery(allEmbeddedMediaArt, query) > 0) {
+                while (query.next()) {
+                    allEmbeddedMediaArt.insert(query.value(0).toString());
+                }
+            }
+        } else {
+            qWarning() << query.lastError();
+            return;
+        }
+
+        if (cancel) {
+            return;
+        }
+
+        std::unordered_set<QString> allUserMediaArt;
+        if (query.exec(QLatin1String("SELECT DISTINCT userMediaArt FROM albums WHERE userMediaArt IS NOT NULL"))) {
+            if (reserveFromQuery(allUserMediaArt, query) > 0) {
+                while (query.next()) {
+                    allUserMediaArt.insert(query.value(0).toString());
+                }
+            }
+        } else {
+            qWarning() << query.lastError();
+            return;
+        }
+
+        if (cancel) {
+            return;
+        }
+
+        const QFileInfoList files(QDir(mediaArtDirectory).entryInfoList(QDir::Files));
+        for (const QFileInfo& info : files) {
+            if (cancel) {
+                return;
+            }
+            const QString filePath(info.filePath());
+            if (!contains(allEmbeddedMediaArt, filePath) && !contains(allUserMediaArt, filePath)) {
+                if (!QFile::remove(filePath)) {
+                    qWarning() << "Failed to remove file:" << info.filePath();
+                }
+            }
+        }
     }
 
     void LibraryUtils::initDatabase()
@@ -532,7 +796,7 @@ namespace unplayer
         return mLibraryUpdateRunnable;
     }
 
-    LibraryUpdateRunnableNotifier::UpdateStage LibraryUtils::updateStage() const
+    LibraryUtils::UpdateStage LibraryUtils::updateStage() const
     {
         return mLibraryUpdateStage;
     }
@@ -552,309 +816,389 @@ namespace unplayer
         return mRemovingFiles;
     }
 
-    void LibraryUtils::removeArtists(std::vector<QString>&& artists, bool deleteFiles)
+    void LibraryUtils::removeArtists(std::vector<int>&& artists, bool deleteFiles)
     {
-        if (mRemovingFiles || !mDatabaseInitialized) {
+        if (mRemovingFiles || !mDatabaseInitialized || artists.empty()) {
             return;
         }
 
         mRemovingFiles = true;
         emit removingFilesChanged();
 
-        auto future = QtConcurrent::run([deleteFiles, artists = std::move(artists)] {
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-
-            // Open database
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
-                return;
-            }
-
-            const TransactionGuard transactionGuard(db);
-
-            batchedCount(artists.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
-                if (!qApp) {
-                    return;
-                }
-
-                QString whereString(QLatin1String("WHERE artist = ?"));
-                const QLatin1String wherePush(" OR artist = ?");
-                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
-                for (size_t i = 1; i < count; ++i) {
-                    whereString.push_back(wherePush);
-                }
-                if (deleteFiles) {
-                    QSqlQuery query(db);
-                    query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (size_t i = first, max = first + count; i < max; ++i) {
-                        query.addBindValue(artists[i]);
-                    }
-                    if (query.exec()) {
-                        while (query.next()) {
-                            if (!qApp) {
-                                return;
-                            }
-                            const QString filePath(query.value(0).toString());
-                            if (!QFile::remove(filePath)) {
-                                qWarning() << "failed to remove file:" << filePath;
-                            }
-                        }
-                    } else {
-                        qWarning() << "failed to select files from artists:" << query.lastError();
-                    }
-                }
-
-                QSqlQuery query(db);
-                query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (size_t i = first, max = first + count; i < max; ++i) {
-                    query.addBindValue(artists[i]);
-                }
-                if (!query.exec()) {
-                    qWarning() << "failed to remove artists:" << query.lastError();
-                }
-            });
-        });
-
-        using Watcher = QFutureWatcher<void>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-            emit databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
-    }
-
-    void LibraryUtils::removeAlbums(std::vector<Album>&& albums, bool deleteFiles)
-    {
-        if (mRemovingFiles || !mDatabaseInitialized) {
-            return;
-        }
-
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        auto future = QtConcurrent::run([deleteFiles, albums = std::move(albums)] {
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-
-            // Open database
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
-                return;
-            }
-
-            const TransactionGuard transactionGuard(db);
-
-            batchedCount(albums.size(), LibraryUtils::maxDbVariableCount / 2, [&](size_t first, size_t count) {
-                if (!qApp) {
-                    return;
-                }
-
-                QString whereString(QLatin1String("WHERE (artist = ? AND album = ?)"));
-                const QLatin1String wherePush(" OR (artist = ? AND album = ?)");
-                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
-                for (size_t i = 1; i < count; ++i) {
-                    whereString.push_back(wherePush);
-                }
-                if (deleteFiles) {
-                    QSqlQuery query(db);
-                    query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (size_t i = first, max = first + count; i < max; ++i) {
-                        const Album& album = albums[i];
-                        query.addBindValue(album.artist);
-                        query.addBindValue(album.album);
-                    }
-                    if (query.exec()) {
-                        while (query.next()) {
-                            if (!qApp) {
-                                return;
-                            }
-
-                            const QString filePath(query.value(0).toString());
-                            if (!QFile::remove(filePath)) {
-                                qWarning() << "failed to remove file:" << filePath;
-                            }
-                        }
-                    } else {
-                        qWarning() << "failed to select files from albums:" << query.lastError();
-                    }
-                }
-
-                QSqlQuery query(db);
-                query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (size_t i = first, max = first + count; i < max; ++i) {
-                    const Album& album = albums[i];
-                    query.addBindValue(album.artist);
-                    query.addBindValue(album.album);
-                }
-                if (!query.exec()) {
-                    qWarning() << "failed to remove albums:" << query.lastError();
-                }
-            });
-        });
-
-        using Watcher = QFutureWatcher<void>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-            emit databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
-    }
-
-    void LibraryUtils::removeGenres(std::vector<QString>&& genres, bool deleteFiles)
-    {
-        if (mRemovingFiles || !mDatabaseInitialized) {
-            return;
-        }
-
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        auto future = QtConcurrent::run([deleteFiles, genres = std::move(genres)] {
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-
-            // Open database
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
-                return;
-            }
-
-            const TransactionGuard transactionGuard(db);
-
-            batchedCount(genres.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
-                if (!qApp) {
-                    return;
-                }
-
-                QString whereString(QLatin1String("WHERE genre = ?"));
-                const QLatin1String wherePush(" OR genre = ?");
-                whereString.reserve(whereString.size() + wherePush.size() * static_cast<int>(count - 1));
-                for (size_t i = 1; i < count; ++i) {
-                    whereString.push_back(wherePush);
-                }
-                if (deleteFiles) {
-                    QSqlQuery query(db);
-                    query.prepare(QLatin1String("SELECT filePath FROM tracks ") % whereString % QLatin1String(" GROUP BY id"));
-                    for (size_t i = first, max = first + count; i < max; ++i) {
-                        query.addBindValue(genres[i]);
-                    }
-                    if (query.exec()) {
-                        while (query.next()) {
-                            if (!qApp) {
-                                return;
-                            }
-                            const QString filePath(query.value(0).toString());
-                            if (!QFile::remove(filePath)) {
-                                qWarning() << "failed to remove file:" << filePath;
-                            }
-                        }
-                    } else {
-                        qWarning() << "failed to select files from artists:" << query.lastError();
-                    }
-                }
-
-                QSqlQuery query(db);
-                query.prepare(QLatin1String("DELETE FROM tracks ") % whereString);
-                for (size_t i = first, max = first + count; i < max; ++i) {
-                    query.addBindValue(genres[i]);
-                }
-                if (!query.exec()) {
-                    qWarning() << "failed to remove artists:" << query.lastError();
-                }
-            });
-        });
-
-        using Watcher = QFutureWatcher<void>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
-            mRemovingFiles = false;
-            emit removingFilesChanged();
-            emit databaseChanged();
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
-    }
-
-    void LibraryUtils::removeFiles(std::vector<QString>&& files, bool deleteFiles, bool canHaveDirectories)
-    {
-        if (mRemovingFiles || !mDatabaseInitialized) {
-            return;
-        }
-
-        mRemovingFiles = true;
-        emit removingFilesChanged();
-
-        auto future = QtConcurrent::run([deleteFiles, canHaveDirectories, files = std::move(files)]() mutable {
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
+        auto future = QtConcurrent::run([deleteFiles, mediaArtDirectory = mMediaArtDirectory, artists = std::move(artists)] {
+            qInfo("Start removing artists, count=%zu, deleteFiles=%d", artists.size(), deleteFiles);
 
             QElapsedTimer timer;
             timer.start();
 
             // Open database
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
             QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
             if (!db.isOpen()) {
                 return;
             }
 
-            qInfo() << "db opening time:" << timer.restart();
-
             const TransactionGuard transactionGuard(db);
 
-            batchedCount(files.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+            QSqlQuery query;
+            std::vector<QString> paths;
+
+            bool abort = false;
+            batchedCount(artists.size(), maxDbVariableCount, [&](size_t first, size_t count) {
+                if (abort) {
+                    return;
+                }
                 if (!qApp) {
+                    abort = true;
                     return;
                 }
 
-                QString queryString(QLatin1String("DELETE FROM tracks WHERE "));
-
-                const auto handleFile = [&](QString& filePath) {
-                    if (canHaveDirectories && QFileInfo(filePath).isDir()) {
-                        if (deleteFiles && !QDir(filePath).removeRecursively()) {
-                            qWarning() << "failed to remove directory:" << filePath;
-                        }
-                        if (!filePath.endsWith(QLatin1Char('/'))) {
-                            filePath.push_back(QLatin1Char('/'));
-                        }
-                        return QLatin1String("instr(filePath, ?) = 1");
-                    }
-                    if (deleteFiles && !QFile::remove(filePath)) {
-                        qWarning() << "failed to remove file:" << filePath;
-                    }
-                    return QLatin1String("filePath = ?");
-                };
-
-                queryString.push_back(handleFile(files.front()));
-                for (size_t i = first + 1, max = first + count; i < max; ++i) {
-                    queryString.push_back(QLatin1String("OR "));
-                    queryString.push_back(handleFile(files[i]));
+                bool addNull = false;
+                QString whereString(QLatin1String("WHERE artistId IN (") % makeInStringFromIds(artists, first, count, addNull));
+                if (addNull) {
+                    whereString += QLatin1String(" OR artistId IS NULL");
                 }
 
-                QSqlQuery query(db);
-                query.prepare(queryString);
-                for (size_t i = first, max = first + count; i < max; ++i) {
-                    query.addBindValue(files[i]);
+                if (deleteFiles) {
+                    if (query.exec(QLatin1String("SELECT filePath "
+                                                 "FROM tracks "
+                                                 "LEFT JOIN tracks_artists ON tracks_artists.trackId = id ") % whereString)) {
+                        if (reserveFromQueryAppend(paths, query) > 0) {
+                            while (query.next()) {
+                                paths.push_back(query.value(0).toString());
+                            }
+                        }
+                    } else {
+                        qWarning() << "Failed to get tracks for artists" << query.lastError();
+                        abort = true;
+                        return;
+                    }
                 }
-                if (!query.exec()) {
-                    qWarning() << "failed to remove tracks:" << query.lastError();
+
+                if (!query.exec(QLatin1String("DELETE FROM tracks "
+                                              "WHERE id IN ("
+                                                "SELECT id FROM tracks "
+                                                "LEFT JOIN tracks_artists ON tracks_artists.trackId = id ") %
+                                                whereString %
+                                              QLatin1Char(')'))) {
+                    qWarning() << "Failed to remove tracks from database" << query.lastError();
+                    abort = true;
                 }
             });
 
-            qInfo() << "file removing time:" << timer.elapsed();
+            if (!abort) {
+                if (deleteFiles) {
+                    deleteFilesFromFilesystem(paths);
+                }
+
+                removeUnusedCategories(db);
+                removeUnusedMediaArt(db, mediaArtDirectory);
+
+                qInfo("Artists removing time: %lld ms", static_cast<long long>(timer.elapsed()));
+            }
         });
 
-        using Watcher = QFutureWatcher<void>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+        onFutureFinished(future, this, [this] {
             mRemovingFiles = false;
             emit removingFilesChanged();
             emit databaseChanged();
-            watcher->deleteLater();
         });
-        watcher->setFuture(future);
+    }
+
+    void LibraryUtils::removeAlbums(std::vector<int>&& albums, bool deleteFiles)
+    {
+        if (mRemovingFiles || !mDatabaseInitialized || albums.empty()) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run([deleteFiles, mediaArtDirectory = mMediaArtDirectory, albums = std::move(albums)] {
+            qInfo("Start removing albums, count=%zu, deleteFiles=%d", albums.size(), deleteFiles);
+
+            QElapsedTimer timer;
+            timer.start();
+
+            // Open database
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
+                return;
+            }
+
+            const TransactionGuard transactionGuard(db);
+
+            QSqlQuery query;
+            std::vector<QString> paths;
+
+            bool abort = false;
+            batchedCount(albums.size(), maxDbVariableCount, [&](size_t first, size_t count) {
+                if (abort) {
+                    return;
+                }
+                if (!qApp) {
+                    abort = true;
+                    return;
+                }
+
+                bool addNull = false;
+                QString whereString(QLatin1String("WHERE albumId IN (") % makeInStringFromIds(albums, first, count, addNull));
+                if (addNull) {
+                    whereString += QLatin1String(" OR albumId IS NULL");
+                }
+
+                if (deleteFiles) {
+                    if (query.exec(QLatin1String("SELECT filePath "
+                                                 "FROM tracks "
+                                                 "LEFT JOIN tracks_albums ON tracks_albums.trackId = id ") % whereString)) {
+                        if (reserveFromQueryAppend(paths, query) > 0) {
+                            while (query.next()) {
+                                paths.push_back(query.value(0).toString());
+                            }
+                        }
+                    } else {
+                        qWarning() << "Failed to get tracks for albums" << query.lastError();
+                        abort = true;
+                        return;
+                    }
+                }
+
+                if (!query.exec(QLatin1String("DELETE FROM tracks "
+                                              "WHERE id IN ("
+                                                "SELECT id FROM tracks "
+                                                "LEFT JOIN tracks_albums ON tracks_albums.trackId = id ") %
+                                                whereString %
+                                              QLatin1Char(')'))) {
+                    qWarning() << "Failed to remove tracks from database" << query.lastError();
+                    abort = true;
+                }
+            });
+
+            if (!abort) {
+                if (deleteFiles) {
+                    deleteFilesFromFilesystem(paths);
+                }
+
+                removeUnusedCategories(db);
+                removeUnusedMediaArt(db, mediaArtDirectory);
+
+                qInfo("Albums removing time: %lld ms", static_cast<long long>(timer.elapsed()));
+            }
+        });
+
+        onFutureFinished(future, this, [this] {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+            emit databaseChanged();
+        });
+    }
+
+    void LibraryUtils::removeGenres(std::vector<int>&& genres, bool deleteFiles)
+    {
+        if (mRemovingFiles || !mDatabaseInitialized || genres.empty()) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run([deleteFiles, mediaArtDirectory = mMediaArtDirectory, genres = std::move(genres)] {
+            qInfo("Start removing genres, count=%zu, deleteFiles=%d", genres.size(), deleteFiles);
+
+            QElapsedTimer timer;
+            timer.start();
+
+            // Open database
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
+                return;
+            }
+
+            const TransactionGuard transactionGuard(db);
+
+            QSqlQuery query;
+            std::vector<QString> paths;
+
+            bool abort = false;
+            batchedCount(genres.size(), maxDbVariableCount, [&](size_t first, size_t count) {
+                if (abort) {
+                    return;
+                }
+                if (!qApp) {
+                    abort = true;
+                    return;
+                }
+
+                const QString whereString(QLatin1String("WHERE genreId IN (") % makeInStringFromIds(genres, first, count));
+
+                if (deleteFiles) {
+                    if (query.exec(QLatin1String("SELECT filePath "
+                                                 "FROM tracks "
+                                                 "JOIN tracks_genres ON tracks_genres.trackId = id ") % whereString)) {
+                        if (reserveFromQueryAppend(paths, query) > 0) {
+                            while (query.next()) {
+                                paths.push_back(query.value(0).toString());
+                            }
+                        }
+                    } else {
+                        qWarning() << "Failed to get tracks for genres" << query.lastError();
+                        abort = true;
+                        return;
+                    }
+                }
+
+                if (!query.exec(QLatin1String("DELETE FROM tracks "
+                                              "WHERE id IN ("
+                                                "SELECT id FROM tracks "
+                                                "JOIN tracks_genres ON tracks_genres.trackId = id ") %
+                                                whereString %
+                                              QLatin1Char(')'))) {
+                    qWarning() << "Failed to remove tracks from database" << query.lastError();
+                    abort = true;
+                }
+            });
+
+            if (!abort) {
+                if (deleteFiles) {
+                    deleteFilesFromFilesystem(paths);
+                }
+
+                removeUnusedCategories(db);
+                removeUnusedMediaArt(db, mediaArtDirectory);
+
+                qInfo("Genres removing time: %lld ms", static_cast<long long>(timer.elapsed()));
+            }
+        });
+
+        onFutureFinished(future, this, [this] {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+            emit databaseChanged();
+        });
+    }
+
+    void LibraryUtils::removeTracks(std::vector<LibraryTrack>&& tracks, bool deleteFiles)
+    {
+        if (mRemovingFiles || !mDatabaseInitialized || tracks.empty()) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run([deleteFiles, tracks = std::move(tracks), mediaArtDirectory = mMediaArtDirectory]() mutable {
+            qInfo("Start removing tracks, count=%zu, deleteFiles=%d", tracks.size(), deleteFiles);
+
+            QElapsedTimer timer;
+            timer.start();
+
+            // Open database
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
+                return;
+            }
+
+            const TransactionGuard transactionGuard(db);
+
+            std::vector<int> ids;
+            ids.reserve(tracks.size());
+            if (deleteFiles) {
+                std::vector<QString> paths;
+                paths.reserve(tracks.size());
+                for (auto& track : tracks) {
+                    ids.push_back(track.id);
+                    paths.push_back(std::move(track.filePath));
+                }
+                if (removeTracksFromDbByIds(std::move(ids), db)) {
+                    deleteFilesFromFilesystem(paths);
+                }
+            } else {
+                for (auto& track : tracks) {
+                    ids.push_back(track.id);
+                }
+                removeTracksFromDbByIds(std::move(ids), db);
+            }
+
+            removeUnusedCategories(db);
+            removeUnusedMediaArt(db, mediaArtDirectory);
+
+            qInfo("Tracks removing time: %lld ms", static_cast<long long>(timer.elapsed()));
+        });
+
+        onFutureFinished(future, this, [this] {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+            emit databaseChanged();
+        });
+    }
+
+    void LibraryUtils::removeTracksByPaths(std::vector<QString>&& paths, bool deleteFiles, bool deleteDirectories)
+    {
+        if (mRemovingFiles || !mDatabaseInitialized || paths.empty()) {
+            return;
+        }
+
+        mRemovingFiles = true;
+        emit removingFilesChanged();
+
+        auto future = QtConcurrent::run([deleteFiles, deleteDirectories, paths = std::move(paths), mediaArtDirectory = mMediaArtDirectory]() mutable {
+            qInfo("Start removing files, count=%zu", paths.size());
+
+            QElapsedTimer timer;
+            timer.start();
+
+            // Open database
+            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
+            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            if (!db.isOpen()) {
+                return;
+            }
+
+            const TransactionGuard transactionGuard(db);
+
+            if (deleteDirectories) {
+                std::vector<QString> files;
+                files.reserve(paths.size());
+                std::vector<QString> directories;
+                for (auto& path : paths) {
+                    if (QFileInfo(path).isDir()) {
+                        directories.push_back(std::move(path));
+                    } else {
+                        files.push_back(std::move(path));
+                    }
+                    //const bool isDir = QFileInfo(path).isDir();
+                    //files.emplace_back(std::move(path), isDir);
+                }
+                if (removeTracksFromDbByPaths(files, db)) {
+                    if (removeTracksFromDbByDirectories(directories, db)) {
+                        if (deleteFiles) {
+                            deleteFilesFromFilesystem(files);
+                            deleteDirectoriesFromFilesystem(directories);
+                        }
+                    }
+                }
+            } else {
+                if (removeTracksFromDbByPaths(paths, db)) {
+                    if (deleteFiles) {
+                        deleteFilesFromFilesystem(paths);
+                    }
+                }
+            }
+
+            removeUnusedCategories(db);
+            removeUnusedMediaArt(db, mediaArtDirectory);
+
+            qInfo("Files removing time: %lld ms", static_cast<long long>(timer.elapsed()));
+        });
+
+        onFutureFinished(future, this, [this] {
+            mRemovingFiles = false;
+            emit removingFilesChanged();
+            emit databaseChanged();
+        });
     }
 
     bool LibraryUtils::isSavingTags() const
@@ -948,15 +1292,11 @@ namespace unplayer
             qInfo("Done saving tags, %lldms", timer.elapsed());
         });
 
-        using Watcher = QFutureWatcher<void>;
-        auto watcher = new Watcher(this);
-        QObject::connect(watcher, &Watcher::finished, this, [this, watcher]() {
+        onFutureFinished(future, this, [this] {
             mSavingTags = false;
             emit savingTagsChanged();
             emit databaseChanged();
-            watcher->deleteLater();
         });
-        watcher->setFuture(future);
     }
 
     std::unordered_map<QByteArray, QString> LibraryUtils::getEmbeddedMediaArt()

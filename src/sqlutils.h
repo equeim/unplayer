@@ -58,6 +58,18 @@ namespace unplayer
         }
         return 0;
     }
+
+    template<typename C>
+    inline typename C::size_type reserveFromQueryAppend(C& container, QSqlQuery& query)
+    {
+        if (query.last()) {
+            const auto size = static_cast<typename C::size_type>(query.at() + 1);
+            container.reserve(container.size() + size);
+            query.seek(QSql::BeforeFirstRow);
+            return size;
+        }
+        return 0;
+    }
 }
 
 #endif // UNPLAYER_SQLUTILS_H

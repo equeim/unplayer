@@ -158,7 +158,7 @@ namespace unplayer
         for (int index : indexes) {
             files.push_back(mFiles[static_cast<size_t>(index)].filePath);
         }
-        LibraryUtils::instance()->removeFiles(std::move(files), true, true);
+        LibraryUtils::instance()->removeTracksByPaths(std::move(files), true, true);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 ModelBatchRemover::removeIndexes(this, indexes);

@@ -399,8 +399,9 @@ namespace unplayer
                 }
 
                 if (!tracksToRemove.empty()) {
-                    removeTracks(tracksToRemove);
-                    qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
+                    if (LibraryUtils::removeTracksFromDbByIds(tracksToRemove, mDb, mCancel)) {
+                        qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
+                    }
                 }
             }
 
@@ -422,37 +423,8 @@ namespace unplayer
 
         emit mNotifier.stageChanged(LibraryUpdateRunnableNotifier::FinishingStage);
 
-        std::unordered_set<QString> allEmbeddedMediaArt;
-        {
-            if (mQuery.exec(QLatin1String("SELECT DISTINCT(embeddedMediaArt) FROM tracks WHERE embeddedMediaArt IS NOT NULL"))) {
-                if (reserveFromQuery(allEmbeddedMediaArt, mQuery) > 0) {
-                    while (mQuery.next()) {
-                        if (mCancel) {
-                            return;
-                        }
-
-                        allEmbeddedMediaArt.insert(mQuery.value(0).toString());
-                    }
-                }
-            }
-        }
-
-        {
-            const QFileInfoList files(QDir(mMediaArtDirectory).entryInfoList(QDir::Files));
-            for (const QFileInfo& info : files) {
-                if (mCancel) {
-                    return;
-                }
-
-                if (!contains(allEmbeddedMediaArt, info.filePath())) {
-                    if (!QFile::remove(info.filePath())) {
-                        qWarning() << "failed to remove file:" << info.filePath();
-                    }
-                }
-            }
-        }
-
-        removeUnusedCategories();
+        LibraryUtils::removeUnusedCategories(mDb);
+        LibraryUtils::removeUnusedMediaArt(mDb, mMediaArtDirectory, mCancel);
 
         qInfo("End updating database (last stage took %.3f s)", static_cast<double>(stageTimer.elapsed()) / 1000.0);
         qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
@@ -633,29 +605,6 @@ namespace unplayer
         return tracksToAdd;
     }
 
-    void LibraryUpdateRunnable::removeTracks(const std::vector<int>& tracksToRemove)
-    {
-        if (!tracksToRemove.empty()) {
-            batchedCount(tracksToRemove.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
-                if (mCancel) {
-                    return;
-                }
-
-                QString queryString(QLatin1String("DELETE FROM tracks WHERE id IN ("));
-                queryString.push_back(QString::number(tracksToRemove[first]));
-                for (std::size_t j = first + 1, max = j + count; j < max; ++j) {
-                    queryString.push_back(QLatin1Char(','));
-                    queryString.push_back(QString::number(tracksToRemove[j]));
-                }
-                queryString.push_back(QLatin1Char(')'));
-
-                if (!mQuery.exec(queryString)) {
-                    qWarning() << "Failed to remove tracks from database" << mQuery.lastError();
-                }
-            });
-        }
-    }
-
     int LibraryUpdateRunnable::addTracks(const std::vector<LibraryUpdateRunnable::TrackToAdd>& tracksToAdd,
                                          std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
     {
@@ -687,57 +636,6 @@ namespace unplayer
         }
 
         return count;
-    }
-
-    void LibraryUpdateRunnable::removeUnusedCategories()
-    {
-        const auto removed = [&] {
-            if (mQuery.exec(QLatin1String("SELECT changes()"))) {
-                mQuery.next();
-                return mQuery.value(0).toInt();
-            }
-            return -1;
-        };
-
-        if (mQuery.exec(QLatin1String("DELETE FROM artists "
-                                      "WHERE id IN ("
-                                        "SELECT id FROM artists "
-                                        "LEFT JOIN tracks_artists ON tracks_artists.artistId = artists.id "
-                                        "WHERE tracks_artists.artistId IS NULL"
-                                      ")"))) {
-            const int count = removed();
-            if (count != 0) {
-                qInfo("Removed %d artists", count);
-            }
-        } else {
-            qWarning() << mQuery.lastError();
-        }
-        if (mQuery.exec(QLatin1String("DELETE FROM albums "
-                                      "WHERE id IN ("
-                                        "SELECT id FROM albums "
-                                        "LEFT JOIN tracks_albums ON tracks_albums.albumId = albums.id "
-                                        "WHERE tracks_albums.albumId IS NULL"
-                                      ")"))) {
-            const int count = removed();
-            if (count != 0) {
-                qInfo("Removed %d albums", count);
-            }
-        } else {
-            qWarning() << mQuery.lastError();
-        }
-        if (mQuery.exec(QLatin1String("DELETE FROM genres "
-                                      "WHERE id IN ("
-                                        "SELECT id FROM genres "
-                                        "LEFT JOIN tracks_genres ON tracks_genres.genreId = genres.id "
-                                        "WHERE tracks_genres.genreId IS NULL"
-                                      ")"))) {
-            const int count = removed();
-            if (count != 0) {
-                qInfo("Removed %d genres", count);
-            }
-        } else {
-            qWarning() << mQuery.lastError();
-        }
     }
 
     bool LibraryUpdateRunnable::isBlacklisted(const QString& path)

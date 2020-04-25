@@ -25,6 +25,7 @@ namespace unplayer
 {
     struct LibraryTrack
     {
+        int id;
         QString filePath;
         QString title;
         QString artist;

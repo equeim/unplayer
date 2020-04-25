@@ -226,12 +226,12 @@ namespace unplayer
             return;
         }
 
-        std::vector<QString> files;
+        std::vector<LibraryTrack> files;
         files.reserve(indexes.size());
         for (int index : indexes) {
-            files.push_back(mTracks[static_cast<size_t>(index)].filePath);
+            files.push_back(mTracks[static_cast<size_t>(index)]);
         }
-        LibraryUtils::instance()->removeFiles(std::move(files), deleteFiles, false);
+        LibraryUtils::instance()->removeTracks(std::move(files), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
             if (!LibraryUtils::instance()->isRemovingFiles()) {
                 ModelBatchRemover::removeIndexes(this, indexes);
@@ -249,7 +249,7 @@ namespace unplayer
                                          int genreId,
                                          bool& groupTracks)
     {
-        QString queryString(QLatin1String("SELECT filePath, tracks.title, duration, directoryMediaArt, embeddedMediaArt, %1 "
+        QString queryString(QLatin1String("SELECT tracks.id, filePath, tracks.title, duration, directoryMediaArt, embeddedMediaArt, %1 "
                                           "FROM tracks "
                                           "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
                                           "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
@@ -371,12 +371,13 @@ namespace unplayer
         };
         const QString artist(rejoin(ArtistField));
         const QString album(rejoin(AlbumField));
-        LibraryTrack track {query.value(FilePathField).toString(),
-                query.value(TitleField).toString(),
-                artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
-                album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
-                query.value(DurationField).toInt(),
-                /*mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)*/QString()};
+        LibraryTrack track {query.value(IdField).toInt(),
+                            query.value(FilePathField).toString(),
+                            query.value(TitleField).toString(),
+                            artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
+                            album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
+                            query.value(DurationField).toInt(),
+                            /*mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)*/QString()};
         return track;
     }
 

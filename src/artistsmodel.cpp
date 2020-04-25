@@ -182,10 +182,10 @@ namespace unplayer
             return;
         }
 
-        std::vector<QString> artists;
+        std::vector<int> artists;
         artists.reserve(indexes.size());
         for (int index : indexes) {
-            artists.push_back(mArtists[static_cast<size_t>(index)].artist);
+            artists.push_back(mArtists[static_cast<size_t>(index)].id);
         }
         LibraryUtils::instance()->removeArtists(std::move(artists), deleteFiles);
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::removingFilesChanged, this, [this, indexes] {
