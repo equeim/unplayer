@@ -20,16 +20,15 @@
 #define UNPLAYER_PLAYLISTMODEL_H
 
 #include <vector>
-#include <QAbstractListModel>
 
+#include "asyncloadingmodel.h"
 #include "playlistutils.h"
 
 namespace unplayer
 {
-    class PlaylistModel : public QAbstractListModel
+    class PlaylistModel : public AsyncLoadingModel
     {
         Q_OBJECT
-        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
         Q_PROPERTY(QString filePath READ filePath WRITE setFilePath)
     public:
         enum Role
@@ -48,8 +47,6 @@ namespace unplayer
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-        bool isLoaded() const;
-
         const QString& filePath() const;
         void setFilePath(const QString& playlistFilePath);
 
@@ -60,12 +57,8 @@ namespace unplayer
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        bool mLoaded = false;
         std::vector<PlaylistTrack> mTracks;
         QString mFilePath;
-
-    signals:
-        void loadedChanged();
     };
 }
 

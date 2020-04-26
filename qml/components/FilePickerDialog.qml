@@ -166,17 +166,15 @@ Dialog {
             sourceModel: Unplayer.DirectoryContentModel {
                 id: directoryContentModel
 
-                onLoadingChanged: {
-                    if (!loading) {
-                        if (listView.goingUp) {
-                            if (listView.savedPositions.length) {
-                                listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
-                            } else {
-                                listView.positionViewAtBeginning()
-                            }
+                onLoaded: {
+                    if (listView.goingUp) {
+                        if (listView.savedPositions.length) {
+                            listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
                         } else {
                             listView.positionViewAtBeginning()
                         }
+                    } else {
+                        listView.positionViewAtBeginning()
                     }
                 }
             }

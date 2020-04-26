@@ -144,14 +144,14 @@ Page {
         }
 
         ListViewPlaceholder {
-            enabled: playlistModel.loaded && !listView.count
+            enabled: !playlistModel.loading && !listView.count
             text: qsTranslate("unplayer", "No tracks")
         }
 
         BusyIndicator {
             anchors.centerIn: parent
             size: BusyIndicatorSize.Large
-            running: !playlistModel.loaded
+            running: playlistModel.loading
         }
 
         VerticalScrollDecorator { }

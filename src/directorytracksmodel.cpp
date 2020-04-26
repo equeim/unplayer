@@ -119,11 +119,6 @@ namespace unplayer
         return QFileInfo(mDirectory).path();
     }
 
-    bool DirectoryTracksModel::isLoaded() const
-    {
-        return mLoaded;
-    }
-
     QString DirectoryTracksModel::getTrack(int index) const
     {
         return mFiles[static_cast<size_t>(index)].filePath;
@@ -149,7 +144,7 @@ namespace unplayer
 
     void DirectoryTracksModel::removeTracks(const std::vector<int>& indexes)
     {
-        if (LibraryUtils::instance()->isRemovingFiles() || !mLoaded) {
+        if (LibraryUtils::instance()->isRemovingFiles() || isLoading()) {
             return;
         }
 
@@ -182,8 +177,7 @@ namespace unplayer
             return;
         }
 
-        mLoaded = false;
-        emit loadedChanged();
+        setLoading(true);
 
         removeRows(0, rowCount());
 
@@ -224,8 +218,7 @@ namespace unplayer
             endInsertRows();
             mTracksCount = result.second;
 
-            mLoaded = true;
-            emit loadedChanged();
+            setLoading(false);
         });
     }
 

@@ -112,7 +112,7 @@ Page {
             }
 
             ParentDirectoryItem {
-                visible: directoryTracksModel.loaded && directoryTracksModel.directory !== "/"
+                visible: !directoryTracksModel.loading && directoryTracksModel.directory !== "/"
                 onClicked: {
                     if (!selectionPanel.showPanel) {
                         searchPanel.open = false
@@ -252,17 +252,15 @@ Page {
             sourceModel: Unplayer.DirectoryTracksModel {
                 id: directoryTracksModel
 
-                onLoadedChanged: {
-                    if (loaded) {
-                        if (listView.goingUp) {
-                            if (listView.savedPositions.length) {
-                                listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
-                            } else {
-                                listView.positionViewAtBeginning()
-                            }
+                onLoaded: {
+                    if (listView.goingUp) {
+                        if (listView.savedPositions.length) {
+                            listView.contentY = (listView.savedPositions.pop() - listView.headerItem.height)
                         } else {
                             listView.positionViewAtBeginning()
                         }
+                    } else {
+                        listView.positionViewAtBeginning()
                     }
                 }
             }
@@ -314,14 +312,14 @@ Page {
         }
 
         ListViewPlaceholder {
-            enabled: directoryTracksModel.loaded && !listView.count
+            enabled: !directoryTracksModel.loading && !listView.count
             text: qsTranslate("unplayer", "No files")
         }
 
         BusyIndicator {
             anchors.centerIn: parent
             size: BusyIndicatorSize.Large
-            running: !directoryTracksModel.loaded
+            running: directoryTracksModel.loading
         }
 
         VerticalScrollDecorator { }

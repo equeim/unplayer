@@ -20,8 +20,8 @@
 #define UNPLAYER_DIRECTORYTRACKSMODEL_H
 
 #include <vector>
-#include <QAbstractListModel>
 
+#include "asyncloadingmodel.h"
 #include "directorycontentproxymodel.h"
 
 namespace unplayer
@@ -34,13 +34,12 @@ namespace unplayer
         bool isPlaylist;
     };
 
-    class DirectoryTracksModel : public QAbstractListModel, public QQmlParserStatus
+    class DirectoryTracksModel : public AsyncLoadingModel, public QQmlParserStatus
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
         Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
-        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
     public:
         enum Role
         {
@@ -64,7 +63,6 @@ namespace unplayer
         void setDirectory(QString newDirectory);
 
         QString parentDirectory() const;
-        bool isLoaded() const;
 
         Q_INVOKABLE QString getTrack(int index) const;
         Q_INVOKABLE QStringList getTracks(const std::vector<int>& indexes, bool includePlaylists = true) const;
@@ -85,12 +83,10 @@ namespace unplayer
         int mTracksCount = 0;
 
         QString mDirectory;
-        bool mLoaded = false;
 
         bool mShowVideoFiles = false;
     signals:
         void directoryChanged();
-        void loadedChanged();
     };
 
     class DirectoryTracksProxyModel : public DirectoryContentProxyModel

@@ -81,11 +81,6 @@ namespace unplayer
         return false;
     }
 
-    bool PlaylistModel::isLoaded() const
-    {
-        return mLoaded;
-    }
-
     QHash<int, QByteArray> PlaylistModel::roleNames() const
     {
         return {{UrlRole, "url"},
@@ -110,10 +105,7 @@ namespace unplayer
 
         mFilePath = playlistFilePath;
 
-        if (mLoaded) {
-            mLoaded = false;
-            emit loadedChanged();
-        }
+        setLoading(true);
 
         removeRows(0, rowCount());
 
@@ -219,8 +211,7 @@ namespace unplayer
             mTracks = std::move(tracks);
             endInsertRows();
 
-            mLoaded = true;
-            emit loadedChanged();
+            setLoading(false);
         });
     }
 
