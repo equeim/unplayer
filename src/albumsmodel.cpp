@@ -23,7 +23,6 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
-#include <QFutureWatcher>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>

@@ -22,7 +22,6 @@
 
 #include <QDebug>
 #include <QFile>
-#include <QFutureWatcher>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QtConcurrentRun>

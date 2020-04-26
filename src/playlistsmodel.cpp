@@ -20,12 +20,12 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QFutureWatcher>
 #include <QtConcurrentRun>
 
 #include "modelutils.h"
 #include "playlistutils.h"
 #include "stdutils.h"
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -113,10 +113,7 @@ namespace unplayer
             return playlists;
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<PlaylistsModelItem>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            std::vector<PlaylistsModelItem> playlists(watcher->result());
+        onFutureFinished(future, this, [this](std::vector<PlaylistsModelItem>&& playlists) {
             ModelBatchRemover remover(this);
             for (int i = static_cast<int>(mPlaylists.size()) - 1; i >= 0; --i) {
                 if (!contains(playlists, mPlaylists[static_cast<size_t>(i)])) {
@@ -147,6 +144,5 @@ namespace unplayer
 
             emit dataChanged(index(0), index(static_cast<int>(oldSize) - 1));
         });
-        watcher->setFuture(future);
     }
 }

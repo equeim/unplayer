@@ -19,9 +19,10 @@
 #include "directorycontentmodel.h"
 
 #include <QDir>
-#include <QFutureWatcher>
 #include <QStandardPaths>
 #include <QtConcurrentRun>
+
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -157,18 +158,14 @@ namespace unplayer
             return files;
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<DirectoryContentFile>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+        onFutureFinished(future, this, [clear, this](std::vector<DirectoryContentFile>&& files) {
             clear();
 
-            auto files(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(files.size()) - 1);
             mFiles = std::move(files);
             endInsertRows();
 
             setLoading(false);
         });
-        watcher->setFuture(future);
     }
 }

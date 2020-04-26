@@ -28,7 +28,6 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QFileInfo>
-#include <QFutureWatcher>
 #include <QMimeDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -604,12 +603,9 @@ namespace unplayer
             return newTracks;
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            addingTracksCallback(watcher->result(), setAsCurrent, setAsCurrentUrl);
+        onFutureFinished(future, this, [=](std::vector<std::shared_ptr<QueueTrack>>&& tracks) {
+            addingTracksCallback(std::move(tracks), setAsCurrent, setAsCurrentUrl);
         });
-        watcher->setFuture(future);
     }
 
     void Queue::addTrackFromUrl(const QString& trackUrl)
@@ -674,12 +670,9 @@ namespace unplayer
             return newTracks;
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<std::shared_ptr<QueueTrack>>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
-            addingTracksCallback(watcher->result(), setAsCurrent, setAsCurrentUrl);
+        onFutureFinished(future, this, [=](std::vector<std::shared_ptr<QueueTrack>>&& tracks) {
+            addingTracksCallback(std::move(tracks), setAsCurrent, setAsCurrentUrl);
         });
-        watcher->setFuture(future);
     }
 
     void Queue::addTrackFromLibrary(const LibraryTrack& libraryTrack, bool clearQueue, int setAsCurrent)

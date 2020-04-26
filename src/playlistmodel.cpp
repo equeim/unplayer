@@ -22,7 +22,6 @@
 #include <unordered_map>
 
 #include <QFileInfo>
-#include <QFutureWatcher>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -213,12 +212,9 @@ namespace unplayer
             return tracks;
         });
 
-        using FutureWatcher = QFutureWatcher<std::vector<PlaylistTrack>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+        onFutureFinished(future, this, [this](std::vector<PlaylistTrack>&& tracks) {
             removeRows(0, rowCount());
 
-            auto tracks(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(tracks.size() - 1));
             mTracks = std::move(tracks);
             endInsertRows();
@@ -226,7 +222,6 @@ namespace unplayer
             mLoaded = true;
             emit loadedChanged();
         });
-        watcher->setFuture(future);
     }
 
     QStringList PlaylistModel::getTracks(const std::vector<int>& indexes)

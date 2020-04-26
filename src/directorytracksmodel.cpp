@@ -23,7 +23,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#include <QFutureWatcher>
 #include <QItemSelectionModel>
 #include <QStandardPaths>
 #include <QSqlDatabase>
@@ -36,6 +35,7 @@
 #include "modelutils.h"
 #include "playlistutils.h"
 #include "settings.h"
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -216,12 +216,9 @@ namespace unplayer
             return std::pair<std::vector<DirectoryTrackFile>, int>(std::move(files), tracksCount);
         });
 
-        using FutureWatcher = QFutureWatcher<std::pair<std::vector<DirectoryTrackFile>, int>>;
-        auto watcher = new FutureWatcher(this);
-        QObject::connect(watcher, &FutureWatcher::finished, this, [=]() {
+        onFutureFinished(future, this, [this](std::pair<std::vector<DirectoryTrackFile>, int>&& result) {
             removeRows(0, rowCount());
 
-            auto result(watcher->result());
             beginInsertRows(QModelIndex(), 0, static_cast<int>(result.first.size()) - 1);
             mFiles = std::move(result.first);
             endInsertRows();
@@ -230,7 +227,6 @@ namespace unplayer
             mLoaded = true;
             emit loadedChanged();
         });
-        watcher->setFuture(future);
     }
 
     DirectoryTracksProxyModel::DirectoryTracksProxyModel()
