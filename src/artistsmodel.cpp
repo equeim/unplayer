@@ -221,7 +221,12 @@ namespace unplayer
                                                                                                            : QLatin1String("ASC"));
     }
 
-    Artist ArtistsModel::itemFromQuery(const QSqlQuery& query)
+    ArtistsModel::AbstractItemFactory* ArtistsModel::createItemFactory()
+    {
+        return new ItemFactory();
+    }
+
+    Artist ArtistsModel::ItemFactory::itemFromQuery(const QSqlQuery& query)
     {
         const QString artist(query.value(ArtistField).toString());
         return {query.value(ArtistIdField).toInt(),

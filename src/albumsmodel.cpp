@@ -331,7 +331,12 @@ namespace unplayer
         return queryString.arg(mSortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
     }
 
-    Album AlbumsModel::itemFromQuery(const QSqlQuery& query)
+    AlbumsModel::AbstractItemFactory* AlbumsModel::createItemFactory()
+    {
+        return new ItemFactory();
+    }
+
+    Album AlbumsModel::ItemFactory::itemFromQuery(const QSqlQuery& query)
     {
         const QString artist(query.value(ArtistField).toString());
         const QString album(query.value(AlbumField).toString());

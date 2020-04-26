@@ -216,7 +216,12 @@ namespace unplayer
                                                                                    : QLatin1String("ASC"));
     }
 
-    Genre GenresModel::itemFromQuery(const QSqlQuery& query)
+    GenresModel::AbstractItemFactory* GenresModel::createItemFactory()
+    {
+        return new ItemFactory();
+    }
+
+    Genre GenresModel::ItemFactory::itemFromQuery(const QSqlQuery& query)
     {
         return {query.value(GenreIdField).toInt(),
                 query.value(GenreField).toString(),

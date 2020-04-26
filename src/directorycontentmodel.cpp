@@ -28,8 +28,7 @@ namespace unplayer
     DirectoryContentModel::DirectoryContentModel()
         : mComponentCompleted(false),
           mDirectory(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)),
-          mShowFiles(true),
-          mLoading(false)
+          mShowFiles(true)
     {
         QDir dir(mDirectory);
         dir.cdUp();
@@ -119,11 +118,6 @@ namespace unplayer
         mNameFilters = filters;
     }
 
-    bool DirectoryContentModel::isLoading() const
-    {
-        return mLoading;
-    }
-
     QHash<int, QByteArray> DirectoryContentModel::roleNames() const
     {
         return {{FilePathRole, "filePath"},
@@ -133,8 +127,7 @@ namespace unplayer
 
     void DirectoryContentModel::loadDirectory()
     {
-        mLoading = true;
-        emit loadingChanged();
+        setLoading(true);
 
         auto clear = [=] {
             if (!mFiles.empty()) {
@@ -174,8 +167,7 @@ namespace unplayer
             mFiles = std::move(files);
             endInsertRows();
 
-            mLoading = false;
-            emit loadingChanged();
+            setLoading(false);
         });
         watcher->setFuture(future);
     }

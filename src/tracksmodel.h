@@ -153,10 +153,18 @@ namespace unplayer
         static LibraryTrack trackFromQuery(const QSqlQuery& query, bool groupTracks);
 
     protected:
+        class ItemFactory : public AbstractItemFactory
+        {
+        public:
+            inline explicit ItemFactory(bool groupTracks) : groupTracks(groupTracks) {}
+            LibraryTrack itemFromQuery(const QSqlQuery& query) override;
+            bool groupTracks;
+        };
+
         QHash<int, QByteArray> roleNames() const override;
 
         QString makeQueryString() override;
-        LibraryTrack itemFromQuery(const QSqlQuery& query) override;
+        AbstractItemFactory* createItemFactory() override;
 
     private:
         std::vector<LibraryTrack>& mTracks = mItems;

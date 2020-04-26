@@ -19,8 +19,9 @@
 #ifndef UNPLAYER_DIRECTORYCONTENTMODEL_H
 #define UNPLAYER_DIRECTORYCONTENTMODEL_H
 
-#include <QAbstractListModel>
 #include <QQmlParserStatus>
+
+#include "asyncloadingmodel.h"
 
 namespace unplayer
 {
@@ -31,7 +32,7 @@ namespace unplayer
         bool isDirectory;
     };
 
-    class DirectoryContentModel : public QAbstractListModel, public QQmlParserStatus
+    class DirectoryContentModel : public AsyncLoadingModel, public QQmlParserStatus
     {
         Q_OBJECT
         Q_INTERFACES(QQmlParserStatus)
@@ -39,7 +40,6 @@ namespace unplayer
         Q_PROPERTY(QString parentDirectory READ parentDirectory NOTIFY directoryChanged)
         Q_PROPERTY(bool showFiles READ showFiles WRITE setShowFiles)
         Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters)
-        Q_PROPERTY(bool loading READ isLoading NOTIFY loadingChanged)
     public:
         enum Role
         {
@@ -67,8 +67,6 @@ namespace unplayer
         const QStringList& nameFilters() const;
         void setNameFilters(const QStringList& filters);
 
-        bool isLoading() const;
-
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
@@ -82,10 +80,8 @@ namespace unplayer
         bool mShowFiles;
         QStringList mNameFilters;
 
-        bool mLoading;
     signals:
         void directoryChanged();
-        void loadingChanged();
     };
 }
 

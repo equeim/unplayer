@@ -100,10 +100,16 @@ namespace unplayer
         Q_INVOKABLE void removeAlbums(const std::vector<int>& indexes, bool deleteFiles);
 
     protected:
+        class ItemFactory : public AbstractItemFactory
+        {
+        public:
+            Album itemFromQuery(const QSqlQuery& query) override;
+        };
+
         QHash<int, QByteArray> roleNames() const override;
 
         QString makeQueryString() override;
-        Album itemFromQuery(const QSqlQuery& query) override;
+        AbstractItemFactory* createItemFactory() override;
 
     private:
         std::vector<Album>& mAlbums = mItems;

@@ -20,23 +20,30 @@
 #define UNPLAYER_ABSTRACTLIBRARYMODEL_H
 
 #include <vector>
-#include <QAbstractListModel>
+
+#include "asyncloadingmodel.h"
 
 class QSqlQuery;
 
 namespace unplayer
 {
     template<typename Item>
-    class AbstractLibraryModel : public QAbstractListModel
+    class AbstractLibraryModel : public AsyncLoadingModel
     {
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
     protected:
-        void execQuery();
+        class AbstractItemFactory
+        {
+        public:
+            virtual ~AbstractItemFactory() = default;
+            virtual Item itemFromQuery(const QSqlQuery& query) = 0;
+        };
 
+        void execQuery();
         virtual QString makeQueryString() = 0;
-        virtual Item itemFromQuery(const QSqlQuery& query) = 0;
+        virtual AbstractItemFactory* createItemFactory() = 0;
 
         std::vector<Item> mItems;
     };

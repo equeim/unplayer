@@ -32,6 +32,7 @@ add_executable("${PROJECT_NAME}"
     abstractlibrarymodel.cpp
     albumsmodel.cpp
     artistsmodel.cpp
+    asyncloadingmodel.h
     commandlineparser.cpp
     directorycontentmodel.cpp
     directorycontentproxymodel.cpp

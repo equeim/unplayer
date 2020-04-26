@@ -18,9 +18,17 @@
 
 #include "abstractlibrarymodel.h"
 
+#include <memory>
+
 #include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QUuid>
+#include <QtConcurrentRun>
+
+#include "libraryutils.h"
+#include "sqlutils.h"
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -48,25 +56,45 @@ namespace unplayer
     {
         removeRows(0, rowCount());
 
-        QSqlQuery query;
-        if (!query.prepare(makeQueryString())) {
-            qWarning() << __func__ << "prepare failed:" << query.lastError();
-            return;
-        }
+        setLoading(true);
 
-        if (query.exec()) {
-            if (query.last()) {
-                const int lastIndex = query.at();
-                query.seek(QSql::BeforeFirstRow);
-                beginInsertRows(QModelIndex(), 0, lastIndex);
-                mItems.reserve(static_cast<size_t>(lastIndex + 1));
-                while (query.next()) {
-                    mItems.emplace_back(itemFromQuery(query));
+        auto itemFactory = createItemFactory();
+        auto queryString(makeQueryString());
+        auto future(QtConcurrent::run([itemFactory, queryString = std::move(queryString)] {
+            auto items(std::make_shared<std::vector<Item>>());
+
+            std::unique_ptr<AbstractItemFactory> itemFactoryUnique(itemFactory);
+
+            DatabaseConnectionGuard databaseGuard{QUuid::createUuid().toString()};
+            auto db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+
+            QSqlQuery query(db);
+            if (!query.prepare(queryString)) {
+                qWarning() << "Prepare failed:" << query.lastError();
+                return items;
+            }
+
+            if (query.exec()) {
+                if (reserveFromQuery(*items, query) > 0) {
+                    while (query.next()) {
+                        items->push_back(itemFactory->itemFromQuery(query));
+                    }
                 }
+            } else {
+                qWarning() << "Exec failed: " << query.lastError();
+            }
+
+            return items;
+        }));
+
+        onFutureFinished(future, this, [this](std::shared_ptr<std::vector<Item>>&& items) {
+            removeRows(0, rowCount());
+            if (!items->empty()) {
+                beginInsertRows(QModelIndex(), 0, static_cast<int>(items->size()) - 1);
+                mItems = std::move(*items);
                 endInsertRows();
             }
-        } else {
-            qWarning() << query.lastError();
-        }
+            setLoading(false);
+        });
     }
 }

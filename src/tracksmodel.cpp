@@ -402,8 +402,13 @@ namespace unplayer
                                mGroupTracks);
     }
 
-    LibraryTrack TracksModel::itemFromQuery(const QSqlQuery& query)
+    TracksModel::AbstractItemFactory* TracksModel::createItemFactory()
     {
-        return trackFromQuery(query, mGroupTracks);
+        return new ItemFactory(mGroupTracks);
+    }
+
+    LibraryTrack TracksModel::ItemFactory::itemFromQuery(const QSqlQuery& query)
+    {
+        return TracksModel::trackFromQuery(query, groupTracks);
     }
 }
