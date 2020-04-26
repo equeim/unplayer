@@ -632,53 +632,60 @@ namespace unplayer
 
     int LibraryUtils::artistsCount() const
     {
-        if (!mDatabaseInitialized) {
-            return 0;
-        }
-
-        QSqlQuery query(Settings::instance()->useAlbumArtist() ? QLatin1String("SELECT COUNT(DISTINCT(albumArtist)) FROM tracks")
-                                                               : QLatin1String("SELECT COUNT(DISTINCT(artist)) FROM tracks"));
-        if (query.next()) {
-            return query.value(0).toInt();
+        if (mDatabaseInitialized) {
+            QSqlQuery query;
+            if (query.exec(QLatin1String("SELECT COUNT(*) FROM artists"))) {
+                if (query.next()) {
+                    return query.value(0).toInt();
+                }
+            } else {
+                qWarning() << query.lastError();
+            }
         }
         return 0;
     }
 
     int LibraryUtils::albumsCount() const
     {
-        if (!mDatabaseInitialized) {
-            return 0;
-        }
-
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(album)) FROM tracks"));
-        if (query.next()) {
-            return query.value(0).toInt();
+        if (mDatabaseInitialized) {
+            QSqlQuery query;
+            if (query.exec(QLatin1String("SELECT COUNT(*) FROM albums"))) {
+                if (query.next()) {
+                    return query.value(0).toInt();
+                }
+            } else {
+                qWarning() << query.lastError();
+            }
         }
         return 0;
     }
 
     int LibraryUtils::tracksCount() const
     {
-        if (!mDatabaseInitialized) {
-            return 0;
-        }
-
-        QSqlQuery query(QLatin1String("SELECT COUNT(DISTINCT(id)) FROM tracks"));
-        if (query.next()) {
-            return query.value(0).toInt();
+        if (mDatabaseInitialized) {
+            QSqlQuery query;
+            if (query.exec(QLatin1String("SELECT COUNT(*) FROM tracks"))) {
+                if (query.next()) {
+                    return query.value(0).toInt();
+                }
+            } else {
+                qWarning() << query.lastError();
+            }
         }
         return 0;
     }
 
     int LibraryUtils::tracksDuration() const
     {
-        if (!mDatabaseInitialized) {
-            return 0;
-        }
-
-        QSqlQuery query(QLatin1String("SELECT SUM(duration) FROM (SELECT duration from tracks GROUP BY id)"));
-        if (query.next()) {
-            return query.value(0).toInt();
+        if (mDatabaseInitialized) {
+            QSqlQuery query;
+            if (query.exec(QLatin1String("SELECT SUM(duration) FROM tracks"))) {
+                if (query.next()) {
+                    return query.value(0).toInt();
+                }
+            } else {
+                qWarning() << query.lastError();
+            }
         }
         return 0;
     }
