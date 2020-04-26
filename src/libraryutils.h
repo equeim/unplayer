@@ -57,7 +57,7 @@ namespace unplayer
         Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
 
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
-        Q_PROPERTY(unplayer::LibraryUpdateRunnableNotifier::UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
+        Q_PROPERTY(unplayer::LibraryUpdateRunnable::UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
         Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
         Q_PROPERTY(int extractedTracks READ extractedTracks NOTIFY extractedTracksChanged)
 
@@ -65,7 +65,7 @@ namespace unplayer
 
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
-        using UpdateStage = LibraryUpdateRunnableNotifier::UpdateStage;
+        using UpdateStage = LibraryUpdateRunnable::UpdateStage;
 
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
 
@@ -123,7 +123,7 @@ namespace unplayer
         bool mCreatedTables;
 
         QRunnable* mLibraryUpdateRunnable;
-        LibraryUpdateRunnableNotifier::UpdateStage mLibraryUpdateStage;
+        UpdateStage mLibraryUpdateStage;
         int mFoundTracks;
         int mExtractedTracks;
 

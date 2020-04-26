@@ -316,11 +316,6 @@ namespace unplayer
 
     }
 
-    LibraryUpdateRunnableNotifier* LibraryUpdateRunnable::notifier()
-    {
-        return &mNotifier;
-    }
-
     void LibraryUpdateRunnable::cancel()
     {
         qInfo("Cancel updating database");
@@ -332,10 +327,10 @@ namespace unplayer
         const struct FinishedGuard
         {
             ~FinishedGuard() {
-                emit notifier.finished();
+                emit runnable->finished();
             }
-            LibraryUpdateRunnableNotifier& notifier;
-        } finishedGuard{mNotifier};
+            LibraryUpdateRunnable* runnable;
+        } finishedGuard{this};
 
         if (mCancel) {
             return;
@@ -384,7 +379,7 @@ namespace unplayer
                     qInfo("Tracks to remove: %zd", tracksToRemove.size());
 
                     qInfo("Start scanning filesystem");
-                    emit mNotifier.stageChanged(LibraryUpdateRunnableNotifier::ScanningStage);
+                    emit stageChanged(ScanningStage);
 
                     tracksToAdd = scanFilesystem(trackInDbResult,
                                                  tracksToRemove,
@@ -411,7 +406,7 @@ namespace unplayer
 
             if (!tracksToAdd.empty()) {
                 qInfo("Start extracting tags from files");
-                emit mNotifier.stageChanged(LibraryUpdateRunnableNotifier::ExtractingStage);
+                emit stageChanged(ExtractingStage);
                 const int count = addTracks(tracksToAdd, embeddedMediaArtFiles);
                 qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(stageTimer.restart()) / 1000.0);
             }
@@ -421,7 +416,7 @@ namespace unplayer
             return;
         }
 
-        emit mNotifier.stageChanged(LibraryUpdateRunnableNotifier::FinishingStage);
+        emit stageChanged(FinishingStage);
 
         LibraryUtils::removeUnusedCategories(mDb);
         LibraryUtils::removeUnusedMediaArt(mDb, mMediaArtDirectory, mCancel);
@@ -572,7 +567,7 @@ namespace unplayer
                     }
 
                     tracksToAdd.push_back({std::move(filePath), directoryMediaArt, extension});
-                    emit mNotifier.foundFilesChanged(static_cast<int>(tracksToAdd.size()));
+                    emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                 } else {
                     // File is in database
 
@@ -596,7 +591,7 @@ namespace unplayer
                         // File has changed
                         tracksToRemove.push_back(file.id);
                         tracksToAdd.push_back({foundInDb->first, directoryMediaArt, extension});
-                        emit mNotifier.foundFilesChanged(static_cast<int>(tracksToAdd.size()));
+                        emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                     }
                 }
             }
@@ -631,7 +626,7 @@ namespace unplayer
                                          LibraryUtils::instance()->saveEmbeddedMediaArt(trackInfo.mediaArtData,
                                                                                         embeddedMediaArtFiles,
                                                                                         mMimeDb));
-                emit mNotifier.extractedFilesChanged(count);
+                emit extractedFilesChanged(count);
             }
         }
 

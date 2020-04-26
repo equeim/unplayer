@@ -552,21 +552,21 @@ namespace unplayer
         }
 
         auto runnable = new LibraryUpdateRunnable(mMediaArtDirectory);
-        QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::stageChanged, this, [this](LibraryUpdateRunnableNotifier::UpdateStage newStage) {
+        QObject::connect(runnable, &LibraryUpdateRunnable::stageChanged, this, [this](UpdateStage newStage) {
             mLibraryUpdateStage = newStage;
             emit updateStageChanged();
         });
-        QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::foundFilesChanged, this, [this](int found) {
+        QObject::connect(runnable, &LibraryUpdateRunnable::foundFilesChanged, this, [this](int found) {
             mFoundTracks = found;
             emit foundTracksChanged();
         });
-        QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::extractedFilesChanged, this, [this](int extracted) {
+        QObject::connect(runnable, &LibraryUpdateRunnable::extractedFilesChanged, this, [this](int extracted) {
             mExtractedTracks = extracted;
             emit extractedTracksChanged();
         });
-        QObject::connect(runnable->notifier(), &LibraryUpdateRunnableNotifier::finished, this, [this]() {
+        QObject::connect(runnable, &LibraryUpdateRunnable::finished, this, [this]() {
             mLibraryUpdateRunnable = nullptr;
-            mLibraryUpdateStage = LibraryUpdateRunnableNotifier::NoneStage;
+            mLibraryUpdateStage = LibraryUpdateRunnable::NoneStage;
             mFoundTracks = 0;
             mExtractedTracks = 0;
             emit updatingChanged();
@@ -575,9 +575,9 @@ namespace unplayer
             emit extractedTracksChanged();
             emit databaseChanged();
         });
-        QObject::connect(qApp, &QCoreApplication::aboutToQuit, runnable->notifier(), [runnable]() { runnable->cancel(); });
+        QObject::connect(qApp, &QCoreApplication::aboutToQuit, runnable, [runnable] { runnable->cancel(); });
         mLibraryUpdateRunnable = runnable;
-        mLibraryUpdateStage = LibraryUpdateRunnableNotifier::PreparingStage;
+        mLibraryUpdateStage = LibraryUpdateRunnable::PreparingStage;
         QThreadPool::globalInstance()->start(runnable);
         emit updatingChanged();
         emit updateStageChanged();
@@ -1355,14 +1355,14 @@ namespace unplayer
           mDatabaseInitialized(false),
           mCreatedTables(false),
           mLibraryUpdateRunnable(nullptr),
-          mLibraryUpdateStage(LibraryUpdateRunnableNotifier::NoneStage),
+          mLibraryUpdateStage(LibraryUpdateRunnable::NoneStage),
           mFoundTracks(0),
           mExtractedTracks(0),
           mRemovingFiles(false),
           mSavingTags(false),
           mMediaArtDirectory(QString::fromLatin1("%1/media-art").arg(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)))
     {
-        qRegisterMetaType<LibraryUpdateRunnableNotifier::UpdateStage>();
+        qRegisterMetaType<LibraryUpdateRunnable::UpdateStage>();
         initDatabase();
         QObject::connect(this, &LibraryUtils::databaseChanged, this, &LibraryUtils::mediaArtChanged);
     }

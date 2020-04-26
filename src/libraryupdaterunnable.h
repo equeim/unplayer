@@ -94,7 +94,7 @@ namespace unplayer
         ArtistsOrGenres mGenres{QLatin1String("genres")};
     };
 
-    class LibraryUpdateRunnableNotifier : public QObject
+    class LibraryUpdateRunnable : public QObject, public QRunnable
     {
         Q_OBJECT
     public:
@@ -106,23 +106,13 @@ namespace unplayer
             FinishingStage
         };
         Q_ENUM(UpdateStage)
-    signals:
-        void stageChanged(unplayer::LibraryUpdateRunnableNotifier::UpdateStage newStage);
-        void foundFilesChanged(int found);
-        void extractedFilesChanged(int extracted);
-        void finished();
-    };
 
-    class LibraryUpdateRunnable : public QRunnable
-    {
-    public:
         explicit LibraryUpdateRunnable(const QString& mediaArtDirectory);
-
-        LibraryUpdateRunnableNotifier* notifier();
 
         void cancel();
 
         void run() override;
+
     private:
         struct TrackInDb
         {
@@ -158,7 +148,6 @@ namespace unplayer
 
         bool isBlacklisted(const QString& path);
 
-        LibraryUpdateRunnableNotifier mNotifier;
         QString mMediaArtDirectory;
         std::atomic_bool mCancel;
 
@@ -168,6 +157,12 @@ namespace unplayer
         QSqlDatabase mDb;
         QSqlQuery mQuery;
         QMimeDatabase mMimeDb;
+
+    signals:
+        void stageChanged(UpdateStage newStage);
+        void foundFilesChanged(int found);
+        void extractedFilesChanged(int extracted);
+        void finished();
     };
 }
 
