@@ -30,6 +30,7 @@ namespace unplayer
     template<typename Item>
     class AbstractLibraryModel : public AsyncLoadingModel
     {
+    public:
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
