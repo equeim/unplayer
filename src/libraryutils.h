@@ -19,17 +19,12 @@
 #ifndef UNPLAYER_LIBRARYUTILS_H
 #define UNPLAYER_LIBRARYUTILS_H
 
+#include <atomic>
+
 #include <QObject>
 #include <QSqlDatabase>
 
-#include <atomic>
-#include <unordered_map>
-#include <unordered_set>
-
-#include "libraryupdaterunnable.h"
-
-class QMimeDatabase;
-class QSqlQuery;
+class QRunnable;
 
 namespace unplayer
 {
@@ -53,7 +48,7 @@ namespace unplayer
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
 
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
-        Q_PROPERTY(unplayer::LibraryUpdateRunnable::UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
+        Q_PROPERTY(UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
         Q_PROPERTY(int foundTracks READ foundTracks NOTIFY foundTracksChanged)
         Q_PROPERTY(int extractedTracks READ extractedTracks NOTIFY extractedTracksChanged)
 
@@ -61,7 +56,14 @@ namespace unplayer
 
         Q_PROPERTY(bool savingTags READ isSavingTags NOTIFY savingTagsChanged)
     public:
-        using UpdateStage = LibraryUpdateRunnable::UpdateStage;
+        enum UpdateStage {
+            NoneStage,
+            PreparingStage,
+            ScanningStage,
+            ExtractingStage,
+            FinishingStage
+        };
+        Q_ENUM(UpdateStage)
 
         static QSqlDatabase openDatabase(const QString& connectionName = QSqlDatabase::defaultConnection);
 

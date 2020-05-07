@@ -19,6 +19,7 @@
 #include "libraryutils.h"
 
 #include <functional>
+#include <unordered_set>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -36,6 +37,7 @@
 #include <QtConcurrentRun>
 
 #include "albumsmodel.h"
+#include "libraryupdaterunnable.h"
 #include "mediaartutils.h"
 #include "settings.h"
 #include "sqlutils.h"
@@ -504,7 +506,7 @@ namespace unplayer
         });
         QObject::connect(runnable, &LibraryUpdateRunnable::finished, this, [this]() {
             mLibraryUpdateRunnable = nullptr;
-            mLibraryUpdateStage = LibraryUpdateRunnable::NoneStage;
+            mLibraryUpdateStage = NoneStage;
             mFoundTracks = 0;
             mExtractedTracks = 0;
             emit updatingChanged();
@@ -519,7 +521,7 @@ namespace unplayer
             }
         });
         mLibraryUpdateRunnable = runnable;
-        mLibraryUpdateStage = LibraryUpdateRunnable::PreparingStage;
+        mLibraryUpdateStage = PreparingStage;
         QThreadPool::globalInstance()->start(runnable);
         emit updatingChanged();
         emit updateStageChanged();
@@ -1145,13 +1147,13 @@ namespace unplayer
           mDatabaseInitialized(false),
           mCreatedTables(false),
           mLibraryUpdateRunnable(nullptr),
-          mLibraryUpdateStage(LibraryUpdateRunnable::NoneStage),
+          mLibraryUpdateStage(NoneStage),
           mFoundTracks(0),
           mExtractedTracks(0),
           mRemovingFiles(false),
           mSavingTags(false)
     {
-        qRegisterMetaType<LibraryUpdateRunnable::UpdateStage>();
+        qRegisterMetaType<UpdateStage>();
         initDatabase();
         QObject::connect(this, &LibraryUtils::databaseChanged, this, &LibraryUtils::mediaArtChanged);
     }

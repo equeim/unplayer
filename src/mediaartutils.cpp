@@ -18,7 +18,7 @@
 
 #include "mediaartutils.h"
 
-#include <unordered_map>
+#include <unordered_set>
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -36,6 +36,7 @@
 #include "fileutils.h"
 #include "libraryutils.h"
 #include "settings.h"
+#include "sqlutils.h"
 #include "stdutils.h"
 #include "tagutils.h"
 

@@ -373,7 +373,7 @@ namespace unplayer
                     qInfo("Tracks to remove: %zd", tracksToRemove.size());
 
                     qInfo("Start scanning filesystem");
-                    emit stageChanged(ScanningStage);
+                    emit stageChanged(LibraryUtils::ScanningStage);
 
                     tracksToAdd = scanFilesystem(trackInDbResult,
                                                  tracksToRemove,
@@ -400,7 +400,7 @@ namespace unplayer
 
             if (!tracksToAdd.empty()) {
                 qInfo("Start extracting tags from files");
-                emit stageChanged(ExtractingStage);
+                emit stageChanged(LibraryUtils::ExtractingStage);
                 const int count = addTracks(tracksToAdd, embeddedMediaArtFiles);
                 qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(stageTimer.restart()) / 1000.0);
             }
@@ -410,7 +410,7 @@ namespace unplayer
             return;
         }
 
-        emit stageChanged(FinishingStage);
+        emit stageChanged(LibraryUtils::FinishingStage);
 
         LibraryUtils::removeUnusedCategories(mDb);
         LibraryUtils::removeUnusedMediaArt(mDb, mCancel);

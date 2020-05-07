@@ -29,6 +29,7 @@
 #include <QVector>
 
 #include "fileutils.h"
+#include "libraryutils.h"
 #include "sqlutils.h"
 #include "stdutils.h"
 
@@ -98,19 +99,8 @@ namespace unplayer
     {
         Q_OBJECT
     public:
-        enum UpdateStage {
-            NoneStage,
-            PreparingStage,
-            ScanningStage,
-            ExtractingStage,
-            FinishingStage
-        };
-        Q_ENUM(UpdateStage)
-
         void cancel();
-
         void run() override;
-
     private:
         struct TrackInDb
         {
@@ -156,7 +146,7 @@ namespace unplayer
         QMimeDatabase mMimeDb;
 
     signals:
-        void stageChanged(UpdateStage newStage);
+        void stageChanged(unplayer::LibraryUtils::UpdateStage newStage);
         void foundFilesChanged(int found);
         void extractedFilesChanged(int extracted);
         void finished();
