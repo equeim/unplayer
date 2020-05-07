@@ -513,7 +513,11 @@ namespace unplayer
             emit extractedTracksChanged();
             emit databaseChanged();
         });
-        QObject::connect(qApp, &QCoreApplication::aboutToQuit, runnable, [runnable] { runnable->cancel(); });
+        QObject::connect(qApp, &QCoreApplication::aboutToQuit, this, [this] {
+            if (mLibraryUpdateRunnable) {
+                static_cast<LibraryUpdateRunnable*>(mLibraryUpdateRunnable)->cancel();
+            }
+        });
         mLibraryUpdateRunnable = runnable;
         mLibraryUpdateStage = LibraryUpdateRunnable::PreparingStage;
         QThreadPool::globalInstance()->start(runnable);
