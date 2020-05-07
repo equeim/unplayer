@@ -20,8 +20,6 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QFile>
-#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -237,12 +235,10 @@ namespace unplayer
     std::vector<LibraryTrack> AlbumsModel::getTracksForAlbums(const std::vector<int>& indexes) const
     {
         std::vector<LibraryTrack> tracks;
-        QSqlDatabase::database().transaction();
         for (int index : indexes) {
             std::vector<LibraryTrack> albumTracks(getTracksForAlbum(index));
             tracks.insert(tracks.end(), std::make_move_iterator(albumTracks.begin()), std::make_move_iterator(albumTracks.end()));
         }
-        QSqlDatabase::database().commit();
         return tracks;
     }
 
@@ -278,13 +274,10 @@ namespace unplayer
     QStringList AlbumsModel::getTrackPathsForAlbums(const std::vector<int>& indexes) const
     {
         QStringList tracks;
-
-        QSqlDatabase::database().transaction();
         for (int index : indexes) {
             QStringList albumTracks(getTrackPathsForAlbum(index));
             tracks.append(getTrackPathsForAlbum(index));
         }
-        QSqlDatabase::database().commit();
         return tracks;
     }
 
