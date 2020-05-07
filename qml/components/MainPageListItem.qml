@@ -19,7 +19,7 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
-import harbour.unplayer 0.1 as Unplayer
+import harbour.unplayer 0.1
 
 ListItem {
     id: listItem
@@ -29,7 +29,7 @@ ListItem {
     property string mediaArt: randomMediaArt ? randomMediaArt.mediaArt : ""
     property alias fallbackIcon: mediaArt.fallbackIcon
 
-    property Unplayer.RandomMediaArt randomMediaArt
+    property RandomMediaArt randomMediaArt
 
     contentHeight: Theme.itemSizeExtraLarge
 
