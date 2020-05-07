@@ -29,7 +29,7 @@ MediaContainerSelectionDelegate {
 
     title: Theme.highlightText(model.displayedAlbum, searchPanel.searchText, Theme.highlightColor)
     secondDescription: model.year
-    mediaArt: Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
+    mediaArt: model.mediaArt
 
     menu: Component {
         ContextMenu {
@@ -69,11 +69,6 @@ MediaContainerSelectionDelegate {
         }
     }
 
-    Connections {
-        target: Unplayer.LibraryUtils
-        onMediaArtChanged: mediaArt = Unplayer.LibraryUtils.randomMediaArtForAlbum(model.artist, model.album)
-    }
-
     Component {
         id: albumPageComponent
         AlbumPage {
@@ -95,7 +90,7 @@ MediaContainerSelectionDelegate {
             title: qsTranslate("unplayer", "Select Image")
             fileIcon: "image://theme/icon-m-image"
             nameFilters: Unplayer.Utils.imageNameFilters
-            onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
+            onAccepted: Unplayer.MediaArtUtils.setUserMediaArt(model.albumId, filePath)
         }
     }
 

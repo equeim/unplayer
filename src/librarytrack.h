@@ -30,8 +30,8 @@ namespace unplayer
         QString title;
         QString artist;
         QString album;
+        bool filteredSingleAlbum;
         int duration;
-        QString mediaArtPath;
     };
 }
 

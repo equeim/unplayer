@@ -19,13 +19,17 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import harbour.unplayer 0.1 as Unplayer
+
 ListItem {
     id: listItem
 
     property alias title: titleLabel.text
     property alias description: descriptionLabel.text
-    property alias mediaArt: mediaArt.source
+    property string mediaArt: randomMediaArt ? randomMediaArt.mediaArt : ""
     property alias fallbackIcon: mediaArt.fallbackIcon
+
+    property Unplayer.RandomMediaArt randomMediaArt
 
     contentHeight: Theme.itemSizeExtraLarge
 
@@ -36,6 +40,8 @@ ListItem {
         highlighted: listItem.highlighted
         size: contentHeight
         x: Theme.horizontalPageMargin
+
+        source: listItem.mediaArt
     }
 
     Column {

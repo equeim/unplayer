@@ -18,21 +18,18 @@
 
 #include "albumsmodel.h"
 
-#include <functional>
-
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "modelutils.h"
 #include "settings.h"
 #include "tracksmodel.h"
-#include "utils.h"
 
 #include "abstractlibrarymodel.cpp"
 
@@ -49,6 +46,44 @@ namespace unplayer
             TracksCountField,
             DurationField
         };
+    }
+
+    AlbumsModel::AlbumsModel()
+    {
+        const auto setMediaArt = [this](int albumId, const QString& mediaArt) {
+            if (mediaArt.isEmpty()) {
+                return;
+            }
+            const auto found(std::find_if(mAlbums.begin(), mAlbums.end(), [albumId](const auto& album) {
+                return album.id == albumId;
+            }));
+            if (found != mAlbums.end()) {
+                found->mediaArt = mediaArt;
+                const int row = static_cast<int>(found - mAlbums.begin());
+                const auto modelIndex(index(row));
+                emit dataChanged(modelIndex, modelIndex, {MediaArtRole});
+            }
+        };
+
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotRandomMediaArtForAlbum, this, [=](int albumId, const QString& mediaArt) {
+            if (mAllArtists) {
+                setMediaArt(albumId, mediaArt);
+            }
+        });
+
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotRandomMediaArtForArtistAndAlbum, this, [=](int artistId, int albumId, const QString& mediaArt) {
+            if (!mAllArtists && artistId == mArtistId) {
+                setMediaArt(albumId, mediaArt);
+            }
+        });
+
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [this] {
+            for (auto& album : mAlbums) {
+                album.mediaArt.clear();
+                album.requestedMediaArt = false;
+            }
+            emit dataChanged(index(0), index(rowCount() - 1), {MediaArtRole});
+        });
     }
 
     AlbumsModel::~AlbumsModel()
@@ -82,7 +117,7 @@ namespace unplayer
 
     QVariant AlbumsModel::data(const QModelIndex& index, int role) const
     {
-        const Album& album = mAlbums[static_cast<size_t>(index.row())];
+        Album& album = mAlbums[static_cast<size_t>(index.row())];
 
         switch (role) {
         case AlbumIdRole:
@@ -105,6 +140,16 @@ namespace unplayer
             return album.tracksCount;
         case DurationRole:
             return album.duration;
+        case MediaArtRole:
+            if (!album.requestedMediaArt) {
+                if (mAllArtists) {
+                    MediaArtUtils::instance()->getRandomMediaArtForAlbum(album.id);
+                } else {
+                    MediaArtUtils::instance()->getRandomMediaArtForArtistAndAlbum(mArtistId, album.id);
+                }
+                album.requestedMediaArt = true;
+            }
+            return album.mediaArt;
         }
 
         return QVariant();
@@ -279,7 +324,8 @@ namespace unplayer
                 {UnknownAlbumRole, "unknownAlbum"},
                 {YearRole, "year"},
                 {TracksCountRole, "tracksCount"},
-                {DurationRole, "duration"}};
+                {DurationRole, "duration"},
+                {MediaArtRole, "mediaArt"}};
     }
 
     QString AlbumsModel::makeQueryString()

@@ -18,15 +18,10 @@
 
 #include "tracksmodel.h"
 
-#include <functional>
-
 #include <QCoreApplication>
 #include <QDebug>
-#include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QUrl>
-#include <QtConcurrentRun>
 
 #include "libraryutils.h"
 #include "modelutils.h"
@@ -357,14 +352,19 @@ namespace unplayer
 
     LibraryTrack TracksModel::trackFromQuery(const QSqlQuery& query, bool groupTracks)
     {
+        bool filteredSingleAlbum = false;
         const auto rejoin = [&](int field) {
             QString value(query.value(field).toString());
-            if (groupTracks && value.contains(QLatin1Char('\n'))) {
-                QStringList list(value.split(QLatin1Char('\n'), QString::SkipEmptyParts));
-                if (list.size() > 1) {
-                    list.removeDuplicates();
-                    value = list.join(QLatin1String(", "));
+            if (groupTracks) {
+                if (value.contains(QLatin1Char('\n'))) {
+                    QStringList list(value.split(QLatin1Char('\n'), QString::SkipEmptyParts));
+                    if (list.size() > 1) {
+                        list.removeDuplicates();
+                        value = list.join(QLatin1String(", "));
+                    }
                 }
+            } else if (!value.isEmpty() && field == AlbumField) {
+                filteredSingleAlbum = true;
             }
             return value;
         };
@@ -375,8 +375,8 @@ namespace unplayer
                             query.value(TitleField).toString(),
                             artist.isEmpty() ? qApp->translate("unplayer", "Unknown artist") : artist,
                             album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
-                            query.value(DurationField).toInt(),
-                            /*mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField)*/QString()};
+                            filteredSingleAlbum,
+                            query.value(DurationField).toInt()};
         return track;
     }
 

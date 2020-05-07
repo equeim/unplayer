@@ -37,6 +37,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "playlistutils.h"
 #include "settings.h"
 #include "sqlutils.h"
@@ -74,8 +75,7 @@ namespace unplayer
                            int duration,
                            const QString& artist,
                            const QString& album,
-                           const QString& mediaArtFilePath,
-                           const QByteArray& mediaArtData,
+                           bool filteredSingleAlbum,
                            long long modificationTime)
         : trackId(trackId),
           url(url),
@@ -83,10 +83,9 @@ namespace unplayer
           duration(duration),
           artist(artist),
           album(album),
-          mediaArtFilePath(mediaArtFilePath),
+          filteredSingleAlbum(filteredSingleAlbum),
           modificationTime(modificationTime)
     {
-        mediaArtPixmap.loadFromData(mediaArtData);
     }
 
     Queue::Queue(QObject* parent)
@@ -96,27 +95,52 @@ namespace unplayer
           mRepeatMode(NoRepeat),
           mAddingTracks(false)
     {
-        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
-            QSqlDatabase::database().transaction();
-            for (const std::shared_ptr<QueueTrack>& track : mTracks) {
+        QObject::connect(this, &Queue::currentTrackChanged, this, [this] {
+            if (!mTracks.empty()) {
+                const auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
                 if (track->url.isLocalFile()) {
-                    const QString filePath(track->url.path());
-                    QSqlQuery query;
-                    query.prepare(QStringLiteral("SELECT directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath = ?"));
-                    query.addBindValue(filePath);
-                    if (query.exec()) {
-                        if (query.next()) {
-                            track->mediaArtFilePath = mediaArtFromQuery(query, 0, 1);
-                        }
-                    } else {
-                        qWarning() << "failed to get media art from database for track:" << filePath;
-                    }
+                    MediaArtUtils::instance()->getMediaArtForFile(track->url.path(),
+                                                                  track->filteredSingleAlbum ? track->album : QString(),
+                                                                  !track->mediaArtFilePath.isEmpty());
+                    return;
                 }
             }
-            QSqlDatabase::database().commit();
+            if (!mCurrentMediaArtData.isEmpty()) {
+                mCurrentMediaArtData.clear();
+                emit mediaArtDataChanged(mCurrentMediaArtData);
+            }
             emit mediaArtChanged();
         });
-        QObject::connect(this, &Queue::currentTrackChanged, this, &Queue::mediaArtChanged);
+
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotMediaArtForFile, this, [this](const QString& filePath, const QString& mediaArt, const QByteArray& embeddedMediaArtData) {
+            if (filePath == currentFilePath()) {
+                auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
+                bool changed = false;
+                if (track->mediaArtFilePath.isEmpty() && mediaArt != track->mediaArtFilePath) {
+                    track->mediaArtFilePath = mediaArt;
+                    changed = true;
+                }
+                if (embeddedMediaArtData != mCurrentMediaArtData) {
+                    mCurrentMediaArtData = embeddedMediaArtData;
+                    emit mediaArtDataChanged(mCurrentMediaArtData);
+                    changed = true;
+                }
+                if (changed) {
+                    emit mediaArtChanged();
+                }
+            }
+        });
+
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
+            if (!mTracks.empty()) {
+                auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
+                if (track->url.isLocalFile()) {
+                    MediaArtUtils::instance()->getMediaArtForFile(track->url.path(),
+                                                                  track->filteredSingleAlbum ? track->album : QString(),
+                                                                  !track->mediaArtFilePath.isEmpty());
+                }
+            }
+        });
     }
 
     const std::vector<std::shared_ptr<QueueTrack>>& Queue::tracks() const
@@ -193,12 +217,10 @@ namespace unplayer
         if (mCurrentIndex >= 0) {
             const QueueTrack* track = mTracks[static_cast<size_t>(mCurrentIndex)].get();
             if (track->url.isLocalFile()) {
-                if (!track->mediaArtFilePath.isEmpty()) {
-                    return track->mediaArtFilePath;
-                }
-                if (!track->mediaArtPixmap.isNull()) {
+                if (!mCurrentMediaArtData.isEmpty() && (!Settings::instance()->useDirectoryMediaArt() || track->mediaArtFilePath.isEmpty())) {
                     return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId, track->url.toString());
                 }
+                return track->mediaArtFilePath;
             }
         }
         return QString();
@@ -350,8 +372,7 @@ namespace unplayer
                                                                                                           playlistTrack.duration,
                                                                                                           playlistTrack.artist,
                                                                                                           QString(),
-                                                                                                          QString(),
-                                                                                                          QByteArray(),
+                                                                                                          false,
                                                                                                           -1)});
                                     }
                                 }
@@ -410,8 +431,6 @@ namespace unplayer
                                       int duration,
                                       QStringList&& artists,
                                       QStringList&& albums,
-                                      QString&& mediaArtFilePath,
-                                      QByteArray&& mediaArtData,
                                       long long modificationTime) {
                 QString artist;
                 if (artists.isEmpty()) {
@@ -433,8 +452,7 @@ namespace unplayer
                                                     duration,
                                                     std::move(artist),
                                                     std::move(album),
-                                                    std::move(mediaArtFilePath),
-                                                    std::move(mediaArtData),
+                                                    albums.size() == 1,
                                                     modificationTime);
             };
 
@@ -490,8 +508,6 @@ namespace unplayer
                                                          duration,
                                                          std::move(artists),
                                                          std::move(albums),
-                                                         std::move(mediaArtFilePath),
-                                                         QByteArray(),
                                                          modificationTime)});
                     };
 
@@ -513,7 +529,6 @@ namespace unplayer
                                 duration = query.value(DurationField).toInt();
                                 artists.clear();
                                 albums.clear();
-                                mediaArtFilePath = mediaArtFromQuery(query, DirectoryMediaArtField, EmbeddedMediaArtField);
                             }
                         }
 
@@ -551,29 +566,13 @@ namespace unplayer
                         if (info.title.isEmpty()) {
                             info.title = fileInfo.fileName();
                         }
-                        QString mediaArtFilePath;
-                        QByteArray mediaArtData;
-                        if (preferDirectoryMediaArt) {
-                            mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
-                            if (mediaArtFilePath.isEmpty()) {
-                                mediaArtData = std::move(info.mediaArtData);
-                            }
-                        } else {
-                            if (info.mediaArtData.isEmpty()) {
-                                mediaArtFilePath = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path());
-                            } else {
-                                mediaArtData = std::move(info.mediaArtData);
-                            }
-                        }
-                        QStringList& artists = useAlbumArtist ? info.albumArtists.isEmpty() ? info.artists : info.albumArtists
-                                                              : info.artists.isEmpty() ? info.albumArtists : info.artists;
+                        info.artists.append(info.albumArtists);
+                        info.artists.removeDuplicates();
                         newTracks.push_back(makeTrack(url,
                                                       std::move(info.title),
                                                       info.duration,
-                                                      std::move(artists),
+                                                      std::move(info.artists),
                                                       std::move(info.albums),
-                                                      std::move(mediaArtFilePath),
-                                                      std::move(mediaArtData),
                                                       getLastModifiedTime(filePath)));
                     } else {
                         newTracks.push_back(std::make_shared<QueueTrack>(createTrackId(),
@@ -582,8 +581,7 @@ namespace unplayer
                                                                          -1,
                                                                          QString(),
                                                                          QString(),
-                                                                         QString(),
-                                                                         QByteArray(),
+                                                                         false,
                                                                          -1));
                     }
                 } else {
@@ -662,8 +660,7 @@ namespace unplayer
                                                                  libraryTrack.duration,
                                                                  std::move(libraryTrack.artist),
                                                                  std::move(libraryTrack.album),
-                                                                 std::move(libraryTrack.mediaArtPath),
-                                                                 QByteArray(),
+                                                                 libraryTrack.filteredSingleAlbum,
                                                                  -1));
             }
 
@@ -688,8 +685,8 @@ namespace unplayer
                 track->title,
                 track->artist,
                 track->album,
-                track->duration,
-                track->mediaArtFilePath};
+                track->filteredSingleAlbum,
+                track->duration};
     }
 
     std::vector<LibraryTrack> Queue::getTracks(const std::vector<int>& indexes) const
@@ -922,30 +919,46 @@ namespace unplayer
     const QLatin1String QueueImageProvider::providerId("queue");
 
     QueueImageProvider::QueueImageProvider(const Queue* queue)
-        : QQuickImageProvider(QQuickImageProvider::Pixmap),
-          mQueue(queue)
+        : QQuickImageProvider(QQuickImageProvider::Pixmap)
     {
-
+        QObject::connect(queue, &Queue::mediaArtDataChanged, this, [=](const QByteArray& mediaArtData) {
+            std::lock_guard<std::mutex> guard(mMutex);
+            mMediaArtData = mediaArtData;
+            if (mMediaArtData.isEmpty() && !mPixmap.isNull()) {
+                mPixmap = QPixmap();
+            }
+        });
     }
 
-    QPixmap QueueImageProvider::requestPixmap(const QString& id, QSize*, const QSize& requestedSize)
+    QPixmap QueueImageProvider::requestPixmap(const QString&, QSize* size, const QSize& requestedSize)
     {
-        for (const auto& track : mQueue->tracks()) {
-            if (track->url.toString() == id) {
-                const QPixmap& pixmap = track->mediaArtPixmap;
-                if (requestedSize.isValid()) {
-                    QSize newSize(requestedSize);
-                    if (newSize.width() == 0) {
-                        newSize.setWidth(pixmap.width());
-                    }
-                    if (newSize.height() == 0) {
-                        newSize.setHeight(pixmap.height());
-                    }
-                    return pixmap.scaled(newSize, Qt::KeepAspectRatio);
+        QPixmap pixmap;
+        {
+            QByteArray mediaArtData;
+            std::lock_guard<std::mutex> loadingGuard(mLoadingMutex);
+            {
+                std::lock_guard<std::mutex> guard(mMutex);
+                pixmap = mPixmap;
+                mediaArtData = mMediaArtData;
+            }
+            if (!mediaArtData.isEmpty()) {
+                pixmap.loadFromData(mediaArtData);
+                {
+                    std::lock_guard<std::mutex> guard(mMutex);
+                    mPixmap = pixmap;
+                    mMediaArtData.clear();
                 }
-                return pixmap;
             }
         }
-        return QPixmap();
+
+        if (!pixmap.isNull()) {
+            *size = pixmap.size();
+            if (requestedSize.isValid() && !requestedSize.isNull()) {
+                return pixmap.scaled(requestedSize.width() > 0 ? requestedSize.width() : std::numeric_limits<int>::max(),
+                                     requestedSize.height() > 0 ? requestedSize.height() : std::numeric_limits<int>::max(),
+                                     Qt::KeepAspectRatio);
+            }
+        }
+        return pixmap;
     }
 }

@@ -19,9 +19,6 @@
 #ifndef UNPLAYER_ARTISTSMODEL_H
 #define UNPLAYER_ARTISTSMODEL_H
 
-#include <vector>
-#include <QAbstractListModel>
-
 #include "abstractlibrarymodel.h"
 #include "librarytrack.h"
 
@@ -35,6 +32,9 @@ namespace unplayer
         int albumsCount;
         int tracksCount;
         int duration;
+
+        QString mediaArt;
+        bool requestedMediaArt;
     };
 
     class ArtistsModel : public AbstractLibraryModel<Artist>
@@ -49,7 +49,8 @@ namespace unplayer
             DisplayedArtistRole,
             AlbumsCountRole,
             TracksCountRole,
-            DurationRole
+            DurationRole,
+            MediaArtRole
         };
         Q_ENUM(Role)
 

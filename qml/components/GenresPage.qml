@@ -101,7 +101,7 @@ Page {
         delegate: MediaContainerSelectionDelegate {
             title: Theme.highlightText(model.genre, searchPanel.searchText, Theme.highlightColor)
             description: qsTranslate("unplayer", "%n track(s), %1", String(), model.tracksCount).arg(Unplayer.Utils.formatDuration(model.duration))
-            mediaArt: Unplayer.LibraryUtils.randomMediaArtForGenre(model.genre)
+            mediaArt: model.mediaArt
             menu: Component {
                 ContextMenu {
                     MenuItem {

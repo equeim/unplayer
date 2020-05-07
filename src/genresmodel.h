@@ -19,9 +19,6 @@
 #ifndef UNPLAYER_GENRESMODEL_H
 #define UNPLAYER_GENRESMODEL_H
 
-#include <vector>
-#include <QAbstractListModel>
-
 #include "abstractlibrarymodel.h"
 #include "librarytrack.h"
 
@@ -33,6 +30,9 @@ namespace unplayer
         QString genre;
         int tracksCount;
         int duration;
+
+        QString mediaArt;
+        bool requestedMediaArt;
     };
 
     class GenresModel : public AbstractLibraryModel<Genre>

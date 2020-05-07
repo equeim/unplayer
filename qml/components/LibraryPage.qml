@@ -49,7 +49,7 @@ Page {
             MainPageListItem {
                 title: qsTranslate("unplayer", "Artists")
                 description: qsTranslate("unplayer", "%n artist(s)", String(), Unplayer.LibraryUtils.artistsCount)
-                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+                randomMediaArt: Unplayer.RandomMediaArt {}
                 onClicked: pageStack.push(artistsPageComponent)
 
                 Component {
@@ -61,7 +61,7 @@ Page {
             MainPageListItem {
                 title: qsTranslate("unplayer", "Albums")
                 description: qsTranslate("unplayer", "%n albums(s)", String(), Unplayer.LibraryUtils.albumsCount)
-                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+                randomMediaArt: Unplayer.RandomMediaArt {}
                 onClicked: pageStack.push(allAlbumsPageComponent)
 
                 Component {
@@ -81,7 +81,7 @@ Page {
                     .arg(qsTranslate("unplayer", "%n tracks(s)", String(), tracksCount))
                     .arg(Unplayer.Utils.formatDuration(Unplayer.LibraryUtils.tracksDuration))
                 }
-                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+                randomMediaArt: Unplayer.RandomMediaArt {}
 
                 onClicked: pageStack.push(tracksPageComponent)
 
@@ -96,7 +96,7 @@ Page {
 
             MainPageListItem {
                 title: qsTranslate("unplayer", "Genres")
-                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+                randomMediaArt: Unplayer.RandomMediaArt {}
                 onClicked: pageStack.push("GenresPage.qml")
             }
         }

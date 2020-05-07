@@ -44,6 +44,7 @@ add_executable("${PROJECT_NAME}"
     libraryupdaterunnable.cpp
     libraryutils.cpp
     main.cpp
+    mediaartutils.cpp
     player.cpp
     playlistmodel.cpp
     playlistsmodel.cpp

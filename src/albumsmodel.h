@@ -19,9 +19,6 @@
 #ifndef UNPLAYER_ALBUMSMODEL_H
 #define UNPLAYER_ALBUMSMODEL_H
 
-#include <vector>
-
-#include <QAbstractListModel>
 #include <QQmlParserStatus>
 
 #include "abstractlibrarymodel.h"
@@ -39,6 +36,9 @@ namespace unplayer
         int year;
         int tracksCount;
         int duration;
+
+        QString mediaArt;
+        bool requestedMediaArt;
     };
 
     class AlbumsModel : public AbstractLibraryModel<Album>, public QQmlParserStatus
@@ -61,7 +61,8 @@ namespace unplayer
             UnknownAlbumRole,
             YearRole,
             TracksCountRole,
-            DurationRole
+            DurationRole,
+            MediaArtRole
         };
         Q_ENUM(Role)
 
@@ -74,6 +75,7 @@ namespace unplayer
         };
         Q_ENUM(SortMode)
 
+        AlbumsModel();
         ~AlbumsModel() override;
         void classBegin() override;
         void componentComplete() override;

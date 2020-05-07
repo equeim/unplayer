@@ -107,8 +107,6 @@ namespace unplayer
         };
         Q_ENUM(UpdateStage)
 
-        explicit LibraryUpdateRunnable(const QString& mediaArtDirectory);
-
         void cancel();
 
         void run() override;
@@ -148,8 +146,7 @@ namespace unplayer
 
         bool isBlacklisted(const QString& path);
 
-        QString mMediaArtDirectory;
-        std::atomic_bool mCancel;
+        std::atomic_bool mCancel{false};
 
         QStringList mLibraryDirectories;
         QStringList mBlacklistedDirectories;

@@ -19,9 +19,6 @@
 #ifndef UNPLAYER_TRACKSMODEL_H
 #define UNPLAYER_TRACKSMODEL_H
 
-#include <vector>
-
-#include <QAbstractListModel>
 #include <QQmlParserStatus>
 
 #include "abstractlibrarymodel.h"

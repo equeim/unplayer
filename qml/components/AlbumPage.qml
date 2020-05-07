@@ -131,7 +131,7 @@ Page {
                         title: qsTranslate("unplayer", "Select Image")
                         fileIcon: "image://theme/icon-m-image"
                         nameFilters: Unplayer.Utils.imageNameFilters
-                        onAccepted: Unplayer.LibraryUtils.setMediaArt(model.artist, model.album, filePath)
+                        onAccepted: Unplayer.MediaArtUtils.setUserMediaArt(model.albumId, filePath)
                     }
                 }
             }

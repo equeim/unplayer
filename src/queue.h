@@ -20,6 +20,7 @@
 #define UNPLAYER_QUEUE_H
 
 #include <memory>
+#include <mutex>
 #include <vector>
 
 #include <QObject>
@@ -39,8 +40,7 @@ namespace unplayer
                             int duration,
                             const QString& artist,
                             const QString& album,
-                            const QString& mediaArtFilePath,
-                            const QByteArray& mediaArtData,
+                            bool filteredSingleAlbum,
                             long long modificationTime);
         QString trackId;
 
@@ -49,9 +49,9 @@ namespace unplayer
         int duration;
         QString artist;
         QString album;
+        bool filteredSingleAlbum;
 
         QString mediaArtFilePath;
-        QPixmap mediaArtPixmap;
 
         long long modificationTime;
     };
@@ -141,10 +141,13 @@ namespace unplayer
         bool mShuffle;
         RepeatMode mRepeatMode;
 
+        QByteArray mCurrentMediaArtData;
+
         bool mAddingTracks;
     signals:
         void currentTrackChanged(bool setAsCurrentWasSet = false);
 
+        void mediaArtDataChanged(const QByteArray& mediaArtData);
         void mediaArtChanged();
 
         void currentIndexChanged();
@@ -163,7 +166,7 @@ namespace unplayer
         void addingTracksChanged();
     };
 
-    class QueueImageProvider final : public QQuickImageProvider
+    class QueueImageProvider final : public QQuickImageProvider, QObject
     {
     public:
         static const QLatin1String providerId;
@@ -172,7 +175,10 @@ namespace unplayer
         QueueImageProvider& operator=(const QueueImageProvider& other) = delete;
         QPixmap requestPixmap(const QString& id, QSize*, const QSize& requestedSize) override;
     private:
-        const Queue* mQueue;
+        std::mutex mMutex;
+        std::mutex mLoadingMutex;
+        QPixmap mPixmap;
+        QByteArray mMediaArtData;
     };
 }
 

@@ -41,9 +41,6 @@ namespace unplayer
         struct Info;
     }
 
-    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, const QString& userMediaArt);
-    QString mediaArtFromQuery(const QSqlQuery& query, int directoryMediaArtField, int embeddedMediaArtField, int userMediaArtField);
-
     class LibraryUtils final : public QObject
     {
         Q_OBJECT
@@ -54,7 +51,6 @@ namespace unplayer
         Q_PROPERTY(int albumsCount READ albumsCount NOTIFY databaseChanged)
         Q_PROPERTY(int tracksCount READ tracksCount NOTIFY databaseChanged)
         Q_PROPERTY(int tracksDuration READ tracksDuration NOTIFY databaseChanged)
-        Q_PROPERTY(QString randomMediaArt READ randomMediaArt NOTIFY mediaArtChanged)
 
         Q_PROPERTY(bool updating READ isUpdating NOTIFY updatingChanged)
         Q_PROPERTY(unplayer::LibraryUpdateRunnable::UpdateStage updateStage READ updateStage NOTIFY updateStageChanged)
@@ -73,11 +69,9 @@ namespace unplayer
         static const size_t maxDbVariableCount;
         static LibraryUtils* instance();
 
-        static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);
-
         static bool removeTracksFromDbByIds(const std::vector<int>& ids, const QSqlDatabase& db, const std::atomic_bool& cancel = false);
         static void removeUnusedCategories(const QSqlDatabase& db);
-        static void removeUnusedMediaArt(const QSqlDatabase& db, const QString& mediaArtDirectory, const std::atomic_bool& cancel = false);
+        static void removeUnusedMediaArt(const QSqlDatabase& db, const std::atomic_bool& cancel = false);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
@@ -91,12 +85,6 @@ namespace unplayer
         int albumsCount() const;
         int tracksCount() const;
         int tracksDuration() const;
-        QString randomMediaArt() const;
-        Q_INVOKABLE QString randomMediaArtForArtist(const QString& artist) const;
-        Q_INVOKABLE QString randomMediaArtForAlbum(const QString& artist, const QString& album) const;
-        Q_INVOKABLE QString randomMediaArtForGenre(const QString& genre) const;
-
-        Q_INVOKABLE void setMediaArt(const QString& artist, const QString& album, const QString& mediaArt);
 
         bool isUpdating() const;
         UpdateStage updateStage() const;
@@ -113,9 +101,6 @@ namespace unplayer
 
         bool isSavingTags() const;
         Q_INVOKABLE void saveTags(const QStringList& files, const QVariantMap& tags, bool incrementTrackNumber);
-
-        std::unordered_map<QByteArray, QString> getEmbeddedMediaArt();
-        QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles, const QMimeDatabase& mimeDb);
     private:
         LibraryUtils(QObject* parent = nullptr);
 
@@ -129,8 +114,6 @@ namespace unplayer
 
         bool mRemovingFiles;
         bool mSavingTags;
-
-        QString mMediaArtDirectory;
     signals:
         void updatingChanged();
         void updateStageChanged();

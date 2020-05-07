@@ -103,7 +103,7 @@ Page {
 
             title: Theme.highlightText(model.displayedArtist, searchPanel.searchText, Theme.highlightColor)
             description: qsTranslate("unplayer", "%n album(s)", String(), model.albumsCount)
-            mediaArt: Unplayer.LibraryUtils.randomMediaArtForArtist(model.artist)
+            mediaArt: model.mediaArt
             menu: Component {
                 ContextMenu {
                     MenuItem {
@@ -164,11 +164,6 @@ Page {
                         artistsModel.removeArtist(artistsProxyModel.sourceIndex(model.index), deleteFiles)
                     }
                 }
-            }
-
-            Connections {
-                target: Unplayer.LibraryUtils
-                onMediaArtChanged: mediaArt = Unplayer.LibraryUtils.randomMediaArtForArtist(model.artist)
             }
         }
         model: Unplayer.FilterProxyModel {

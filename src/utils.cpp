@@ -38,6 +38,7 @@
 #include "genresmodel.h"
 #include "librarydirectoriesmodel.h"
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "player.h"
 #include "playlistmodel.h"
 #include "playlistsmodel.h"
@@ -100,6 +101,9 @@ namespace unplayer
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
 
         qmlRegisterSingletonType<Tags>(url, major, minor, "Tags", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Tags(); });
+
+        qmlRegisterSingletonType<MediaArtUtils>(url, major, minor, "MediaArtUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return MediaArtUtils::instance(); });
+        qmlRegisterType<RandomMediaArt>(url, major, minor, "RandomMediaArt");
     }
 
     QString Utils::formatDuration(int seconds)

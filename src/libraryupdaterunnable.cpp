@@ -27,6 +27,7 @@
 #include <QSqlError>
 
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "settings.h"
 #include "sqlutils.h"
 #include "tagutils.h"
@@ -309,13 +310,6 @@ namespace unplayer
 
     const QLatin1String LibraryUpdateRunnable::databaseConnectionName("unplayer_update");
 
-    LibraryUpdateRunnable::LibraryUpdateRunnable(const QString& mediaArtDirectory)
-        : mMediaArtDirectory(mediaArtDirectory),
-          mCancel(false)
-    {
-
-    }
-
     void LibraryUpdateRunnable::cancel()
     {
         qInfo("Cancel updating database");
@@ -352,12 +346,12 @@ namespace unplayer
         const TransactionGuard transactionGuard(mDb);
 
         // Create media art directory
-        if (!QDir().mkpath(mMediaArtDirectory)) {
-            qWarning() << "failed to create media art directory:" << mMediaArtDirectory;
+        if (!QDir().mkpath(MediaArtUtils::mediaArtDirectory())) {
+            qWarning() << "failed to create media art directory:" << MediaArtUtils::mediaArtDirectory();
         }
 
         {
-            std::unordered_map<QByteArray, QString> embeddedMediaArtFiles(LibraryUtils::instance()->getEmbeddedMediaArt());
+            std::unordered_map<QByteArray, QString> embeddedMediaArtFiles(MediaArtUtils::getEmbeddedMediaArtFiles());
             std::vector<TrackToAdd> tracksToAdd;
 
             {
@@ -419,7 +413,7 @@ namespace unplayer
         emit stageChanged(FinishingStage);
 
         LibraryUtils::removeUnusedCategories(mDb);
-        LibraryUtils::removeUnusedMediaArt(mDb, mMediaArtDirectory, mCancel);
+        LibraryUtils::removeUnusedMediaArt(mDb, mCancel);
 
         qInfo("End updating database (last stage took %.3f s)", static_cast<double>(stageTimer.elapsed()) / 1000.0);
         qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
@@ -538,7 +532,7 @@ namespace unplayer
 
                 if (fileInfo.path() != directory) {
                     directory = fileInfo.path();
-                    directoryMediaArt = LibraryUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, directory, mCancel);
+                    directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, directory, mCancel);
 
                     const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(directory));
                     if (directoryMediaArtInDb != mediaArtDirectoriesInDbHashEnd) {
@@ -577,9 +571,9 @@ namespace unplayer
                     if (modificationTime == file.modificationTime) {
                         // File has not changed
                         if (file.embeddedMediaArtDeleted) {
-                            const QString embeddedMediaArt(LibraryUtils::instance()->saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
-                                                                                                          embeddedMediaArtFiles,
-                                                                                                          mMimeDb));
+                            const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
+                                                                                               embeddedMediaArtFiles,
+                                                                                               mMimeDb));
                             mQuery.prepare(QStringLiteral("UPDATE tracks SET embeddedMediaArt = ? WHERE id = ?"));
                             mQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
                             mQuery.addBindValue(file.id);
@@ -623,9 +617,9 @@ namespace unplayer
                                          getLastModifiedTime(track.filePath),
                                          trackInfo,
                                          track.directoryMediaArt,
-                                         LibraryUtils::instance()->saveEmbeddedMediaArt(trackInfo.mediaArtData,
-                                                                                        embeddedMediaArtFiles,
-                                                                                        mMimeDb));
+                                         MediaArtUtils::saveEmbeddedMediaArt(trackInfo.mediaArtData,
+                                                                             embeddedMediaArtFiles,
+                                                                             mMimeDb));
                 emit extractedFilesChanged(count);
             }
         }

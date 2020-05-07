@@ -67,7 +67,7 @@ Page {
                     .arg(qsTranslate("unplayer", "%n tracks(s)", String(), tracksCount))
                     .arg(Unplayer.Utils.formatDuration(Unplayer.LibraryUtils.tracksDuration))
                 }
-                mediaArt: Unplayer.LibraryUtils.randomMediaArt
+                randomMediaArt: Unplayer.RandomMediaArt {}
 
                 menu: Component {
                     ContextMenu {

@@ -18,16 +18,13 @@
 
 #include "artistsmodel.h"
 
-#include <functional>
-
 #include <QCoreApplication>
 #include <QDebug>
-#include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "modelutils.h"
 #include "settings.h"
 #include "tracksmodel.h"
@@ -51,12 +48,35 @@ namespace unplayer
     ArtistsModel::ArtistsModel()
         : mSortDescending(Settings::instance()->artistsSortDescending())
     {
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotRandomMediaArtForArtist, this, [this](int artistId, const QString& mediaArt) {
+            if (mediaArt.isEmpty()) {
+                return;
+            }
+            const auto found(std::find_if(mArtists.begin(), mArtists.end(), [artistId](const auto& artist) {
+                return artist.id == artistId;
+            }));
+            if (found != mArtists.end()) {
+                found->mediaArt = mediaArt;
+                const int row = static_cast<int>(found - mArtists.begin());
+                const auto modelIndex(index(row));
+                emit dataChanged(modelIndex, modelIndex, {MediaArtRole});
+            }
+        });
+
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [this] {
+            for (auto& artist : mArtists) {
+                artist.mediaArt.clear();
+                artist.requestedMediaArt = false;
+            }
+            emit dataChanged(index(0), index(rowCount() - 1), {MediaArtRole});
+        });
+
         execQuery();
     }
 
     QVariant ArtistsModel::data(const QModelIndex& index, int role) const
     {
-        const Artist& artist = mArtists[static_cast<size_t>(index.row())];
+        Artist& artist = mArtists[static_cast<size_t>(index.row())];
 
         switch (role) {
         case ArtistIdRole:
@@ -71,6 +91,12 @@ namespace unplayer
             return artist.tracksCount;
         case DurationRole:
             return artist.duration;
+        case MediaArtRole:
+            if (!artist.requestedMediaArt) {
+                MediaArtUtils::instance()->getRandomMediaArtForArtist(artist.id);
+                artist.requestedMediaArt = true;
+            }
+            return artist.mediaArt;
         }
 
         return QVariant();
@@ -202,7 +228,8 @@ namespace unplayer
                 {DisplayedArtistRole, "displayedArtist"},
                 {AlbumsCountRole, "albumsCount"},
                 {TracksCountRole, "tracksCount"},
-                {DurationRole, "duration"}};
+                {DurationRole, "duration"},
+                {MediaArtRole, "mediaArt"}};
     }
 
     QString ArtistsModel::makeQueryString()

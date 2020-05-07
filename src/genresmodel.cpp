@@ -18,15 +18,12 @@
 
 #include "genresmodel.h"
 
-#include <functional>
-
 #include <QDebug>
-#include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "modelutils.h"
 #include "settings.h"
 #include "tracksmodel.h"
@@ -50,19 +47,43 @@ namespace unplayer
             GenreIdRole = Qt::UserRole,
             GenreRole,
             TracksCountRole,
-            DurationRole
+            DurationRole,
+            MediaArtRole
         };
     }
 
     GenresModel::GenresModel()
         : mSortDescending(Settings::instance()->genresSortDescending())
     {
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotRandomMediaArtForGenre, this, [this](int genreId, const QString& mediaArt) {
+            if (mediaArt.isEmpty()) {
+                return;
+            }
+            const auto found(std::find_if(mGenres.begin(), mGenres.end(), [genreId](const auto& genre) {
+                return genre.id == genreId;
+            }));
+            if (found != mGenres.end()) {
+                found->mediaArt = mediaArt;
+                const int row = static_cast<int>(found - mGenres.begin());
+                const auto modelIndex(index(row));
+                emit dataChanged(modelIndex, modelIndex, {MediaArtRole});
+            }
+        });
+
+        QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [this] {
+            for (auto& genre : mGenres) {
+                genre.mediaArt.clear();
+                genre.requestedMediaArt = false;
+            }
+            emit dataChanged(index(0), index(rowCount() - 1), {MediaArtRole});
+        });
+
         execQuery();
     }
 
     QVariant GenresModel::data(const QModelIndex& index, int role) const
     {
-        const Genre& genre = mGenres[static_cast<size_t>(index.row())];
+        Genre& genre = mGenres[static_cast<size_t>(index.row())];
         switch (role) {
         case GenreIdRole:
             return genre.id;
@@ -72,6 +93,12 @@ namespace unplayer
             return genre.tracksCount;
         case DurationRole:
             return genre.duration;
+        case MediaArtRole:
+            if (!genre.requestedMediaArt) {
+                MediaArtUtils::instance()->getRandomMediaArtForGenre(genre.id);
+                genre.requestedMediaArt = true;
+            }
+            return genre.mediaArt;
         default:
             return QVariant();
         }
@@ -201,7 +228,8 @@ namespace unplayer
         return {{GenreIdRole, "genreId"},
                 {GenreRole, "genre"},
                 {TracksCountRole, "tracksCount"},
-                {DurationRole, "duration"}};
+                {DurationRole, "duration"},
+                {MediaArtRole, "mediaArt"}};
     }
 
     QString GenresModel::makeQueryString()
