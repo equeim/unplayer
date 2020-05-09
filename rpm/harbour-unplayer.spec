@@ -21,17 +21,6 @@ BuildRequires: pkgconfig(sailfishapp)
 BuildRequires: cmake
 BuildRequires: desktop-file-utils
 
-# qt5-qtmultimedia-devel installs plugins' CMake modules so we need plugins at build time, otherwise CMake will fail
-# https://bugs.merproject.org/show_bug.cgi?id=1943
-BuildRequires: qt5-qtmultimedia-plugin-audio-alsa
-BuildRequires: qt5-qtmultimedia-plugin-audio-pulseaudio
-BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder
-BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstcamerabin
-BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediacapture
-BuildRequires: qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
-BuildRequires: qt5-qtmultimedia-plugin-playlistformats-m3u
-BuildRequires: qt5-qtmultimedia-plugin-resourcepolicy-resourceqt
-
 # TagLib dependencies
 BuildRequires: pkgconfig(zlib)
 BuildRequires: boost-devel
@@ -76,6 +65,13 @@ fi
 %build
 export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
 
+# Enable -O0 for debug builds
+# This also requires disabling _FORTIFY_SOURCE
+%if "%{build_type}" == "debug"
+    export CFLAGS="$CFLAGS -O0 -Wp,-U_FORTIFY_SOURCE"
+    export CXXFLAGS="$CXXFLAGS -O0 -Wp,-U_FORTIFY_SOURCE"
+%endif
+
 %{__mkdir_p} %{qtdbusextended_build}
 cd %{qtdbusextended_build}
 %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
@@ -94,12 +90,11 @@ cd -
 
 %{__mkdir_p} %{taglib_build}
 cd %{taglib_build}
-%cmake %{taglib} \
+CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib} \
     -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
     -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
     -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
     -DCMAKE_BUILD_TYPE=%{build_type} \
-    -DCMAKE_CXX_FLAGS="-fPIC" \
     -DBUILD_SHARED_LIBS=OFF \
     -DWITH_MP4=ON
 %make_build
@@ -122,8 +117,6 @@ desktop-file-install \
     --delete-original \
     --dir %{buildroot}/%{_datadir}/applications \
     %{buildroot}/%{_datadir}/applications/%{name}.desktop
-
-#install -m 644 -D %{_libdir}/libstdc++.so.6 %{buildroot}/%{_datadir}/%{name}/lib/libstdc++.so.6
 
 %files
 %defattr(-,root,root,-)
