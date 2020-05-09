@@ -133,11 +133,14 @@ namespace unplayer
 
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
             if (!mTracks.empty()) {
-                auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
+                for (auto& track : mTracks) {
+                    track->mediaArtFilePath.clear();
+                }
+                const auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
                 if (track->url.isLocalFile()) {
                     MediaArtUtils::instance()->getMediaArtForFile(track->url.path(),
                                                                   track->filteredSingleAlbum ? track->album : QString(),
-                                                                  !track->mediaArtFilePath.isEmpty());
+                                                                  false);
                 }
             }
         });
