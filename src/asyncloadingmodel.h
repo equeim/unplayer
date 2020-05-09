@@ -43,7 +43,7 @@ namespace unplayer
         }
 
     private:
-        bool mLoading = false;
+        bool mLoading = true;
 
     signals:
         void loadingChanged(bool loading);
