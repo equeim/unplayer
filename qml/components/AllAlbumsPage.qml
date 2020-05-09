@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: allAlbumsPage
+
     SearchPanel {
         id: searchPanel
     }
@@ -85,7 +87,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -94,6 +96,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: allAlbumsPage
+        emptyText: qsTranslate("unplayer", "No albums")
 
         header: PageHeader {
             title: qsTranslate("unplayer", "Albums")
@@ -138,12 +143,6 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No albums")
-        }
-
-        VerticalScrollDecorator { }
     }
 }
 

@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: page
+
     property string pageTitle
     property alias filePath: playlistModel.filePath
 
@@ -63,7 +65,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -72,6 +74,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: page
+        emptyText: qsTranslate("unplayer", "No tracks")
 
         header: PageHeader {
             title: pageTitle
@@ -142,18 +147,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            enabled: !playlistModel.loading && !listView.count
-            text: qsTranslate("unplayer", "No tracks")
-        }
-
-        BusyIndicator {
-            anchors.centerIn: parent
-            size: BusyIndicatorSize.Large
-            running: playlistModel.loading
-        }
-
-        VerticalScrollDecorator { }
     }
 }

@@ -44,7 +44,7 @@ Dialog {
         id: searchPanel
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         property var savedPositions: []
@@ -54,6 +54,9 @@ Dialog {
             fill: parent
             topMargin: searchPanel.visibleSize
         }
+
+        page: filePickerDialog
+        emptyText: qsTranslate("unplayer", "No files")
 
         header: Column {
             property int oldHeight
@@ -209,18 +212,5 @@ Dialog {
 
             SearchMenuItem { }
         }
-
-        ViewPlaceholder {
-            enabled: !directoryContentModel.loading && !listView.count
-            text: qsTranslate("unplayer", "No files")
-        }
-
-        BusyIndicator {
-            anchors.centerIn: parent
-            size: BusyIndicatorSize.Large
-            running: directoryContentModel.loading
-        }
-
-        VerticalScrollDecorator { }
     }
 }

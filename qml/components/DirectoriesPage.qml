@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: page
+
     SearchPanel {
         id: searchPanel
     }
@@ -79,7 +81,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         property var savedPositions: []
@@ -92,8 +94,13 @@ Page {
         }
         clip: true
 
+        page: page
+        emptyText: qsTranslate("unplayer", "No files")
+
         header: Column {
             property int oldHeight
+
+            property int extraHeight: parentDirectoryItem.height
 
             width: listView.width
 
@@ -112,6 +119,8 @@ Page {
             }
 
             ParentDirectoryItem {
+                id: parentDirectoryItem
+
                 visible: !directoryTracksModel.loading && directoryTracksModel.directory !== "/"
                 onClicked: {
                     if (!selectionPanel.showPanel) {
@@ -310,18 +319,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            enabled: !directoryTracksModel.loading && !listView.count
-            text: qsTranslate("unplayer", "No files")
-        }
-
-        BusyIndicator {
-            anchors.centerIn: parent
-            size: BusyIndicatorSize.Large
-            running: directoryTracksModel.loading
-        }
-
-        VerticalScrollDecorator { }
     }
 }

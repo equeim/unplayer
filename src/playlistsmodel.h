@@ -20,7 +20,8 @@
 #define UNPLAYER_PLAYLISTSMODEL_H
 
 #include <vector>
-#include <QAbstractListModel>
+
+#include "asyncloadingmodel.h"
 
 namespace unplayer
 {
@@ -33,7 +34,7 @@ namespace unplayer
         bool operator==(const PlaylistsModelItem& other) const;
     };
 
-    class PlaylistsModel : public QAbstractListModel
+    class PlaylistsModel : public AsyncLoadingModel
     {
         Q_OBJECT
     public:

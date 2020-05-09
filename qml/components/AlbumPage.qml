@@ -74,7 +74,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -83,6 +83,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: albumPage
+        emptyText: qsTranslate("unplayer", "No tracks")
 
         header: AlbumPageHeader { }
         delegate: LibraryTrackDelegate {
@@ -147,11 +150,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No tracks")
-        }
-
-        VerticalScrollDecorator { }
     }
 }

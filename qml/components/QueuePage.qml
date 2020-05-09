@@ -189,6 +189,7 @@ Page {
         }
 
         ListViewPlaceholder {
+            listView: listView
             text: qsTranslate("unplayer", "No tracks")
         }
 

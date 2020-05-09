@@ -31,7 +31,7 @@ Page {
         id: searchPanel
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -39,6 +39,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: page
+        emptyText: qsTranslate("unplayer", "No playlists")
 
         header: PageHeader {
             title: qsTranslate("unplayer", "Add to playlist")
@@ -59,7 +62,9 @@ Page {
         }
         model: Unplayer.FilterProxyModel {
             filterRole: Unplayer.PlaylistsModel.NameRole
-            sourceModel: Unplayer.PlaylistsModel { }
+            sourceModel: Unplayer.PlaylistsModel {
+                id: playlistsModel
+            }
         }
 
         PullDownMenu {
@@ -82,11 +87,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No playlists")
-        }
-
-        VerticalScrollDecorator { }
     }
 }

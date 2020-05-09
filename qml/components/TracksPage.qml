@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: tracksPage
+
     property string pageTitle
 
     property alias mode: tracksModel.mode
@@ -105,7 +107,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -114,6 +116,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: tracksPage
+        emptyText: qsTranslate("unplayer", "No tracks")
 
         header: PageHeader {
             title: pageTitle
@@ -158,11 +163,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No tracks")
-        }
-
-        VerticalScrollDecorator { }
     }
 }

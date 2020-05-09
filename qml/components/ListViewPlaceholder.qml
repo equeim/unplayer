@@ -19,11 +19,8 @@
 import Sailfish.Silica 1.0
 
 ViewPlaceholder {
-    enabled: !listView.count
-    verticalOffset: {
-        var windowHeight = isLandscape ? rootWindow.width :
-                                         rootWindow.height
-
-        return (listView.headerItem.height + listView.height - windowHeight) / 2
-    }
+    property SilicaListView listView
+    property bool loading
+    enabled: !loading && !listView.count
+    verticalOffset: listView.headerItem.extraHeight ? listView.headerItem.extraHeight : 0
 }

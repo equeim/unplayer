@@ -22,6 +22,8 @@ import Sailfish.Silica 1.0
 import harbour.unplayer 0.1 as Unplayer
 
 Page {
+    id: artistsPage
+
     SearchPanel {
         id: searchPanel
     }
@@ -85,7 +87,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -94,6 +96,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: artistsPage
+        emptyText: qsTranslate("unplayer", "No artists")
 
         header: PageHeader {
             title: qsTranslate("unplayer", "Artists")
@@ -195,11 +200,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No artists")
-        }
-
-        VerticalScrollDecorator { }
     }
 }

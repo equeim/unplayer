@@ -100,6 +100,8 @@ namespace unplayer
 
     void PlaylistsModel::update()
     {
+        setLoading(true);
+
         auto future = QtConcurrent::run([]() {
             std::vector<PlaylistsModelItem> playlists;
             const QList<QFileInfo> files(QDir(PlaylistUtils::instance()->playlistsDirectoryPath())
@@ -143,6 +145,8 @@ namespace unplayer
             }
 
             emit dataChanged(index(0), index(static_cast<int>(oldSize) - 1));
+
+            setLoading(false);
         });
     }
 }

@@ -94,7 +94,7 @@ Page {
         }
     }
 
-    SilicaListView {
+    AsyncLoadingListView {
         id: listView
 
         anchors {
@@ -103,6 +103,9 @@ Page {
             topMargin: searchPanel.visibleSize
         }
         clip: true
+
+        page: artistPage
+        emptyText: qsTranslate("unplayer", "No albums")
 
         header: ArtistPageHeader { }
         delegate: AlbumDelegate {
@@ -165,11 +168,5 @@ Page {
 
             SearchMenuItem { }
         }
-
-        ListViewPlaceholder {
-            text: qsTranslate("unplayer", "No albums")
-        }
-
-        VerticalScrollDecorator { }
     }
 }
