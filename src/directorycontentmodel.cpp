@@ -18,6 +18,8 @@
 
 #include "directorycontentmodel.h"
 
+#include <memory>
+
 #include <QDir>
 #include <QStandardPaths>
 #include <QtConcurrentRun>
@@ -147,22 +149,22 @@ namespace unplayer
         }
 
         auto future = QtConcurrent::run([=]() {
-            std::vector<DirectoryContentFile> files;
+            auto files(std::make_shared<std::vector<DirectoryContentFile>>());
             const QList<QFileInfo> fileInfos(QDir(directory).entryInfoList(nameFilters, filters));
-            files.reserve(static_cast<size_t>(fileInfos.size()));
+            files->reserve(static_cast<size_t>(fileInfos.size()));
             for (const QFileInfo& info : fileInfos) {
-                files.push_back({info.filePath(),
-                                 info.fileName(),
-                                 info.isDir()});
+                files->push_back({info.filePath(),
+                                  info.fileName(),
+                                  info.isDir()});
             }
             return files;
         });
 
-        onFutureFinished(future, this, [clear, this](std::vector<DirectoryContentFile>&& files) {
+        onFutureFinished(future, this, [clear, this](std::shared_ptr<std::vector<DirectoryContentFile>>&& files) {
             clear();
 
-            beginInsertRows(QModelIndex(), 0, static_cast<int>(files.size()) - 1);
-            mFiles = std::move(files);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(files->size()) - 1);
+            mFiles = std::move(*files);
             endInsertRows();
 
             setLoading(false);

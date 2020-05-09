@@ -19,6 +19,7 @@
 #include "directorytracksmodel.h"
 
 #include <functional>
+#include <memory>
 
 #include <QDebug>
 #include <QDir>
@@ -181,9 +182,12 @@ namespace unplayer
 
         removeRows(0, rowCount());
 
-        const QString directory(mDirectory);
-        const bool showVideoFiles = mShowVideoFiles;
-        auto future = QtConcurrent::run([directory, showVideoFiles]() {
+        struct FutureResult
+        {
+            std::vector<DirectoryTrackFile> files;
+            int tracksCount;
+        };
+        auto future = QtConcurrent::run([directory = mDirectory, showVideoFiles = mShowVideoFiles]() {
             std::vector<DirectoryTrackFile> files;
             int tracksCount = 0;
             const QFileInfoList fileInfos(QDir(directory).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Files | QDir::Readable));
@@ -207,16 +211,16 @@ namespace unplayer
                     }
                 }
             }
-            return std::pair<std::vector<DirectoryTrackFile>, int>(std::move(files), tracksCount);
+            return std::make_shared<FutureResult>(FutureResult{std::move(files), tracksCount});
         });
 
-        onFutureFinished(future, this, [this](std::pair<std::vector<DirectoryTrackFile>, int>&& result) {
+        onFutureFinished(future, this, [this](std::shared_ptr<FutureResult>&& result) {
             removeRows(0, rowCount());
 
-            beginInsertRows(QModelIndex(), 0, static_cast<int>(result.first.size()) - 1);
-            mFiles = std::move(result.first);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(result->files.size()) - 1);
+            mFiles = std::move(result->files);
             endInsertRows();
-            mTracksCount = result.second;
+            mTracksCount = result->tracksCount;
 
             setLoading(false);
         });

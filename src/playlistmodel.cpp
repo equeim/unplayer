@@ -110,13 +110,13 @@ namespace unplayer
         removeRows(0, rowCount());
 
         auto future = QtConcurrent::run([playlistFilePath]() {
-            std::vector<PlaylistTrack> tracks(PlaylistUtils::parsePlaylist(playlistFilePath));
+            auto tracks(std::make_shared<std::vector<PlaylistTrack>>(PlaylistUtils::parsePlaylist(playlistFilePath)));
 
             std::vector<QString> tracksToQuery;
-            tracksToQuery.reserve(tracks.size());
+            tracksToQuery.reserve(tracks->size());
             std::unordered_map<QString, PlaylistTrack*> tracksMap;
-            tracksMap.reserve(tracks.size());
-            for (PlaylistTrack& track : tracks) {
+            tracksMap.reserve(tracks->size());
+            for (PlaylistTrack& track : *tracks) {
                 if (track.url.isLocalFile()) {
                     QString filePath(track.url.path());
                     tracksToQuery.push_back(filePath);
@@ -204,11 +204,11 @@ namespace unplayer
             return tracks;
         });
 
-        onFutureFinished(future, this, [this](std::vector<PlaylistTrack>&& tracks) {
+        onFutureFinished(future, this, [this](std::shared_ptr<std::vector<PlaylistTrack>>&& tracks) {
             removeRows(0, rowCount());
 
-            beginInsertRows(QModelIndex(), 0, static_cast<int>(tracks.size() - 1));
-            mTracks = std::move(tracks);
+            beginInsertRows(QModelIndex(), 0, static_cast<int>(tracks->size() - 1));
+            mTracks = std::move(*tracks);
             endInsertRows();
 
             setLoading(false);
