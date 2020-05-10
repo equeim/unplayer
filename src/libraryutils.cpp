@@ -184,7 +184,7 @@ namespace unplayer
         QString makeInStringFromIds(const std::vector<int>& ids, size_t first, size_t count, bool& addNull)
         {
             QString str(QString::number(ids[first]));
-            for (size_t i = first + 1, max = first + count; i <= max; ++i) {
+            for (size_t i = first + 1, max = first + count; i < max; ++i) {
                 const int id = ids[i];
                 if (id > 0) {
                     str += QLatin1Char(',');
