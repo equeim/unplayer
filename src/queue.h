@@ -34,15 +34,19 @@ namespace unplayer
 {
     struct QueueTrack
     {
-        explicit QueueTrack(const QString& trackId,
-                            const QUrl& url,
+        explicit QueueTrack(const QUrl& url,
                             const QString& title,
                             int duration,
                             const QString& artist,
                             const QString& album,
-                            bool filteredSingleAlbum,
-                            long long modificationTime);
-        QString trackId;
+                            bool filteredSingleAlbum);
+        inline const QString& getTrackId() const
+        {
+            if (mTrackId.isEmpty()) {
+                initTrackId();
+            }
+            return mTrackId;
+        }
 
         QUrl url;
         QString title;
@@ -53,7 +57,9 @@ namespace unplayer
 
         QString mediaArtFilePath;
 
-        long long modificationTime;
+    private:
+        void initTrackId() const;
+        mutable QString mTrackId;
     };
 
     class Queue final : public QObject

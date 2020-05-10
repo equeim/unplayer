@@ -213,7 +213,7 @@ namespace unplayer
                 mpris->setCanGoNext(true);
                 mpris->setCanGoPrevious(true);
                 mpris->setCanSeek(true);
-                mpris->setMetadata({{Mpris::metadataToString(Mpris::TrackId), track->trackId},
+                mpris->setMetadata({{Mpris::metadataToString(Mpris::TrackId), track->getTrackId()},
                                     {Mpris::metadataToString(Mpris::Title), track->title},
                                     {Mpris::metadataToString(Mpris::Length), track->duration * 1000000LL},
                                     {Mpris::metadataToString(Mpris::Artist), track->artist},
@@ -236,7 +236,7 @@ namespace unplayer
         QObject::connect(mpris, &MprisPlayer::setPositionRequested, this, [=](const QDBusObjectPath& trackId, qint64 position) {
             if (state() != StoppedState &&
                     mQueue->currentIndex() != -1 &&
-                    trackId.path() == mQueue->tracks()[static_cast<size_t>(mQueue->currentIndex())]->trackId) {
+                    trackId.path() == mQueue->tracks()[static_cast<size_t>(mQueue->currentIndex())]->getTrackId()) {
                 setPosition(position / 1000);
             }
         });

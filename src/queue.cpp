@@ -60,32 +60,313 @@ namespace unplayer
             return static_cast<size_t>(dist(random));
         }
 
-        QString createTrackId()
+        inline QString joinStrings(const QStringList& strings)
         {
-            QString id(QLatin1String("/"));
-            id += QUuid::createUuid().toString().remove(0, 1).remove(QLatin1Char('-'));
-            id.chop(1);
-            return id;
+            return strings.join(QLatin1String(", "));
         }
+
+        inline QUrl urlFromString(const QString& string)
+        {
+            QUrl url(string);
+            if (url.isRelative()) {
+                url.setScheme(QLatin1String("file"));
+            }
+            return url;
+        }
+
+        class TracksAdder
+        {
+        public:
+            static std::vector<std::shared_ptr<QueueTrack>> addTracksFromUrls(const QStringList& trackUrls, std::vector<std::shared_ptr<QueueTrack>>&& oldTracks)
+            {
+                std::vector<std::shared_ptr<QueueTrack>> newTracks;
+
+                qInfo("Start adding tracks from urls, count = %d, old tracks count = %zu", trackUrls.size(), oldTracks.size());
+                QElapsedTimer timer;
+                timer.start();
+
+                auto existenceResult(checkTracksExistence(trackUrls, std::move(oldTracks)));
+                auto& tracksMap = existenceResult.tracksMap;
+
+                if (!queryTracks(std::move(existenceResult.tracksToQuery), tracksMap)) {
+                    return newTracks;
+                }
+
+                auto& existingTracks = existenceResult.existingTracks;
+                newTracks.reserve(existingTracks.size());
+                QMimeDatabase mimeDb;
+
+                for (QUrl& url : existingTracks) {
+                    if (!qApp) {
+                        break;
+                    }
+
+                    const auto found(tracksMap.find(url));
+                    if (found == tracksMap.end()) {
+                        if (url.isLocalFile()) {
+                            const QString filePath(url.path());
+                            const QFileInfo fileInfo(filePath);
+                            tagutils::Info info(tagutils::getTrackInfo(filePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
+                            if (info.title.isEmpty()) {
+                                info.title = fileInfo.fileName();
+                            }
+                            info.artists.append(info.albumArtists);
+                            info.artists.removeDuplicates();
+                            newTracks.push_back(std::make_shared<QueueTrack>(url,
+                                                                             info.title,
+                                                                             info.duration,
+                                                                             joinStrings(info.artists),
+                                                                             joinStrings(info.albums),
+                                                                             false));
+                            tracksMap.emplace(std::move(url), newTracks.back());
+                        } else {
+                            newTracks.push_back(std::make_shared<QueueTrack>(url,
+                                                                             url.toString(),
+                                                                             -1,
+                                                                             QString(),
+                                                                             QString(),
+                                                                             false));
+                        }
+                    } else {
+                        const auto& track = found->second;
+                        if (track.use_count() == 1) {
+                            newTracks.push_back(track);
+                        } else {
+                            newTracks.push_back(std::make_shared<QueueTrack>(*track));
+                        }
+                    }
+                }
+
+                qInfo("Tracks adding time %lldms", static_cast<long long>(timer.elapsed()));
+
+                return newTracks;
+            }
+
+        private:
+            struct ExistenceResult
+            {
+                std::vector<QUrl> existingTracks;
+                std::vector<QString> tracksToQuery;
+                std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> tracksMap;
+            };
+
+            static ExistenceResult checkTracksExistence(const QStringList& trackUrls, std::vector<std::shared_ptr<QueueTrack>> oldTracks)
+            {
+                std::vector<QUrl> existingTracks;
+                existingTracks.reserve(static_cast<size_t>(trackUrls.size()));
+                std::vector<QString> tracksToQuery;
+                tracksToQuery.reserve(static_cast<size_t>(trackUrls.size()));
+                std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> tracksMap;
+                tracksMap.reserve(static_cast<size_t>(trackUrls.size()));
+
+                std::unordered_set<QString> playlists;
+
+                std::function<void(const QUrl&)> processTrack;
+                processTrack = [&](const QUrl& url) {
+                    if (url.isLocalFile()) {
+                        const QFileInfo fileInfo(url.path());
+                        if (fileInfo.isFile() && fileInfo.isReadable()) {
+                            if (PlaylistUtils::isPlaylistExtension(fileInfo.suffix())) {
+                                QString absoluteFilePath(fileInfo.absoluteFilePath());
+                                if (!contains(playlists, absoluteFilePath)) {
+                                    playlists.insert(std::move(absoluteFilePath));
+                                    std::vector<PlaylistTrack> playlistTracks(PlaylistUtils::parsePlaylist(url.path()));
+                                    existingTracks.reserve(existingTracks.size() + playlistTracks.size());
+                                    tracksToQuery.reserve(tracksToQuery.size() + playlistTracks.size());
+                                    tracksMap.reserve(tracksMap.size() + playlistTracks.size());
+                                    for (const PlaylistTrack& playlistTrack : playlistTracks) {
+                                        if (playlistTrack.url.isLocalFile()) {
+                                            processTrack(playlistTrack.url);
+                                        } else {
+                                            existingTracks.push_back(playlistTrack.url);
+                                            if (tracksMap.find(playlistTrack.url) == tracksMap.end()) {
+                                                tracksMap.insert({playlistTrack.url, std::make_shared<QueueTrack>(playlistTrack.url,
+                                                                                                                  playlistTrack.title,
+                                                                                                                  playlistTrack.duration,
+                                                                                                                  playlistTrack.artist,
+                                                                                                                  QString(),
+                                                                                                                  false)});
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (tracksMap.find(url) == tracksMap.end()) {
+                                    auto found(std::find_if(oldTracks.begin(), oldTracks.end(), [&url](const std::shared_ptr<QueueTrack>& track) {
+                                        return track->url == url;
+                                    }));
+                                    if (found == oldTracks.end()) {
+                                        tracksToQuery.push_back(url.path());
+                                    } else {
+                                        tracksMap.insert({url, std::move(*found)});
+                                        oldTracks.erase(found);
+                                    }
+                                    existingTracks.push_back(url);
+                                }
+                            }
+                        } else {
+                            qWarning() << "File is not readable:" << fileInfo.filePath();
+                        }
+                    } else {
+                        existingTracks.push_back(url);
+                    }
+                };
+
+                for (const QString& urlString : trackUrls) {
+                    if (!qApp) {
+                        break;
+                    }
+                    const QUrl url(urlFromString(urlString));
+                    if (!url.isRelative()) {
+                        processTrack(url);
+                    }
+                }
+
+                return {std::move(existingTracks),
+                        std::move(tracksToQuery),
+                        std::move(tracksMap)};
+            }
+
+            static bool queryTracks(std::vector<QString> tracksToQuery, std::unordered_map<QUrl, std::shared_ptr<QueueTrack>>& tracksMap)
+            {
+                const DatabaseConnectionGuard databaseGuard{dbConnectionName};
+                QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+                if (!db.isOpen()) {
+                    return false;
+                }
+
+                std::sort(tracksToQuery.begin(), tracksToQuery.end());
+                tracksToQuery.erase(std::unique(tracksToQuery.begin(), tracksToQuery.end()), tracksToQuery.end());
+
+                bool abort = false;
+
+                QSqlQuery query(db);
+                size_t previousCount = 0;
+
+                batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+                    enum {
+                        FilePathField,
+                        TitleField,
+                        DurationField,
+                        ArtistField,
+                        AlbumField
+                    };
+
+                    if (!qApp) {
+                        abort = true;
+                    }
+
+                    if (abort) {
+                        return;
+                    }
+
+                    if (count != previousCount) {
+                        QString queryString(QLatin1String("SELECT filePath, tracks.title, duration, artists.title, albums.title "
+                                                          "FROM tracks "
+                                                          "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
+                                                          "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
+                                                          "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                                          "LEFT JOIN albums ON albums.id = tracks_albums.albumId "
+                                                          "WHERE filePath IN (?"));
+
+                        const auto add(QStringLiteral(",?"));
+                        const int addSize = add.size();
+                        queryString.reserve(queryString.size() + static_cast<int>(count - 1) * addSize + 1);
+                        for (size_t i = 1; i < count; ++i) {
+                            queryString += add;
+                        }
+                        queryString += QLatin1Char(')');
+
+                        if (!query.prepare(queryString)) {
+                            qWarning() << query.lastError();
+                            abort = true;
+                            return;
+                        }
+
+                        previousCount = count;
+                    }
+
+                    for (size_t i = first, max = first + count; i < max; ++i) {
+                        query.addBindValue(tracksToQuery[i]);
+                    }
+
+                    if (!query.exec()) {
+                        qWarning() << query.lastError();
+                        abort = true;
+                        return;
+                    }
+
+                    QString filePath;
+                    QStringList artists;
+                    QStringList albums;
+
+                    const auto insert = [&] {
+                        const QUrl url(QUrl::fromLocalFile(filePath));
+                        QString title(query.value(TitleField).toString());
+                        if (title.isEmpty()) {
+                            title = QFileInfo(filePath).fileName();
+                        }
+                        tracksMap.emplace(url,
+                                          std::make_shared<QueueTrack>(url,
+                                                                       title,
+                                                                       query.value(DurationField).toInt(),
+                                                                       joinStrings(artists),
+                                                                       joinStrings(albums),
+                                                                       false));
+                        artists.clear();
+                        albums.clear();
+                    };
+
+                    while (query.next()) {
+                        QString newFilePath(query.value(FilePathField).toString());
+                        if (newFilePath != filePath) {
+                            if (!filePath.isEmpty()) {
+                                insert();
+                            }
+                            filePath = std::move(newFilePath);
+                        }
+                        const QString artist(query.value(ArtistField).toString());
+                        if (!artist.isEmpty() && !artists.contains(artist)) {
+                            artists.push_back(artist);
+                        }
+                        const QString album(query.value(AlbumField).toString());
+                        if (!album.isEmpty() && !albums.contains(album)) {
+                            albums.push_back(album);
+                        }
+                    }
+                    if (!filePath.isEmpty()) {
+                        query.previous();
+                        insert();
+                    }
+
+                    query.finish();
+                });
+
+                return !abort;
+            }
+        };
     }
 
-    QueueTrack::QueueTrack(const QString& trackId,
-                           const QUrl& url,
+    QueueTrack::QueueTrack(const QUrl& url,
                            const QString& title,
                            int duration,
                            const QString& artist,
                            const QString& album,
-                           bool filteredSingleAlbum,
-                           long long modificationTime)
-        : trackId(trackId),
-          url(url),
+                           bool filteredSingleAlbum)
+        : url(url),
           title(title),
           duration(duration),
           artist(artist),
           album(album),
-          filteredSingleAlbum(filteredSingleAlbum),
-          modificationTime(modificationTime)
+          filteredSingleAlbum(filteredSingleAlbum)
     {
+    }
+
+    void QueueTrack::initTrackId() const
+    {
+        mTrackId = QLatin1Char('/');
+        mTrackId += QUuid::createUuid().toString().remove(0, 1).remove(QLatin1Char('-'));
+        mTrackId.chop(1);
     }
 
     Queue::Queue(QObject* parent)
@@ -295,313 +576,32 @@ namespace unplayer
         mAddingTracks = true;
         emit addingTracksChanged();
 
+        if (clearQueue) {
+            emit aboutToBeCleared();
+        }
+
         std::vector<std::shared_ptr<QueueTrack>> oldTracks;
         oldTracks.reserve(mTracks.size());
 
+        for (auto& track : mTracks) {
+            if (track->url.isLocalFile()) {
+                oldTracks.push_back(std::move(track));
+            }
+        }
+
         if (clearQueue) {
-            emit aboutToBeCleared();
-            for (auto& track : mTracks) {
-                if (track->modificationTime > 0) {
-                    oldTracks.push_back(std::move(track));
-                }
-            }
             clear(false);
-        } else {
-            for (const auto& track : mTracks) {
-                if (track->modificationTime > 0) {
-                    oldTracks.push_back(track);
-                }
-            }
         }
 
         const QUrl setAsCurrentUrl([&]() {
             if (setAsCurrent < 0 || setAsCurrent >= trackUrls.size()) {
                 return QUrl();
             }
-            const QString urlString(trackUrls[setAsCurrent]);
-            QUrl url(urlString);
-            if (url.isRelative()) {
-                url = QUrl::fromLocalFile(urlString);
-            }
-            return url;
+            return urlFromString(trackUrls[setAsCurrent]);
         }());
 
         auto future = QtConcurrent::run([trackUrls, oldTracks = std::move(oldTracks)]() mutable {
-            QElapsedTimer timer;
-            timer.start();
-
-            std::vector<std::shared_ptr<QueueTrack>> newTracks;
-
-            std::vector<QUrl> existingTracks;
-            existingTracks.reserve(static_cast<size_t>(trackUrls.size()));
-            std::vector<QString> tracksToQuery;
-            tracksToQuery.reserve(static_cast<size_t>(trackUrls.size()));
-
-            std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> tracksMap;
-
-            struct TrackHandler
-            {
-                std::vector<std::shared_ptr<QueueTrack>>& oldTracks;
-                const std::vector<std::shared_ptr<QueueTrack>>::iterator oldTracksBegin;
-                std::vector<std::shared_ptr<QueueTrack>>::iterator oldTracksEnd;
-
-                std::unordered_map<QUrl, std::shared_ptr<QueueTrack>>& tracksMap;
-                std::unordered_map<QUrl, std::shared_ptr<QueueTrack>>::iterator tracksMapEnd;
-
-                std::vector<QUrl>& existingTracks;
-                std::vector<QString>& tracksToQuery;
-
-                std::unordered_set<QString> playlists;
-
-                void processTrack(const QUrl& url)
-                {
-                    if (url.isLocalFile()) {
-                        const QFileInfo fileInfo(url.path());
-                        if (fileInfo.isFile() && fileInfo.isReadable()) {
-                            if (PlaylistUtils::isPlaylistExtension(fileInfo.suffix()) &&
-                                    !contains(playlists, fileInfo.absoluteFilePath())) {
-                                playlists.insert(fileInfo.absoluteFilePath());
-                                std::vector<PlaylistTrack> playlistTracks(PlaylistUtils::parsePlaylist(url.path()));
-                                existingTracks.reserve(existingTracks.size() + playlistTracks.size());
-                                tracksToQuery.reserve(tracksToQuery.size() + playlistTracks.size());
-                                for (const PlaylistTrack& playlistTrack : playlistTracks) {
-                                    if (playlistTrack.url.isLocalFile()) {
-                                        processTrack(playlistTrack.url);
-                                    } else {
-                                        existingTracks.push_back(playlistTrack.url);
-                                        tracksMap.insert({playlistTrack.url, std::make_shared<QueueTrack>(createTrackId(),
-                                                                                                          playlistTrack.url,
-                                                                                                          playlistTrack.title,
-                                                                                                          playlistTrack.duration,
-                                                                                                          playlistTrack.artist,
-                                                                                                          QString(),
-                                                                                                          false,
-                                                                                                          -1)});
-                                    }
-                                }
-                            } else {
-                                if (tracksMap.find(url) == tracksMapEnd) {
-                                    const auto modificationTime = getLastModifiedTime(fileInfo.filePath());
-                                    auto found(std::find_if(oldTracksBegin, oldTracksEnd, [&url, &modificationTime](const std::shared_ptr<QueueTrack>& track) {
-                                        return track->url == url && track->modificationTime == modificationTime;
-                                    }));
-                                    if (found == oldTracks.end()) {
-                                        tracksToQuery.push_back(url.path());
-                                    } else {
-                                        tracksMap.insert({url, std::move(*found)});
-                                        tracksMapEnd = tracksMap.end();
-                                        oldTracks.erase(found);
-                                        oldTracksEnd = oldTracks.end();
-                                    }
-                                    existingTracks.push_back(url);
-                                }
-                            }
-                        } else {
-                            qWarning() << "file" << fileInfo.filePath() << "is not readable";
-                        }
-                    } else {
-                        existingTracks.push_back(url);
-                    }
-                }
-            };
-
-            {
-                TrackHandler handler{oldTracks,
-                                     oldTracks.begin(),
-                                     oldTracks.end(),
-                                     tracksMap,
-                                     tracksMap.end(),
-                                     existingTracks,
-                                     tracksToQuery,
-                                     std::unordered_set<QString>{}};
-                for (const QString& urlString : trackUrls) {
-                    const QUrl url([&urlString]() {
-                        if (urlString.startsWith(QLatin1Char('/'))) {
-                            return QUrl::fromLocalFile(urlString);
-                        }
-                        return QUrl(urlString);
-                    }());
-                    if (!url.isRelative()) {
-                        handler.processTrack(url);
-                    }
-                }
-            }
-
-            const bool useAlbumArtist = Settings::instance()->useAlbumArtist();
-
-            const auto makeTrack = [](const QUrl& url,
-                                      QString&& title,
-                                      int duration,
-                                      QStringList&& artists,
-                                      QStringList&& albums,
-                                      long long modificationTime) {
-                QString artist;
-                if (artists.isEmpty()) {
-                    artist = qApp->translate("unplayer", "Unknown artist");
-                } else {
-                    artist = artists.join(QLatin1String(", "));
-                }
-
-                QString album;
-                if (albums.isEmpty()) {
-                    album = qApp->translate("unplayer", "Unknown artist");
-                } else {
-                    album = albums.join(QLatin1String(", "));
-                }
-
-                return std::make_shared<QueueTrack>(createTrackId(),
-                                                    url,
-                                                    std::move(title),
-                                                    duration,
-                                                    std::move(artist),
-                                                    std::move(album),
-                                                    albums.size() == 1,
-                                                    modificationTime);
-            };
-
-            const DatabaseConnectionGuard databaseGuard{dbConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
-                return newTracks;
-            }
-
-            batchedCount(tracksToQuery.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
-                enum {
-                    FilePathField,
-                    ModificationTimeField,
-                    TitleField,
-                    ArtistField,
-                    AlbumField,
-                    DurationField,
-                    DirectoryMediaArtField,
-                    EmbeddedMediaArtField
-                };
-
-                QString queryString(QLatin1String("SELECT filePath, modificationTime, title, %1, album, duration, directoryMediaArt, embeddedMediaArt FROM tracks WHERE filePath IN (?"));
-                queryString.reserve(queryString.size() + static_cast<int>(count - 1) * 2 + 1);
-                for (size_t j = 1; j < count; ++j) {
-                    queryString.push_back(QStringLiteral(",?"));
-                }
-                queryString.push_back(QLatin1Char(')'));
-                queryString = queryString.arg(useAlbumArtist ? QLatin1String("albumArtist") : QLatin1String("artist"));
-
-                QSqlQuery query(db);
-                query.prepare(queryString);
-                for (size_t j = first, max = first + count; j < max; ++j) {
-                    query.addBindValue(tracksToQuery[j]);
-                }
-
-
-                if (query.exec()) {
-                    QString previousFilePath;
-                    QString title;
-                    int duration;
-                    QStringList artists;
-                    QStringList albums;
-                    QString mediaArtFilePath;
-                    long long modificationTime;
-                    bool shouldInsert = false;
-
-                    const auto insert = [&]() {
-                        const QUrl url(QUrl::fromLocalFile(previousFilePath));
-                        artists.removeDuplicates();
-                        albums.removeDuplicates();
-                        tracksMap.insert({url, makeTrack(url,
-                                                         std::move(title),
-                                                         duration,
-                                                         std::move(artists),
-                                                         std::move(albums),
-                                                         modificationTime)});
-                    };
-
-                    while (query.next()) {
-                        QString filePath(query.value(FilePathField).toString());
-
-                        if (filePath != previousFilePath) {
-                            // insert previous
-                            if (!previousFilePath.isEmpty() && shouldInsert) {
-                                insert();
-                            }
-
-                            const QFileInfo info(filePath);
-                            modificationTime = query.value(ModificationTimeField).toLongLong();
-                            shouldInsert = info.isFile() && info.isReadable() && (modificationTime == getLastModifiedTime(filePath));
-
-                            if (shouldInsert) {
-                                title = query.value(TitleField).toString();
-                                duration = query.value(DurationField).toInt();
-                                artists.clear();
-                                albums.clear();
-                            }
-                        }
-
-                        if (shouldInsert) {
-                            artists.push_back(query.value(ArtistField).toString());
-                            albums.push_back(query.value(AlbumField).toString());
-                        }
-
-                        previousFilePath = std::move(filePath);
-                    }
-
-                    if (shouldInsert && query.previous()) {
-                        // insert last
-                        insert();
-                    }
-                } else {
-                    qWarning() << query.lastError();
-                }
-            });
-
-            const QMimeDatabase mimeDb;
-
-            std::unordered_map<QString, QString> mediaArtDirectoriesHash;
-            const bool preferDirectoryMediaArt = Settings::instance()->useDirectoryMediaArt();
-
-            newTracks.reserve(existingTracks.size());
-            const auto tracksMapEnd(tracksMap.end());
-            for (QUrl& url : existingTracks) {
-                const auto found = tracksMap.find(url);
-                if (found == tracksMapEnd) {
-                    if (url.isLocalFile()) {
-                        const QString filePath(url.path());
-                        const QFileInfo fileInfo(filePath);
-                        tagutils::Info info(tagutils::getTrackInfo(filePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb));
-                        if (info.title.isEmpty()) {
-                            info.title = fileInfo.fileName();
-                        }
-                        info.artists.append(info.albumArtists);
-                        info.artists.removeDuplicates();
-                        newTracks.push_back(makeTrack(url,
-                                                      std::move(info.title),
-                                                      info.duration,
-                                                      std::move(info.artists),
-                                                      std::move(info.albums),
-                                                      getLastModifiedTime(filePath)));
-                    } else {
-                        newTracks.push_back(std::make_shared<QueueTrack>(createTrackId(),
-                                                                         url,
-                                                                         url.toString(),
-                                                                         -1,
-                                                                         QString(),
-                                                                         QString(),
-                                                                         false,
-                                                                         -1));
-                    }
-                } else {
-                    newTracks.push_back(std::make_shared<QueueTrack>(*(found->second.get())));
-                }
-
-                QueueTrack* track = newTracks.back().get();
-                if (track->title.isEmpty()) {
-                    if (track->url.isLocalFile()) {
-                        track->title = QFileInfo(track->url.path()).fileName();
-                    } else {
-                        track->title = track->url.toString();
-                    }
-                }
-            }
-
-            return newTracks;
+            return TracksAdder::addTracksFromUrls(trackUrls, std::move(oldTracks));
         });
 
         onFutureFinished(future, this, [=](std::vector<std::shared_ptr<QueueTrack>>&& tracks) {
@@ -644,27 +644,21 @@ namespace unplayer
 
             for (const LibraryTrack& libraryTrack : libraryTracks) {
                 const QString& filePath = libraryTrack.filePath;
-
                 const QFileInfo info(filePath);
-
                 if (!info.isFile()) {
-                    qWarning() << "file" << filePath << "does not exist or not a file";
+                    qWarning() << "File does not exist or is not a file:" << filePath;
                     continue;
                 }
-
                 if (!info.isReadable()) {
-                    qWarning() << "file" << filePath << "is not readable";
+                    qWarning() << "File is not readable:" << filePath;
                     continue;
                 }
-
-                newTracks.push_back(std::make_shared<QueueTrack>(createTrackId(),
-                                                                 QUrl::fromLocalFile(libraryTrack.filePath),
-                                                                 std::move(libraryTrack.title),
+                newTracks.push_back(std::make_shared<QueueTrack>(QUrl::fromLocalFile(filePath),
+                                                                 libraryTrack.title,
                                                                  libraryTrack.duration,
-                                                                 std::move(libraryTrack.artist),
-                                                                 std::move(libraryTrack.album),
-                                                                 libraryTrack.filteredSingleAlbum,
-                                                                 -1));
+                                                                 libraryTrack.artist,
+                                                                 libraryTrack.album,
+                                                                 libraryTrack.filteredSingleAlbum));
             }
 
             return newTracks;
@@ -879,6 +873,7 @@ namespace unplayer
     {
         emit tracksAboutToBeAdded(static_cast<int>(tracks.size()));
 
+        // If queue was not cleared
         setAsCurrent += static_cast<int>(mTracks.size());
 
         mNotPlayedTracks.reserve(mNotPlayedTracks.size() + tracks.size());
