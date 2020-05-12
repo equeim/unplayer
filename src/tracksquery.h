@@ -42,7 +42,7 @@ namespace unplayer
     }
 
     template<typename Track>
-    bool queryTracksByPaths(std::set<QString> tracksToQuery, std::unordered_multimap<QString, Track>& tracksToQueryMap, QLatin1String dbConnectionName)
+    inline bool queryTracksByPaths(std::set<QString> tracksToQuery, std::unordered_multimap<QString, Track>& tracksToQueryMap, QLatin1String dbConnectionName)
     {
         if (tracksToQuery.empty()) {
             return true;
