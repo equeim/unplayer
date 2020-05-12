@@ -96,6 +96,9 @@ namespace unplayer
             if (!filePaths.empty()) {
                 bool abort = false;
 
+                QSqlQuery query(db);
+                size_t previousCount = 0;
+
                 batchedCount(filePaths.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                     if (abort) {
                         return;
@@ -105,27 +108,26 @@ namespace unplayer
                         return;
                     }
 
-                    QString queryString(QLatin1String("DELETE FROM tracks WHERE filePath IN (?"));
-                    const QLatin1String add(",?");
-                    queryString.reserve(queryString.size() + (static_cast<int>(count) - 1) * add.size() + 1);
-                    for (size_t i = 1; i < count; ++i) {
-                        queryString += add;
-                    }
-                    queryString += QLatin1Char(')');
-
-                    QSqlQuery query(db);
-                    if (query.prepare(queryString)) {
-                        for (size_t i = first, max = first + count; i < max; ++i) {
-                            query.addBindValue(filePaths[i]);
-                        }
-                        if (!query.exec()) {
+                    if (count != previousCount) {
+                        QString queryString(QLatin1String("DELETE FROM tracks WHERE filePath IN ("));
+                        queryString += makeInStringForParameters(count);
+                        if (!query.prepare(queryString)) {
                             qWarning() << "Failed to remove tracks from database" << query.lastError();
                             abort = true;
+                            return;
                         }
-                    } else {
+                    }
+
+                    for (size_t i = first, max = first + count; i < max; ++i) {
+                        query.addBindValue(filePaths[i]);
+                    }
+
+                    if (!query.exec()) {
                         qWarning() << "Failed to remove tracks from database" << query.lastError();
                         abort = true;
                     }
+
+                    query.finish();
                 });
 
                 return !abort;
