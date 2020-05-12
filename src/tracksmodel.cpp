@@ -243,7 +243,7 @@ namespace unplayer
                                          int genreId,
                                          bool& groupTracks)
     {
-        QString queryString(QLatin1String("SELECT tracks.id, filePath, tracks.title, duration, directoryMediaArt, embeddedMediaArt, %1 "
+        QString queryString(QLatin1String("SELECT tracks.id, filePath, tracks.title, duration, %1 "
                                           "FROM tracks "
                                           "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
                                           "LEFT JOIN artists ON artists.id = tracks_artists.artistId "

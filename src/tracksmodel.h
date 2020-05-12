@@ -94,8 +94,6 @@ namespace unplayer
             FilePathField,
             TitleField,
             DurationField,
-            DirectoryMediaArtField,
-            EmbeddedMediaArtField,
             ArtistField,
             AlbumField
         };
