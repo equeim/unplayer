@@ -58,8 +58,8 @@ namespace unplayer
 
         setLoading(true);
 
-        auto itemFactory = createItemFactory();
         auto queryString(makeQueryString());
+        auto itemFactory = createItemFactory();
         auto future(QtConcurrent::run([itemFactory, queryString = std::move(queryString)] {
             auto items(std::make_shared<std::vector<Item>>());
 
