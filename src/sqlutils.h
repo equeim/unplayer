@@ -22,6 +22,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
+#include <vector>
+
 namespace unplayer
 {
     struct DatabaseConnectionGuard
@@ -69,6 +71,41 @@ namespace unplayer
             return size;
         }
         return 0;
+    }
+
+    inline QString makeInStringFromIds(const std::vector<int>& ids, size_t first, size_t count, bool& addNull)
+    {
+        QString str(QString::number(ids[first]));
+        for (size_t i = first + 1, max = first + count; i < max; ++i) {
+            const int id = ids[i];
+            if (id > 0) {
+                str += QLatin1Char(',');
+                str += QString::number(id);
+            } else {
+                addNull = true;
+            }
+        }
+        str += QLatin1Char(')');
+        return str;
+    }
+
+    inline QString makeInStringFromIds(const std::vector<int>& ids, size_t first, size_t count)
+    {
+        bool addNull;
+        return makeInStringFromIds(ids, first, count, addNull);
+    }
+
+    inline QString makeInStringForParameters(size_t count)
+    {
+        QString str(QLatin1Char('?'));
+        const auto add(QStringLiteral(",?"));
+        const int addSize = add.size();
+        str.reserve(str.size() + static_cast<int>(count - 1) * addSize + 1);
+        for (size_t i = 1; i < count; ++i) {
+            str += add;
+        }
+        str += QLatin1Char(')');
+        return str;
     }
 }
 

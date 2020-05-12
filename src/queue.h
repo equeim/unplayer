@@ -40,6 +40,10 @@ namespace unplayer
                             const QString& artist,
                             const QString& album,
                             bool filteredSingleAlbum);
+
+        explicit QueueTrack(const QUrl& url,
+                            const QString& title);
+
         inline const QString& getTrackId() const
         {
             if (mTrackId.isEmpty()) {
