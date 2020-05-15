@@ -77,7 +77,7 @@ namespace unplayer
                     if (foundInDb) {
                         mFileMediaArtQuery.last();
                         const QString mediaArt(mediaArtFromQuery(mFileMediaArtQuery, foundUserMediaArt));
-                        emit gotMediaArtForFile(filePath, mediaArt, {});
+                        emit gotMediaArtForFile(filePath, mediaArt, {}, {});
                     }
                     mFileMediaArtQuery.last();
                 } else {
@@ -99,7 +99,7 @@ namespace unplayer
                 std::unordered_map<QString, QString> mediaArtHash;
                 directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtHash, fileInfo.path());
             }
-            emit gotMediaArtForFile(filePath, directoryMediaArt, info.mediaArtData);
+            emit gotMediaArtForFile(filePath, {}, directoryMediaArt, info.mediaArtData);
         }
 
         Q_INVOKABLE void getRandomMediaArt(uintptr_t requestId)
@@ -352,7 +352,7 @@ namespace unplayer
         QSqlQuery mGenreQuery;
 
     signals:
-        void gotMediaArtForFile(const QString& filePath, const QString& mediaArt, const QByteArray& embeddedMediaArtData);
+        void gotMediaArtForFile(const QString& filePath, const QString& libraryMediaArt, const QString& directoryMediaArt, const QByteArray& embeddedMediaArtData);
         void gotRandomMediaArt(uintptr_t requestId, const QString& mediaArt);
         void gotRandomMediaArtForArtist(int artistId, const QString& mediaArt);
         void gotRandomMediaArtForAlbum(int albumId, const QString& mediaArt);

@@ -63,7 +63,7 @@ namespace unplayer
         MediaArtUtilsWorker* mWorker = nullptr;
 
     signals:
-        void gotMediaArtForFile(const QString& filePath, const QString& mediaArt, const QByteArray& embeddedMediaArtData);
+        void gotMediaArtForFile(const QString& filePath, const QString& libraryMediaArt, const QString& directoryMediaArt, const QByteArray& embeddedMediaArtData);
 
         void gotRandomMediaArt(uintptr_t requestId, const QString& mediaArt);
         void gotRandomMediaArtForArtist(int artistId, const QString& mediaArt);

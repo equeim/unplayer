@@ -59,7 +59,8 @@ namespace unplayer
         QString album;
         bool filteredSingleAlbum;
 
-        QString mediaArtFilePath;
+        QString libraryMediaArt;
+        QString directoryMediaArt;
 
     private:
         void initTrackId() const;
@@ -140,8 +141,8 @@ namespace unplayer
 
     private:
         void reset();
-
         void addingTracksCallback(std::vector<std::shared_ptr<QueueTrack>>&& tracks, int setAsCurrent, const QUrl& setAsCurrentUrl);
+        void setCurrentMediaArt(const QString& libraryMediaArt, const QString& directoryMediaArt, const QByteArray& embeddedMediaArtData);
 
     private:
         std::vector<std::shared_ptr<QueueTrack>> mTracks;
@@ -151,7 +152,9 @@ namespace unplayer
         bool mShuffle;
         RepeatMode mRepeatMode;
 
-        QByteArray mCurrentMediaArtData;
+        QString mCurrentLibraryMediaArt;
+        QString mCurrentDirectoryMediaArt;
+        QByteArray mCurrentEmbeddedMediaArtData;
 
         bool mAddingTracks;
     signals:

@@ -268,49 +268,45 @@ namespace unplayer
           mRepeatMode(NoRepeat),
           mAddingTracks(false)
     {
-        QObject::connect(this, &Queue::currentTrackChanged, this, [this] {
-            if (!mTracks.empty()) {
-                const auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
-                if (track->url.isLocalFile()) {
+        QObject::connect(this, &Queue::currentTrackChanged, this, [=] {
+            const QueueTrack* track = mTracks.empty() ? nullptr : mTracks[static_cast<size_t>(mCurrentIndex)].get();
+            if (track && track->url.isLocalFile()) {
+                if (track->libraryMediaArt.isEmpty()) {
                     MediaArtUtils::instance()->getMediaArtForFile(track->url.path(),
                                                                   track->filteredSingleAlbum ? track->album : QString(),
-                                                                  !track->mediaArtFilePath.isEmpty());
-                    return;
+                                                                  !track->directoryMediaArt.isEmpty());
+                } else {
+                    setCurrentMediaArt(track->libraryMediaArt, {}, {});
                 }
+            } else {
+                setCurrentMediaArt({}, {}, {});
             }
-            if (!mCurrentMediaArtData.isEmpty()) {
-                mCurrentMediaArtData.clear();
-                emit mediaArtDataChanged(mCurrentMediaArtData);
-            }
-            emit mediaArtChanged();
         });
 
-        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotMediaArtForFile, this, [this](const QString& filePath, const QString& mediaArt, const QByteArray& embeddedMediaArtData) {
+        QObject::connect(MediaArtUtils::instance(), &MediaArtUtils::gotMediaArtForFile, this, [=](const QString& filePath, const QString& libraryMediaArt, const QString& directoryMediaArt, const QByteArray& embeddedMediaArtData) {
             if (filePath == currentFilePath()) {
-                auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
-                bool changed = false;
-                if (track->mediaArtFilePath.isEmpty() && mediaArt != track->mediaArtFilePath) {
-                    track->mediaArtFilePath = mediaArt;
-                    changed = true;
+                const auto& track = mTracks[static_cast<size_t>(mCurrentIndex)].get();
+                if (track->libraryMediaArt.isEmpty()) {
+                    track->libraryMediaArt = libraryMediaArt;
                 }
-                if (embeddedMediaArtData != mCurrentMediaArtData) {
-                    mCurrentMediaArtData = embeddedMediaArtData;
-                    emit mediaArtDataChanged(mCurrentMediaArtData);
-                    changed = true;
+                if (track->directoryMediaArt.isEmpty()) {
+                    track->directoryMediaArt = directoryMediaArt;
                 }
-                if (changed) {
-                    emit mediaArtChanged();
-                }
+                setCurrentMediaArt(track->libraryMediaArt,
+                                   track->directoryMediaArt,
+                                   embeddedMediaArtData);
             }
         });
 
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::mediaArtChanged, this, [=]() {
             if (!mTracks.empty()) {
                 for (auto& track : mTracks) {
-                    track->mediaArtFilePath.clear();
+                    track->libraryMediaArt.clear();
+                    track->directoryMediaArt.clear();
                 }
-                const auto& track = mTracks[static_cast<size_t>(mCurrentIndex)];
-                if (track->url.isLocalFile()) {
+                setCurrentMediaArt({}, {}, {});
+                const QueueTrack* track = mTracks.empty() ? nullptr : mTracks[static_cast<size_t>(mCurrentIndex)].get();
+                if (track && track->url.isLocalFile()) {
                     MediaArtUtils::instance()->getMediaArtForFile(track->url.path(),
                                                                   track->filteredSingleAlbum ? track->album : QString(),
                                                                   false);
@@ -393,10 +389,13 @@ namespace unplayer
         if (mCurrentIndex >= 0) {
             const QueueTrack* track = mTracks[static_cast<size_t>(mCurrentIndex)].get();
             if (track->url.isLocalFile()) {
-                if (!mCurrentMediaArtData.isEmpty() && (!Settings::instance()->useDirectoryMediaArt() || track->mediaArtFilePath.isEmpty())) {
+                if (!mCurrentLibraryMediaArt.isEmpty()) {
+                    return mCurrentLibraryMediaArt;
+                }
+                if (!mCurrentEmbeddedMediaArtData.isEmpty() && (!Settings::instance()->useDirectoryMediaArt() || mCurrentDirectoryMediaArt.isEmpty())) {
                     return QString::fromLatin1("image://%1/%2").arg(QueueImageProvider::providerId, track->url.toString());
                 }
-                return track->mediaArtFilePath;
+                return mCurrentDirectoryMediaArt;
             }
         }
         return QString();
@@ -805,6 +804,27 @@ namespace unplayer
 
         mAddingTracks = false;
         emit addingTracksChanged();
+    }
+
+    void Queue::setCurrentMediaArt(const QString& libraryMediaArt, const QString& directoryMediaArt, const QByteArray& embeddedMediaArtData)
+    {
+        bool changed = false;
+        if (libraryMediaArt != mCurrentLibraryMediaArt) {
+            mCurrentLibraryMediaArt = libraryMediaArt;
+            changed = true;
+        }
+        if (directoryMediaArt != mCurrentDirectoryMediaArt) {
+            mCurrentDirectoryMediaArt = directoryMediaArt;
+            changed = true;
+        }
+        if (embeddedMediaArtData != mCurrentEmbeddedMediaArtData) {
+            mCurrentEmbeddedMediaArtData = embeddedMediaArtData;
+            emit mediaArtDataChanged(mCurrentEmbeddedMediaArtData);
+            changed = true;
+        }
+        if (changed) {
+            emit mediaArtChanged();
+        }
     }
 
     const QLatin1String QueueImageProvider::providerId("queue");
