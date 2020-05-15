@@ -114,13 +114,14 @@ namespace unplayer
             }
 
             QString filePath;
+            QString title;
+            int duration = 0;
             QStringList artists;
             QStringList albums;
 
             const auto insert = [&] {
                 const auto found(tracksToQueryMap.equal_range(filePath));
                 if (found.first != tracksToQueryMap.end()) {
-                    QString title(query.value(TitleField).toString());
                     if (title.isEmpty()) {
                         title = QFileInfo(filePath).fileName();
                     }
@@ -130,7 +131,7 @@ namespace unplayer
                     for (auto i = found.first; i != found.second; ++i) {
                         Track& track = i->second;
                         track->title = title;
-                        track->duration = query.value(DurationField).toInt();
+                        track->duration = duration;
                         track->artist = artist;
                         track->album = album;
                     }
@@ -147,6 +148,8 @@ namespace unplayer
                         insert();
                     }
                     filePath = std::move(newFilePath);
+                    title = query.value(TitleField).toString();
+                    duration = query.value(DurationField).toInt();
                 }
                 const QString artist(query.value(ArtistField).toString());
                 if (!artist.isEmpty() && !artists.contains(artist)) {
@@ -158,7 +161,6 @@ namespace unplayer
                 }
             }
             if (!filePath.isEmpty()) {
-                query.previous();
                 insert();
             }
 
