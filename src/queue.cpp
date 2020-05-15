@@ -79,30 +79,30 @@ namespace unplayer
                 QElapsedTimer timer;
                 timer.start();
 
-                auto existenceResult(checkTracksExistence(trackUrls, std::move(oldTracks)));
+                auto createTracksResult(createTracks(trackUrls, std::move(oldTracks)));
 
-                if (!queryTracksByPaths(std::move(existenceResult.tracksToQuery), existenceResult.tracksToQueryMap, dbConnectionName)) {
+                if (!queryTracksByPaths(std::move(createTracksResult.tracksToQuery), createTracksResult.tracksToQueryMap, dbConnectionName)) {
                     return {};
                 }
 
-                extractTrackInfos(std::move(existenceResult.tracksToQueryMap));
+                extractTrackInfos(std::move(createTracksResult.tracksToQueryMap));
 
                 qInfo("Finished adding tracks: %lldms", static_cast<long long>(timer.elapsed()));
 
-                return std::move(existenceResult.newTracks);
+                return std::move(createTracksResult.newTracks);
             }
 
         private:
-            struct ExistenceResult
+            struct CreateTracksResult
             {
                 std::vector<std::shared_ptr<QueueTrack>> newTracks;
                 std::set<QString> tracksToQuery;
                 std::unordered_multimap<QString, QueueTrack*> tracksToQueryMap;
             };
 
-            static ExistenceResult checkTracksExistence(const QStringList& trackUrls, std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> oldTracks)
+            static CreateTracksResult createTracks(const QStringList& trackUrls, std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> oldTracks)
             {
-                qInfo("Start checking tracks existence, count=%d", trackUrls.size());
+                qInfo("Start creating tracks, count=%d", trackUrls.size());
 
                 QElapsedTimer timer;
                 timer.start();
@@ -178,7 +178,7 @@ namespace unplayer
                     }
                 }
 
-                qInfo("Finished checking tracks existence: %lldms", static_cast<long long>(timer.elapsed()));
+                qInfo("Finished creating tracks: %lldms", static_cast<long long>(timer.elapsed()));
 
                 return {std::move(newTracks),
                         std::move(tracksToQuery),
