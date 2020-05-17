@@ -244,11 +244,11 @@ namespace unplayer
 
                 {
                     mAlbumQuery = QSqlQuery(mDb);
-                    if (!mAlbumQuery.prepare(query.arg(QString(), "AND albumId = ?"))) {
+                    if (!mAlbumQuery.prepare(query.arg(QString(), QLatin1String("AND albumId = ?")))) {
                         qWarning() << mAlbumQuery.lastError();
                     }
                     mNullAlbumQuery = QSqlQuery(mDb);
-                    if (!mNullAlbumQuery.prepare(query.arg(QString(), "AND albumId IS NULL"))) {
+                    if (!mNullAlbumQuery.prepare(query.arg(QString(), QLatin1String("AND albumId IS NULL")))) {
                         qWarning() << mNullAlbumQuery.lastError();
                     }
                 }
