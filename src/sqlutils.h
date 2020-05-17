@@ -32,6 +32,10 @@ namespace unplayer
         {
             QSqlDatabase::removeDatabase(connectionName);
         }
+
+        inline DatabaseConnectionGuard(const DatabaseConnectionGuard&) = delete;
+        inline DatabaseConnectionGuard& operator=(const DatabaseConnectionGuard&) = delete;
+
         const QString connectionName;
     };
 
@@ -46,6 +50,10 @@ namespace unplayer
         {
             db.commit();
         }
+
+        inline TransactionGuard(const TransactionGuard&) = delete;
+        inline TransactionGuard& operator=(const TransactionGuard&) = delete;
+
         QSqlDatabase& db;
     };
 
