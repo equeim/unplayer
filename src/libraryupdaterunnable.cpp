@@ -323,6 +323,8 @@ namespace unplayer
             ~FinishedGuard() {
                 emit runnable->finished();
             }
+            inline FinishedGuard(const FinishedGuard&) = delete;
+            inline FinishedGuard& operator=(const FinishedGuard&) = delete;
             LibraryUpdateRunnable* runnable;
         } finishedGuard{this};
 
