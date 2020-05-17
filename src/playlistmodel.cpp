@@ -158,7 +158,7 @@ namespace unplayer
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);
     }
 
-    void PlaylistModel::removeTracks(std::vector<int> indexes)
+    void PlaylistModel::removeTracks(const std::vector<int>& indexes)
     {
         ModelBatchRemover::removeIndexes(this, indexes);
         PlaylistUtils::instance()->savePlaylist(mFilePath, mTracks);

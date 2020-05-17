@@ -115,7 +115,7 @@ namespace unplayer
         }
     }
 
-    void LibraryDirectoriesModel::removeDirectories(std::vector<int> indexes)
+    void LibraryDirectoriesModel::removeDirectories(const std::vector<int>& indexes)
     {
         ModelBatchRemover::removeIndexes(this, indexes);
 
