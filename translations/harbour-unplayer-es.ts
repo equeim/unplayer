@@ -421,11 +421,11 @@
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Restablecer fonoteca</translation>
+        <translation>Restablecer</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Actualizar fonoteca</translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <source>Library</source>
