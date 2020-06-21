@@ -19,18 +19,14 @@
 #include "playlistmodel.h"
 
 #include <algorithm>
+#include <memory>
+#include <set>
 #include <unordered_map>
 
-#include <QFileInfo>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
 #include <QtConcurrentRun>
 
-#include "libraryutils.h"
 #include "modelutils.h"
 #include "playlistutils.h"
-#include "sqlutils.h"
 #include "stdutils.h"
 #include "tracksquery.h"
 #include "utilsfunctions.h"

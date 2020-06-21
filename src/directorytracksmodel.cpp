@@ -18,17 +18,13 @@
 
 #include "directorytracksmodel.h"
 
-#include <functional>
 #include <memory>
 
 #include <QDebug>
 #include <QDir>
-#include <QFile>
+#include <QFileInfo>
 #include <QItemSelectionModel>
 #include <QStandardPaths>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
 #include <QtConcurrentRun>
 
 #include "fileutils.h"

@@ -21,6 +21,8 @@
 
 #include <vector>
 
+#include <QString>
+
 #include "asyncloadingmodel.h"
 #include "playlistutils.h"
 

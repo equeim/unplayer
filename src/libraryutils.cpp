@@ -18,7 +18,7 @@
 
 #include "libraryutils.h"
 
-#include <functional>
+#include <unordered_map>
 #include <unordered_set>
 
 #include <QCoreApplication>
@@ -36,12 +36,11 @@
 #include <QThreadPool>
 #include <QtConcurrentRun>
 
-#include "albumsmodel.h"
 #include "librarymigrator.h"
+#include "librarytrack.h"
 #include "librarytracksadder.h"
 #include "libraryupdaterunnable.h"
 #include "mediaartutils.h"
-#include "settings.h"
 #include "sqlutils.h"
 #include "stdutils.h"
 #include "tagutils.h"

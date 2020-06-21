@@ -20,10 +20,13 @@
 #define UNPLAYER_GENRESMODEL_H
 
 #include "abstractlibrarymodel.h"
-#include "librarytrack.h"
+
+#include <QStringList>
 
 namespace unplayer
 {
+    struct LibraryTrack;
+
     struct Genre
     {
         int id;

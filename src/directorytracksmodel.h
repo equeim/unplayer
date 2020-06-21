@@ -21,6 +21,8 @@
 
 #include <vector>
 
+#include <QQmlParserStatus>
+
 #include "asyncloadingmodel.h"
 #include "directorycontentproxymodel.h"
 

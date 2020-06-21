@@ -18,12 +18,16 @@
 
 #include "librarymigrator.h"
 
+#include <algorithm>
+#include <vector>
+
 #include <QDebug>
 #include <QRegularExpression>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QVariant>
+#include <QVector>
 
 #include "librarytracksadder.h"
 #include "libraryutils.h"

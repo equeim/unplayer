@@ -20,12 +20,14 @@
 #define UNPLAYER_ALBUMSMODEL_H
 
 #include <QQmlParserStatus>
+#include <QStringList>
 
 #include "abstractlibrarymodel.h"
-#include "librarytrack.h"
 
 namespace unplayer
 {
+    struct LibraryTrack;
+
     struct Album
     {
         int id;

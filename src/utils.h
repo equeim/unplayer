@@ -21,7 +21,6 @@
 
 #include <QObject>
 #include <QStringList>
-#include <QUrl>
 
 namespace unplayer
 {

@@ -18,8 +18,9 @@
 
 #include "tagutils.h"
 
+#include <algorithm>
+
 #include <QCoreApplication>
-#include <QCryptographicHash>
 #include <QDebug>
 #include <QFileInfo>
 #include <QMimeDatabase>

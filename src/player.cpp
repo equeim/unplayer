@@ -20,6 +20,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QMediaContent>
 #include <QUrl>
 
 #include <MprisPlayer>

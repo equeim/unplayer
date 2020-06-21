@@ -19,7 +19,10 @@
 #ifndef UNPLAYER_DIRECTORYCONTENTMODEL_H
 #define UNPLAYER_DIRECTORYCONTENTMODEL_H
 
+#include <vector>
+
 #include <QQmlParserStatus>
+#include <QStringList>
 
 #include "asyncloadingmodel.h"
 

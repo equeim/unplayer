@@ -21,10 +21,8 @@
 #include <cerrno>
 #include <csignal>
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <unistd.h>
 
-#include <QtGlobal>
 #include <QSocketNotifier>
 #include <QCoreApplication>
 

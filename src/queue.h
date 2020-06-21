@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QQuickImageProvider>
+#include <QPixmap>
 #include <QStringList>
 #include <QUrl>
 

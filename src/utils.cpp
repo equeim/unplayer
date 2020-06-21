@@ -18,15 +18,15 @@
 
 #include "utils.h"
 
+#include <vector>
+
 #include <QCoreApplication>
-#include <QDir>
 #include <QFile>
 #include <QImageReader>
-#include <QItemSelection>
+#include <QItemSelectionModel>
 #include <QLocale>
 #include <QRegularExpression>
 #include <QStandardPaths>
-#include <QUrl>
 #include <qqml.h>
 
 #include "albumsmodel.h"

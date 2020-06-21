@@ -18,8 +18,6 @@
 
 #include "librarydirectoriesmodel.h"
 
-#include <algorithm>
-
 #include "modelutils.h"
 #include "settings.h"
 

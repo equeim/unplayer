@@ -24,6 +24,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
+class QString;
+
 namespace unplayer
 {
     class LibraryMigrator

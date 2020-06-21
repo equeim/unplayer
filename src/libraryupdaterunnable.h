@@ -19,7 +19,9 @@
 #ifndef UNPLAYER_LIBRARYUPDATERUNNABLE_H
 #define UNPLAYER_LIBRARYUPDATERUNNABLE_H
 
+#include <atomic>
 #include <unordered_map>
+#include <vector>
 
 #include <QMimeDatabase>
 #include <QObject>

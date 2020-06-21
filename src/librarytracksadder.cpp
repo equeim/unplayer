@@ -18,6 +18,8 @@
 
 #include "librarytracksadder.h"
 
+#include <algorithm>
+
 #include <QDebug>
 #include <QVariant>
 #include <QSqlError>

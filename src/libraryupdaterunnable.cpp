@@ -18,10 +18,13 @@
 
 #include "libraryupdaterunnable.h"
 
+#include <algorithm>
+
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
 #include <QElapsedTimer>
+#include <QFileInfo>
 #include <QStringBuilder>
 #include <QSqlError>
 

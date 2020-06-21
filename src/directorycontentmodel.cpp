@@ -21,6 +21,7 @@
 #include <memory>
 
 #include <QDir>
+#include <QFileInfo>
 #include <QStandardPaths>
 #include <QtConcurrentRun>
 

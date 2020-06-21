@@ -20,8 +20,10 @@
 #define UNPLAYER_LIBRARYDIRECTORIESMODEL_H
 
 #include <vector>
+
 #include <QAbstractListModel>
 #include <QQmlParserStatus>
+#include <QStringList>
 
 namespace unplayer
 {

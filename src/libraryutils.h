@@ -20,21 +20,18 @@
 #define UNPLAYER_LIBRARYUTILS_H
 
 #include <atomic>
+#include <vector>
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QStringList>
+#include <QVariantMap>
 
 class QRunnable;
 
 namespace unplayer
 {
-    struct Album;
     struct LibraryTrack;
-
-    namespace tagutils
-    {
-        struct Info;
-    }
 
     class LibraryUtils final : public QObject
     {

@@ -20,9 +20,11 @@
 #define UNPLAYER_MEDIAARTPROVIDER_H
 
 #include <atomic>
+#include <cstdint>
 #include <unordered_map>
 
 #include <QObject>
+#include <QString>
 
 class QMimeDatabase;
 class QThread;

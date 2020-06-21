@@ -20,8 +20,11 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <random>
+#include <set>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -29,18 +32,16 @@
 #include <QElapsedTimer>
 #include <QFileInfo>
 #include <QMimeDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QSqlDatabase>
 #include <QUrl>
 #include <QUuid>
 #include <QtConcurrentRun>
 
+#include "fileutils.h"
 #include "libraryutils.h"
 #include "mediaartutils.h"
 #include "playlistutils.h"
 #include "settings.h"
-#include "sqlutils.h"
+#include "stdutils.h"
 #include "tagutils.h"
 #include "tracksquery.h"
 #include "utilsfunctions.h"

@@ -20,6 +20,7 @@
 #define UNPLAYER_TRACKINFO_H
 
 #include <QObject>
+#include <QString>
 
 #include "tagutils.h"
 

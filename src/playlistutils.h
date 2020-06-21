@@ -19,19 +19,16 @@
 #ifndef UNPLAYER_PLAYLISTUTILS_H
 #define UNPLAYER_PLAYLISTUTILS_H
 
-#include <memory>
 #include <vector>
-#include <unordered_set>
 
 #include <QObject>
 #include <QStringList>
 #include <QUrl>
 
-#include "librarytrack.h"
-#include "stdutils.h"
-
 namespace unplayer
 {
+    struct LibraryTrack;
+
     struct PlaylistTrack
     {
         QUrl url;

@@ -19,8 +19,6 @@
 #include "tracksmodel.h"
 
 #include <QCoreApplication>
-#include <QDebug>
-#include <QSqlError>
 #include <QSqlQuery>
 
 #include "libraryutils.h"

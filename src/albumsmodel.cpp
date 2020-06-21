@@ -18,11 +18,15 @@
 
 #include "albumsmodel.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
 
+#include "librarytrack.h"
 #include "libraryutils.h"
 #include "mediaartutils.h"
 #include "modelutils.h"

@@ -20,6 +20,8 @@
 #define UNPLAYER_SETTINGS_H
 
 #include <QObject>
+#include <QString>
+#include <QStringList>
 
 class QSettings;
 

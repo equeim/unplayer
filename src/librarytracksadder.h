@@ -24,12 +24,12 @@
 #include <QLatin1String>
 #include <QPair>
 #include <QSqlQuery>
+#include <QString>
 #include <QVector>
 
 #include "stdutils.h"
 
 class QSqlDatabase;
-class QString;
 
 using QStringIntVectorPair = QPair<QString, QVector<int>>;
 QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QStringIntVectorPair)

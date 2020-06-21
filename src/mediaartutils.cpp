@@ -25,10 +25,12 @@
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
+#include <QFile>
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QThread>
 #include <QUuid>

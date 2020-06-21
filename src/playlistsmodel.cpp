@@ -18,6 +18,8 @@
 
 #include "playlistsmodel.h"
 
+#include <algorithm>
+
 #include <QDir>
 #include <QFileInfo>
 #include <QtConcurrentRun>

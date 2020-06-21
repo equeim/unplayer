@@ -19,15 +19,12 @@
 #ifndef UNPLAYER_QUEUEMODEL_H
 #define UNPLAYER_QUEUEMODEL_H
 
-#include <memory>
-#include <vector>
-
 #include <QAbstractListModel>
-
-#include "queue.h"
 
 namespace unplayer
 {
+    class Queue;
+
     class QueueModel : public QAbstractListModel
     {
         Q_OBJECT

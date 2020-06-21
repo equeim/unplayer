@@ -21,6 +21,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <QLatin1String>
+
 #include "stdutils.h"
 
 namespace unplayer

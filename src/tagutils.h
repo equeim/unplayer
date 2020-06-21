@@ -20,6 +20,7 @@
 #define UNPLAYER_TAGUTILS_H
 
 #include <functional>
+#include <vector>
 
 #include <QObject>
 #include <QString>

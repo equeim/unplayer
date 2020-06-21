@@ -20,10 +20,11 @@
 #define UNPLAYER_ARTISTSMODEL_H
 
 #include "abstractlibrarymodel.h"
-#include "librarytrack.h"
 
 namespace unplayer
 {
+    struct LibraryTrack;
+
     struct Artist
     {
         int id;

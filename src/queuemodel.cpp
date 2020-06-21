@@ -18,6 +18,8 @@
 
 #include "queuemodel.h"
 
+#include "queue.h"
+
 namespace unplayer
 {
     QVariant QueueModel::data(const QModelIndex& index, int role) const

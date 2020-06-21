@@ -18,16 +18,15 @@
 
 #include "playlistutils.h"
 
-#include <algorithm>
 #include <iterator>
+#include <map>
+#include <unordered_set>
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QRegularExpression>
-#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QStandardPaths>
@@ -35,7 +34,8 @@
 #include <QTextStream>
 #include <QUrl>
 
-#include "libraryutils.h"
+#include "librarytrack.h"
+#include "stdutils.h"
 
 namespace unplayer
 {
