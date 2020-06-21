@@ -31,8 +31,8 @@ namespace unplayer
         int tracksCount;
         int duration;
 
-        QString mediaArt{};
-        bool requestedMediaArt{};
+        QString mediaArt;
+        bool requestedMediaArt;
     };
 
     class GenresModel : public AbstractLibraryModel<Genre>

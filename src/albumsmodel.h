@@ -37,8 +37,8 @@ namespace unplayer
         int tracksCount;
         int duration;
 
-        QString mediaArt{};
-        bool requestedMediaArt{false};
+        QString mediaArt;
+        bool requestedMediaArt;
     };
 
     class AlbumsModel : public AbstractLibraryModel<Album>, public QQmlParserStatus

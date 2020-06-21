@@ -385,6 +385,8 @@ namespace unplayer
                 album.isEmpty() ? qApp->translate("unplayer", "Unknown album") : album,
                 query.value(YearField).toInt(),
                 query.value(TracksCountField).toInt(),
-                query.value(DurationField).toInt()};
+                query.value(DurationField).toInt(),
+                QString(),
+                false};
     }
 }

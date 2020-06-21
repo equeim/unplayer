@@ -253,6 +253,8 @@ namespace unplayer
         return {query.value(GenreIdField).toInt(),
                 query.value(GenreField).toString(),
                 query.value(TracksCountField).toInt(),
-                query.value(DurationField).toInt()};
+                query.value(DurationField).toInt(),
+                QString(),
+                false};
     }
 }
