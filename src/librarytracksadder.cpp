@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QVariant>
 #include <QSqlError>
+#include <QStringBuilder>
 
 #include "sqlutils.h"
 #include "tagutils.h"
@@ -32,19 +33,25 @@ namespace unplayer
     LibraryTracksAdder::LibraryTracksAdder(const QSqlDatabase& db)
         : mDb(db)
     {
-        if (mQuery.exec(QLatin1String("SELECT id FROM tracks ORDER BY id DESC LIMIT 1"))) {
-            if (mQuery.next()) {
-                mLastTrackId = mQuery.value(0).toInt();
+        QSqlQuery query(db);
+        if (query.exec(QLatin1String("SELECT id FROM tracks ORDER BY id DESC LIMIT 1"))) {
+            if (query.next()) {
+                mLastTrackId = query.value(0).toInt();
             } else {
                 mLastTrackId = 0;
             }
         } else {
-            qWarning() << __func__ << "failed to get last track id" << mQuery.lastError();
+            qWarning() << "Failed to get last track id" << query.lastError();
         }
 
         getArtists();
         getAlbums();
         getGenres();
+
+        if (!mAddTrackQuery.prepare(QLatin1String("INSERT INTO tracks (modificationTime, year, trackNumber, duration, filePath, title, discNumber, directoryMediaArt, embeddedMediaArt) "
+                                                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"))) {
+            qWarning() << "Failed to prepare new track query" << mAddTrackQuery.lastError();
+        }
     }
 
     void LibraryTracksAdder::addTrackToDatabase(const QString& filePath,
@@ -53,21 +60,18 @@ namespace unplayer
                                                 const QString& directoryMediaArt,
                                                 const QString& embeddedMediaArt)
     {
-        mQuery.prepare([&]() {
-            QString queryString(QStringLiteral("INSERT INTO tracks (modificationTime, year, trackNumber, duration, filePath, title, discNumber, directoryMediaArt, embeddedMediaArt) "
-                                               "VALUES (%1, %2, %3, %4, ?, ?, ?, ?, ?)"));
-            queryString = queryString.arg(modificationTime).arg(info.year).arg(info.trackNumber).arg(info.duration);
-            return queryString;
-        }());
+        mAddTrackQuery.addBindValue(modificationTime);
+        mAddTrackQuery.addBindValue(info.year);
+        mAddTrackQuery.addBindValue(info.trackNumber);
+        mAddTrackQuery.addBindValue(info.duration);
+        mAddTrackQuery.addBindValue(filePath);
+        mAddTrackQuery.addBindValue(info.title);
+        mAddTrackQuery.addBindValue(nullIfEmpty(info.discNumber));
+        mAddTrackQuery.addBindValue(nullIfEmpty(directoryMediaArt));
+        mAddTrackQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
 
-        mQuery.addBindValue(filePath);
-        mQuery.addBindValue(info.title);
-        mQuery.addBindValue(nullIfEmpty(info.discNumber));
-        mQuery.addBindValue(nullIfEmpty(directoryMediaArt));
-        mQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
-
-        if (!mQuery.exec()) {
-            qWarning() << __func__ << "failed to insert track in the database" << mQuery.lastError();
+        if (!mAddTrackQuery.exec()) {
+            qWarning() << "Failed to insert track in the database" << mAddTrackQuery.lastError();
             return;
         }
 
@@ -79,7 +83,7 @@ namespace unplayer
         for (const QString& artist : info.artists) {
             const int artistId = getArtistId(artist);
             if (artistId != 0) {
-                addRelationship(trackId, artistId, "tracks_artists");
+                addRelationship(trackId, artistId, mArtists.addTracksRelationshipQuery);
             }
         }
 
@@ -101,7 +105,7 @@ namespace unplayer
             for (const QString& album : info.albums) {
                 const int albumId = getAlbumId(album, std::move(artistIds));
                 if (albumId != 0) {
-                    addRelationship(trackId, albumId, "tracks_albums");
+                    addRelationship(trackId, albumId, mAlbums.addTracksRelationshipQuery);
                 }
             }
         }
@@ -109,7 +113,7 @@ namespace unplayer
         for (const QString& genre : info.genres) {
             const int genreId = getGenreId(genre);
             if (genreId != 0) {
-                addRelationship(trackId, genreId, "tracks_genres");
+                addRelationship(trackId, genreId, mGenres.addTracksRelationshipQuery);
             }
         }
     }
@@ -139,6 +143,26 @@ namespace unplayer
         getArtistsOrGenres(mArtists);
     }
 
+    void LibraryTracksAdder::getGenres()
+    {
+        getArtistsOrGenres(mGenres);
+    }
+
+    void LibraryTracksAdder::getArtistsOrGenres(LibraryTracksAdder::ArtistsOrGenres& ids)
+    {
+        QSqlQuery query(mDb);
+        if (query.exec(QLatin1String("SELECT id, title FROM ") % ids.table)) {
+            if (reserveFromQuery(ids.ids, query) > 0) {
+                while (query.next()) {
+                    ids.lastId = query.value(0).toInt();
+                    ids.ids.emplace(query.value(1).toString(), ids.lastId);
+                }
+            }
+        } else {
+            qWarning() << "Failed to exec query" << query.lastError();
+        }
+    }
+
     void LibraryTracksAdder::getAlbums()
     {
         enum
@@ -147,33 +171,29 @@ namespace unplayer
             TitleField,
             ArtistIdField
         };
-        if (mQuery.exec(QLatin1String("SELECT id, title, artistId "
-                                      "FROM albums "
-                                      "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id"))) {
+        QSqlQuery query(mDb);
+        if (query.exec(QLatin1String("SELECT id, title, artistId "
+                                     "FROM albums "
+                                     "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id"))) {
             QVector<int> artistIds;
-            while (mQuery.next()) {
+            while (query.next()) {
                 {
-                    const int artistId = mQuery.value(ArtistIdField).toInt();
+                    const int artistId = query.value(ArtistIdField).toInt();
                     if (artistId != 0) {
                         artistIds.push_back(artistId);
                     }
                 }
-                const int id = mQuery.value(IdField).toInt();
+                const int id = query.value(IdField).toInt();
                 if (id != mAlbums.lastId && mAlbums.lastId != 0) {
                     std::sort(artistIds.begin(), artistIds.end());
-                    mAlbums.ids.emplace(QPair<QString, QVector<int>>(mQuery.value(TitleField).toString(), artistIds), mAlbums.lastId);
+                    mAlbums.ids.emplace(QPair<QString, QVector<int>>(query.value(TitleField).toString(), artistIds), mAlbums.lastId);
                     artistIds.clear();
                 }
                 mAlbums.lastId = id;
             }
         } else {
-            qWarning() << __func__ << mQuery.lastError();
+            qWarning() << "Failed to exec query" << query.lastError();
         }
-    }
-
-    void LibraryTracksAdder::getGenres()
-    {
-        getArtistsOrGenres(mGenres);
     }
 
     int LibraryTracksAdder::getArtistId(const QString& title)
@@ -181,70 +201,9 @@ namespace unplayer
         return getArtistOrGenreId(title, mArtists);
     }
 
-    int LibraryTracksAdder::getAlbumId(const QString& title, QVector<int>&& artistIds)
-    {
-        if (title.isEmpty()) {
-            return 0;
-        }
-        const auto& map = mAlbums.ids;
-        const auto found(map.find(QPair<QString, QVector<int>>(title, artistIds)));
-        if (found == map.end()) {
-            return addAlbum(title, std::move(artistIds));
-        }
-        return found->second;
-    }
-
     int LibraryTracksAdder::getGenreId(const QString& title)
     {
         return getArtistOrGenreId(title, mGenres);
-    }
-
-    void LibraryTracksAdder::addRelationship(int firstId, int secondId, const char* table)
-    {
-        /*if (!mQuery.prepare()) {
-            qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
-        }*/
-        if (!mQuery.exec(QStringLiteral("INSERT INTO %1 VALUES (%2, %3)").arg(QLatin1String(table)).arg(firstId).arg(secondId))) {
-            qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
-        }
-    }
-
-    int LibraryTracksAdder::addAlbum(const QString& title, QVector<int>&& artistIds)
-    {
-        if (!mQuery.prepare(QStringLiteral("INSERT INTO albums (title) VALUES (?)"))) {
-            qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
-            return 0;
-        }
-        mQuery.addBindValue(title);
-        if (!mQuery.exec()) {
-            qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
-            return 0;
-        }
-
-        ++mAlbums.lastId;
-
-        for (int artistId : artistIds) {
-            addRelationship(mAlbums.lastId, artistId, "albums_artists");
-        }
-
-        mAlbums.ids.emplace(QPair<QString, QVector<int>>(title, std::move(artistIds)), mAlbums.lastId);
-        return mAlbums.lastId;
-    }
-
-    void LibraryTracksAdder::getArtistsOrGenres(LibraryTracksAdder::ArtistsOrGenres& ids)
-    {
-        QString queryString(QLatin1String("SELECT id, title FROM "));
-        queryString.push_back(ids.table);
-        if (mQuery.exec(queryString)) {
-            if (reserveFromQuery(ids.ids, mQuery) > 0) {
-                while (mQuery.next()) {
-                    ids.lastId = mQuery.value(0).toInt();
-                    ids.ids.emplace(mQuery.value(1).toString(), ids.lastId);
-                }
-            }
-        } else {
-            qWarning() << __func__ << mQuery.lastError();
-        }
     }
 
     int LibraryTracksAdder::getArtistOrGenreId(const QString& title, LibraryTracksAdder::ArtistsOrGenres& ids)
@@ -262,17 +221,82 @@ namespace unplayer
 
     int LibraryTracksAdder::addArtistOrGenre(const QString& title, LibraryTracksAdder::ArtistsOrGenres& ids)
     {
-        if (!mQuery.prepare(QStringLiteral("INSERT INTO %1 (title) VALUES (?)").arg(ids.table))) {
-            qWarning() << __func__ << "failed to prepare query" << mQuery.lastError();
-            return 0;
-        }
-        mQuery.addBindValue(title);
-        if (!mQuery.exec()) {
-            qWarning() << __func__ << "failed to exec query" << mQuery.lastError();
+        ids.addNewQuery.addBindValue(title);
+        if (!ids.addNewQuery.exec()) {
+            qWarning() << "Failed to exec query" << ids.addNewQuery.lastError();
             return 0;
         }
         ++ids.lastId;
         ids.ids.emplace(title, ids.lastId);
         return ids.lastId;
+    }
+
+    int LibraryTracksAdder::getAlbumId(const QString& title, QVector<int>&& artistIds)
+    {
+        if (title.isEmpty()) {
+            return 0;
+        }
+        const auto& map = mAlbums.ids;
+        const auto found(map.find(QPair<QString, QVector<int>>(title, artistIds)));
+        if (found == map.end()) {
+            return addAlbum(title, std::move(artistIds));
+        }
+        return found->second;
+    }
+
+    int LibraryTracksAdder::addAlbum(const QString& title, QVector<int>&& artistIds)
+    {
+        mAlbums.addNewQuery.addBindValue(title);
+        if (!mAlbums.addNewQuery.exec()) {
+            qWarning() << "Failed to exec query" << mAlbums.addNewQuery.lastError();
+            return 0;
+        }
+
+        ++mAlbums.lastId;
+
+        for (int artistId : artistIds) {
+            addRelationship(mAlbums.lastId, artistId, mAlbums.addArtistsRelationshipQuery);
+        }
+
+        mAlbums.ids.emplace(QPair<QString, QVector<int>>(title, std::move(artistIds)), mAlbums.lastId);
+        return mAlbums.lastId;
+    }
+
+    void LibraryTracksAdder::addRelationship(int firstId, int secondId, QSqlQuery& query)
+    {
+        query.addBindValue(firstId);
+        query.addBindValue(secondId);
+        if (!query.exec()) {
+            qWarning() << "Failed to exec query" << query.lastError();
+        }
+    }
+
+    LibraryTracksAdder::ArtistsOrGenres::ArtistsOrGenres(QLatin1String table, const QSqlDatabase& db)
+        : table(table),
+          addNewQuery(db),
+          addTracksRelationshipQuery(db)
+    {
+        if (!addNewQuery.prepare(QString::fromLatin1("INSERT INTO %1 (title) VALUES (?)").arg(table))) {
+            qWarning() << "Failed to prepare query" << addNewQuery.lastError();
+        }
+        if (!addTracksRelationshipQuery.prepare(QString::fromLatin1("INSERT INTO tracks_%1 VALUES (?, ?)").arg(table))) {
+            qWarning() << "Failed to prepare query" << addTracksRelationshipQuery.lastError();
+        }
+    }
+
+    LibraryTracksAdder::Albums::Albums(const QSqlDatabase& db)
+        : addNewQuery(db),
+          addTracksRelationshipQuery(db),
+          addArtistsRelationshipQuery(db)
+    {
+        if (!addNewQuery.prepare(QLatin1String("INSERT INTO albums (title) VALUES (?)"))) {
+            qWarning() << "Failed to prepare query" << addNewQuery.lastError();
+        }
+        if (!addTracksRelationshipQuery.prepare(QLatin1String("INSERT INTO tracks_albums VALUES (?, ?)"))) {
+            qWarning() << "Failed to prepare query" << addTracksRelationshipQuery.lastError();
+        }
+        if (!addArtistsRelationshipQuery.prepare(QLatin1String("INSERT INTO tracks_artists VALUES (?, ?)"))) {
+            qWarning() << "Failed to prepare query" << addArtistsRelationshipQuery.lastError();
+        }
     }
 }

@@ -58,39 +58,50 @@ namespace unplayer
     private:
         struct ArtistsOrGenres
         {
-            explicit ArtistsOrGenres(QLatin1String table) : table(table) {}
+            explicit ArtistsOrGenres(QLatin1String table, const QSqlDatabase& db);
+
             QLatin1String table;
+            QSqlQuery addNewQuery;
+            QSqlQuery addTracksRelationshipQuery;
+
             std::unordered_map<QString, int> ids{};
             int lastId = 0;
         };
 
+        struct Albums
+        {
+            explicit Albums(const QSqlDatabase& db);
+
+            QSqlQuery addNewQuery;
+            QSqlQuery addTracksRelationshipQuery;
+            QSqlQuery addArtistsRelationshipQuery;
+
+            std::unordered_map<QPair<QString, QVector<int>>, int> ids{};
+            int lastId = 0;
+        };
+
         void getArtists();
-        void getAlbums();
         void getGenres();
+        void getArtistsOrGenres(ArtistsOrGenres& ids);
+        void getAlbums();
 
         int getArtistId(const QString& title);
-        int getAlbumId(const QString& title, QVector<int>&& artistIds);
         int getGenreId(const QString& title);
-
-        void addRelationship(int firstId, int secondId, const char* table);
-
-        int addAlbum(const QString& title, QVector<int>&& artistIds);
-
-        void getArtistsOrGenres(ArtistsOrGenres& ids);
         int getArtistOrGenreId(const QString& title, ArtistsOrGenres& ids);
         int addArtistOrGenre(const QString& title, ArtistsOrGenres& ids);
 
+        int getAlbumId(const QString& title, QVector<int>&& artistIds);
+        int addAlbum(const QString& title, QVector<int>&& artistIds);
+
+        void addRelationship(int firstId, int secondId, QSqlQuery& query);
+
         int mLastTrackId;
         const QSqlDatabase& mDb;
-        QSqlQuery mQuery{mDb};
+        QSqlQuery mAddTrackQuery{mDb};
 
-        ArtistsOrGenres mArtists{QLatin1String("artists")};
-        struct
-        {
-            std::unordered_map<QPair<QString, QVector<int>>, int> ids{};
-            int lastId = 0;
-        } mAlbums{};
-        ArtistsOrGenres mGenres{QLatin1String("genres")};
+        ArtistsOrGenres mArtists{QLatin1String("artists"), mDb};
+        Albums mAlbums{mDb};
+        ArtistsOrGenres mGenres{QLatin1String("genres"), mDb};
     };
 }
 
