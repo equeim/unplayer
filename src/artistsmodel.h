@@ -70,7 +70,7 @@ namespace unplayer
         Q_INVOKABLE void removeArtist(int index, bool deleteFiles);
         Q_INVOKABLE void removeArtists(const std::vector<int>& indexes, bool deleteFiles);
     protected:
-        class ItemFactory : public AbstractItemFactory
+        class ItemFactory final : public AbstractItemFactory
         {
         public:
             Artist itemFromQuery(const QSqlQuery& query) override;

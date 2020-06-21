@@ -148,7 +148,7 @@ namespace unplayer
         static LibraryTrack trackFromQuery(const QSqlQuery& query, bool groupTracks);
 
     protected:
-        class ItemFactory : public AbstractItemFactory
+        class ItemFactory final : public AbstractItemFactory
         {
         public:
             inline explicit ItemFactory(bool groupTracks) : groupTracks(groupTracks) {}

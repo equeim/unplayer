@@ -36,7 +36,7 @@ class QElapsedTimer;
 
 namespace unplayer
 {
-    class LibraryUpdateRunnable : public QObject, public QRunnable
+    class LibraryUpdateRunnable final : public QObject, public QRunnable
     {
         Q_OBJECT
     public:

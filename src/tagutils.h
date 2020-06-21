@@ -34,7 +34,7 @@ typedef QMap<QString, QVariant> QVariantMap;
 
 namespace unplayer
 {
-    class Tags : public QObject
+    class Tags final : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QString title READ title CONSTANT)

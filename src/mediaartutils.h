@@ -31,7 +31,7 @@ namespace unplayer
 {
     class MediaArtUtilsWorker;
 
-    class MediaArtUtils : public QObject
+    class MediaArtUtils final : public QObject
     {
         Q_OBJECT
     public:

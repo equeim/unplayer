@@ -55,7 +55,7 @@ namespace unplayer
         Q_INVOKABLE void removeGenre(int index, bool deleteFiles);
         Q_INVOKABLE void removeGenres(const std::vector<int>& indexes, bool deleteFiles);
     protected:
-        class ItemFactory : public AbstractItemFactory
+        class ItemFactory final : public AbstractItemFactory
         {
         public:
             Genre itemFromQuery(const QSqlQuery& query) override;
