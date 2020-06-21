@@ -77,7 +77,10 @@ int main(int argc, char* argv[])
             }
         });
 
-        LibraryUtils::instance()->updateDatabase();
+        if (!LibraryUtils::instance()->updateDatabase()) {
+            qWarning("Failed to start library update");
+            return 1;
+        }
 
         if (SignalHandler::exitRequested) {
             return 0;

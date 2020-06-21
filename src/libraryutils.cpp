@@ -521,10 +521,10 @@ namespace unplayer
         mDatabaseInitialized = true;
     }
 
-    void LibraryUtils::updateDatabase()
+    bool LibraryUtils::updateDatabase()
     {
         if (mLibraryUpdateRunnable || !mDatabaseInitialized) {
-            return;
+            return false;
         }
 
         auto runnable = new LibraryUpdateRunnable();
@@ -561,6 +561,8 @@ namespace unplayer
         QThreadPool::globalInstance()->start(runnable);
         emit updatingChanged();
         emit updateStageChanged();
+
+        return true;
     }
 
     void LibraryUtils::cancelDatabaseUpdate()

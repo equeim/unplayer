@@ -77,7 +77,7 @@ namespace unplayer
         static bool dropIndexes(QSqlDatabase& db);
 
         void initDatabase();
-        Q_INVOKABLE void updateDatabase();
+        Q_INVOKABLE bool updateDatabase();
         Q_INVOKABLE void cancelDatabaseUpdate();
         Q_INVOKABLE void resetDatabase();
 
