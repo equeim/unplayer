@@ -1,7 +1,5 @@
-diff --git a/3rdparty/qtmpris-0.1.0/src/src.pro b/3rdparty/qtmpris-0.1.0/src/src.pro
-index d15a5b7..720453b 100644
---- 3rdparty/qtmpris-1.0.2/src/src.pro
-+++ 3rdparty/qtmpris-1.0.2/src/src.pro
+--- 3rdparty/qtmpris/src/src.pro
++++ 3rdparty/qtmpris/src/src.pro
 @@ -51,15 +51,15 @@ INSTALL_HEADERS = \
  OTHER_FILES += org.mpris.MediaPlayer2.xml \
      org.mpris.MediaPlayer2.Player.xml

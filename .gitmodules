@@ -1,0 +1,9 @@
+[submodule "3rdparty/qtdbusextended"]
+	path = 3rdparty/qtdbusextended
+	url = https://github.com/nemomobile/qtdbusextended
+[submodule "3rdparty/qtmpris"]
+	path = 3rdparty/qtmpris
+	url = https://git.sailfishos.org/mer-core/qtmpris
+[submodule "3rdparty/taglib"]
+	path = 3rdparty/taglib
+	url = https://github.com/taglib/taglib

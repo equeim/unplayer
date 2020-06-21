@@ -1,7 +1,5 @@
-diff --git a/3rdparty/qtdbusextended-0.0.3/src/src.pro b/3rdparty/qtdbusextended-0.0.3/src/src.pro
-index e9c2c28..27b805a 100644
---- 3rdparty/qtdbusextended-0.0.3/src/src.pro
-+++ 3rdparty/qtdbusextended-0.0.3/src/src.pro
+--- 3rdparty/qtdbusextended/src/src.pro
++++ 3rdparty/qtdbusextended/src/src.pro
 @@ -31,15 +31,15 @@ INSTALL_HEADERS = \
      dbusextended.h \
      dbusextendedabstractinterface.h

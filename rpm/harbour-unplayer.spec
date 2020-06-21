@@ -35,13 +35,13 @@ BuildRequires: boost-devel
 
 %global build_directory "%{_builddir}/build-%{_target}-$(%{__grep} VERSION_ID /etc/os-release | cut -d '=' -f 2)"
 
-%global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended-0.0.3"
+%global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended"
 %global qtdbusextended_build "%{build_directory}/3rdparty/build-qtdbusextended"
 
-%global qtmpris "%{_builddir}/3rdparty/qtmpris-1.0.2"
+%global qtmpris "%{_builddir}/3rdparty/qtmpris"
 %global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
 
-%global taglib "%{_builddir}/3rdparty/taglib-54508df3"
+%global taglib "%{_builddir}/3rdparty/taglib"
 %global taglib_build "%{build_directory}/3rdparty/build-taglib"
 
 %global thirdparty_install "%{build_directory}/3rdparty/install"
