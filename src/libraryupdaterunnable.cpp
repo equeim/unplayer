@@ -406,7 +406,7 @@ namespace unplayer
                                                                              embeddedMediaArtFiles,
                                                                              mMimeDb));
                 if ((count % 100) == 0) {
-                    qInfo("Extracted tags from %d of %zu files (%.3f s elapsed)", count, tracksToAdd.size(), stageTimer.elapsed() / 1000.0);
+                    qInfo("Extracted tags from %d of %zu files (%.3f s elapsed)", count, tracksToAdd.size(), static_cast<double>(stageTimer.elapsed()) / 1000.0);
                 }
                 emit extractedFilesChanged(count);
             }
