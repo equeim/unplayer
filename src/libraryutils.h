@@ -75,6 +75,9 @@ namespace unplayer
         static void removeUnusedCategories(const QSqlDatabase& db);
         static void removeUnusedMediaArt(const QSqlDatabase& db, const std::atomic_bool& cancel = false);
 
+        static bool createTables(QSqlDatabase& db);
+        static bool createIndexes(QSqlDatabase& db);
+
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
         Q_INVOKABLE void cancelDatabaseUpdate();

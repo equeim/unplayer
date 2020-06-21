@@ -74,6 +74,15 @@ namespace unplayer
         });
         watcher->setFuture(future);
     }
+
+    inline QString unquote(QString str) {
+        static const QLatin1Char quoteChar('"');
+        if (str.startsWith(quoteChar) && str.endsWith(quoteChar) && str.size() > 1) {
+            str.chop(1);
+            str.remove(0, 1);
+        }
+        return str;
+    }
 }
 
 #endif // UNPLAYER_UTILSFUNCTIONS_H

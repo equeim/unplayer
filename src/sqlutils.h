@@ -21,6 +21,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QVariant>
 
 #include <vector>
 
@@ -114,6 +115,14 @@ namespace unplayer
         }
         str += QLatin1Char(')');
         return str;
+    }
+
+    inline QVariant nullIfEmpty(const QString& string)
+    {
+        if (string.isEmpty()) {
+            return {};
+        }
+        return string;
     }
 }
 

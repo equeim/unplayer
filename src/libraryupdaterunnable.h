@@ -23,78 +23,17 @@
 
 #include <QMimeDatabase>
 #include <QObject>
-#include <QPair>
 #include <QRunnable>
+#include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QVector>
 
 #include "fileutils.h"
 #include "libraryutils.h"
 #include "sqlutils.h"
 #include "stdutils.h"
 
-
-using QStringIntVectorPair = QPair<QString, QVector<int>>;
-QT_SPECIALIZE_STD_HASH_TO_CALL_QHASH_BY_CREF(QStringIntVectorPair)
-
-class QSqlDatabase;
-
 namespace unplayer
 {
-    namespace tagutils
-    {
-        struct Info;
-    }
-
-    class LibraryTracksAdder
-    {
-    public:
-        explicit LibraryTracksAdder(const QSqlDatabase& db);
-
-        void addTrackToDatabase(const QString& filePath,
-                                long long modificationTime,
-                                tagutils::Info& info,
-                                const QString& directoryMediaArt,
-                                const QString& embeddedMediaArt);
-
-    private:
-        struct ArtistsOrGenres
-        {
-            explicit ArtistsOrGenres(QLatin1String table) : table(table) {}
-            QLatin1String table;
-            std::unordered_map<QString, int> ids{};
-            int lastId = 0;
-        };
-
-        void getArtists();
-        void getAlbums();
-        void getGenres();
-
-        int getArtistId(const QString& title);
-        int getAlbumId(const QString& title, QVector<int>&& artistIds);
-        int getGenreId(const QString& title);
-
-        void addRelationship(int firstId, int secondId, const char* table);
-
-        int addAlbum(const QString& title, QVector<int>&& artistIds);
-
-        void getArtistsOrGenres(ArtistsOrGenres& ids);
-        int getArtistOrGenreId(const QString& title, ArtistsOrGenres& ids);
-        int addArtistOrGenre(const QString& title, ArtistsOrGenres& ids);
-
-        int mLastTrackId;
-        const QSqlDatabase& mDb;
-        QSqlQuery mQuery{mDb};
-
-        ArtistsOrGenres mArtists{QLatin1String("artists")};
-        struct
-        {
-            std::unordered_map<QPair<QString, QVector<int>>, int> ids{};
-            int lastId = 0;
-        } mAlbums{};
-        ArtistsOrGenres mGenres{QLatin1String("genres")};
-    };
-
     class LibraryUpdateRunnable : public QObject, public QRunnable
     {
         Q_OBJECT

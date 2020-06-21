@@ -38,6 +38,8 @@
 #include <wavfile.h>
 #include <wavpackfile.h>
 
+#include "utilsfunctions.h"
+
 namespace unplayer
 {
     QLatin1String Tags::title()
@@ -90,15 +92,6 @@ namespace unplayer
                 TagLib::String str(std::wstring(size, 0));
                 const ushort* utf16 = string.utf16();
                 std::copy(utf16, utf16 + size, str.begin());
-                return str;
-            }
-
-            inline QString unquote(QString str) {
-                static const QLatin1Char quoteChar('"');
-                if (str.startsWith(quoteChar) && str.endsWith(quoteChar) && str.size() > 1) {
-                    str.chop(1);
-                    str.remove(0, 1);
-                }
                 return str;
             }
 

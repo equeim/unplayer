@@ -37,6 +37,8 @@
 #include <QtConcurrentRun>
 
 #include "albumsmodel.h"
+#include "librarymigrator.h"
+#include "librarytracksadder.h"
 #include "libraryupdaterunnable.h"
 #include "mediaartutils.h"
 #include "settings.h"
@@ -338,6 +340,113 @@ namespace unplayer
         }
     }
 
+    bool LibraryUtils::createTables(QSqlDatabase& db)
+    {
+        QSqlQuery query(db);
+
+        if (!query.exec(QLatin1String("CREATE TABLE tracks ("
+                                      "    id INTEGER PRIMARY KEY,"
+                                      "    filePath TEXT NOT NULL,"
+                                      "    modificationTime INTEGER NOT NULL,"
+                                      "    title TEXT COLLATE NOCASE,"
+                                      "    year INTEGER,"
+                                      "    trackNumber INTEGER,"
+                                      "    discNumber TEXT,"
+                                      "    duration INTEGER NOT NULL,"
+                                      "    directoryMediaArt TEXT,"
+                                      "    embeddedMediaArt TEXT"
+                                      ")"))) {
+            qWarning() << "Failed to create 'tracks' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE artists ("
+                                      "    id INTEGER PRIMARY KEY,"
+                                      "    title TEXT NOT NULL COLLATE NOCASE"
+                                      ")"))) {
+            qWarning() << "Failed to create 'artists' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE albums ("
+                                      "    id INTEGER PRIMARY KEY,"
+                                      "    title TEXT NOT NULL COLLATE NOCASE,"
+                                      "    userMediaArt TEXT"
+                                      ")"))) {
+            qWarning() << "Failed to create 'albums' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE genres ("
+                                      "    id INTEGER PRIMARY KEY,"
+                                      "    title TEXT NOT NULL COLLATE NOCASE"
+                                      ")"))) {
+            qWarning() << "Failed to create 'genres' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE tracks_artists ("
+                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
+                                      ")"))) {
+            qWarning() << "Failed to create 'tracks_artists' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE tracks_albums ("
+                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                      "    albumId INTEGER NOT NULL REFERENCES albums(id)"
+                                      ")"))) {
+            qWarning() << "Failed to create 'tracks_albums' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE albums_artists ("
+                                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
+                                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
+                                      ")"))) {
+            qWarning() << "Failed to create 'albums_artists' table" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE TABLE tracks_genres ("
+                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                      "    genreId INTEGER NOT NULL REFERENCES genres(id)"
+                                      ")"))) {
+            qWarning() << "Failed to create 'tracks_genres' table" << query.lastError();
+            return false;
+        }
+
+        return true;
+    }
+
+    bool LibraryUtils::createIndexes(QSqlDatabase& db)
+    {
+        QSqlQuery query(db);
+
+        if (!query.exec(QLatin1String("CREATE INDEX tracks_artists_trackIndex ON tracks_artists(trackId)"))) {
+            qWarning() << "Failed to create 'tracks_artists_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE INDEX tracks_albums_trackIndex ON tracks_albums(trackId)"))) {
+            qWarning() << "Failed to create 'tracks_albums_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE INDEX albums_artists_albumIndex ON albums_artists(albumId)"))) {
+            qWarning() << "Failed to create 'albums_artists_albumIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("CREATE INDEX tracks_genres_trackIndex ON tracks_genres(trackId)"))) {
+            qWarning() << "Failed to create 'tracks_genres_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        return true;
+    }
+
     void LibraryUtils::initDatabase()
     {
         qDebug() << "Initializing database";
@@ -358,104 +467,25 @@ namespace unplayer
         if (db.tables().isEmpty()) {
             qInfo("Creating tables");
 
-            const auto exec = [&](const char* string) {
-                if (!query.exec(QLatin1String(string))) {
-                    qWarning() << "initDatabase" << query.lastError();
-                    return false;
-                }
-                return true;
-            };
-
-            if (!exec("CREATE TABLE tracks ("
-                      "    id INTEGER PRIMARY KEY,"
-                      "    filePath TEXT NOT NULL,"
-                      "    modificationTime INTEGER NOT NULL,"
-                      "    title TEXT COLLATE NOCASE,"
-                      "    year INTEGER,"
-                      "    trackNumber INTEGER,"
-                      "    discNumber TEXT,"
-                      "    duration INTEGER NOT NULL,"
-                      "    directoryMediaArt TEXT,"
-                      "    embeddedMediaArt TEXT"
-                      ")")) {
+            if (!createTables(db)) {
+                qWarning("Failed to create tables");
                 return;
             }
 
-            if (!exec("CREATE TABLE artists ("
-                      "    id INTEGER PRIMARY KEY,"
-                      "    title TEXT NOT NULL COLLATE NOCASE"
-                      ")")) {
+            if (!createIndexes(db)) {
+                qWarning("Failed to create indexes");
                 return;
             }
 
-            if (!exec("CREATE TABLE albums ("
-                      "    id INTEGER PRIMARY KEY,"
-                      "    title TEXT NOT NULL COLLATE NOCASE,"
-                      "    userMediaArt TEXT"
-                      ")")) {
+            if (!query.exec(QString::fromLatin1("PRAGMA user_version = %1").arg(databaseVersion))) {
+                qWarning() << "Failed to set user_version" << query.lastError();
                 return;
             }
-
-            if (!exec("CREATE TABLE genres ("
-                      "    id INTEGER PRIMARY KEY,"
-                      "    title TEXT NOT NULL COLLATE NOCASE"
-                      ")")) {
-                return;
-            }
-
-            if (!exec("CREATE TABLE tracks_artists ("
-                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
-                      ")")) {
-                return;
-            }
-
-            if (!exec("CREATE INDEX tracks_artists_trackIndex ON tracks_artists(trackId)")) {
-                return;
-            }
-
-            if (!exec("CREATE TABLE tracks_albums ("
-                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    albumId INTEGER NOT NULL REFERENCES albums(id)"
-                      ")")) {
-                return;
-            }
-
-            if (!exec("CREATE INDEX tracks_albums_trackIndex ON tracks_albums(trackId)")) {
-                return;
-            }
-
-            if (!exec("CREATE TABLE albums_artists ("
-                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
-                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
-                      ")")) {
-                return;
-            }
-
-            if (!exec("CREATE INDEX albums_artists_albumIndex ON albums_artists(albumId)")) {
-                return;
-            }
-
-            if (!exec("CREATE TABLE tracks_genres ("
-                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                      "    genreId INTEGER NOT NULL REFERENCES genres(id)"
-                      ")")) {
-                return;
-            }
-
-            if (!exec("CREATE INDEX tracks_genres_trackIndex ON tracks_genres(trackId)")) {
-                return;
-            }
-
-            query.exec(QString::fromLatin1("PRAGMA user_version = %1").arg(databaseVersion));
 
             mCreatedTables = true;
         } else {
-            query.exec(QLatin1String("PRAGMA user_version"));
-            query.next();
-            const int currentVersion = query.value(0).toInt();
-            if (currentVersion != databaseVersion) {
-                // TODO: migration
+            LibraryMigrator migrator(db);
+            if (!migrator.migrateIfNeeded(databaseVersion)) {
                 return;
             }
         }
@@ -516,10 +546,6 @@ namespace unplayer
 
     void LibraryUtils::resetDatabase()
     {
-        if (!mDatabaseInitialized) {
-            return;
-        }
-
         qInfo("Resetting database");
 
         MediaArtUtils::deleteInstance();

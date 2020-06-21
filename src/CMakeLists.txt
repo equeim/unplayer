@@ -41,6 +41,8 @@ add_executable("${PROJECT_NAME}"
     filterproxymodel.cpp
     genresmodel.cpp
     librarydirectoriesmodel.cpp
+    librarymigrator.cpp
+    librarytracksadder.cpp
     libraryupdaterunnable.cpp
     libraryutils.cpp
     main.cpp
