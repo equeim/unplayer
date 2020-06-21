@@ -32,6 +32,8 @@
 #include "sqlutils.h"
 #include "stdutils.h"
 
+class QElapsedTimer;
+
 namespace unplayer
 {
     class LibraryUpdateRunnable : public QObject, public QRunnable
@@ -71,7 +73,8 @@ namespace unplayer
                                                std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
         int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
-                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
+                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
+                      const QElapsedTimer& stageTimer);
 
         bool isBlacklisted(const QString& path);
 

@@ -168,7 +168,7 @@ namespace unplayer
             if (!tracksToAdd.empty()) {
                 qInfo("Start extracting tags from files");
                 emit stageChanged(LibraryUtils::ExtractingStage);
-                const int count = addTracks(tracksToAdd, embeddedMediaArtFiles);
+                const int count = addTracks(tracksToAdd, embeddedMediaArtFiles, stageTimer);
                 qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(stageTimer.restart()) / 1000.0);
             }
         }
@@ -362,7 +362,8 @@ namespace unplayer
     }
 
     int LibraryUpdateRunnable::addTracks(const std::vector<LibraryUpdateRunnable::TrackToAdd>& tracksToAdd,
-                                         std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
+                                         std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
+                                         const QElapsedTimer& stageTimer)
     {
         int count = 0;
 
@@ -387,6 +388,9 @@ namespace unplayer
                                          MediaArtUtils::saveEmbeddedMediaArt(trackInfo.mediaArtData,
                                                                              embeddedMediaArtFiles,
                                                                              mMimeDb));
+                if ((count % 100) == 0) {
+                    qInfo("Extracted tags from %d of %zu files (%.3f s elapsed)", count, tracksToAdd.size(), stageTimer.elapsed() / 1000.0);
+                }
                 emit extractedFilesChanged(count);
             }
         }
