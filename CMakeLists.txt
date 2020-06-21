@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1.0)
-cmake_policy(SET CMP0071 NEW)
+cmake_minimum_required(VERSION 3.10)
+cmake_policy(VERSION ${CMAKE_MINIMUM_REQUIRED_VERSION}..3.17)
 
 project(harbour-unplayer VERSION 2.0.4 LANGUAGES CXX)
 
