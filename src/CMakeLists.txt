@@ -1,5 +1,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt5Core 5.6 REQUIRED CONFIG)
 find_package(Qt5Concurrent CONFIG REQUIRED)
@@ -25,8 +26,6 @@ if (TAGLIB_STATIC)
 else()
     set(taglib_ldflags ${TAGLIB_LDFLAGS})
 endif()
-
-qt5_add_resources(resources resources.qrc)
 
 add_executable("${PROJECT_NAME}"
     abstractlibrarymodel.cpp
@@ -59,7 +58,7 @@ add_executable("${PROJECT_NAME}"
     tracksmodel.cpp
     utils.cpp
     tagutils.cpp
-    ${resources}
+    resources.qrc
 )
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES
