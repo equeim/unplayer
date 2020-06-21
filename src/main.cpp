@@ -30,6 +30,7 @@
 
 #include "commandlineparser.h"
 #include "libraryutils.h"
+#include "mediaartutils.h"
 #include "player.h"
 #include "queue.h"
 #include "settings.h"
@@ -64,6 +65,7 @@ int main(int argc, char* argv[])
         }
 
         Settings::instance();
+        MediaArtUtils::instance();
 
         if (SignalHandler::exitRequested) {
             return 0;
@@ -109,6 +111,7 @@ int main(int argc, char* argv[])
     view->rootContext()->setContextProperty(QLatin1String("commandLineArguments"), args.files);
 
     Settings::instance();
+    MediaArtUtils::instance();
     LibraryUtils::instance();
     Utils::registerTypes();
 
