@@ -295,7 +295,7 @@ namespace unplayer
         if (!addTracksRelationshipQuery.prepare(QLatin1String("INSERT INTO tracks_albums VALUES (?, ?)"))) {
             qWarning() << "Failed to prepare query" << addTracksRelationshipQuery.lastError();
         }
-        if (!addArtistsRelationshipQuery.prepare(QLatin1String("INSERT INTO tracks_artists VALUES (?, ?)"))) {
+        if (!addArtistsRelationshipQuery.prepare(QLatin1String("INSERT INTO albums_artists VALUES (?, ?)"))) {
             qWarning() << "Failed to prepare query" << addArtistsRelationshipQuery.lastError();
         }
     }
