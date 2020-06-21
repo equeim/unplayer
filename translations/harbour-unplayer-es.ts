@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Lista nueva…</translation>
+        <translation>Lista nueva</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Añadir directorio…</translation>
+        <translation>Añadir directorio</translation>
     </message>
     <message>
         <source>Select directory</source>
@@ -421,11 +421,11 @@
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Restablecer fonoteca</translation>
+        <translation>Restablecer</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Actualizar fonoteca</translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <source>Library</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Restaurar estado del reproductor al iniciar</translation>
+        <translation>Restaurar reproductor al iniciar</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -636,15 +636,15 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation>Abrir URL</translation>
+        <translation>Retransmisor</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation>Aceptar</translation>
     </message>
     <message>
         <source>URL</source>
-        <translation>URL</translation>
+        <translation>Introducir url</translation>
     </message>
     <message>
         <source>Disc number</source>
@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Guardando etiquetas…</translation>
+        <translation>Guardando etiquetas</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Usar etiqueta «Artista del álbum» en lugar de «Artista» si está disponible</translation>
+        <translation>Etiquetar «Artista del álbum» en vez de «Artista»</translation>
     </message>
     <message>
         <source>Save</source>
@@ -741,11 +741,11 @@
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation>Detener tras reproducir pista: &lt;font color=&quot;%1&quot;&gt;sí&lt;/font&gt;</translation>
+        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;sí&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation>Detener tras reproducir pista: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>Detener pista siguiente: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
 </context>
 </TS>
