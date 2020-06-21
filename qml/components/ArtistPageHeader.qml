@@ -24,6 +24,8 @@ import harbour.unplayer 0.1 as Unplayer
 Item {
     property alias searchFieldY: pageHeader.height
 
+    property int extraHeight: height - pageHeader.height
+
     width: listView.width
     height: listView.showSearchField ? pageHeader.height + listView.searchFieldHeight :
                                        childrenRect.height
