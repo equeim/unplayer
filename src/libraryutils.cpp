@@ -446,6 +446,33 @@ namespace unplayer
         return true;
     }
 
+    bool LibraryUtils::dropIndexes(QSqlDatabase& db)
+    {
+        QSqlQuery query(db);
+
+        if (!query.exec(QLatin1String("DROP INDEX tracks_artists_trackIndex"))) {
+            qWarning() << "Failed to drop 'tracks_artists_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("DROP INDEX tracks_albums_trackIndex"))) {
+            qWarning() << "Failed to drop 'tracks_albums_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("DROP INDEX albums_artists_albumIndex"))) {
+            qWarning() << "Failed to drop 'albums_artists_albumIndex' index" << query.lastError();
+            return false;
+        }
+
+        if (!query.exec(QLatin1String("DROP INDEX tracks_genres_trackIndex"))) {
+            qWarning() << "Failed to drop 'tracks_genres_trackIndex' index" << query.lastError();
+            return false;
+        }
+
+        return true;
+    }
+
     void LibraryUtils::initDatabase()
     {
         qDebug() << "Initializing database";

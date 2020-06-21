@@ -120,6 +120,20 @@ namespace unplayer
             qWarning() << "failed to create media art directory:" << MediaArtUtils::mediaArtDirectory();
         }
 
+        if (!LibraryUtils::dropIndexes(mDb)) {
+            qWarning("Failed to drop indexes");
+        }
+
+        const struct IndexesGuard
+        {
+            ~IndexesGuard() {
+                if (!LibraryUtils::createIndexes(db)) {
+                    qWarning("Failed to create indexes");
+                }
+            }
+            QSqlDatabase& db;
+        } indexesGuard{mDb};
+
         {
             std::unordered_map<QByteArray, QString> embeddedMediaArtFiles(MediaArtUtils::getEmbeddedMediaArtFiles());
             std::vector<TrackToAdd> tracksToAdd;

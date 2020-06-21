@@ -74,6 +74,7 @@ namespace unplayer
 
         static bool createTables(QSqlDatabase& db);
         static bool createIndexes(QSqlDatabase& db);
+        static bool dropIndexes(QSqlDatabase& db);
 
         void initDatabase();
         Q_INVOKABLE void updateDatabase();
