@@ -11,7 +11,6 @@ Patch0:     qtdbusextended.patch
 Patch1:     qtmpris.patch
 
 Requires:      sailfishsilica-qt5
-Requires:      nemo-qml-plugin-dbus-qt5
 BuildRequires: pkgconfig(Qt5Concurrent)
 BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Multimedia)

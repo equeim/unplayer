@@ -46,13 +46,13 @@ namespace unplayer
                             fileutils::isExtensionSupported(suffix) ||
                             fileutils::isVideoExtensionSupported(suffix)) {
 
-                            args.files.push_back(info.absoluteFilePath());
+                            args.files.push_back(QUrl::fromLocalFile(info.absoluteFilePath()).toString());
                         }
                     } else {
                         const QUrl url(file);
                         if (url.isLocalFile()) {
                             if (QFileInfo(url.path()).isFile()) {
-                                args.files.push_back(url.path());
+                                args.files.push_back(file);
                             }
                         } else {
                             args.files.push_back(file);

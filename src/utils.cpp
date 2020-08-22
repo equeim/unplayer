@@ -31,6 +31,7 @@
 
 #include "albumsmodel.h"
 #include "artistsmodel.h"
+#include "dbusservice.h"
 #include "directorycontentmodel.h"
 #include "directorycontentproxymodel.h"
 #include "directorytracksmodel.h"
@@ -64,6 +65,8 @@ namespace unplayer
         const char* url = "harbour.unplayer";
         const int major = 0;
         const int minor = 1;
+
+        qmlRegisterType<DBusService>(url, major, minor, "DBusService");
 
         qmlRegisterSingletonType<Settings>(url, major, minor, "Settings", [](QQmlEngine*, QJSEngine*) -> QObject* { return Settings::instance(); });
         qmlRegisterSingletonType<LibraryUtils>(url, major, minor, "LibraryUtils", [](QQmlEngine*, QJSEngine*) -> QObject* { return LibraryUtils::instance(); });

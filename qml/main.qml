@@ -18,7 +18,6 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import Nemo.DBus 2.0
 
 import harbour.unplayer 0.1 as Unplayer
 
@@ -66,15 +65,11 @@ ApplicationWindow
         id: nowPlayingPanel
     }
 
-    DBusAdaptor {
-        service: "org.equeim.unplayer"
-        iface: "org.equeim.unplayer"
-        path: "/org/equeim/unplayer"
-
-        function addTracksToQueue(tracks) {
-            if (tracks.length) {
-                Unplayer.Player.queue.addTracksFromUrls(tracks, true)
-            }
+    Unplayer.DBusService {
+        onWindowActivationRequested: activate()
+        onFilesOpeningRequested: {
+            activate()
+            Unplayer.Player.queue.addTracksFromUrls(uris, true)
         }
     }
 }

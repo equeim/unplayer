@@ -27,12 +27,22 @@ else()
     set(taglib_ldflags ${TAGLIB_LDFLAGS})
 endif()
 
+set_source_files_properties(org.freedesktop.Application.xml org.equeim.unplayer.xml PROPERTIES NO_NAMESPACE ON)
+qt5_add_dbus_interface(dbus_generated org.freedesktop.Application.xml org_freedesktop_application_interface)
+qt5_add_dbus_interface(dbus_generated org.equeim.unplayer.xml org_equeim_unplayer_interface)
+qt5_add_dbus_adaptor(dbus_generated org.freedesktop.Application.xml dbusservice.h unplayer::DBusService org_freedesktop_application_adaptor OrgFreedesktopApplicationAdaptor)
+qt5_add_dbus_adaptor(dbus_generated org.equeim.unplayer.xml dbusservice.h unplayer::DBusService org_equeim_unplayer_adaptor OrgEqueimUnplayerAdaptor)
+if (Qt5_VERSION VERSION_LESS 5.9.2)
+    set_source_files_properties(${dbus_generated} PROPERTIES SKIP_AUTOMOC ON)
+endif()
+
 add_executable("${PROJECT_NAME}"
     abstractlibrarymodel.cpp
     albumsmodel.cpp
     artistsmodel.cpp
     asyncloadingmodel.h
     commandlineparser.cpp
+    dbusservice.cpp
     directorycontentmodel.cpp
     directorycontentproxymodel.cpp
     directorytracksmodel.cpp
@@ -59,6 +69,7 @@ add_executable("${PROJECT_NAME}"
     utils.cpp
     tagutils.cpp
     resources.qrc
+    ${dbus_generated}
 )
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES
