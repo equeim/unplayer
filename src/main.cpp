@@ -18,13 +18,10 @@
 
 #include <memory>
 
-#include <QDBusInterface>
-#include <QDBusMessage>
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlContext>
 #include <QQmlEngine>
-#include <QUrl>
 
 #include <sailfishapp.h>
 
