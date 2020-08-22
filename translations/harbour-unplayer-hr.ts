@@ -189,18 +189,18 @@
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n album</numerusform>
+            <numerusform>%n albuma</numerusform>
+            <numerusform>%n albuma</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n pjesma</numerusform>
+            <numerusform>%n pjesme</numerusform>
+            <numerusform>%n pjesama</numerusform>
         </translation>
     </message>
     <message numerus="yes">
