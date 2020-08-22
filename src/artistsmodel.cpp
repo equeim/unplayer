@@ -238,8 +238,6 @@ namespace unplayer
 
     QString ArtistsModel::makeQueryString()
     {
-        const QLatin1String artistType(Settings::instance()->useAlbumArtist() ? "albumArtist" : "artist");
-
         return QString::fromLatin1("SELECT artists.id, artists.title, COUNT(DISTINCT CASE WHEN albums.id IS NULL THEN 0 ELSE albums.id END), COUNT(tracks.id), SUM(duration) "
                                    "FROM tracks "
                                    "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "

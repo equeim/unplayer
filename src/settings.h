@@ -32,7 +32,6 @@ namespace unplayer
         Q_OBJECT
         Q_PROPERTY(bool hasLibraryDirectories READ hasLibraryDirectories NOTIFY libraryDirectoriesChanged)
         Q_PROPERTY(bool openLibraryOnStartup READ openLibraryOnStartup WRITE setOpenLibraryOnStartup)
-        Q_PROPERTY(bool useAlbumArtist READ useAlbumArtist WRITE setUseAlbumArtist)
         Q_PROPERTY(QString defaultDirectory READ defaultDirectory WRITE setDefaultDirectory)
         Q_PROPERTY(bool useDirectoryMediaArt READ useDirectoryMediaArt WRITE setUseDirectoryMediaArt)
         Q_PROPERTY(bool restorePlayerState READ restorePlayerState WRITE setRestorePlayerState)
