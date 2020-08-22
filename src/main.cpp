@@ -54,7 +54,7 @@ namespace
         if (args.resetLibrary) {
             LibraryUtils::instance()->resetDatabase();
             if (!args.updateLibrary) {
-                return 0;
+                return EXIT_SUCCESS;
             }
         }
 
@@ -62,7 +62,7 @@ namespace
         MediaArtUtils::instance();
 
         if (SignalHandler::exitRequested) {
-            return 0;
+            return EXIT_SUCCESS;
         }
 
         QObject::connect(LibraryUtils::instance(), &LibraryUtils::updatingChanged, &app, []() {
@@ -73,11 +73,11 @@ namespace
 
         if (!LibraryUtils::instance()->updateDatabase()) {
             qWarning("Failed to start library update");
-            return 1;
+            return EXIT_FAILURE;
         }
 
         if (SignalHandler::exitRequested) {
-            return 0;
+            return EXIT_SUCCESS;
         }
         SignalHandler::setupNotifier();
         return QCoreApplication::exec();
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
     }
 
     if (SignalHandler::exitRequested) {
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     if (args.resetLibrary || args.updateLibrary) {
@@ -144,14 +144,14 @@ int main(int argc, char** argv)
     }
 
     if (tryToInvokeExistingInstance(args)) {
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     const std::unique_ptr<QGuiApplication> app(SailfishApp::application(argc, argv));
     app->setApplicationVersion(QLatin1String(UNPLAYER_VERSION));
 
     if (SignalHandler::exitRequested) {
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     const std::unique_ptr<QQuickView> view(SailfishApp::createView());
@@ -166,14 +166,14 @@ int main(int argc, char** argv)
     view->engine()->addImageProvider(QueueImageProvider::providerId, new QueueImageProvider(Player::instance()->queue()));
 
     if (SignalHandler::exitRequested) {
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     view->setSource(SailfishApp::pathTo(QLatin1String("qml/main.qml")));
     view->show();
 
     if (SignalHandler::exitRequested) {
-        return 0;
+        return EXIT_SUCCESS;
     }
     SignalHandler::setupNotifier();
 
