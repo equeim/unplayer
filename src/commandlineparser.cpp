@@ -23,7 +23,8 @@
 #include <QFileInfo>
 #include <QUrl>
 
-#include "clara.hpp"
+#define CXXOPTS_VECTOR_DELIMITER '\0'
+#include <cxxopts.hpp>
 
 #include "fileutils.h"
 #include "playlistutils.h"
@@ -66,29 +67,38 @@ namespace unplayer
     {
         CommandLineArgs args{};
 
-        using namespace clara;
+        const std::string appName(QFileInfo(*argv).fileName().toStdString());
+        const std::string versionString(appName + " " UNPLAYER_VERSION);
 
+        cxxopts::Options opts(appName, versionString);
         bool version = false;
         bool help = false;
         std::vector<std::string> files;
-        auto cli = Opt(args.updateLibrary)["-u"]["--update-library"]("update music library and exit") |
-                   Opt(args.resetLibrary)["-r"]["--reset-library"]("reset music library and exit") |
-                   Opt(version)["-v"]["--version"]("display version information") |
-                   Help(help) |
-                   Arg(files, "files");
-        auto result = cli.parse(Args(argc, argv));
-        if (!result) {
-            std::cerr << result.errorMessage() << '\n';
+        opts.add_options()
+            ("u,update-library", "update music library and exit", cxxopts::value<bool>(args.updateLibrary))
+            ("r,reset-library", "reset music library and exit", cxxopts::value<bool>(args.resetLibrary))
+            ("v,version", "display version information", cxxopts::value<bool>(version))
+            ("h,help", "display this help", cxxopts::value<bool>(help))
+            ("files", "", cxxopts::value<decltype(files)>(files));
+            opts.parse_positional("files");
+            opts.positional_help("files");
+        try {
+            const auto result(opts.parse(argc, argv));
+            if (help) {
+                std::cout << opts.help() << std::endl;
+                args.exit = true;
+                return args;
+            }
+            if (version) {
+                std::cout << versionString << std::endl;
+                args.exit = true;
+                return args;
+            }
+            parseFiles(files, args);
+        } catch (const cxxopts::OptionException& e) {
+            std::cerr << e.what() << std::endl;
             args.exit = true;
             args.returnCode = 1;
-        } else if (help) {
-            std::cout << cli << '\n';
-            args.exit = true;
-        } else if (version) {
-            std::cout << cli.m_exeName.name() << " " UNPLAYER_VERSION "\n";
-            args.exit = true;
-        } else {
-            parseFiles(files, args);
         }
 
         return args;

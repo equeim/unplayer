@@ -7,3 +7,6 @@
 [submodule "3rdparty/taglib"]
 	path = 3rdparty/taglib
 	url = https://github.com/taglib/taglib
+[submodule "3rdparty/cxxopts"]
+	path = 3rdparty/cxxopts
+	url = https://github.com/jarro2783/cxxopts

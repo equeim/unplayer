@@ -82,7 +82,7 @@ target_include_directories("${PROJECT_NAME}" PRIVATE
     ${SAILFISHAPP_INCLUDE_DIRS}
     ${QTMPRIS_INCLUDE_DIRS}
     ${TAGLIB_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/3rdparty/clara
+    ${PROJECT_SOURCE_DIR}/3rdparty/cxxopts/include
 )
 
 target_compile_definitions("${PROJECT_NAME}" PRIVATE
