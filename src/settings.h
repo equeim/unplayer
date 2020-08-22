@@ -48,9 +48,6 @@ namespace unplayer
         bool openLibraryOnStartup() const;
         void setOpenLibraryOnStartup(bool open);
 
-        bool useAlbumArtist() const;
-        void setUseAlbumArtist(bool use);
-
         QStringList blacklistedDirectories() const;
         void setBlacklistedDirectories(const QStringList& directories);
 
