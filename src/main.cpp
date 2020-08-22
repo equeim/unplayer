@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
         if (SignalHandler::exitRequested) {
             return 0;
         }
-
+        SignalHandler::setupNotifier();
         return QCoreApplication::exec();
     }
 
