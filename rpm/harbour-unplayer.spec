@@ -93,7 +93,6 @@ CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib} \
     -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
     -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
     -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
-    -DCMAKE_BUILD_TYPE=%{build_type} \
     -DBUILD_SHARED_LIBS=OFF \
     -DWITH_MP4=ON
 %make_build
@@ -103,7 +102,6 @@ cd -
 
 cd %{build_directory}
 %cmake .. \
-    -DCMAKE_BUILD_TYPE=%{build_type} \
     -DHARBOUR=%{harbour} \
     -DQTMPRIS_STATIC=ON \
     -DTAGLIB_STATIC=ON
