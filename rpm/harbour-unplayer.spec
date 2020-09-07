@@ -32,18 +32,18 @@ BuildRequires: boost-devel
 %global harbour ON
 #%%global harbour OFF
 
-%global build_directory "%{_builddir}/build-%{_target}-$(%{__grep} VERSION_ID /etc/os-release | cut -d '=' -f 2)"
+%global build_directory %{_builddir}/build-%{_target}-%(version | awk '{print $3}')
 
-%global qtdbusextended "%{_builddir}/3rdparty/qtdbusextended"
-%global qtdbusextended_build "%{build_directory}/3rdparty/build-qtdbusextended"
+%global qtdbusextended %{_builddir}/3rdparty/qtdbusextended
+%global qtdbusextended_build %{build_directory}/3rdparty/qtdbusextended
 
-%global qtmpris "%{_builddir}/3rdparty/qtmpris"
-%global qtmpris_build "%{build_directory}/3rdparty/build-qtmpris"
+%global qtmpris %{_builddir}/3rdparty/qtmpris
+%global qtmpris_build %{build_directory}/3rdparty/qtmpris
 
-%global taglib "%{_builddir}/3rdparty/taglib"
-%global taglib_build "%{build_directory}/3rdparty/build-taglib"
+%global taglib %{_builddir}/3rdparty/taglib
+%global taglib_build %{build_directory}/3rdparty/taglib
 
-%global thirdparty_install "%{build_directory}/3rdparty/install"
+%global thirdparty_install %{build_directory}/3rdparty/install
 
 
 %description
@@ -53,10 +53,10 @@ BuildRequires: boost-devel
 %prep
 %setup -q
 # patch if not patched
-if ! %{__patch} -p0 -R --dry-run -f -i "%{P:0}"; then
+if ! patch -p0 -R --dry-run -f -i %{P:0}; then
 %patch0
 fi
-if ! %{__patch} -p0 -R --dry-run -f -i "%{P:1}"; then
+if ! patch -p0 -R --dry-run -f -i %{P:1}; then
 %patch1
 fi
 
@@ -67,27 +67,27 @@ export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
 # Enable -O0 for debug builds
 # This also requires disabling _FORTIFY_SOURCE
 %if "%{build_type}" == "debug"
-    export CFLAGS="$CFLAGS -O0 -Wp,-U_FORTIFY_SOURCE"
-    export CXXFLAGS="$CXXFLAGS -O0 -Wp,-U_FORTIFY_SOURCE"
+    export CFLAGS="${CFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
+    export CXXFLAGS="${CXXFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
 %endif
 
-%{__mkdir_p} %{qtdbusextended_build}
+mkdir -p %{qtdbusextended_build}
 cd %{qtdbusextended_build}
 %qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
 %make_build
-# not make_install, because we do not want DESTDIR here
-%{__make} install
+# not make_install, because we do not want INSTALL_ROOT here
+make install
 cd -
 
-%{__mkdir_p} %{qtmpris_build}
+mkdir -p %{qtmpris_build}
 cd %{qtmpris_build}
 %qmake5 %{qtmpris} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
 %make_build
-# not make_install, because we do not want DESTDIR here
-%{__make} install
+# not make_install, because we do not want INSTALL_ROOT here
+make install
 cd -
 
-%{__mkdir_p} %{taglib_build}
+mkdir -p %{taglib_build}
 cd %{taglib_build}
 CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib} \
     -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
@@ -97,7 +97,7 @@ CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib} \
     -DWITH_MP4=ON
 %make_build
 # not make_install, because we do not want DESTDIR here
-%{__make} install
+make install
 cd -
 
 cd %{build_directory}
@@ -110,10 +110,8 @@ cd %{build_directory}
 %install
 cd %{build_directory}
 %make_install
-desktop-file-install \
-    --delete-original \
-    --dir %{buildroot}/%{_datadir}/applications \
-    %{buildroot}/%{_datadir}/applications/%{name}.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
+
 
 %files
 %defattr(-,root,root,-)
