@@ -50,9 +50,10 @@ namespace
 
         if (args.resetLibrary) {
             LibraryUtils::instance()->resetDatabase();
-            if (!args.updateLibrary) {
-                return EXIT_SUCCESS;
-            }
+        }
+
+        if (!args.updateLibrary) {
+            return EXIT_SUCCESS;
         }
 
         Settings::instance();
