@@ -11,8 +11,6 @@ find_package(Qt5Sql CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
-pkg_check_modules(SAILFISHAPP REQUIRED sailfishapp)
-
 pkg_check_modules(QTMPRIS REQUIRED mpris-qt5)
 if (QTMPRIS_STATIC)
     set(qtmpris_ldflags ${QTMPRIS_STATIC_LDFLAGS})
@@ -84,13 +82,11 @@ target_link_libraries("${PROJECT_NAME}"
     Qt5::Multimedia
     Qt5::Quick
     Qt5::Sql
-    ${SAILFISHAPP_LDFLAGS}
     ${qtmpris_ldflags}
     ${taglib_ldflags}
 )
 
 target_include_directories("${PROJECT_NAME}" PRIVATE
-    ${SAILFISHAPP_INCLUDE_DIRS}
     ${QTMPRIS_INCLUDE_DIRS}
     ${TAGLIB_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/3rdparty/cxxopts/include
@@ -116,9 +112,16 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
     -Wdouble-promotion
     -Wformat=2
     -Werror=format
-    ${SAILFISHAPP_CFLAGS_OTHER}
     ${QTMPRIS_CFLAGS_OTHER}
     ${TAGLIB_CFLAGS_OTHER}
 )
+
+if (SAILFISHOS)
+    pkg_check_modules(SAILFISHAPP REQUIRED sailfishapp)
+    target_link_libraries("${PROJECT_NAME}" ${SAILFISHAPP_LDFLAGS})
+    target_include_directories("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_INCLUDE_DIRS})
+    target_compile_definitions("${PROJECT_NAME}" PRIVATE UNPLAYER_SAILFISHOS)
+    target_compile_options("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_CFLAGS_OTHER})
+endif()
 
 install(TARGETS "${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")

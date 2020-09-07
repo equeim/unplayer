@@ -9,6 +9,8 @@ option(HARBOUR "Build for Harbour" ON)
 option(QTMPRIS_STATIC "Link with qtmpris statically" OFF)
 option(TAGLIB_STATIC "Link with taglib statically" OFF)
 
+option(SAILFISHOS "Build for Sailfish OS" ON)
+
 add_subdirectory("src")
 add_subdirectory("translations")
 

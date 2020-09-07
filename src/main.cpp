@@ -16,21 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef UNPLAYER_SAILFISHOS
 #include <memory>
-
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlContext>
 #include <QQmlEngine>
-
 #include <sailfishapp.h>
+#include "queue.h"
+#include "player.h"
+#else
+#include <QCoreApplication>
+#endif
 
 #include "commandlineparser.h"
 #include "dbusservice.h"
 #include "libraryutils.h"
 #include "mediaartutils.h"
-#include "player.h"
-#include "queue.h"
 #include "settings.h"
 #include "signalhandler.h"
 #include "utils.h"
@@ -141,6 +143,10 @@ int main(int argc, char** argv)
         return handleNoGuiCommandLineArguments(argc, argv, args);
     }
 
+#ifndef UNPLAYER_SAILFISHOS
+    return EXIT_SUCCESS;
+#else
+
     if (tryToInvokeExistingInstance(args)) {
         return EXIT_SUCCESS;
     }
@@ -176,4 +182,5 @@ int main(int argc, char** argv)
     SignalHandler::setupNotifier();
 
     return QCoreApplication::exec();
+#endif
 }
