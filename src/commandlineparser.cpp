@@ -87,18 +87,20 @@ namespace unplayer
             if (help) {
                 std::cout << opts.help() << std::endl;
                 args.exit = true;
+                args.returnCode = EXIT_SUCCESS;
                 return args;
             }
             if (version) {
                 std::cout << versionString << std::endl;
                 args.exit = true;
+                args.returnCode = EXIT_SUCCESS;
                 return args;
             }
             parseFiles(files, args);
         } catch (const cxxopts::OptionException& e) {
             std::cerr << e.what() << std::endl;
             args.exit = true;
-            args.returnCode = 1;
+            args.returnCode = EXIT_FAILURE;
         }
 
         return args;
