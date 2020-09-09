@@ -735,5 +735,9 @@
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
         <translation>Arrêter après la lecture de la piste : &lt;font color=&quot;%1&quot;&gt;non&lt;/font&gt;</translation>
     </message>
+    <message>
+        <source>Replace queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
