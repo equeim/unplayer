@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Usa il tag «Artista dell&apos;album» invece di «Artista», se disponibile</translation>
+        <translation type="vanished">Usa il tag «Artista dell&apos;album» invece di «Artista», se disponibile</translation>
     </message>
     <message>
         <source>Save</source>

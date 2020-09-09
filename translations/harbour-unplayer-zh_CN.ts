@@ -683,7 +683,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>如果可用，请使用标签“专辑艺人”而不是“艺人”</translation>
+        <translation type="vanished">如果可用，请使用标签“专辑艺人”而不是“艺人”</translation>
     </message>
     <message>
         <source>Save</source>

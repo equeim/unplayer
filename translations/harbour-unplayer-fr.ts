@@ -690,7 +690,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Utiliser le tag « Artiste de l&apos;album » au lieu de « Artiste » si disponible</translation>
+        <translation type="vanished">Utiliser le tag « Artiste de l&apos;album » au lieu de « Artiste » si disponible</translation>
     </message>
     <message>
         <source>Save</source>

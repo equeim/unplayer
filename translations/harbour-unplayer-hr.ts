@@ -725,7 +725,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Koristi oznaku „Izvođač albuma” umjesto „Izvođač”, ako postoji</translation>
+        <translation type="vanished">Koristi oznaku „Izvođač albuma” umjesto „Izvođač”, ako postoji</translation>
     </message>
     <message>
         <source>Save</source>
@@ -770,6 +770,10 @@
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
         <translation>Prekini nakon sviranja pjesme: &lt;font color=&quot;%1&quot;&gt;ne&lt;/font&gt;</translation>
+    </message>
+    <message>
+        <source>Replace queue</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

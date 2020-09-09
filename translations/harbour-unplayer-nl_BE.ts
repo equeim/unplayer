@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Gebruikt den ‘Albumartiest’- in plaats van den ‘Artiest’-tag indien beschikbaar</translation>
+        <translation type="vanished">Gebruikt den ‘Albumartiest’- in plaats van den ‘Artiest’-tag indien beschikbaar</translation>
     </message>
     <message>
         <source>Save</source>

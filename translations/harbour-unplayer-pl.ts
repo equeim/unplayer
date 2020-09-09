@@ -733,7 +733,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Użyj tagu „Album artystów” zamiast „Artysta”, jeśli jest dostępny</translation>
+        <translation type="vanished">Użyj tagu „Album artystów” zamiast „Artysta”, jeśli jest dostępny</translation>
     </message>
     <message>
         <source>Save</source>
