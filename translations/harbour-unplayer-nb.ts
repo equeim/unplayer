@@ -749,7 +749,7 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Erstatt kø</translation>
     </message>
 </context>
 </TS>
