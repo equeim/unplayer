@@ -26,24 +26,23 @@ BuildRequires: boost-devel
 
 %define __provides_exclude mimehandler
 
-%global build_type debug
-#%%global build_type release
+%global debug 0
 
 %global harbour ON
 #%%global harbour OFF
 
 %global build_directory %{_builddir}/build-%{_target}-%(version | awk '{print $3}')
 
-%global qtdbusextended %{_builddir}/3rdparty/qtdbusextended
-%global qtdbusextended_build %{build_directory}/3rdparty/qtdbusextended
+%global qtdbusextended_source_directory %{_builddir}/3rdparty/qtdbusextended
+%global qtdbusextended_build_directory %{build_directory}/3rdparty/qtdbusextended
 
-%global qtmpris %{_builddir}/3rdparty/qtmpris
-%global qtmpris_build %{build_directory}/3rdparty/qtmpris
+%global qtmpris_source_directory %{_builddir}/3rdparty/qtmpris
+%global qtmpris_build_directory %{build_directory}/3rdparty/qtmpris
 
-%global taglib %{_builddir}/3rdparty/taglib
-%global taglib_build %{build_directory}/3rdparty/taglib
+%global taglib_source_directory %{_builddir}/3rdparty/taglib
+%global taglib_build_directory %{build_directory}/3rdparty/taglib
 
-%global thirdparty_install %{build_directory}/3rdparty/install
+%global thirdparty_install_directory %{build_directory}/3rdparty/install
 
 
 %description
@@ -62,43 +61,41 @@ fi
 
 
 %build
-export PKG_CONFIG_PATH=%{thirdparty_install}/lib/pkgconfig
+export PKG_CONFIG_PATH=%{thirdparty_install_directory}/lib/pkgconfig
 
 # Enable -O0 for debug builds
 # This also requires disabling _FORTIFY_SOURCE
-%if "%{build_type}" == "debug"
+%if %{debug}
     export CFLAGS="${CFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
     export CXXFLAGS="${CXXFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
 %endif
 
-mkdir -p %{qtdbusextended_build}
-cd %{qtdbusextended_build}
-%qmake5 %{qtdbusextended} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+mkdir -p %{qtdbusextended_build_directory}
+cd %{qtdbusextended_build_directory}
+%qmake5 %{qtdbusextended_source_directory} CONFIG+=staticlib PREFIX=%{thirdparty_install_directory}
 %make_build
 # not make_install, because we do not want INSTALL_ROOT here
 make install
 cd -
 
-mkdir -p %{qtmpris_build}
-cd %{qtmpris_build}
-%qmake5 %{qtmpris} CONFIG+='%{build_type} staticlib' PREFIX=%{thirdparty_install}
+mkdir -p %{qtmpris_build_directory}
+cd %{qtmpris_build_directory}
+%qmake5 %{qtmpris_source_directory} CONFIG+=staticlib PREFIX=%{thirdparty_install_directory}
 %make_build
 # not make_install, because we do not want INSTALL_ROOT here
 make install
-cd -
 
-mkdir -p %{taglib_build}
-cd %{taglib_build}
-CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib} \
-    -DCMAKE_INSTALL_PREFIX=%{thirdparty_install} \
-    -DLIB_INSTALL_DIR=%{thirdparty_install}/lib \
-    -DINCLUDE_INSTALL_DIR=%{thirdparty_install}/include \
+mkdir -p %{taglib_build_directory}
+cd %{taglib_build_directory}
+CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib_source_directory} \
+    -DCMAKE_INSTALL_PREFIX=%{thirdparty_install_directory} \
+    -DLIB_INSTALL_DIR=%{thirdparty_install_directory}/lib \
+    -DINCLUDE_INSTALL_DIR=%{thirdparty_install_directory}/include \
     -DBUILD_SHARED_LIBS=OFF \
     -DWITH_MP4=ON
 %make_build
 # not make_install, because we do not want DESTDIR here
 make install
-cd -
 
 cd %{build_directory}
 %cmake .. \
@@ -114,8 +111,7 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
 
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
