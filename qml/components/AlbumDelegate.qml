@@ -34,6 +34,11 @@ MediaContainerSelectionDelegate {
     menu: Component {
         ContextMenu {
             MenuItem {
+                text: qsTranslate("unplayer", "Replace queue")
+                onClicked: Unplayer.Player.queue.addTracksFromLibrary(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)), true)
+            }
+
+            MenuItem {
                 text: qsTranslate("unplayer", "Add to queue")
                 onClicked: Unplayer.Player.queue.addTracksFromLibrary(albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)))
             }
@@ -41,12 +46,6 @@ MediaContainerSelectionDelegate {
             MenuItem {
                 text: qsTranslate("unplayer", "Add to playlist")
                 onClicked: pageStack.push("AddToPlaylistPage.qml", { tracks: albumsModel.getTracksForAlbum(albumsProxyModel.sourceIndex(model.index)) })
-            }
-
-            MenuItem {
-                visible: !model.unknownArtist && !model.unknownAlbum
-                text: qsTranslate("unplayer", "Set cover image")
-                onClicked: pageStack.push(filePickerDialogComponent)
             }
 
             MenuItem {
