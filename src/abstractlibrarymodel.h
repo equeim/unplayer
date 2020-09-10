@@ -38,10 +38,12 @@ namespace unplayer
         class AbstractItemFactory
         {
         public:
-            inline AbstractItemFactory() = default;
-            inline AbstractItemFactory(const AbstractItemFactory&) = delete;
+            AbstractItemFactory() = default;
+            AbstractItemFactory(const AbstractItemFactory&) = delete;
+            AbstractItemFactory(AbstractItemFactory&&) = delete;
             virtual ~AbstractItemFactory() = default;
-            inline AbstractItemFactory& operator=(const AbstractItemFactory&) = delete;
+            AbstractItemFactory& operator=(const AbstractItemFactory&) = delete;
+            AbstractItemFactory& operator=(AbstractItemFactory&&) = delete;
             virtual Item itemFromQuery(const QSqlQuery& query) = 0;
         };
 

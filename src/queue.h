@@ -186,7 +186,9 @@ namespace unplayer
         static const QLatin1String providerId;
         explicit QueueImageProvider(const Queue* queue);
         QueueImageProvider(const QueueImageProvider& other) = delete;
+        QueueImageProvider(QueueImageProvider&& other) = delete;
         QueueImageProvider& operator=(const QueueImageProvider& other) = delete;
+        QueueImageProvider& operator=(QueueImageProvider&& other) = delete;
         QPixmap requestPixmap(const QString& id, QSize*, const QSize& requestedSize) override;
     private:
         std::mutex mMutex;

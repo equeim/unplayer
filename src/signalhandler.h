@@ -31,9 +31,10 @@ namespace unplayer
         static void setupHandlers();
         static void setupNotifier();
 
-        SignalHandler() = delete;
         SignalHandler(const SignalHandler&) = delete;
         SignalHandler(SignalHandler&&) = delete;
+        SignalHandler& operator=(const SignalHandler&) = delete;
+        SignalHandler& operator=(SignalHandler&&) = delete;
     };
 }
 
