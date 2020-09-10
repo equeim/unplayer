@@ -749,7 +749,7 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Reemplazar cola</translation>
     </message>
 </context>
 </TS>
