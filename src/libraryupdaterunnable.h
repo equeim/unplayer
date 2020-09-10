@@ -20,21 +20,11 @@
 #define UNPLAYER_LIBRARYUPDATERUNNABLE_H
 
 #include <atomic>
-#include <unordered_map>
-#include <vector>
 
-#include <QMimeDatabase>
 #include <QObject>
 #include <QRunnable>
-#include <QSqlDatabase>
-#include <QSqlQuery>
 
-#include "fileutils.h"
 #include "libraryutils.h"
-#include "sqlutils.h"
-#include "stdutils.h"
-
-class QElapsedTimer;
 
 namespace unplayer
 {
@@ -44,49 +34,9 @@ namespace unplayer
     public:
         void cancel();
         void run() override;
+
     private:
-        struct TrackInDb
-        {
-            int id;
-            bool embeddedMediaArtDeleted;
-            long long modificationTime;
-        };
-
-        struct TracksInDbResult
-        {
-            std::unordered_map<QString, TrackInDb> tracksInDb;
-            std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
-        };
-
-        static const QLatin1String databaseConnectionName;
-
-        TracksInDbResult getTracksFromDatabase(std::vector<int>& tracksToRemove, std::unordered_map<QString, bool>& noMediaDirectories);
-
-        struct TrackToAdd
-        {
-            QString filePath;
-            QString directoryMediaArt;
-            fileutils::Extension extension;
-        };
-
-        std::vector<TrackToAdd> scanFilesystem(TracksInDbResult& tracksInDbResult,
-                                               std::vector<int>& tracksToRemove,
-                                               std::unordered_map<QString, bool>& noMediaDirectories,
-                                               std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
-
-        int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
-                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
-                      const QElapsedTimer& stageTimer);
-
-        bool isBlacklisted(const QString& path);
-
-        std::atomic_bool mCancel{false};
-
-        QStringList mLibraryDirectories;
-        QStringList mBlacklistedDirectories;
-        QSqlDatabase* mDb = nullptr;
-        QSqlQuery* mQuery = nullptr;
-        QMimeDatabase mMimeDb;
+        std::atomic_bool mCancelFlag;
 
     signals:
         void stageChanged(unplayer::LibraryUtils::UpdateStage newStage);
