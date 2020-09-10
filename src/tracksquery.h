@@ -53,15 +53,14 @@ namespace unplayer
         QElapsedTimer timer;
         timer.start();
 
-        const DatabaseConnectionGuard databaseGuard{dbConnectionName};
-        QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-        if (!db.isOpen()) {
+        const DatabaseConnectionGuard databaseGuard(dbConnectionName);
+        if (!databaseGuard.db.isOpen()) {
             return false;
         }
 
         bool abort = false;
 
-        QSqlQuery query(db);
+        QSqlQuery query(databaseGuard.db);
         size_t previousCount = 0;
 
         auto tracksIter(tracksToQuery.begin());

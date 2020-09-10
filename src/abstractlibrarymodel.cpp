@@ -27,6 +27,7 @@
 #include <QtConcurrentRun>
 
 #include "libraryutils.h"
+#include "qscopeguard.h"
 #include "sqlutils.h"
 #include "utilsfunctions.h"
 
@@ -65,10 +66,12 @@ namespace unplayer
 
             std::unique_ptr<AbstractItemFactory> itemFactoryUnique(itemFactory);
 
-            DatabaseConnectionGuard databaseGuard{QUuid::createUuid().toString()};
-            auto db(LibraryUtils::openDatabase(databaseGuard.connectionName));
+            const DatabaseConnectionGuard databaseGuard(QUuid::createUuid().toString());
+            if (!databaseGuard.db.isOpen()) {
+                return items;
+            }
 
-            QSqlQuery query(db);
+            QSqlQuery query(databaseGuard.db);
             if (!query.prepare(queryString)) {
                 qWarning() << "Prepare failed:" << query.lastError();
                 return items;

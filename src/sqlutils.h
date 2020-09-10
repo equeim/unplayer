@@ -25,19 +25,58 @@
 
 #include <vector>
 
+#include "libraryutils.h"
+
 namespace unplayer
 {
-    struct DatabaseConnectionGuard
+    class BaseDatabaseConnectionGuard
     {
-        inline ~DatabaseConnectionGuard()
+    public:
+        BaseDatabaseConnectionGuard(const BaseDatabaseConnectionGuard&) = delete;
+        BaseDatabaseConnectionGuard(BaseDatabaseConnectionGuard&&) = delete;
+        BaseDatabaseConnectionGuard& operator=(const BaseDatabaseConnectionGuard&) = delete;
+        BaseDatabaseConnectionGuard& operator=(BaseDatabaseConnectionGuard&&) = delete;
+    protected:
+        inline BaseDatabaseConnectionGuard(const QString& connectionName, bool open) : mConnectionName(connectionName), mOpened(open) {}
+
+        inline virtual ~BaseDatabaseConnectionGuard()
         {
-            QSqlDatabase::removeDatabase(connectionName);
+            if (mOpened) {
+                QSqlDatabase::removeDatabase(mConnectionName);
+            }
         }
 
-        inline DatabaseConnectionGuard(const DatabaseConnectionGuard&) = delete;
-        inline DatabaseConnectionGuard& operator=(const DatabaseConnectionGuard&) = delete;
+        const QString mConnectionName;
+        bool mOpened;
+    };
 
-        const QString connectionName;
+    class DatabaseConnectionGuard final : private BaseDatabaseConnectionGuard
+    {
+    public:
+        inline DatabaseConnectionGuard(const QString& connectionName, bool open = true)
+            : BaseDatabaseConnectionGuard(connectionName, open),
+              db(open ? LibraryUtils::openDatabase(connectionName) : QSqlDatabase())
+        {
+
+        }
+
+        DatabaseConnectionGuard(const DatabaseConnectionGuard&) = delete;
+        DatabaseConnectionGuard(DatabaseConnectionGuard&&) = delete;
+        DatabaseConnectionGuard& operator=(const DatabaseConnectionGuard&) = delete;
+        DatabaseConnectionGuard& operator=(DatabaseConnectionGuard&&) = delete;
+
+        inline bool isOpened() const
+        {
+            return mOpened;
+        }
+
+        inline void openDatabase()
+        {
+            db = LibraryUtils::openDatabase(mConnectionName);
+            mOpened = true;
+        }
+
+        QSqlDatabase db;
     };
 
     struct TransactionGuard
@@ -52,8 +91,10 @@ namespace unplayer
             db.commit();
         }
 
-        inline TransactionGuard(const TransactionGuard&) = delete;
-        inline TransactionGuard& operator=(const TransactionGuard&) = delete;
+        TransactionGuard(const TransactionGuard&) = delete;
+        TransactionGuard(TransactionGuard&&) = delete;
+        TransactionGuard& operator=(const TransactionGuard&) = delete;
+        TransactionGuard& operator=(TransactionGuard&&) = delete;
 
         QSqlDatabase& db;
     };

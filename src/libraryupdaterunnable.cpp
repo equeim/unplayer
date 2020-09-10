@@ -31,6 +31,7 @@
 #include "librarytracksadder.h"
 #include "libraryutils.h"
 #include "mediaartutils.h"
+#include "qscopeguard.h"
 #include "settings.h"
 #include "tagutils.h"
 #include "utilsfunctions.h"
@@ -86,15 +87,11 @@ namespace unplayer
 
     void LibraryUpdateRunnable::run()
     {
-        const struct FinishedGuard
-        {
-            ~FinishedGuard() {
-                emit runnable->finished();
-            }
-            inline FinishedGuard(const FinishedGuard&) = delete;
-            inline FinishedGuard& operator=(const FinishedGuard&) = delete;
-            LibraryUpdateRunnable* runnable;
-        } finishedGuard{this};
+        const auto finishedGuard(qScopeGuard([&] {
+            mDb = nullptr;
+            mQuery = nullptr;
+            emit finished();
+        }));
 
         if (mCancel) {
             return;
@@ -107,32 +104,33 @@ namespace unplayer
         stageTimer.start();
 
         // Open database
-        mDb = LibraryUtils::openDatabase(databaseGuard.connectionName);
-        if (!mDb.isOpen()) {
+
+        DatabaseConnectionGuard databaseGuard(databaseConnectionName);
+        if (!databaseGuard.db.isOpen()) {
             return;
         }
-        mQuery = QSqlQuery(mDb);
 
-        const TransactionGuard transactionGuard(mDb);
+        mDb = &databaseGuard.db;
+
+        QSqlQuery query(*mDb);
+        mQuery = &query;
+
+        const TransactionGuard transactionGuard(*mDb);
 
         // Create media art directory
         if (!QDir().mkpath(MediaArtUtils::mediaArtDirectory())) {
             qWarning() << "failed to create media art directory:" << MediaArtUtils::mediaArtDirectory();
         }
 
-        if (!LibraryUtils::dropIndexes(mDb)) {
+        if (!LibraryUtils::dropIndexes(*mDb)) {
             qWarning("Failed to drop indexes");
         }
 
-        const struct IndexesGuard
-        {
-            ~IndexesGuard() {
-                if (!LibraryUtils::createIndexes(db)) {
-                    qWarning("Failed to create indexes");
-                }
+        const auto indexesGuard(qScopeGuard([&] {
+            if (!LibraryUtils::createIndexes(*mDb)) {
+                qWarning("Failed to create indexes");
             }
-            QSqlDatabase& db;
-        } indexesGuard{mDb};
+        }));
 
         {
             std::unordered_map<QByteArray, QString> embeddedMediaArtFiles(MediaArtUtils::getEmbeddedMediaArtFiles());
@@ -172,7 +170,7 @@ namespace unplayer
                 }
 
                 if (!tracksToRemove.empty()) {
-                    if (LibraryUtils::removeTracksFromDbByIds(tracksToRemove, mDb, mCancel)) {
+                    if (LibraryUtils::removeTracksFromDbByIds(tracksToRemove, *mDb, mCancel)) {
                         qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
                     }
                 }
@@ -196,8 +194,8 @@ namespace unplayer
 
         emit stageChanged(LibraryUtils::FinishingStage);
 
-        LibraryUtils::removeUnusedCategories(mDb);
-        LibraryUtils::removeUnusedMediaArt(mDb, mCancel);
+        LibraryUtils::removeUnusedCategories(*mDb);
+        LibraryUtils::removeUnusedMediaArt(*mDb, mCancel);
 
         qInfo("End updating database (last stage took %.3f s)", static_cast<double>(stageTimer.elapsed()) / 1000.0);
         qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
@@ -231,19 +229,19 @@ namespace unplayer
             return found->second;
         };
 
-        if (!mQuery.exec(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"))) {
-            qWarning() << "failed to get files from database" << mQuery.lastError();
+        if (!mQuery->exec(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"))) {
+            qWarning() << "failed to get files from database" << mQuery->lastError();
             mCancel = true;
             return {};
         }
 
-        while (mQuery.next()) {
+        while (mQuery->next()) {
             if (mCancel) {
                 return {};
             }
 
-            const int id(mQuery.value(0).toInt());
-            QString filePath(mQuery.value(1).toString());
+            const int id(mQuery->value(0).toInt());
+            QString filePath(mQuery->value(1).toString());
             const QFileInfo fileInfo(filePath);
             QString directory(fileInfo.path());
 
@@ -270,9 +268,9 @@ namespace unplayer
                 tracksToRemove.push_back(id);
             } else {
                 tracksInDb.emplace(std::move(filePath), TrackInDb{id,
-                                                                  !checkExistance(mQuery.value(4).toString()),
-                                                                  mQuery.value(2).toLongLong()});
-                mediaArtDirectoriesInDbHash.insert({std::move(directory), mQuery.value(3).toString()});
+                                                                  !checkExistance(mQuery->value(4).toString()),
+                                                                  mQuery->value(2).toLongLong()});
+                mediaArtDirectoriesInDbHash.insert({std::move(directory), mQuery->value(3).toString()});
             }
         }
 
@@ -321,11 +319,11 @@ namespace unplayer
                     const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(directory));
                     if (directoryMediaArtInDb != mediaArtDirectoriesInDbHashEnd) {
                         if (directoryMediaArtInDb->second != directoryMediaArt) {
-                            mQuery.prepare(QStringLiteral("UPDATE tracks SET directoryMediaArt = ? WHERE instr(filePath, ?) = 1"));
-                            mQuery.addBindValue(nullIfEmpty(directoryMediaArt));
-                            mQuery.addBindValue(QString(directory % QLatin1Char('/')));
-                            if (!mQuery.exec()) {
-                                qWarning() << mQuery.lastError();
+                            mQuery->prepare(QStringLiteral("UPDATE tracks SET directoryMediaArt = ? WHERE instr(filePath, ?) = 1"));
+                            mQuery->addBindValue(nullIfEmpty(directoryMediaArt));
+                            mQuery->addBindValue(QString(directory % QLatin1Char('/')));
+                            if (!mQuery->exec()) {
+                                qWarning() << mQuery->lastError();
                             }
                         }
                         mediaArtDirectoriesInDbHash.erase(directoryMediaArtInDb);
@@ -358,11 +356,11 @@ namespace unplayer
                             const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
                                                                                                embeddedMediaArtFiles,
                                                                                                mMimeDb));
-                            mQuery.prepare(QStringLiteral("UPDATE tracks SET embeddedMediaArt = ? WHERE id = ?"));
-                            mQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
-                            mQuery.addBindValue(file.id);
-                            if (!mQuery.exec()) {
-                                qWarning() << mQuery.lastError();
+                            mQuery->prepare(QStringLiteral("UPDATE tracks SET embeddedMediaArt = ? WHERE id = ?"));
+                            mQuery->addBindValue(nullIfEmpty(embeddedMediaArt));
+                            mQuery->addBindValue(file.id);
+                            if (!mQuery->exec()) {
+                                qWarning() << mQuery->lastError();
                             }
                         }
                     } else {
@@ -384,7 +382,7 @@ namespace unplayer
     {
         int count = 0;
 
-        LibraryTracksAdder adder(mDb);
+        LibraryTracksAdder adder(*mDb);
         for (const TrackToAdd& track : tracksToAdd) {
             if (mCancel) {
                 return count;

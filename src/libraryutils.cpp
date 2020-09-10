@@ -711,13 +711,12 @@ namespace unplayer
             timer.start();
 
             // Open database
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard(removeFilesConnectionName);
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             QSqlQuery query;
             std::vector<QString> paths;
@@ -770,8 +769,8 @@ namespace unplayer
                     deleteFilesFromFilesystem(paths);
                 }
 
-                removeUnusedCategories(db);
-                removeUnusedMediaArt(db);
+                removeUnusedCategories(databaseGuard.db);
+                removeUnusedMediaArt(databaseGuard.db);
 
                 qInfo("Artists removing time: %lld ms", static_cast<long long>(timer.elapsed()));
             }
@@ -800,13 +799,12 @@ namespace unplayer
             timer.start();
 
             // Open database
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard(removeFilesConnectionName);
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             QSqlQuery query;
             std::vector<QString> paths;
@@ -859,8 +857,8 @@ namespace unplayer
                     deleteFilesFromFilesystem(paths);
                 }
 
-                removeUnusedCategories(db);
-                removeUnusedMediaArt(db);
+                removeUnusedCategories(databaseGuard.db);
+                removeUnusedMediaArt(databaseGuard.db);
 
                 qInfo("Albums removing time: %lld ms", static_cast<long long>(timer.elapsed()));
             }
@@ -889,13 +887,12 @@ namespace unplayer
             timer.start();
 
             // Open database
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard(removeFilesConnectionName);
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             QSqlQuery query;
             std::vector<QString> paths;
@@ -944,8 +941,8 @@ namespace unplayer
                     deleteFilesFromFilesystem(paths);
                 }
 
-                removeUnusedCategories(db);
-                removeUnusedMediaArt(db);
+                removeUnusedCategories(databaseGuard.db);
+                removeUnusedMediaArt(databaseGuard.db);
 
                 qInfo("Genres removing time: %lld ms", static_cast<long long>(timer.elapsed()));
             }
@@ -974,13 +971,12 @@ namespace unplayer
             timer.start();
 
             // Open database
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard(removeFilesConnectionName);
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             std::vector<int> ids;
             ids.reserve(tracks.size());
@@ -991,18 +987,18 @@ namespace unplayer
                     ids.push_back(track.id);
                     paths.push_back(std::move(track.filePath));
                 }
-                if (removeTracksFromDbByIds(std::move(ids), db)) {
+                if (removeTracksFromDbByIds(std::move(ids), databaseGuard.db)) {
                     deleteFilesFromFilesystem(paths);
                 }
             } else {
                 for (auto& track : tracks) {
                     ids.push_back(track.id);
                 }
-                removeTracksFromDbByIds(std::move(ids), db);
+                removeTracksFromDbByIds(std::move(ids), databaseGuard.db);
             }
 
-            removeUnusedCategories(db);
-            removeUnusedMediaArt(db);
+            removeUnusedCategories(databaseGuard.db);
+            removeUnusedMediaArt(databaseGuard.db);
 
             qInfo("Tracks removing time: %lld ms", static_cast<long long>(timer.elapsed()));
         });
@@ -1030,13 +1026,12 @@ namespace unplayer
             timer.start();
 
             // Open database
-            const DatabaseConnectionGuard databaseGuard{removeFilesConnectionName};
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard(removeFilesConnectionName);
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             if (deleteDirectories) {
                 std::vector<QString> files;
@@ -1051,8 +1046,8 @@ namespace unplayer
                     //const bool isDir = QFileInfo(path).isDir();
                     //files.emplace_back(std::move(path), isDir);
                 }
-                if (removeTracksFromDbByPaths(files, db)) {
-                    if (removeTracksFromDbByDirectories(directories, db)) {
+                if (removeTracksFromDbByPaths(files, databaseGuard.db)) {
+                    if (removeTracksFromDbByDirectories(directories, databaseGuard.db)) {
                         if (deleteFiles) {
                             deleteFilesFromFilesystem(files);
                             deleteDirectoriesFromFilesystem(directories);
@@ -1060,15 +1055,15 @@ namespace unplayer
                     }
                 }
             } else {
-                if (removeTracksFromDbByPaths(paths, db)) {
+                if (removeTracksFromDbByPaths(paths, databaseGuard.db)) {
                     if (deleteFiles) {
                         deleteFilesFromFilesystem(paths);
                     }
                 }
             }
 
-            removeUnusedCategories(db);
-            removeUnusedMediaArt(db);
+            removeUnusedCategories(databaseGuard.db);
+            removeUnusedMediaArt(databaseGuard.db);
 
             qInfo("Files removing time: %lld ms", static_cast<long long>(timer.elapsed()));
         });
@@ -1121,15 +1116,13 @@ namespace unplayer
                 return;
             }
 
-            const DatabaseConnectionGuard databaseGuard{saveTagsConnectionName};
-
             // Open database
-            QSqlDatabase db(LibraryUtils::openDatabase(databaseGuard.connectionName));
-            if (!db.isOpen()) {
+            DatabaseConnectionGuard databaseGuard{saveTagsConnectionName};
+            if (!databaseGuard.db.isOpen()) {
                 return;
             }
 
-            const TransactionGuard transactionGuard(db);
+            const TransactionGuard transactionGuard(databaseGuard.db);
 
             batchedCount(infos.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
                 if (!qApp) {
@@ -1141,7 +1134,7 @@ namespace unplayer
                     queryString.push_back(QLatin1String(" OR filePath = ?"));
                 }
 
-                QSqlQuery query(db);
+                QSqlQuery query(databaseGuard.db);
                 query.prepare(queryString);
                 for (size_t i = first, max = first + count; i < max; ++i) {
                     query.addBindValue(emptyIfNull(infos[i].filePath));
@@ -1154,7 +1147,7 @@ namespace unplayer
 
             std::unordered_map<QString, QString> mediaArtDirectoriesHash;
 
-            LibraryTracksAdder adder(db);
+            LibraryTracksAdder adder(databaseGuard.db);
 
             for (size_t i = 0, max = infos.size(); i < max; ++i) {
                 tagutils::Info& info = infos[i];

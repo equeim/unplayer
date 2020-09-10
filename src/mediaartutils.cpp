@@ -198,10 +198,9 @@ namespace unplayer
 
         void openDb()
         {
-            if (!mOpenedDb) {
-                mOpenedDb = true;
-                mDb = LibraryUtils::openDatabase(mDatabaseGuard.connectionName);
-                if (!mDb.isOpen()) {
+            if (!mDatabaseGuard.isOpened()) {
+                mDatabaseGuard.openDatabase();
+                if (!mDatabaseGuard.db.isOpen()) {
                     return;
                 }
 
@@ -332,9 +331,8 @@ namespace unplayer
             query.finish();
         }
 
-        DatabaseConnectionGuard mDatabaseGuard{QLatin1String("MediaArtProviderWorker")};
-        QSqlDatabase mDb;
-        bool mOpenedDb = false;
+        DatabaseConnectionGuard mDatabaseGuard{QLatin1String("MediaArtProviderWorker"), false};
+        QSqlDatabase& mDb = mDatabaseGuard.db;
 
         QSqlQuery mFileMediaArtQuery;
 
