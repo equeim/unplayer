@@ -170,7 +170,7 @@
         <location filename="../qml/components/GenresPage.qml" line="38"/>
         <location filename="../qml/components/TracksPage.qml" line="58"/>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Заменить очередь</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumPage.qml" line="153"/>
