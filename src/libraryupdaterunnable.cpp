@@ -131,7 +131,6 @@ namespace unplayer
             void stageChanged(unplayer::LibraryUtils::UpdateStage newStage);
             void foundFilesChanged(int found);
             void extractedFilesChanged(int extracted);
-            void finished();
         };
 
         LibraryUpdater::LibraryUpdater(std::atomic_bool& cancelFlag)
@@ -142,10 +141,6 @@ namespace unplayer
 
         void LibraryUpdater::update()
         {
-            const auto finishedGuard(qScopeGuard([&] {
-                emit finished();
-            }));
-
             if (mCancel) {
                 return;
             }
@@ -483,8 +478,8 @@ namespace unplayer
         QObject::connect(&updater, &LibraryUpdater::stageChanged, this, &LibraryUpdateRunnable::stageChanged);
         QObject::connect(&updater, &LibraryUpdater::foundFilesChanged, this, &LibraryUpdateRunnable::foundFilesChanged);
         QObject::connect(&updater, &LibraryUpdater::extractedFilesChanged, this, &LibraryUpdateRunnable::extractedFilesChanged);
-        QObject::connect(&updater, &LibraryUpdater::finished, this, &LibraryUpdateRunnable::finished);
         updater.update();
+        emit finished();
     }
 }
 
