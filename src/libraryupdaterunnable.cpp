@@ -89,16 +89,18 @@ namespace unplayer
             {
                 int id;
                 bool embeddedMediaArtDeleted;
+                bool removeFromDatabase;
                 long long modificationTime;
             };
 
             struct TracksInDbResult
             {
                 std::unordered_map<QString, TrackInDb> tracksInDb;
+                size_t tracksToRemoveFromDatabaseCount;
                 std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
             };
 
-            TracksInDbResult getTracksFromDatabase(std::vector<int>& tracksToRemove, std::unordered_map<QString, bool>& noMediaDirectories);
+            TracksInDbResult getTracksFromDatabase();
 
             struct TrackToAdd
             {
@@ -108,8 +110,6 @@ namespace unplayer
             };
 
             std::vector<TrackToAdd> scanFilesystem(TracksInDbResult& tracksInDbResult,
-                                                   std::vector<int>& tracksToRemove,
-                                                   std::unordered_map<QString, bool>& noMediaDirectories,
                                                    std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
             int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
@@ -190,8 +190,7 @@ namespace unplayer
 
                     std::vector<int> tracksToRemove;
                     {
-                        std::unordered_map<QString, bool> noMediaDirectories;
-                        TracksInDbResult trackInDbResult(getTracksFromDatabase(tracksToRemove, noMediaDirectories));
+                        TracksInDbResult trackInDbResult(getTracksFromDatabase());
                         auto& tracksInDb = trackInDbResult.tracksInDb;
 
                         if (mCancel) {
@@ -199,23 +198,31 @@ namespace unplayer
                         }
 
                         qInfo("Tracks in database: %zd (took %.3f s)", tracksInDb.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
-                        qInfo("Tracks to remove: %zd", tracksToRemove.size());
 
                         qInfo("Start scanning filesystem");
                         emit stageChanged(LibraryUtils::ScanningStage);
 
                         tracksToAdd = scanFilesystem(trackInDbResult,
-                                                     tracksToRemove,
-                                                     noMediaDirectories,
                                                      embeddedMediaArtFiles);
 
                         if (mCancel) {
                             return;
                         }
 
+                        if (trackInDbResult.tracksToRemoveFromDatabaseCount > 0) {
+                            tracksToRemove.reserve(tracksToRemove.size() + trackInDbResult.tracksToRemoveFromDatabaseCount);
+                            for (const auto& i : trackInDbResult.tracksInDb) {
+                                const TrackInDb& track = i.second;
+                                if (track.removeFromDatabase) {
+                                    tracksToRemove.push_back(track.id);
+                                }
+                            }
+                        }
+
                         qInfo("End scanning filesystem (took %.3f s), need to extract tags from %zu files", static_cast<double>(stageTimer.restart()) / 1000.0, tracksToAdd.size());
                     }
 
+                    qInfo("Tracks to remove: %zd", tracksToRemove.size());
                     if (!tracksToRemove.empty()) {
                         if (LibraryUtils::removeTracksFromDbByIds(tracksToRemove, mDb, mCancel)) {
                             qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
@@ -248,22 +255,22 @@ namespace unplayer
             qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
         }
 
-        LibraryUpdater::TracksInDbResult LibraryUpdater::getTracksFromDatabase(std::vector<int>& tracksToRemove, std::unordered_map<QString, bool>& noMediaDirectories)
+        LibraryUpdater::TracksInDbResult LibraryUpdater::getTracksFromDatabase()
         {
-            std::unordered_map<QString, TrackInDb> tracksInDb;
-            std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
+            TracksInDbResult result{};
+            std::unordered_map<QString, TrackInDb>& tracksInDb = result.tracksInDb;
+            std::unordered_map<QString, QString>& mediaArtDirectoriesInDbHash = result.mediaArtDirectoriesInDbHash;
 
             // Extract tracks from database
 
             std::unordered_map<QString, bool> embeddedMediaArtExistanceHash;
-            const auto embeddedMediaArtExistanceHashEnd(embeddedMediaArtExistanceHash.end());
-            const auto checkExistance = [&](QString&& mediaArt) {
+            const auto checkExistanceOfEmbeddedMediaArt = [&](QString&& mediaArt) {
                 if (mediaArt.isEmpty()) {
                     return true;
                 }
 
                 const auto found(embeddedMediaArtExistanceHash.find(mediaArt));
-                if (found == embeddedMediaArtExistanceHashEnd) {
+                if (found == embeddedMediaArtExistanceHash.end()) {
                     const QFileInfo fileInfo(mediaArt);
                     if (fileInfo.isFile() && fileInfo.isReadable()) {
                         embeddedMediaArtExistanceHash.insert({std::move(mediaArt), true});
@@ -276,57 +283,45 @@ namespace unplayer
                 return found->second;
             };
 
+            enum
+            {
+                IdField,
+                FilePathField,
+                ModificationTimeField,
+                DirectoryMediaArtField,
+                EmbeddedMediaArtField
+            };
+
             if (!mQuery.exec(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"))) {
                 qWarning() << "failed to get files from database" << mQuery.lastError();
                 mCancel = true;
                 return {};
             }
 
+            reserveFromQuery(tracksInDb, mQuery);
+
             while (mQuery.next()) {
                 if (mCancel) {
                     return {};
                 }
 
-                const int id(mQuery.value(0).toInt());
-                QString filePath(mQuery.value(1).toString());
+                const int id(mQuery.value(IdField).toInt());
+                QString filePath(mQuery.value(FilePathField).toString());
                 const QFileInfo fileInfo(filePath);
                 QString directory(fileInfo.path());
 
-                bool remove = false;
-                if (!fileInfo.exists() || fileInfo.isDir() || !fileInfo.isReadable()) {
-                    remove = true;
-                } else {
-                    remove = true;
-                    for (const QString& dir : mLibraryDirectories) {
-                        if (filePath.startsWith(dir)) {
-                            remove = false;
-                            break;
-                        }
-                    }
-                    if (!remove) {
-                        remove = isBlacklisted(filePath);
-                    }
-                    if (!remove) {
-                        remove = isNoMediaDirectory(directory, noMediaDirectories);
-                    }
-                }
-
-                if (remove) {
-                    tracksToRemove.push_back(id);
-                } else {
-                    tracksInDb.emplace(std::move(filePath), TrackInDb{id,
-                                                                      !checkExistance(mQuery.value(4).toString()),
-                                                                      mQuery.value(2).toLongLong()});
-                    mediaArtDirectoriesInDbHash.insert({std::move(directory), mQuery.value(3).toString()});
-                }
+                tracksInDb.emplace(std::move(filePath), TrackInDb{id,
+                                                                  !checkExistanceOfEmbeddedMediaArt(mQuery.value(EmbeddedMediaArtField).toString()),
+                                                                  true,
+                                                                  mQuery.value(ModificationTimeField).toLongLong()});
+                mediaArtDirectoriesInDbHash.insert({std::move(directory), mQuery.value(DirectoryMediaArtField).toString()});
             }
 
-            return {std::move(tracksInDb), std::move(mediaArtDirectoriesInDbHash)};
+            result.tracksToRemoveFromDatabaseCount = tracksInDb.size();
+            return result;
         }
 
         std::vector<LibraryUpdater::TrackToAdd> LibraryUpdater::scanFilesystem(LibraryUpdater::TracksInDbResult& tracksInDbResult,
-                                                                               std::vector<int>& tracksToRemove,
-                                                                               std::unordered_map<QString, bool>& noMediaDirectories,
                                                                                std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
         {
             std::vector<TrackToAdd> tracksToAdd;
@@ -336,10 +331,11 @@ namespace unplayer
             auto& mediaArtDirectoriesInDbHash = tracksInDbResult.mediaArtDirectoriesInDbHash;
             const auto mediaArtDirectoriesInDbHashEnd(mediaArtDirectoriesInDbHash.end());
 
+            std::unordered_map<QString, bool> noMediaDirectories;
             std::unordered_map<QString, QString> mediaArtDirectoriesHash;
 
-            QString directory;
-            QString directoryMediaArt;
+            QString currentDirectory;
+            QString currentDirectoryMediaArt;
 
             for (const QString& topLevelDirectory : mLibraryDirectories) {
                 if (mCancel) {
@@ -360,16 +356,26 @@ namespace unplayer
                         continue;
                     }
 
-                    if (fileInfo.path() != directory) {
-                        directory = fileInfo.path();
-                        directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, directory, mCancel);
+                    if (fileInfo.path() != currentDirectory) {
+                        // Entered new directory
 
-                        const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(directory));
+                        currentDirectory = fileInfo.path();
+
+                        if (isNoMediaDirectory(currentDirectory, noMediaDirectories)) {
+                            continue;
+                        }
+                        if (isBlacklisted(filePath)) {
+                            continue;
+                        }
+
+                        currentDirectoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, currentDirectory, mCancel);
+
+                        const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(currentDirectory));
                         if (directoryMediaArtInDb != mediaArtDirectoriesInDbHashEnd) {
-                            if (directoryMediaArtInDb->second != directoryMediaArt) {
+                            if (directoryMediaArtInDb->second != currentDirectoryMediaArt) {
                                 mQuery.prepare(QStringLiteral("UPDATE tracks SET directoryMediaArt = ? WHERE instr(filePath, ?) = 1"));
-                                mQuery.addBindValue(nullIfEmpty(directoryMediaArt));
-                                mQuery.addBindValue(QString(directory % QLatin1Char('/')));
+                                mQuery.addBindValue(nullIfEmpty(currentDirectoryMediaArt));
+                                mQuery.addBindValue(QString(currentDirectory % QLatin1Char('/')));
                                 if (!mQuery.exec()) {
                                     qWarning() << mQuery.lastError();
                                 }
@@ -381,25 +387,19 @@ namespace unplayer
                     const auto foundInDb(tracksInDb.find(filePath));
                     if (foundInDb == tracksInDbEnd) {
                         // File is not in database
-
-                        if (isNoMediaDirectory(fileInfo.path(), noMediaDirectories)) {
-                            continue;
-                        }
-
-                        if (isBlacklisted(filePath)) {
-                            continue;
-                        }
-
-                        tracksToAdd.push_back({std::move(filePath), directoryMediaArt, extension});
+                        tracksToAdd.push_back({std::move(filePath), currentDirectoryMediaArt, extension});
                         emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                     } else {
                         // File is in database
 
-                        const TrackInDb& file = foundInDb->second;
+                        TrackInDb& file = foundInDb->second;
 
                         const long long modificationTime = getLastModifiedTime(filePath);
                         if (modificationTime == file.modificationTime) {
                             // File has not changed
+                            file.removeFromDatabase = false;
+                            --tracksInDbResult.tracksToRemoveFromDatabaseCount;
+
                             if (file.embeddedMediaArtDeleted) {
                                 const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
                                                                                                    embeddedMediaArtFiles,
@@ -413,8 +413,7 @@ namespace unplayer
                             }
                         } else {
                             // File has changed
-                            tracksToRemove.push_back(file.id);
-                            tracksToAdd.push_back({foundInDb->first, directoryMediaArt, extension});
+                            tracksToAdd.push_back({foundInDb->first, currentDirectoryMediaArt, extension});
                             emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                         }
                     }
