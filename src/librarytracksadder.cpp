@@ -175,21 +175,32 @@ namespace unplayer
         if (query.exec(QLatin1String("SELECT id, title, artistId "
                                      "FROM albums "
                                      "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id"))) {
+            QString title;
             QVector<int> artistIds;
+
+            const auto addAlbum = [&] {
+                std::sort(artistIds.begin(), artistIds.end());
+                mAlbums.ids.emplace(QPair<QString, QVector<int>>(title, artistIds), mAlbums.lastId);
+                artistIds.clear();
+            };
+
             while (query.next()) {
-                {
-                    const int artistId = query.value(ArtistIdField).toInt();
-                    if (artistId != 0) {
-                        artistIds.push_back(artistId);
-                    }
-                }
                 const int id = query.value(IdField).toInt();
-                if (id != mAlbums.lastId && mAlbums.lastId != 0) {
-                    std::sort(artistIds.begin(), artistIds.end());
-                    mAlbums.ids.emplace(QPair<QString, QVector<int>>(query.value(TitleField).toString(), artistIds), mAlbums.lastId);
-                    artistIds.clear();
+                if (id != mAlbums.lastId) {
+                    if (mAlbums.lastId != 0) {
+                        addAlbum();
+                    }
+                    mAlbums.lastId = id;
+                    title = query.value(TitleField).toString();
                 }
-                mAlbums.lastId = id;
+                const int artistId = query.value(ArtistIdField).toInt();
+                if (artistId != 0) {
+                    artistIds.push_back(artistId);
+                }
+            }
+
+            if (mAlbums.lastId != 0) {
+                addAlbum();
             }
         } else {
             qWarning() << "Failed to exec query" << query.lastError();
