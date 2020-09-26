@@ -1155,7 +1155,7 @@ namespace unplayer
                 if (info.title.isEmpty()) {
                     info.title = fileInfo.fileName();
                 }
-                const QString directoryMediaArt(MediaArtUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, fileInfo.path(), false));
+                const QString directoryMediaArt(MediaArtUtils::findMediaArtForDirectory(fileInfo.path(), mediaArtDirectoriesHash));
                 adder.addTrackToDatabase(info.filePath, getLastModifiedTime(info.filePath), info, directoryMediaArt, embeddedMediaArt[i]);
             }
 

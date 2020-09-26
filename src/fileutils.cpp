@@ -58,6 +58,11 @@ namespace unplayer
 
         Extension extensionFromSuffix(const QString& suffix)
         {
+            return extensionFromSuffixLowered(suffix.toLower());
+        }
+
+        Extension extensionFromSuffixLowered(const QString& suffixLowered)
+        {
             static const std::unordered_map<QString, Extension> extensions{
                 {flacSuffix, Extension::FLAC},
                 {aacSuffix, Extension::AAC},
@@ -85,7 +90,7 @@ namespace unplayer
             };
             static const auto end(extensions.end());
 
-            const auto found(extensions.find(suffix.toLower()));
+            const auto found(extensions.find(suffixLowered));
             if (found == end) {
                 return Extension::Other;
             }

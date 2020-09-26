@@ -99,7 +99,7 @@ namespace unplayer
             QString directoryMediaArt;
             if (!onlyExtractEmbedded) {
                 std::unordered_map<QString, QString> mediaArtHash;
-                directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtHash, fileInfo.path());
+                directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(fileInfo.path(), mediaArtHash);
             }
             emit gotMediaArtForFile(filePath, {}, directoryMediaArt, info.mediaArtData);
         }
@@ -387,11 +387,11 @@ namespace unplayer
         return directory;
     }
 
-    QString MediaArtUtils::findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag)
+    QString MediaArtUtils::findMediaArtForDirectory(const QString& directoryPath, std::unordered_map<QString, QString>& directoriesMediaArtCache)
     {
         {
-            const auto found(mediaArtHash.find(directoryPath));
-            if (found != mediaArtHash.end()) {
+            const auto found(directoriesMediaArtCache.find(directoryPath));
+            if (found != directoriesMediaArtCache.end()) {
                 return found->second;
             }
         }
@@ -399,26 +399,40 @@ namespace unplayer
         static const std::unordered_set<QString> suffixes{QLatin1String("jpeg"), QLatin1String("jpg"), QLatin1String("png")};
         QDirIterator iterator(directoryPath, QDir::Files | QDir::Readable);
         while (iterator.hasNext()) {
-            if (cancelFlag) {
-                return QString();
-            }
             const QString filePath(iterator.next());
-            const QFileInfo fileInfo(iterator.fileInfo());
-            if (contains(suffixes, fileInfo.suffix().toLower())) {
-                const QString baseName(fileInfo.completeBaseName().toLower());
-                if (baseName == QLatin1String("cover") ||
-                        baseName == QLatin1String("front") ||
-                        baseName == QLatin1String("folder") ||
-                        baseName.startsWith(QLatin1String("albumart"))) {
-                    mediaArtHash.insert({directoryPath, filePath});
-                    return filePath;
-                }
-                continue;
+            if (isMediaArtFile(QFileInfo(filePath))) {
+                directoriesMediaArtCache.emplace(directoryPath, filePath);
+                return filePath;
             }
         }
 
-        mediaArtHash.insert({directoryPath, QString()});
+        directoriesMediaArtCache.emplace(directoryPath, QString());
         return QString();
+    }
+
+    bool MediaArtUtils::isMediaArtFile(const QFileInfo& fileInfo)
+    {
+        return isMediaArtFile(fileInfo, fileInfo.suffix());
+    }
+
+    bool MediaArtUtils::isMediaArtFile(const QFileInfo& fileInfo, const QString& suffix)
+    {
+        return isMediaArtFileSuffixLowered(fileInfo, suffix.toLower());
+    }
+
+    bool MediaArtUtils::isMediaArtFileSuffixLowered(const QFileInfo& fileInfo, const QString& suffixLowered)
+    {
+        static const std::unordered_set<QString> suffixes{QLatin1String("jpeg"), QLatin1String("jpg"), QLatin1String("png")};
+        if (contains(suffixes, suffixLowered)) {
+            const QString baseName(fileInfo.baseName().toLower());
+            if (baseName == QLatin1String("cover") ||
+                    baseName == QLatin1String("front") ||
+                    baseName == QLatin1String("folder") ||
+                    baseName.startsWith(QLatin1String("albumart"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     std::unordered_map<QByteArray, QString> MediaArtUtils::getEmbeddedMediaArtFiles()

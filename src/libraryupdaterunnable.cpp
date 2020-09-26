@@ -90,33 +90,85 @@ namespace unplayer
                 int id;
                 bool embeddedMediaArtDeleted;
                 bool removeFromDatabase;
+                bool checkedIfDirectoryMediaArtChanged;
                 long long modificationTime;
             };
 
             struct TracksInDbResult
             {
                 std::unordered_map<QString, TrackInDb> tracksInDb;
-                size_t tracksToRemoveFromDatabaseCount;
+                /**
+                 * @brief Map of directory paths to their media art which are in db
+                 */
                 std::unordered_map<QString, QString> mediaArtDirectoriesInDbHash;
             };
 
+            /**
+             * @brief Extracts information about existing tracks in db
+             * @return `TracksInDbResult` instance
+             */
             TracksInDbResult getTracksFromDatabase();
 
             struct TrackToAdd
             {
                 QString filePath;
                 QString directoryMediaArt;
+                bool foundDirectoryMediaArt;
                 fileutils::Extension extension;
             };
 
-            std::vector<TrackToAdd> scanFilesystem(TracksInDbResult& tracksInDbResult,
-                                                   std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
+            struct ScanFilesystemResult
+            {
+                std::vector<TrackToAdd> tracksToAdd;
+                size_t tracksToRemoveFromDatabaseCount;
 
-            int addTracks(const std::vector<TrackToAdd>& tracksToAdd,
-                          std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
-                          const QElapsedTimer& stageTimer);
+                struct ChangedDirectoryMediaArt
+                {
+                    QString newDirectoryMediaArt;
+                    /**
+                     * @brief Ids of tracks which need their directory media art to be updated
+                     */
+                    std::vector<int> trackIds{};
+                };
+                /**
+                 * @brief Map of directory paths to `LibraryUpdater::ScanFilesystemResult::ChangedDirectoryMediaArt` instances
+                 */
+                std::unordered_map<QString, ChangedDirectoryMediaArt> changedDirectoriesMediaArt;
+            };
 
-            bool isBlacklisted(const QString& path);
+            /**
+             * @brief Iterates over library directories, finds new tracks, determines whether existing ones changed or removed
+             * @param tracksInDbResult      Return value from `getTracksFromDatabase()`
+             * @param embeddedMediaArtFiles Map of embedded media art files' MD5 hashes to their paths
+             * @return `ScanFilesystemResult` instance
+             */
+            ScanFilesystemResult scanFilesystem(TracksInDbResult& tracksInDbResult,
+                                                std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
+
+            /**
+             * @brief Checks if this directory has media art in db and it has changed
+             * @param directoryPath              Path to directory
+             * @param newDirectoryMediaArt       New media art for this directory
+             * @param directoriesMediaArtInDb    Map of directory paths to their media art which are in db
+             * @param changedDirectoriesMediaArt Map of directory paths to `LibraryUpdater::ScanFilesystemResult::ChangedDirectoryMediaArt` instances
+             * @return Pointer to vector of existing track ids for this directory,
+             *         or nullptr if this directory media art has not changed or is not in db
+             */
+            static std::vector<int>* checkIfDirectoryMediaArtIsInDbAndChanged(const QString& directoryPath,
+                                                                              const QString& newDirectoryMediaArt,
+                                                                              std::unordered_map<QString, QString>& directoriesMediaArtInDb,
+                                                                              std::unordered_map<QString, ScanFilesystemResult::ChangedDirectoryMediaArt>& changedDrectoriesMediaArt);
+
+            bool isPathBlacklisted(const QString& path);
+
+            /**
+             * @brief Update tracks which directory media art was changed
+             * @param changedDirectoriesMediaArt Map of directory paths to `LibraryUpdater::ScanFilesystemResult::ChangedDirectoryMediaArt` instances
+             */
+            void updateChangedDirectoriesMediaArt(std::unordered_map<QString, ScanFilesystemResult::ChangedDirectoryMediaArt> changedDirectoriesMediaArt);
+
+            int addTracks(std::vector<TrackToAdd> tracksToAdd,
+                          std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles);
 
             std::atomic_bool& mCancel;
 
@@ -126,6 +178,7 @@ namespace unplayer
             QSqlDatabase& mDb{mDatabaseGuard.db};
             QSqlQuery mQuery{mDb};
             QMimeDatabase mMimeDb;
+            QElapsedTimer mStageTimer;
 
         signals:
             void stageChanged(unplayer::LibraryUtils::UpdateStage newStage);
@@ -148,8 +201,7 @@ namespace unplayer
             qInfo("Start updating database");
             QElapsedTimer timer;
             timer.start();
-            QElapsedTimer stageTimer;
-            stageTimer.start();
+            mStageTimer.start();
 
             // Open database
 
@@ -179,34 +231,34 @@ namespace unplayer
                 std::vector<TrackToAdd> tracksToAdd;
 
                 {
-                    // Library directories
-                    mLibraryDirectories = prepareLibraryDirectories(Settings::instance()->libraryDirectories());
-                    mBlacklistedDirectories = prepareLibraryDirectories(Settings::instance()->blacklistedDirectories());
-
                     std::vector<int> tracksToRemove;
                     {
-                        TracksInDbResult trackInDbResult(getTracksFromDatabase());
-                        auto& tracksInDb = trackInDbResult.tracksInDb;
+                        TracksInDbResult tracksInDbResult(getTracksFromDatabase());
+                        auto& tracksInDb = tracksInDbResult.tracksInDb;
 
                         if (mCancel) {
                             return;
                         }
 
-                        qInfo("Tracks in database: %zd (took %.3f s)", tracksInDb.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
+                        qInfo("Tracks in database: %zd (took %.3f s)", tracksInDb.size(), static_cast<double>(mStageTimer.restart()) / 1000.0);
 
                         qInfo("Start scanning filesystem");
                         emit stageChanged(LibraryUtils::ScanningStage);
 
-                        tracksToAdd = scanFilesystem(trackInDbResult,
-                                                     embeddedMediaArtFiles);
+                        // Library directories
+                        mLibraryDirectories = prepareLibraryDirectories(Settings::instance()->libraryDirectories());
+                        mBlacklistedDirectories = prepareLibraryDirectories(Settings::instance()->blacklistedDirectories());
+
+                        ScanFilesystemResult scanFilesystemResult(scanFilesystem(tracksInDbResult, embeddedMediaArtFiles));
+                        tracksToAdd = std::move(scanFilesystemResult.tracksToAdd);
 
                         if (mCancel) {
                             return;
                         }
 
-                        if (trackInDbResult.tracksToRemoveFromDatabaseCount > 0) {
-                            tracksToRemove.reserve(tracksToRemove.size() + trackInDbResult.tracksToRemoveFromDatabaseCount);
-                            for (const auto& i : trackInDbResult.tracksInDb) {
+                        if (scanFilesystemResult.tracksToRemoveFromDatabaseCount > 0) {
+                            tracksToRemove.reserve(scanFilesystemResult.tracksToRemoveFromDatabaseCount);
+                            for (const auto& i : tracksInDbResult.tracksInDb) {
                                 const TrackInDb& track = i.second;
                                 if (track.removeFromDatabase) {
                                     tracksToRemove.push_back(track.id);
@@ -214,14 +266,17 @@ namespace unplayer
                             }
                         }
 
-                        qInfo("End scanning filesystem (took %.3f s), need to extract tags from %zu files", static_cast<double>(stageTimer.restart()) / 1000.0, tracksToAdd.size());
+                        qInfo("End scanning filesystem (took %.3f s), need to extract tags from %zu files", static_cast<double>(mStageTimer.restart()) / 1000.0, tracksToAdd.size());
+
+                        updateChangedDirectoriesMediaArt(std::move(scanFilesystemResult.changedDirectoriesMediaArt));
                     }
 
-                    qInfo("Tracks to remove: %zd", tracksToRemove.size());
                     if (!tracksToRemove.empty()) {
+                        qInfo("Tracks to remove: %zd", tracksToRemove.size());
                         if (LibraryUtils::removeTracksFromDbByIds(tracksToRemove, mDb, mCancel)) {
-                            qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(stageTimer.restart()) / 1000.0);
+                            qInfo("Removed %zu tracks from database (took %.3f s)", tracksToRemove.size(), static_cast<double>(mStageTimer.restart()) / 1000.0);
                         }
+                        tracksToRemove.clear();
                     }
                 }
 
@@ -232,8 +287,8 @@ namespace unplayer
                 if (!tracksToAdd.empty()) {
                     qInfo("Start extracting tags from files");
                     emit stageChanged(LibraryUtils::ExtractingStage);
-                    const int count = addTracks(tracksToAdd, embeddedMediaArtFiles, stageTimer);
-                    qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(stageTimer.restart()) / 1000.0);
+                    const int count = addTracks(std::move(tracksToAdd), embeddedMediaArtFiles);
+                    qInfo("Added %d tracks to database (took %.3f s)", count, static_cast<double>(mStageTimer.restart()) / 1000.0);
                 }
             }
 
@@ -246,7 +301,7 @@ namespace unplayer
             LibraryUtils::removeUnusedCategories(mDb);
             LibraryUtils::removeUnusedMediaArt(mDb, mCancel);
 
-            qInfo("End updating database (last stage took %.3f s)", static_cast<double>(stageTimer.elapsed()) / 1000.0);
+            qInfo("End updating database (last stage took %.3f s)", static_cast<double>(mStageTimer.elapsed()) / 1000.0);
             qInfo("Total time: %.3f s", static_cast<double>(timer.elapsed()) / 1000.0);
         }
 
@@ -302,87 +357,99 @@ namespace unplayer
 
                 const int id(mQuery.value(IdField).toInt());
                 QString filePath(mQuery.value(FilePathField).toString());
-                const QFileInfo fileInfo(filePath);
-                QString directory(fileInfo.path());
+
+                mediaArtDirectoriesInDbHash.insert({QFileInfo(filePath).path(), mQuery.value(DirectoryMediaArtField).toString()});
 
                 tracksInDb.emplace(std::move(filePath), TrackInDb{id,
                                                                   !checkExistanceOfEmbeddedMediaArt(mQuery.value(EmbeddedMediaArtField).toString()),
                                                                   true,
+                                                                  false,
                                                                   mQuery.value(ModificationTimeField).toLongLong()});
-                mediaArtDirectoriesInDbHash.insert({std::move(directory), mQuery.value(DirectoryMediaArtField).toString()});
             }
 
-            result.tracksToRemoveFromDatabaseCount = tracksInDb.size();
             return result;
         }
 
-        std::vector<LibraryUpdater::TrackToAdd> LibraryUpdater::scanFilesystem(LibraryUpdater::TracksInDbResult& tracksInDbResult,
-                                                                               std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
+        LibraryUpdater::ScanFilesystemResult LibraryUpdater::scanFilesystem(LibraryUpdater::TracksInDbResult& tracksInDbResult,
+                                                                            std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
         {
-            std::vector<TrackToAdd> tracksToAdd;
+            ScanFilesystemResult result{};
+            std::vector<TrackToAdd>& tracksToAdd = result.tracksToAdd;
+            auto& changedDirectoriesMediaArt = result.changedDirectoriesMediaArt;
 
             auto& tracksInDb = tracksInDbResult.tracksInDb;
             const auto tracksInDbEnd(tracksInDb.end());
-            auto& mediaArtDirectoriesInDbHash = tracksInDbResult.mediaArtDirectoriesInDbHash;
-            const auto mediaArtDirectoriesInDbHashEnd(mediaArtDirectoriesInDbHash.end());
+            auto& directoriesMediaArtInDb = tracksInDbResult.mediaArtDirectoriesInDbHash;
 
-            std::unordered_map<QString, bool> noMediaDirectories;
-            std::unordered_map<QString, QString> mediaArtDirectoriesHash;
+            result.tracksToRemoveFromDatabaseCount = tracksInDb.size();
+
+            std::unordered_map<QString, bool> noMediaDirectoriesCache;
+            std::unordered_map<QString, QString> directoriesMediaArt;
 
             QString currentDirectory;
             QString currentDirectoryMediaArt;
+            bool foundCurrentDirectoryMediaArt = false;
+            std::vector<int>* currentDirectoryChangedMediaArtTrackIds = nullptr;
+
+            const auto onFoundCurrentDirectoryMediaArt = [&](const QString& directoryMediaArt) {
+                currentDirectoryMediaArt = directoryMediaArt;
+                foundCurrentDirectoryMediaArt = true;
+                currentDirectoryChangedMediaArtTrackIds = checkIfDirectoryMediaArtIsInDbAndChanged(currentDirectory, currentDirectoryMediaArt, directoriesMediaArtInDb, changedDirectoriesMediaArt);
+            };
 
             for (const QString& topLevelDirectory : mLibraryDirectories) {
                 if (mCancel) {
-                    return tracksToAdd;
+                    return result;
                 }
 
                 QDirIterator iterator(topLevelDirectory, QDir::Files | QDir::Readable, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
                 while (iterator.hasNext()) {
                     if (mCancel) {
-                        return tracksToAdd;
+                        return result;
                     }
 
                     QString filePath(iterator.next());
                     const QFileInfo fileInfo(iterator.fileInfo());
 
-                    const fileutils::Extension extension = fileutils::extensionFromSuffix(fileInfo.suffix());
-                    if (extension == fileutils::Extension::Other) {
-                        continue;
+                    {
+                        const QString directoryPath(fileInfo.path());
+                        if (directoryPath != currentDirectory) {
+                            // Entered new directory
+                            currentDirectory = directoryPath;
+
+                            if (isNoMediaDirectory(currentDirectory, noMediaDirectoriesCache)) {
+                                continue;
+                            }
+                            if (isPathBlacklisted(fileInfo.filePath())) {
+                                continue;
+                            }
+
+                            currentDirectoryChangedMediaArtTrackIds = nullptr;
+
+                            const auto foundMediaArt(directoriesMediaArt.find(currentDirectory));
+                            if (foundMediaArt != directoriesMediaArt.end()) {
+                                onFoundCurrentDirectoryMediaArt(foundMediaArt->second);
+                            } else {
+                                currentDirectoryMediaArt.clear();
+                                foundCurrentDirectoryMediaArt = false;
+                            }
+                        }
                     }
 
-                    if (fileInfo.path() != currentDirectory) {
-                        // Entered new directory
-
-                        currentDirectory = fileInfo.path();
-
-                        if (isNoMediaDirectory(currentDirectory, noMediaDirectories)) {
-                            continue;
+                    const QString suffixLowered(fileInfo.suffix().toLower());
+                    const fileutils::Extension extension = fileutils::extensionFromSuffixLowered(suffixLowered);
+                    if (extension == fileutils::Extension::Other) {
+                        if (!foundCurrentDirectoryMediaArt && MediaArtUtils::isMediaArtFileSuffixLowered(fileInfo, suffixLowered)) {
+                            directoriesMediaArt.emplace(currentDirectory, filePath);
+                            onFoundCurrentDirectoryMediaArt(filePath);
                         }
-                        if (isBlacklisted(filePath)) {
-                            continue;
-                        }
-
-                        currentDirectoryMediaArt = MediaArtUtils::findMediaArtForDirectory(mediaArtDirectoriesHash, currentDirectory, mCancel);
-
-                        const auto directoryMediaArtInDb(mediaArtDirectoriesInDbHash.find(currentDirectory));
-                        if (directoryMediaArtInDb != mediaArtDirectoriesInDbHashEnd) {
-                            if (directoryMediaArtInDb->second != currentDirectoryMediaArt) {
-                                mQuery.prepare(QStringLiteral("UPDATE tracks SET directoryMediaArt = ? WHERE instr(filePath, ?) = 1"));
-                                mQuery.addBindValue(nullIfEmpty(currentDirectoryMediaArt));
-                                mQuery.addBindValue(QString(currentDirectory % QLatin1Char('/')));
-                                if (!mQuery.exec()) {
-                                    qWarning() << mQuery.lastError();
-                                }
-                            }
-                            mediaArtDirectoriesInDbHash.erase(directoryMediaArtInDb);
-                        }
+                        continue;
                     }
 
                     const auto foundInDb(tracksInDb.find(filePath));
                     if (foundInDb == tracksInDbEnd) {
                         // File is not in database
-                        tracksToAdd.push_back({std::move(filePath), currentDirectoryMediaArt, extension});
+                        tracksToAdd.push_back({std::move(filePath), currentDirectoryMediaArt, foundCurrentDirectoryMediaArt, extension});
                         emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                     } else {
                         // File is in database
@@ -393,7 +460,7 @@ namespace unplayer
                         if (modificationTime == file.modificationTime) {
                             // File has not changed
                             file.removeFromDatabase = false;
-                            --tracksInDbResult.tracksToRemoveFromDatabaseCount;
+                            --result.tracksToRemoveFromDatabaseCount;
 
                             if (file.embeddedMediaArtDeleted) {
                                 const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
@@ -406,26 +473,119 @@ namespace unplayer
                                     qWarning() << mQuery.lastError();
                                 }
                             }
+
+                            if (foundCurrentDirectoryMediaArt) {
+                                file.checkedIfDirectoryMediaArtChanged = true;
+                                if (currentDirectoryChangedMediaArtTrackIds) {
+                                    currentDirectoryChangedMediaArtTrackIds->push_back(file.id);
+                                }
+                            }
                         } else {
                             // File has changed
-                            tracksToAdd.push_back({foundInDb->first, currentDirectoryMediaArt, extension});
+                            tracksToAdd.push_back({std::move(filePath), currentDirectoryMediaArt, foundCurrentDirectoryMediaArt, extension});
                             emit foundFilesChanged(static_cast<int>(tracksToAdd.size()));
                         }
                     }
                 }
             }
 
-            return tracksToAdd;
+            // Process directory media art for tracks which didn't have it yet at the moment of iteration
+
+            const auto directoriesMediaArtEnd(directoriesMediaArt.end());
+
+            for (auto& i : tracksInDb) {
+                TrackInDb& trackInDb = i.second;
+                if (!trackInDb.removeFromDatabase && !trackInDb.checkedIfDirectoryMediaArtChanged) {
+                    const QString directoryPath(QFileInfo(i.first).path());
+                    std::vector<int>* trackIds = nullptr;
+                    const auto foundMediaArt(directoriesMediaArt.find(directoryPath));
+                    if (foundMediaArt != directoriesMediaArtEnd) {
+                        trackIds = checkIfDirectoryMediaArtIsInDbAndChanged(directoryPath, foundMediaArt->second, directoriesMediaArtInDb, changedDirectoriesMediaArt);
+                    } else {
+                        trackIds = checkIfDirectoryMediaArtIsInDbAndChanged(directoryPath, QString(), directoriesMediaArtInDb, changedDirectoriesMediaArt);
+                    }
+                    if (trackIds) {
+                        trackIds->push_back(trackInDb.id);
+                    }
+                    trackInDb.checkedIfDirectoryMediaArtChanged = true;
+                }
+            }
+
+            for (TrackToAdd& trackToAdd : tracksToAdd) {
+                if (!trackToAdd.foundDirectoryMediaArt) {
+                    const auto foundMediaArt(directoriesMediaArt.find(QFileInfo(trackToAdd.filePath).path()));
+                    if (foundMediaArt != directoriesMediaArtEnd) {
+                        trackToAdd.directoryMediaArt = foundMediaArt->second;
+                    }
+                    trackToAdd.foundDirectoryMediaArt = true;
+                }
+            }
+
+            return result;
         }
 
-        int LibraryUpdater::addTracks(const std::vector<LibraryUpdater::TrackToAdd>& tracksToAdd,
-                                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles,
-                                      const QElapsedTimer& stageTimer)
+        std::vector<int>* LibraryUpdater::checkIfDirectoryMediaArtIsInDbAndChanged(const QString& directoryPath,
+                                                                                   const QString& newDirectoryMediaArt,
+                                                                                   std::unordered_map<QString, QString>& directoriesMediaArtInDb,
+                                                                                   std::unordered_map<QString, ScanFilesystemResult::ChangedDirectoryMediaArt>& changedDirectoriesMediaArt)
+        {
+            const auto directoryMediaArtInDb(directoriesMediaArtInDb.find(directoryPath));
+            if (directoryMediaArtInDb != directoriesMediaArtInDb.end()) {
+                // This directory is in db and we haven't checked it yet
+                if (directoryMediaArtInDb->second != newDirectoryMediaArt) {
+                    // Media art has changed
+                    const auto inserted(changedDirectoriesMediaArt.emplace(directoryPath, ScanFilesystemResult::ChangedDirectoryMediaArt{newDirectoryMediaArt}));
+                    if (inserted.second) {
+                        return &inserted.first->second.trackIds;
+                    }
+                }
+                // Remove it from db map
+                directoriesMediaArtInDb.erase(directoryMediaArtInDb);
+            } else {
+                // This directory is not in db or we already checked it
+                // See if its media art changed
+                const auto changedDirectoryMediaArt(changedDirectoriesMediaArt.find(directoryPath));
+                if (changedDirectoryMediaArt != changedDirectoriesMediaArt.end()) {
+                    // Media art has changed
+                    return &changedDirectoryMediaArt->second.trackIds;
+                }
+            }
+            return nullptr;
+        }
+
+        bool LibraryUpdater::isPathBlacklisted(const QString& path)
+        {
+            for (const QString& directory : mBlacklistedDirectories) {
+                if (path.startsWith(directory)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void LibraryUpdater::updateChangedDirectoriesMediaArt(std::unordered_map<QString, LibraryUpdater::ScanFilesystemResult::ChangedDirectoryMediaArt> changedDirectoriesMediaArt)
+        {
+            if (!changedDirectoriesMediaArt.empty()) {
+                qInfo("Update changed media art");
+                for (const auto& i : changedDirectoriesMediaArt) {
+                    batchedCount(i.second.trackIds.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
+                        mQuery.prepare(QLatin1String("UPDATE tracks SET directoryMediaArt = ? WHERE id IN (") % makeInStringFromIds(i.second.trackIds, first, count));
+                        mQuery.addBindValue(nullIfEmpty(i.second.newDirectoryMediaArt));
+                        if (!mQuery.exec()) {
+                            qWarning() << mQuery.lastError();
+                        }
+                    });
+                }
+            }
+        }
+
+        int LibraryUpdater::addTracks(std::vector<LibraryUpdater::TrackToAdd> tracksToAdd,
+                                      std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles)
         {
             int count = 0;
 
             LibraryTracksAdder adder(mDb);
-            for (const TrackToAdd& track : tracksToAdd) {
+            for (TrackToAdd& track : tracksToAdd) {
                 if (mCancel) {
                     return count;
                 }
@@ -446,23 +606,13 @@ namespace unplayer
                                                                                  embeddedMediaArtFiles,
                                                                                  mMimeDb));
                     if ((count % 100) == 0) {
-                        qInfo("Extracted tags from %d of %zu files (%.3f s elapsed)", count, tracksToAdd.size(), static_cast<double>(stageTimer.elapsed()) / 1000.0);
+                        qInfo("Extracted tags from %d of %zu files (%.3f s elapsed)", count, tracksToAdd.size(), static_cast<double>(mStageTimer.elapsed()) / 1000.0);
                     }
                     emit extractedFilesChanged(count);
                 }
             }
 
             return count;
-        }
-
-        bool LibraryUpdater::isBlacklisted(const QString& path)
-        {
-            for (const QString& directory : mBlacklistedDirectories) {
-                if (path.startsWith(directory)) {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 

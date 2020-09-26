@@ -19,13 +19,13 @@
 #ifndef UNPLAYER_MEDIAARTPROVIDER_H
 #define UNPLAYER_MEDIAARTPROVIDER_H
 
-#include <atomic>
 #include <cstdint>
 #include <unordered_map>
 
 #include <QObject>
 #include <QString>
 
+class QFileInfo;
 class QMimeDatabase;
 class QThread;
 
@@ -41,7 +41,10 @@ namespace unplayer
         static void deleteInstance();
 
         static const QString& mediaArtDirectory();
-        static QString findMediaArtForDirectory(std::unordered_map<QString, QString>& mediaArtHash, const QString& directoryPath, const std::atomic_bool& cancelFlag = false);
+        static QString findMediaArtForDirectory(const QString& directoryPath, std::unordered_map<QString, QString>& directoriesMediaArtCache);
+        static bool isMediaArtFile(const QFileInfo& fileInfo);
+        static bool isMediaArtFile(const QFileInfo& fileInfo, const QString& suffix);
+        static bool isMediaArtFileSuffixLowered(const QFileInfo& fileInfo, const QString& suffixLowered);
         static std::unordered_map<QByteArray, QString> getEmbeddedMediaArtFiles();
         static QString saveEmbeddedMediaArt(const QByteArray& data, std::unordered_map<QByteArray, QString>& embeddedMediaArtFiles, const QMimeDatabase& mimeDb);
 

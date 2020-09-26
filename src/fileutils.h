@@ -46,6 +46,7 @@ namespace unplayer
         };
 
         Extension extensionFromSuffix(const QString& suffix);
+        Extension extensionFromSuffixLowered(const QString& suffixLowered);
         bool isExtensionSupported(const QString& suffix);
         bool isVideoExtensionSupported(const QString& suffix);
     }
