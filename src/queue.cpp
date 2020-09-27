@@ -476,9 +476,9 @@ namespace unplayer
         std::unordered_map<QUrl, std::shared_ptr<QueueTrack>> oldTracks;
         oldTracks.reserve(mTracks.size());
 
-        for (auto& track : mTracks) {
+        for (const auto& track : mTracks) {
             if (track->url.isLocalFile()) {
-                oldTracks.emplace(track->url, std::move(track));
+                oldTracks.emplace(track->url, track);
             }
         }
 
