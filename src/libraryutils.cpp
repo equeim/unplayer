@@ -259,7 +259,7 @@ namespace unplayer
                 qInfo("Removed %d albums", count);
             }
         } else {
-            qWarning() << query.lastError();
+            qWarning() << "Failed to remove unused albums:" << query.lastError();
         }
         if (query.exec(QLatin1String("DELETE FROM artists "
                                      "WHERE id IN ("
@@ -272,7 +272,7 @@ namespace unplayer
                 qInfo("Removed %d artists", count);
             }
         } else {
-            qWarning() << query.lastError();
+            qWarning() << "Failed to remove unused artists:" << query.lastError();
         }
         if (query.exec(QLatin1String("DELETE FROM genres "
                                      "WHERE id IN ("
@@ -285,7 +285,7 @@ namespace unplayer
                 qInfo("Removed %d genres", count);
             }
         } else {
-            qWarning() << query.lastError();
+            qWarning() << "Failed to remove unused genres:" << query.lastError();
         }
     }
 
@@ -344,73 +344,73 @@ namespace unplayer
         QSqlQuery query(db);
 
         if (!query.exec(QLatin1String("CREATE TABLE tracks ("
-                                      "    id INTEGER PRIMARY KEY,"
-                                      "    filePath TEXT NOT NULL,"
-                                      "    modificationTime INTEGER NOT NULL,"
-                                      "    title TEXT COLLATE NOCASE,"
-                                      "    year INTEGER,"
-                                      "    trackNumber INTEGER,"
-                                      "    discNumber TEXT,"
-                                      "    duration INTEGER NOT NULL,"
-                                      "    directoryMediaArt TEXT,"
-                                      "    embeddedMediaArt TEXT"
+                                        "id INTEGER PRIMARY KEY,"
+                                        "filePath TEXT NOT NULL,"
+                                        "modificationTime INTEGER NOT NULL,"
+                                        "title TEXT COLLATE NOCASE,"
+                                        "year INTEGER,"
+                                        "trackNumber INTEGER,"
+                                        "discNumber TEXT,"
+                                        "duration INTEGER NOT NULL,"
+                                        "directoryMediaArt TEXT,"
+                                        "embeddedMediaArt TEXT"
                                       ")"))) {
             qWarning() << "Failed to create 'tracks' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE artists ("
-                                      "    id INTEGER PRIMARY KEY,"
-                                      "    title TEXT NOT NULL COLLATE NOCASE"
+                                        "id INTEGER PRIMARY KEY,"
+                                        "title TEXT NOT NULL COLLATE NOCASE"
                                       ")"))) {
             qWarning() << "Failed to create 'artists' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE albums ("
-                                      "    id INTEGER PRIMARY KEY,"
-                                      "    title TEXT NOT NULL COLLATE NOCASE,"
-                                      "    userMediaArt TEXT"
+                                        "id INTEGER PRIMARY KEY,"
+                                        "title TEXT NOT NULL COLLATE NOCASE,"
+                                        "userMediaArt TEXT"
                                       ")"))) {
             qWarning() << "Failed to create 'albums' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE genres ("
-                                      "    id INTEGER PRIMARY KEY,"
-                                      "    title TEXT NOT NULL COLLATE NOCASE"
+                                        "id INTEGER PRIMARY KEY,"
+                                        "title TEXT NOT NULL COLLATE NOCASE"
                                       ")"))) {
             qWarning() << "Failed to create 'genres' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE tracks_artists ("
-                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
+                                        "trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                        "artistId INTEGER NOT NULL REFERENCES artists(id)"
                                       ")"))) {
             qWarning() << "Failed to create 'tracks_artists' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE tracks_albums ("
-                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                                      "    albumId INTEGER NOT NULL REFERENCES albums(id)"
+                                        "trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                        "albumId INTEGER NOT NULL REFERENCES albums(id)"
                                       ")"))) {
             qWarning() << "Failed to create 'tracks_albums' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE albums_artists ("
-                                      "    albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
-                                      "    artistId INTEGER NOT NULL REFERENCES artists(id)"
+                                        "albumId INTEGER NOT NULL REFERENCES albums(id) ON DELETE CASCADE,"
+                                        "artistId INTEGER NOT NULL REFERENCES artists(id)"
                                       ")"))) {
             qWarning() << "Failed to create 'albums_artists' table" << query.lastError();
             return false;
         }
 
         if (!query.exec(QLatin1String("CREATE TABLE tracks_genres ("
-                                      "    trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
-                                      "    genreId INTEGER NOT NULL REFERENCES genres(id)"
+                                        "trackId INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,"
+                                        "genreId INTEGER NOT NULL REFERENCES genres(id)"
                                       ")"))) {
             qWarning() << "Failed to create 'tracks_genres' table" << query.lastError();
             return false;

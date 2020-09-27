@@ -150,12 +150,17 @@ namespace unplayer
 
     void LibraryTracksAdder::getArtistsOrGenres(LibraryTracksAdder::ArtistsOrGenres& ids)
     {
+        enum
+        {
+            IdField,
+            TitleField
+        };
         QSqlQuery query(mDb);
         if (query.exec(QLatin1String("SELECT id, title FROM ") % ids.table)) {
             if (reserveFromQuery(ids.ids, query) > 0) {
                 while (query.next()) {
-                    ids.lastId = query.value(0).toInt();
-                    ids.ids.emplace(query.value(1).toString(), ids.lastId);
+                    ids.lastId = query.value(IdField).toInt();
+                    ids.ids.emplace(query.value(TitleField).toString(), ids.lastId);
                 }
             }
         } else {
