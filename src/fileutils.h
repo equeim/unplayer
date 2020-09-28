@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Unplayer
  * Copyright (C) 2015-2020 Alexey Rochev <equeim@gmail.com>
  *
@@ -45,10 +45,27 @@ namespace unplayer
             Other
         };
 
+        enum class AudioCodec
+        {
+            FLAC,
+            AAC,
+            ALAC,
+            MP3,
+            Vorbis,
+            Opus,
+            APE,
+            WAVPACK,
+            RAW,
+            Unknown
+        };
+
         Extension extensionFromSuffix(const QString& suffix);
         Extension extensionFromSuffixLowered(const QString& suffixLowered);
         bool isExtensionSupported(const QString& suffix);
         bool isVideoExtensionSupported(const QString& suffix);
+
+        bool isAudioCodecSupported(AudioCodec audioCodec);
+        QString audioCodecDisplayName(AudioCodec fileType);
     }
 }
 

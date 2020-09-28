@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Unplayer
  * Copyright (C) 2015-2019 Alexey Rochev <equeim@gmail.com>
  *
@@ -49,8 +49,13 @@ namespace unplayer
         Q_PROPERTY(QString genre READ genre NOTIFY loaded)
         Q_PROPERTY(long long fileSize READ fileSize NOTIFY loaded)
         Q_PROPERTY(QString mimeType READ mimeType NOTIFY loaded)
+        Q_PROPERTY(QString audioCodec READ audioCodec NOTIFY loaded)
         Q_PROPERTY(int duration READ duration NOTIFY loaded)
         Q_PROPERTY(QString bitrate READ bitrate NOTIFY loaded)
+        Q_PROPERTY(bool hasBitDepth READ hasBitDepth NOTIFY loaded)
+        Q_PROPERTY(QString bitDepth READ bitDepth NOTIFY loaded)
+        Q_PROPERTY(QString sampleRate READ sampleRate NOTIFY loaded)
+        Q_PROPERTY(int channels READ channels NOTIFY loaded)
 
     public:
         const QString& filePath() const;
@@ -74,13 +79,18 @@ namespace unplayer
         QString genre() const;
         long long fileSize() const;
         const QString& mimeType() const;
+        QString audioCodec() const;
         int duration() const;
         QString bitrate() const;
+        bool hasBitDepth() const;
+        QString bitDepth() const;
+        QString sampleRate() const;
+        int channels() const;
 
     private:
         QString mFilePath;
         QString mFileName;
-        tagutils::Info mInfo;
+        tagutils::Info mInfo{};
         QString mMimeType;
         long long mFileSize;
 

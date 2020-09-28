@@ -70,14 +70,31 @@ namespace unplayer
             int trackNumber;
             QStringList genres;
             QString discNumber;
+
+            fileutils::AudioCodec audioCodec{fileutils::AudioCodec::Unknown};
             int duration;
             int bitrate;
+            int bitDepth;
+            int sampleRate;
+            int channels;
+
             QByteArray mediaArtData;
-            bool fileTypeValid;
+
+            bool fileTypeMatchesExtension;
             bool canReadTags;
         };
 
+        struct AudioCodecInfo
+        {
+            fileutils::AudioCodec audioCodec{fileutils::AudioCodec::Unknown};
+            int bitDepth;
+            int sampleRate;
+            int bitrate;
+        };
+
         Info getTrackInfo(const QString& filePath, fileutils::Extension extension, const QMimeDatabase& mimeDb);
+
+        AudioCodecInfo getTrackAudioCodecInfo(const QString& filePath, fileutils::Extension extension);
 
         template<bool IncrementTrackNumber>
         std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);

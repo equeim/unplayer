@@ -133,6 +133,11 @@ namespace unplayer
         return mMimeType;
     }
 
+    QString TrackInfo::audioCodec() const
+    {
+        return fileutils::audioCodecDisplayName(mInfo.audioCodec);
+    }
+
     int TrackInfo::duration() const
     {
         return mInfo.duration;
@@ -140,6 +145,26 @@ namespace unplayer
 
     QString TrackInfo::bitrate() const
     {
-        return qApp->translate("unplayer", "%1 kB/s").arg(mInfo.bitrate);
+        return qApp->translate("unplayer", "%1 kbit/s").arg(mInfo.bitrate);
+    }
+
+    bool TrackInfo::hasBitDepth() const
+    {
+        return mInfo.bitDepth != 0;
+    }
+
+    QString TrackInfo::bitDepth() const
+    {
+        return qApp->translate("unplayer", "%1 bits").arg(mInfo.bitDepth);
+    }
+
+    QString TrackInfo::sampleRate() const
+    {
+        return qApp->translate("unplayer", "%1 Hz").arg(mInfo.sampleRate);
+    }
+
+    int TrackInfo::channels() const
+    {
+        return mInfo.channels;
     }
 }

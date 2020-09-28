@@ -122,5 +122,43 @@ namespace unplayer
             };
             return contains(videoMimeTypesExtensions, suffix.toLower());
         }
+
+        bool isAudioCodecSupported(AudioCodec audioCodec)
+        {
+            switch (audioCodec) {
+            case AudioCodec::ALAC:
+            case AudioCodec::Unknown:
+                return false;
+            default:
+                return true;
+            }
+        }
+
+        QString audioCodecDisplayName(AudioCodec fileType)
+        {
+            switch (fileType) {
+            case AudioCodec::FLAC:
+                return QLatin1String("FLAC");
+            case AudioCodec::AAC:
+                return QLatin1String("AAC");
+            case AudioCodec::ALAC:
+                return QLatin1String("ALAC");
+            case AudioCodec::MP3:
+                return QLatin1String("MP3");
+            case AudioCodec::Vorbis:
+                return QLatin1String("Vorbis");
+            case AudioCodec::Opus:
+                return QLatin1String("Opus");
+            case AudioCodec::APE:
+                return QLatin1String("APE");
+            case AudioCodec::WAVPACK:
+                return QLatin1String("WavPack");
+            case AudioCodec::RAW:
+                return QLatin1String("RAW");
+            case AudioCodec::Unknown:
+            default:
+                return QString();
+            }
+        }
     }
 }

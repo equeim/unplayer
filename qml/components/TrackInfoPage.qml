@@ -127,6 +127,12 @@ Page {
 
             DetailItem {
                 visible: trackInfo.canReadTags
+                label: qsTranslate("unplayer", "Audio codec")
+                value: trackInfo.audioCodec
+            }
+
+            DetailItem {
+                visible: trackInfo.canReadTags
                 label: qsTranslate("unplayer", "Duration")
                 value: Format.formatDuration(trackInfo.duration, trackInfo.duration >= 3600 ? Format.DurationLong
                                                                                             : Format.DurationShort)
@@ -136,6 +142,24 @@ Page {
                 visible: trackInfo.canReadTags
                 label: qsTranslate("unplayer", "Bitrate")
                 value: trackInfo.bitrate
+            }
+
+            DetailItem {
+                visible: trackInfo.hasBitDepth
+                label: qsTranslate("unplayer", "Bit depth")
+                value: trackInfo.bitDepth
+            }
+
+            DetailItem {
+                visible: trackInfo.canReadTags
+                label: qsTranslate("unplayer", "Sample rate")
+                value: trackInfo.sampleRate
+            }
+
+            DetailItem {
+                visible: trackInfo.canReadTags
+                label: qsTranslate("unplayer", "Channels")
+                value: trackInfo.channels
             }
         }
 
