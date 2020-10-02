@@ -101,6 +101,7 @@ namespace unplayer
 
         qmlRegisterSingletonType<Utils>(url, major, minor, "Utils", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Utils(); });
         qmlRegisterType<TrackInfo>(url, major, minor, "TrackInfo");
+        qmlRegisterType<TrackAudioCodecInfo>(url, major, minor, "TrackAudioCodecInfo");
         qmlRegisterType<LibraryDirectoriesModel>(url, major, minor, "LibraryDirectoriesModel");
 
         qmlRegisterSingletonType<Tags>(url, major, minor, "Tags", [](QQmlEngine*, QJSEngine*) -> QObject* { return new Tags(); });

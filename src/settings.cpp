@@ -35,6 +35,7 @@ namespace unplayer
         const QLatin1String useDirectoryMediaArtKey("useDirectoryMediaArt");
         const QLatin1String restorePlayerStateKey("restorePlayerState");
         const QLatin1String showVideoFilesKey("showVideoFiles");
+        const QLatin1String showNowPlayingCodecInfoKey("showNowPlayingCodecInfo");
 
         const QLatin1String artistsSortDescendingKey("artistsSortDescending");
 
@@ -145,6 +146,19 @@ namespace unplayer
     void Settings::setShowVideoFiles(bool show)
     {
         mSettings->setValue(showVideoFilesKey, show);
+    }
+
+    bool Settings::showNowPlayingCodecInfo() const
+    {
+        return mSettings->value(showNowPlayingCodecInfoKey, true).toBool();
+    }
+
+    void Settings::setShowNowPlayingCodecInfo(bool show)
+    {
+        if (show != showNowPlayingCodecInfo()) {
+            mSettings->setValue(showNowPlayingCodecInfoKey, show);
+            emit showNowPlayingCodecInfoChanged(show);
+        }
     }
 
     bool Settings::artistsSortDescending() const

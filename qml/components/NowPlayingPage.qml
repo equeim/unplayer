@@ -271,68 +271,111 @@ Page {
                 }
             }
 
-            Row {
-                id: controls
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: largeScreen ? Theme.paddingLarge : Theme.paddingMedium
 
-                Switch {
-                    anchors.verticalCenter: parent.verticalCenter
-                    checked: Unplayer.Player.queue.shuffle
-                    icon.source: "image://theme/icon-m-shuffle"
-                    onCheckedChanged: Unplayer.Player.queue.shuffle = checked
-                }
+            Item {
+                id: controlsParent
+                width: parent.width
+                height: controls.height + (codecInfoLabelLoader.active ? Theme.paddingLarge : 0)
 
-                IconButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    icon.source: "image://theme/icon-m-previous"
-                    onClicked: Unplayer.Player.queue.previous()
-                }
+                Row {
+                    id: controls
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: largeScreen ? Theme.paddingLarge : Theme.paddingMedium
 
-                IconButton {
-                    id: playPauseButton
+                    Switch {
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked: Unplayer.Player.queue.shuffle
+                        icon.source: "image://theme/icon-m-shuffle"
+                        onCheckedChanged: Unplayer.Player.queue.shuffle = checked
+                    }
 
-                    property bool playing: Unplayer.Player.playing
+                    IconButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        icon.source: "image://theme/icon-m-previous"
+                        onClicked: Unplayer.Player.queue.previous()
+                    }
 
-                    anchors.verticalCenter: parent.verticalCenter
-                    icon.source: playing ? "image://theme/icon-l-pause" :
-                                           "image://theme/icon-l-play"
+                    IconButton {
+                        id: playPauseButton
 
-                    onClicked: {
-                        if (playing) {
-                            Unplayer.Player.pause()
-                        } else {
-                            Unplayer.Player.play()
+                        property bool playing: Unplayer.Player.playing
+
+                        anchors.verticalCenter: parent.verticalCenter
+                        icon.source: playing ? "image://theme/icon-l-pause" :
+                                               "image://theme/icon-l-play"
+
+                        onClicked: {
+                            if (playing) {
+                                Unplayer.Player.pause()
+                            } else {
+                                Unplayer.Player.play()
+                            }
+                        }
+                    }
+
+                    IconButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        icon.source: "image://theme/icon-m-next"
+                        onClicked: Unplayer.Player.queue.next()
+                    }
+
+                    Switch {
+                        id: repeatSwitch
+
+                        anchors.verticalCenter: parent.verticalCenter
+                        icon.source: "image://theme/icon-m-repeat"
+                        checked: Unplayer.Player.queue.repeatMode !== Unplayer.Queue.NoRepeat
+                        automaticCheck: false
+
+                        onClicked: Unplayer.Player.queue.changeRepeatMode()
+
+                        Label {
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                                bottom: parent.bottom
+                                bottomMargin: Theme.paddingMedium
+                            }
+                            visible: Unplayer.Player.queue.repeatMode === Unplayer.Queue.RepeatOne
+                            color: repeatSwitch.pressed ? Theme.highlightColor : Theme.primaryColor
+                            font.pixelSize: Theme.fontSizeExtraSmall
+                            text: "1"
                         }
                     }
                 }
 
-                IconButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    icon.source: "image://theme/icon-m-next"
-                    onClicked: Unplayer.Player.queue.next()
-                }
+                Loader {
+                    id: codecInfoLabelLoader
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    active: Unplayer.Settings.showNowPlayingCodecInfo
+                    sourceComponent: Component {
+                        Label {
+                            visible: audioCodecInfo.sampleRate !== 0
 
-                Switch {
-                    id: repeatSwitch
+                            font.pixelSize: Theme.fontSizeExtraSmall
+                            color: Theme.secondaryColor
+                            text: {
+                                var str
+                                if (audioCodecInfo.bitDepth !== 0) {
+                                    str = qsTranslate("unplayer", "%L1-bit \u00b7 %2 kHz \u00b7 %L3 kbit/s \u00b7 %4")
+                                        .arg(audioCodecInfo.bitDepth)
+                                } else if (audioCodecInfo.sampleRate !== 0) {
+                                    str = qsTranslate("unplayer", "%1 kHz \u00b7 %L2 kbit/s \u00b7 %3")
+                                } else {
+                                    return ""
+                                }
+                                return str.arg((audioCodecInfo.sampleRate / 1000.0).toLocaleString(Qt.locale(), 'f', 1))
+                                    .arg(audioCodecInfo.bitrate)
+                                    .arg(audioCodecInfo.audioCodec)
+                            }
 
-                    anchors.verticalCenter: parent.verticalCenter
-                    icon.source: "image://theme/icon-m-repeat"
-                    checked: Unplayer.Player.queue.repeatMode !== Unplayer.Queue.NoRepeat
-                    automaticCheck: false
-
-                    onClicked: Unplayer.Player.queue.changeRepeatMode()
-
-                    Label {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            bottom: parent.bottom
-                            bottomMargin: Theme.paddingMedium
+                            Unplayer.TrackAudioCodecInfo {
+                                id: audioCodecInfo
+                                filePath: Unplayer.Player.queue.currentFilePath
+                            }
                         }
-                        visible: Unplayer.Player.queue.repeatMode === Unplayer.Queue.RepeatOne
-                        color: repeatSwitch.pressed ? Theme.highlightColor : Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeExtraSmall
-                        text: "1"
                     }
                 }
             }

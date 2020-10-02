@@ -66,6 +66,12 @@ Page {
                 Component.onCompleted: useDirectoryMediaArt = Unplayer.Settings.useDirectoryMediaArt
             }
 
+            TextSwitch {
+                text: qsTranslate("unplayer", "Show audio codec information on Now Playing screen")
+                checked: Unplayer.Settings.showNowPlayingCodecInfo
+                onCheckedChanged: Unplayer.Settings.showNowPlayingCodecInfo = checked
+            }
+
             SectionHeader {
                 text: qsTranslate("unplayer", "Directories")
             }

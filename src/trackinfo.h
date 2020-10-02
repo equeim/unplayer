@@ -97,6 +97,35 @@ namespace unplayer
     signals:
         void loaded();
     };
+
+    class TrackAudioCodecInfo : public QObject
+    {
+        Q_OBJECT
+        Q_PROPERTY(bool loaded READ isLoaded NOTIFY loadedChanged)
+        Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
+        Q_PROPERTY(int sampleRate READ sampleRate NOTIFY loadedChanged)
+        Q_PROPERTY(int bitDepth READ bitDepth NOTIFY loadedChanged)
+        Q_PROPERTY(int bitrate READ bitrate NOTIFY loadedChanged)
+        Q_PROPERTY(QString audioCodec READ audioCodec NOTIFY loadedChanged)
+    public:
+        bool isLoaded() const;
+
+        const QString& filePath() const;
+        void setFilePath(const QString& filePath);
+
+        int sampleRate() const;
+        int bitDepth() const;
+        int bitrate() const;
+        QString audioCodec() const;
+    private:
+        QString mFilePath;
+
+        tagutils::AudioCodecInfo mInfo{};
+        bool mLoaded = false;
+    signals:
+        void loadedChanged(bool loaded);
+        void filePathChanged(const QString& filePath);
+    };
 }
 
 #endif // UNPLAYER_TRACKINFO_H

@@ -21,8 +21,10 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QMimeDatabase>
+#include <QtConcurrentRun>
 
 #include "fileutils.h"
+#include "utilsfunctions.h"
 
 namespace unplayer
 {
@@ -166,5 +168,60 @@ namespace unplayer
     int TrackInfo::channels() const
     {
         return mInfo.channels;
+    }
+
+    bool TrackAudioCodecInfo::isLoaded() const
+    {
+        return mLoaded;
+    }
+
+    int TrackAudioCodecInfo::sampleRate() const
+    {
+        return mInfo.sampleRate;
+    }
+
+    int TrackAudioCodecInfo::bitDepth() const
+    {
+        return mInfo.bitDepth;
+    }
+
+    int TrackAudioCodecInfo::bitrate() const
+    {
+        return mInfo.bitrate;
+    }
+
+    QString TrackAudioCodecInfo::audioCodec() const
+    {
+        return fileutils::audioCodecDisplayName(mInfo.audioCodec);
+    }
+
+    const QString& TrackAudioCodecInfo::filePath() const
+    {
+        return mFilePath;
+    }
+
+    void TrackAudioCodecInfo::setFilePath(const QString& filePath)
+    {
+        if (filePath != mFilePath) {
+            mFilePath = filePath;
+            emit filePathChanged(filePath);
+            if (mLoaded) {
+                mInfo = {};
+                mLoaded = false;
+                emit loadedChanged(mLoaded);
+            }
+            if (!filePath.isEmpty()) {
+                const auto future(QtConcurrent::run([filePath] {
+                    return tagutils::getTrackAudioCodecInfo(filePath, fileutils::extensionFromSuffix(QFileInfo(filePath).suffix()));
+                }));
+                onFutureFinished(future, this, [=](const tagutils::AudioCodecInfo& info) {
+                    if (mFilePath == filePath && !mLoaded) {
+                        mInfo = info;
+                        mLoaded = true;
+                        emit loadedChanged(true);
+                    }
+                });
+            }
+        }
     }
 }
