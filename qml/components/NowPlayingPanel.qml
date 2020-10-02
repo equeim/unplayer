@@ -161,9 +161,14 @@ DockedPanel {
 
                     Row {
                         id: buttonsRow
+
+                        readonly property bool pageIsLandscape: pageStack.currentPage && pageStack.currentPage.isLandscape
+                        readonly property bool centerButtons: pageIsLandscape && largeScreen
+
                         anchors {
-                            right: largeScreen ? undefined : parent.right
-                            horizontalCenter: largeScreen ? parent.horizontalCenter : undefined
+                            right: centerButtons ? undefined : parent.right
+                            rightMargin: (!centerButtons && pageIsLandscape) ? Theme.horizontalPageMargin : 0
+                            horizontalCenter: centerButtons ? parent.horizontalCenter : undefined
                         }
                         height: parent.height
                         spacing: largeScreen ? Theme.paddingLarge : 0
