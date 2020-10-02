@@ -128,7 +128,7 @@ namespace unplayer
                     /**
                      * @brief Ids of tracks which need their directory media art to be updated
                      */
-                    std::vector<int> trackIds{};
+                    std::vector<int> trackIds;
                 };
                 /**
                  * @brief Map of directory paths to `LibraryUpdater::ScanFilesystemResult::ChangedDirectoryMediaArt` instances
@@ -534,7 +534,7 @@ namespace unplayer
                 // This directory is in db and we haven't checked it yet
                 if (directoryMediaArtInDb->second != newDirectoryMediaArt) {
                     // Media art has changed
-                    const auto inserted(changedDirectoriesMediaArt.emplace(directoryPath, ScanFilesystemResult::ChangedDirectoryMediaArt{newDirectoryMediaArt}));
+                    const auto inserted(changedDirectoriesMediaArt.emplace(directoryPath, ScanFilesystemResult::ChangedDirectoryMediaArt{newDirectoryMediaArt, {}}));
                     if (inserted.second) {
                         return &inserted.first->second.trackIds;
                     }
