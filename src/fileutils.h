@@ -55,7 +55,7 @@ namespace unplayer
             Opus,
             APE,
             WAVPACK,
-            RAW,
+            LPCM,
             Unknown
         };
 

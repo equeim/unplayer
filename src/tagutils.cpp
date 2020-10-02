@@ -599,7 +599,7 @@ namespace unplayer
                     processor.processOnlyMimeType(matroskaMimeType, AudioCodec::Unknown);
                     break;
                 case Extension::WAV:
-                    processor.processFile(TagLib::RIFF::WAV::File(filePath.toUtf8()), AudioCodec::RAW);
+                    processor.processFile(TagLib::RIFF::WAV::File(filePath.toUtf8()), AudioCodec::LPCM);
                     break;
                 case Extension::WAVPACK:
                     processor.processFile(TagLib::WavPack::File(filePath.toUtf8()), AudioCodec::WAVPACK);

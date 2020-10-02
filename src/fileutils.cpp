@@ -153,8 +153,8 @@ namespace unplayer
                 return QLatin1String("APE");
             case AudioCodec::WAVPACK:
                 return QLatin1String("WavPack");
-            case AudioCodec::RAW:
-                return QLatin1String("RAW");
+            case AudioCodec::LPCM:
+                return QLatin1String("LPCM");
             case AudioCodec::Unknown:
             default:
                 return QString();
