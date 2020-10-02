@@ -40,6 +40,12 @@ namespace unplayer
 
         Q_INVOKABLE static QString escapeRegExp(const QString& string);
 
+        /**
+         * @brief Hack to disable SilicaFlickable's overshoot fading animation
+         * @param silicaFlickable SilicaFlickable instance
+         */
+        Q_INVOKABLE static void disableSilicaFlickableBounceEffect(QObject* silicaFlickable);
+
         static QString homeDirectory();
         static QString sdcardPath(bool emptyIfNotMounted = false);
 

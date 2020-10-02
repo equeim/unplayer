@@ -218,4 +218,16 @@ namespace unplayer
         file.open(QIODevice::ReadOnly);
         return QLatin1String(file.readAll());
     }
+
+    void Utils::disableSilicaFlickableBounceEffect(QObject* silicaFlickable)
+    {
+        if (silicaFlickable) {
+            for (QObject* child : silicaFlickable->children()) {
+                if (child->inherits("DeclarativeBounceEffect")) {
+                    child->setProperty("flickable", QVariant::fromValue<QObject*>(nullptr));
+                    break;
+                }
+            }
+        }
+    }
 }

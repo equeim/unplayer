@@ -102,7 +102,16 @@ Page {
     ]
 
     SilicaFlickable {
+        id: flickable
+
         anchors.fill: parent
+        contentWidth: parent.width
+        contentHeight: parent.height
+
+        // SilicaFlickable's overshoot fading animation behaves weird when Flickable's
+        // content item size is equal to the size of Flickable itself and PushUpMenu is present
+        // Use this hack to disable overshoot animation
+        Component.onCompleted: Unplayer.Utils.disableSilicaFlickableBounceEffect(flickable)
 
         PullDownMenu {
             MenuItem {
