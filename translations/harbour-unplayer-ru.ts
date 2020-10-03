@@ -55,7 +55,7 @@
         <location filename="../qml/components/GenresPage.qml" line="56"/>
         <location filename="../qml/components/GenresPage.qml" line="127"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="39"/>
-        <location filename="../qml/components/NowPlayingPage.qml" line="115"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="124"/>
         <location filename="../qml/components/QueuePage.qml" line="64"/>
         <location filename="../qml/components/QueuePage.qml" line="130"/>
         <location filename="../qml/components/TracksPage.qml" line="76"/>
@@ -128,7 +128,7 @@
         <location filename="../qml/components/GenresPage.qml" line="75"/>
         <location filename="../qml/components/GenresPage.qml" line="132"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="44"/>
-        <location filename="../qml/components/NowPlayingPage.qml" line="110"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="119"/>
         <location filename="../qml/components/QueuePage.qml" line="84"/>
         <location filename="../qml/components/QueuePage.qml" line="136"/>
         <location filename="../qml/components/TagEditDialog.qml" line="101"/>
@@ -291,7 +291,7 @@
     </message>
     <message>
         <location filename="../qml/components/BusyPanelBindings.qml" line="41"/>
-        <location filename="../qml/components/NowPlayingPanel.qml" line="262"/>
+        <location filename="../qml/components/NowPlayingPanel.qml" line="267"/>
         <source>Removing files...</source>
         <translation>Удаление файлов...</translation>
     </message>
@@ -351,7 +351,7 @@
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="126"/>
         <location filename="../qml/components/MainPage.qml" line="127"/>
-        <location filename="../qml/components/SettingsPage.qml" line="70"/>
+        <location filename="../qml/components/SettingsPage.qml" line="76"/>
         <source>Directories</source>
         <translation>Каталоги</translation>
     </message>
@@ -364,7 +364,7 @@
     <message>
         <location filename="../qml/components/DirectoriesPage.qml" line="164"/>
         <location filename="../qml/components/LibraryTrackDelegate.qml" line="29"/>
-        <location filename="../qml/components/NowPlayingPage.qml" line="121"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="130"/>
         <location filename="../qml/components/PlaylistPage.qml" line="92"/>
         <location filename="../qml/components/QueuePage.qml" line="125"/>
         <location filename="../qml/components/TrackInfoPage.qml" line="49"/>
@@ -469,7 +469,7 @@
     <message>
         <location filename="../qml/components/LibraryPage.qml" line="46"/>
         <location filename="../qml/components/MainPage.qml" line="51"/>
-        <location filename="../qml/components/SettingsPage.qml" line="80"/>
+        <location filename="../qml/components/SettingsPage.qml" line="86"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
@@ -637,8 +637,8 @@
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="102"/>
-        <location filename="../qml/components/SettingsPage.qml" line="110"/>
+        <location filename="../qml/components/SettingsPage.qml" line="108"/>
+        <location filename="../qml/components/SettingsPage.qml" line="116"/>
         <source>Library Directories</source>
         <translation>Каталоги библиотеки</translation>
     </message>
@@ -828,71 +828,91 @@
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="130"/>
+        <source>Audio codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/TrackInfoPage.qml" line="136"/>
         <source>Duration</source>
         <translation>Длительность</translation>
     </message>
     <message>
-        <location filename="../qml/components/TrackInfoPage.qml" line="137"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="143"/>
         <source>Bitrate</source>
         <translation>Битрейт</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="122"/>
+        <location filename="../qml/components/TrackInfoPage.qml" line="149"/>
+        <source>Bit depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/TrackInfoPage.qml" line="155"/>
+        <source>Sample rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/TrackInfoPage.qml" line="161"/>
+        <source>Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils.cpp" line="123"/>
         <source>%1 h %2 m</source>
         <translation>%1 ч %2 м</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="126"/>
+        <location filename="../src/utils.cpp" line="127"/>
         <source>%1 m %2 s</source>
         <translation>%1 м %2 с</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="129"/>
+        <location filename="../src/utils.cpp" line="130"/>
         <source>%1 s</source>
         <translation>%1 с</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="149"/>
+        <location filename="../src/utils.cpp" line="150"/>
         <source>%1 B</source>
         <translation>%1 Б</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="151"/>
+        <location filename="../src/utils.cpp" line="152"/>
         <source>%1 KiB</source>
         <translation>%1 КиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="153"/>
+        <location filename="../src/utils.cpp" line="154"/>
         <source>%1 MiB</source>
         <translation>%1 МиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="155"/>
+        <location filename="../src/utils.cpp" line="156"/>
         <source>%1 GiB</source>
         <translation>%1 ГиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="157"/>
+        <location filename="../src/utils.cpp" line="158"/>
         <source>%1 TiB</source>
         <translation>%1 ТиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="159"/>
+        <location filename="../src/utils.cpp" line="160"/>
         <source>%1 PiB</source>
         <translation>%1 ПиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="161"/>
+        <location filename="../src/utils.cpp" line="162"/>
         <source>%1 EiB</source>
         <translation>%1 ЭиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="163"/>
+        <location filename="../src/utils.cpp" line="164"/>
         <source>%1 ZiB</source>
         <translation>%1 ЗиБ</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="165"/>
+        <location filename="../src/utils.cpp" line="166"/>
         <source>%1 YiB</source>
         <translation>%1 ЙиБ</translation>
     </message>
@@ -912,19 +932,29 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPage.qml" line="128"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="137"/>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
         <translation>Останавливаться после воспр.: &lt;font color=&quot;%1&quot;&gt;да&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPage.qml" line="129"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="138"/>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
         <translation>Останавливаться после воспр.: &lt;font color=&quot;%1&quot;&gt;нет&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPage.qml" line="134"/>
+        <location filename="../qml/components/NowPlayingPage.qml" line="143"/>
         <source>Clear Queue</source>
         <translation>Очистить очередь</translation>
+    </message>
+    <message>
+        <location filename="../qml/components/NowPlayingPage.qml" line="371"/>
+        <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/NowPlayingPage.qml" line="374"/>
+        <source>%1 kHz · %L2 kbit/s · %3</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="48"/>
@@ -942,12 +972,17 @@
         <translation>Предпочитать обложку, расположенную в виде отдельного файла в каталоге музыкального файла, вместо извлеченной из музыкального файла</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="74"/>
+        <location filename="../qml/components/SettingsPage.qml" line="70"/>
+        <source>Show audio codec information on Now Playing screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/SettingsPage.qml" line="80"/>
         <source>Show video files</source>
         <translation>Показывать видеофайлы</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="84"/>
+        <location filename="../qml/components/SettingsPage.qml" line="90"/>
         <source>Open library on startup</source>
         <translation>Открывать библиотеку при запуске</translation>
     </message>
@@ -956,15 +991,14 @@
         <translation type="vanished">Использовать тег &quot;Исполнитель альбома&quot; вместо &quot;Исполнитель&quot;, если он установлен</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="132"/>
-        <location filename="../qml/components/SettingsPage.qml" line="140"/>
+        <location filename="../qml/components/SettingsPage.qml" line="138"/>
+        <location filename="../qml/components/SettingsPage.qml" line="146"/>
         <source>Blacklisted Directories</source>
         <translation>Черный список каталогов</translation>
     </message>
     <message>
-        <location filename="../src/trackinfo.cpp" line="143"/>
         <source>%1 kB/s</source>
-        <translation>%1 кБ/с</translation>
+        <translation type="vanished">%1 кБ/с</translation>
     </message>
     <message>
         <location filename="../qml/components/AlbumsSortPage.qml" line="40"/>
@@ -1093,17 +1127,17 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPanel.qml" line="256"/>
+        <location filename="../qml/components/NowPlayingPanel.qml" line="261"/>
         <source>Adding tracks...</source>
         <translation>Добавление треков...</translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPanel.qml" line="259"/>
+        <location filename="../qml/components/NowPlayingPanel.qml" line="264"/>
         <source>Saving tags...</source>
         <translation>Сохранение тегов...</translation>
     </message>
     <message>
-        <location filename="../qml/components/NowPlayingPanel.qml" line="380"/>
+        <location filename="../qml/components/NowPlayingPanel.qml" line="385"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -1111,6 +1145,31 @@
         <location filename="../qml/components/TagEditDialogListItem.qml" line="99"/>
         <source>Add</source>
         <translation>Добавить</translation>
+    </message>
+    <message>
+        <location filename="../src/player.cpp" line="70"/>
+        <source>File format is not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/player.cpp" line="72"/>
+        <source>Error playing file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/trackinfo.cpp" line="150"/>
+        <source>%1 kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/trackinfo.cpp" line="160"/>
+        <source>%1 bits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/trackinfo.cpp" line="165"/>
+        <source>%1 Hz</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

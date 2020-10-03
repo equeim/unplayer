@@ -449,7 +449,7 @@
     </message>
     <message>
         <source>%1 kB/s</source>
-        <translation>%1 kB/s</translation>
+        <translation type="vanished">%1 kB/s</translation>
     </message>
     <message>
         <source>%1 h %2 m</source>
@@ -725,6 +725,54 @@
     </message>
     <message>
         <source>Replace queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 kHz · %L2 kbit/s · %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show audio codec information on Now Playing screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bit depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File format is not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error playing file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 bits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 Hz</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
