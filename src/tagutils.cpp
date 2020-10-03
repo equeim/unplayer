@@ -597,9 +597,6 @@ namespace unplayer
                 case Extension::APE:
                     processor.processFile(TagLib::APE::File(filePath.toUtf8()), AudioCodec::APE);
                     break;
-                case Extension::MKA:
-                    processor.processOnlyMimeType(matroskaMimeType, AudioCodec::Unknown);
-                    break;
                 case Extension::WAV:
                     processor.processFile(TagLib::RIFF::WAV::File(filePath.toUtf8()), AudioCodec::LPCM);
                     break;

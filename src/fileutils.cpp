@@ -48,8 +48,6 @@ namespace unplayer
 
             const QLatin1String apeSuffix("ape");
 
-            const QLatin1String mkaSuffix("mka");
-
             const QLatin1String wavSuffix("wav");
 
             const QLatin1String aiffSuffix("aiff");
@@ -80,8 +78,6 @@ namespace unplayer
                 {opusSuffix, Extension::OPUS},
 
                 {apeSuffix, Extension::APE},
-
-                {mkaSuffix, Extension::MKA},
 
                 {wavSuffix, Extension::WAV},
 

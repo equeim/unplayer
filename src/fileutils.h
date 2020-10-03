@@ -38,7 +38,6 @@ namespace unplayer
             OPUS,
 
             APE,
-            MKA,
 
             WAV,
             AIFF,
