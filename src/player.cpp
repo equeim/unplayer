@@ -25,6 +25,10 @@
 
 #include <MprisPlayer>
 
+#ifdef UNPLAYER_SAILFISHOS
+#include <notification.h>
+#endif
+
 #include "queue.h"
 #include "settings.h"
 
@@ -57,6 +61,23 @@ namespace unplayer
                 return Queue::NoRepeat;
             }
         }
+
+#ifdef UNPLAYER_SAILFISHOS
+        void showErrorNotification(QMediaPlayer::Error error, const QString& errorString)
+        {
+            QString summary;
+            if (error == QMediaPlayer::FormatError) {
+                summary = qApp->translate("unplayer", "File format is not supported");
+            } else {
+                summary = qApp->translate("unplayer", "Error playing file");
+            }
+            Notification notification;
+            notification.setIsTransient(true);
+            notification.setPreviewSummary(summary);
+            notification.setPreviewBody(errorString);
+            notification.publish();
+        }
+#endif
     }
 
     Player* Player::instance()
@@ -174,8 +195,15 @@ namespace unplayer
                     mQueue->nextOnEos();
                 }
             } else if (status == InvalidMedia) {
-                qWarning() << error() << errorString();
+                qWarning("Invalid media");
             }
+        });
+
+        QObject::connect(this, static_cast<void(Player::*)(Error)>(&Player::error), this, [=](Error error) {
+            qWarning() << "error" << error << errorString();
+#ifdef UNPLAYER_SAILFISHOS
+            showErrorNotification(error, errorString());
+#endif
         });
 
         QObject::connect(this, &Player::positionChanged, this, [=](qint64 position) {

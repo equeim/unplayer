@@ -17,6 +17,7 @@ BuildRequires: pkgconfig(Qt5Multimedia)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Sql)
 BuildRequires: pkgconfig(sailfishapp)
+BuildRequires: pkgconfig(nemonotifications-qt5)
 BuildRequires: cmake
 BuildRequires: desktop-file-utils
 
