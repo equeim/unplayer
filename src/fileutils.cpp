@@ -54,9 +54,6 @@ namespace unplayer
 
             const QLatin1String aiffSuffix("aiff");
             const QLatin1String aifSuffix("aif");
-
-            //const QLatin1String wvSuffix("wv");
-            //const QLatin1String wvpSuffix("wvp");
         }
 
         Extension extensionFromSuffix(const QString& suffix)
@@ -90,9 +87,6 @@ namespace unplayer
 
                 {aiffSuffix, Extension::AIFF},
                 {aifSuffix, Extension::AIFF},
-
-                //{wvSuffix, Extension::WAVPACK},
-                //{wvpSuffix, Extension::WAVPACK}
             };
             static const auto end(extensions.end());
 
@@ -158,8 +152,6 @@ namespace unplayer
                 return QLatin1String("Opus");
             case AudioCodec::APE:
                 return QLatin1String("APE");
-            case AudioCodec::WAVPACK:
-                return QLatin1String("WavPack");
             case AudioCodec::LPCM:
                 return QLatin1String("LPCM");
             case AudioCodec::AIFFC:

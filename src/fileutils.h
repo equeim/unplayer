@@ -39,7 +39,6 @@ namespace unplayer
 
             APE,
             MKA,
-            WAVPACK,
 
             WAV,
             AIFF,
@@ -55,7 +54,6 @@ namespace unplayer
             Vorbis,
             Opus,
             APE,
-            WAVPACK,
             LPCM,
 
             // Unsupported

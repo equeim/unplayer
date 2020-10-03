@@ -38,7 +38,6 @@
 #include <tpropertymap.h>
 #include <vorbisfile.h>
 #include <wavfile.h>
-#include <wavpackfile.h>
 
 #include "utilsfunctions.h"
 
@@ -293,16 +292,6 @@ namespace unplayer
                     }
                 }
 
-                void processFile(TagLib::WavPack::File&& file, fileutils::AudioCodec audioCodec) const
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
-                        info.bitDepth = file.audioProperties()->bitsPerSample();
-                        if (file.hasAPETag()) {
-                            setMediaArtFromApeTag(file.APETag());
-                        }
-                    }
-                }
-
                 void processOnlyMimeType(QLatin1String mimeType, fileutils::AudioCodec audioCodec) const
                 {
                     if (mMimeDb.mimeTypeForFile(info.filePath, QMimeDatabase::MatchContent).name() == mimeType) {
@@ -446,13 +435,6 @@ namespace unplayer
                 }
 
                 void processFile(TagLib::RIFF::AIFF::File&& file, fileutils::AudioCodec audioCodec)
-                {
-                    if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
-                        info.bitDepth = file.audioProperties()->bitsPerSample();
-                    }
-                }
-
-                void processFile(TagLib::WavPack::File&& file, fileutils::AudioCodec audioCodec)
                 {
                     if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
                         info.bitDepth = file.audioProperties()->bitsPerSample();
@@ -620,9 +602,6 @@ namespace unplayer
                     break;
                 case Extension::WAV:
                     processor.processFile(TagLib::RIFF::WAV::File(filePath.toUtf8()), AudioCodec::LPCM);
-                    break;
-                case Extension::WAVPACK:
-                    processor.processFile(TagLib::WavPack::File(filePath.toUtf8()), AudioCodec::WAVPACK);
                     break;
                 case Extension::AIFF:
                 {
