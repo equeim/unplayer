@@ -159,6 +159,7 @@ namespace unplayer
         });
 
         QObject::connect(this, &Player::stateChanged, this, [=](State newState) {
+            qInfo() << "stateChanged" << newState;
             if (mSettingNewTrack) {
                 return;
             }
@@ -188,6 +189,7 @@ namespace unplayer
         });
 
         QObject::connect(this, &Player::mediaStatusChanged, this, [=](MediaStatus status) {
+            qInfo() << "mediaStatusChanged" << status;
             if (status == EndOfMedia) {
                 if (mStopAfterEos) {
                     mStoppedAfterEos = true;
@@ -211,6 +213,8 @@ namespace unplayer
         });
 
         QObject::connect(mQueue, &Queue::currentTrackChanged, this, [=](bool setAsCurrentWasSet) {
+            qInfo() << "currentTrackChanged, setAsCurrentWasSet =" << setAsCurrentWasSet;
+            qInfo("currentIndex = %d", mQueue->currentIndex());
             if (mQueue->currentIndex() == -1) {
                 setMedia(QMediaContent());
 
@@ -222,6 +226,7 @@ namespace unplayer
                 mpris->setMetadata(QVariantMap());
             } else {
                 const QueueTrack* track = mQueue->tracks()[static_cast<size_t>(mQueue->currentIndex())].get();
+                qInfo() << "track =" << track->url;
 
                 mSettingNewTrack = true;
                 setMedia(track->url);
