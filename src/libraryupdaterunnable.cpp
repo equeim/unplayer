@@ -591,7 +591,7 @@ namespace unplayer
                 }
 
                 tagutils::Info trackInfo(tagutils::getTrackInfo(track.filePath, track.extension, mMimeDb));
-                if (trackInfo.fileTypeMatchesExtension) {
+                if (trackInfo.fileTypeMatchesExtension && fileutils::isAudioCodecSupported(trackInfo.audioCodec)) {
                     ++count;
 
                     if (trackInfo.title.isEmpty()) {

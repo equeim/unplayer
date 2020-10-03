@@ -25,6 +25,7 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 
+#include <aifffile.h>
 #include <apefile.h>
 #include <apetag.h>
 #include <attachedpictureframe.h>
@@ -282,6 +283,16 @@ namespace unplayer
                     }
                 }
 
+                void processFile(TagLib::RIFF::AIFF::File&& file, fileutils::AudioCodec audioCodec) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
+                        info.bitDepth = file.audioProperties()->bitsPerSample();
+                        if (file.hasID3v2Tag()) {
+                            setMediaArtFromIDv2Tag(file.tag());
+                        }
+                    }
+                }
+
                 void processFile(TagLib::WavPack::File&& file, fileutils::AudioCodec audioCodec) const
                 {
                     if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
@@ -434,6 +445,13 @@ namespace unplayer
                     }
                 }
 
+                void processFile(TagLib::RIFF::AIFF::File&& file, fileutils::AudioCodec audioCodec)
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
+                        info.bitDepth = file.audioProperties()->bitsPerSample();
+                    }
+                }
+
                 void processFile(TagLib::WavPack::File&& file, fileutils::AudioCodec audioCodec)
                 {
                     if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
@@ -556,15 +574,17 @@ namespace unplayer
                 {
                     TagLib::MP4::File file(filePath.toUtf8());
                     auto audioCodec = AudioCodec::Unknown;
-                    switch (file.audioProperties()->codec()) {
-                    case TagLib::MP4::Properties::AAC:
-                        audioCodec = fileutils::AudioCodec::AAC;
-                        break;
-                    case TagLib::MP4::Properties::ALAC:
-                        audioCodec = fileutils::AudioCodec::ALAC;
-                        break;
-                    case TagLib::MP4::Properties::Unknown:
-                        break;
+                    if (file.isValid()) {
+                        switch (file.audioProperties()->codec()) {
+                        case TagLib::MP4::Properties::AAC:
+                            audioCodec = fileutils::AudioCodec::AAC;
+                            break;
+                        case TagLib::MP4::Properties::ALAC:
+                            audioCodec = fileutils::AudioCodec::ALAC;
+                            break;
+                        case TagLib::MP4::Properties::Unknown:
+                            break;
+                        }
                     }
                     processor.processFile(std::move(file), audioCodec);
                     break;
@@ -604,6 +624,20 @@ namespace unplayer
                 case Extension::WAVPACK:
                     processor.processFile(TagLib::WavPack::File(filePath.toUtf8()), AudioCodec::WAVPACK);
                     break;
+                case Extension::AIFF:
+                {
+                    TagLib::RIFF::AIFF::File file(filePath.toUtf8());
+                    auto audioCodec = AudioCodec::Unknown;
+                    if (file.isValid()) {
+                        if (file.audioProperties()->isAiffC()) {
+                            audioCodec = AudioCodec::AIFFC;
+                        } else {
+                            audioCodec = AudioCodec::LPCM;
+                        }
+                    }
+                    processor.processFile(std::move(file), audioCodec);
+                    break;
+                }
                 case Extension::Other:
                     processor.error(errorCauseFormatNotSupported);
                     break;

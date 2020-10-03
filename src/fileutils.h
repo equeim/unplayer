@@ -28,9 +28,10 @@ namespace unplayer
         enum class Extension
         {
             FLAC,
-            AAC,
 
+            AAC,
             M4A,
+
             MP3,
 
             OGG,
@@ -38,9 +39,10 @@ namespace unplayer
 
             APE,
             MKA,
+            WAVPACK,
 
             WAV,
-            WAVPACK,
+            AIFF,
 
             Other
         };
@@ -49,13 +51,16 @@ namespace unplayer
         {
             FLAC,
             AAC,
-            ALAC,
             MP3,
             Vorbis,
             Opus,
             APE,
             WAVPACK,
             LPCM,
+
+            // Unsupported
+            ALAC,
+            AIFFC,
             Unknown
         };
 
@@ -65,7 +70,7 @@ namespace unplayer
         bool isVideoExtensionSupported(const QString& suffix);
 
         bool isAudioCodecSupported(AudioCodec audioCodec);
-        QString audioCodecDisplayName(AudioCodec fileType);
+        QString audioCodecDisplayName(AudioCodec audioCodec);
     }
 }
 

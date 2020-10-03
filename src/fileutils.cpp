@@ -52,6 +52,9 @@ namespace unplayer
 
             const QLatin1String wavSuffix("wav");
 
+            const QLatin1String aiffSuffix("aiff");
+            const QLatin1String aifSuffix("aif");
+
             //const QLatin1String wvSuffix("wv");
             //const QLatin1String wvpSuffix("wvp");
         }
@@ -84,6 +87,9 @@ namespace unplayer
                 {mkaSuffix, Extension::MKA},
 
                 {wavSuffix, Extension::WAV},
+
+                {aiffSuffix, Extension::AIFF},
+                {aifSuffix, Extension::AIFF},
 
                 //{wvSuffix, Extension::WAVPACK},
                 //{wvpSuffix, Extension::WAVPACK}
@@ -127,6 +133,7 @@ namespace unplayer
         {
             switch (audioCodec) {
             case AudioCodec::ALAC:
+            case AudioCodec::AIFFC:
             case AudioCodec::Unknown:
                 return false;
             default:
@@ -134,9 +141,9 @@ namespace unplayer
             }
         }
 
-        QString audioCodecDisplayName(AudioCodec fileType)
+        QString audioCodecDisplayName(AudioCodec audioCodec)
         {
-            switch (fileType) {
+            switch (audioCodec) {
             case AudioCodec::FLAC:
                 return QLatin1String("FLAC");
             case AudioCodec::AAC:
@@ -155,6 +162,8 @@ namespace unplayer
                 return QLatin1String("WavPack");
             case AudioCodec::LPCM:
                 return QLatin1String("LPCM");
+            case AudioCodec::AIFFC:
+                return QLatin1String("AIFF-C");
             case AudioCodec::Unknown:
             default:
                 return QString();
