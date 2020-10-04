@@ -773,55 +773,55 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Zamijeni red čekanja</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži audio-kodek podatke na ekranu „Trenutačno svira”</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio kodek</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Količina bitova</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Brzina</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanali</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Datotečni format nije podržan</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Pogreška pri reprodukciji datoteke</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bitova</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
