@@ -109,8 +109,8 @@
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform>已选择％n个艺术家</numerusform>
+        <translation>
+            <numerusform>已选择 ％n 位艺术家</numerusform>
         </translation>
     </message>
     <message>
