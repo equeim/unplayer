@@ -829,7 +829,7 @@
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="130"/>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Аудио кодек</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="136"/>
@@ -844,17 +844,17 @@
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="149"/>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Разрядность</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="155"/>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Частота дискретизации</translation>
     </message>
     <message>
         <location filename="../qml/components/TrackInfoPage.qml" line="161"/>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Число каналов</translation>
     </message>
     <message>
         <location filename="../src/utils.cpp" line="123"/>
@@ -949,12 +949,12 @@
     <message>
         <location filename="../qml/components/NowPlayingPage.qml" line="371"/>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 бит · %2 кГц · %L3 кбит/с · %4</translation>
     </message>
     <message>
         <location filename="../qml/components/NowPlayingPage.qml" line="374"/>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 кГц · %L2 кбит/с · %3</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="48"/>
@@ -974,7 +974,7 @@
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="70"/>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Показывать информацию об аудио кодеке на экране текущего трека</translation>
     </message>
     <message>
         <location filename="../qml/components/SettingsPage.qml" line="80"/>
@@ -1149,27 +1149,27 @@
     <message>
         <location filename="../src/player.cpp" line="70"/>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Формат файла не поддерживается</translation>
     </message>
     <message>
         <location filename="../src/player.cpp" line="72"/>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка воспроизведения файла</translation>
     </message>
     <message>
         <location filename="../src/trackinfo.cpp" line="150"/>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 кбит/с</translation>
     </message>
     <message>
         <location filename="../src/trackinfo.cpp" line="160"/>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 бит</translation>
     </message>
     <message>
         <location filename="../src/trackinfo.cpp" line="165"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Гц</translation>
     </message>
 </context>
 </TS>
