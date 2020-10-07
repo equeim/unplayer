@@ -118,10 +118,11 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
 
 if (SAILFISHOS)
     pkg_check_modules(SAILFISHAPP REQUIRED sailfishapp)
-    target_link_libraries("${PROJECT_NAME}" ${SAILFISHAPP_LDFLAGS})
-    target_include_directories("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_INCLUDE_DIRS})
+    pkg_check_modules(NEMONOTIFICATIONS REQUIRED nemonotifications-qt5)
+    target_link_libraries("${PROJECT_NAME}" ${SAILFISHAPP_LDFLAGS} ${NEMONOTIFICATIONS_LDFLAGS})
+    target_include_directories("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_INCLUDE_DIRS} ${NEMONOTIFICATIONS_INCLUDE_DIRS})
     target_compile_definitions("${PROJECT_NAME}" PRIVATE UNPLAYER_SAILFISHOS)
-    target_compile_options("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_CFLAGS_OTHER})
+    target_compile_options("${PROJECT_NAME}" PRIVATE ${SAILFISHAPP_CFLAGS_OTHER} ${NEMONOTIFICATIONS_CFLAGS_OTHER})
 endif()
 
 install(TARGETS "${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")
