@@ -204,6 +204,86 @@ namespace unplayer
             }
             return false;
         }
+
+        inline void sortAndRemoveDuplicates(QStringList& list)
+        {
+            std::sort(list.begin(), list.end());
+            list.erase(std::unique(list.begin(), list.end()), list.end());
+        }
+
+        struct OldTrack
+        {
+            //inline explicit OldTrack(std::unordered_map<QString, QString>& trackUserMediaArt) : trackUserMediaArt(trackUserMediaArt) {}
+
+            int id = -1;
+            long long modificationTime = 0;
+            tagutils::Info info{};
+            QString directoryMediaArt;
+            QString embeddedMediaArt;
+            /**
+             * @brief Map of album titles to user media art file paths
+             */
+            std::unordered_map<QString, QString> userMediaArt;
+        };
+
+        /**
+         * @brief Adds old track to database
+         * @param `OldTrack` instance
+         * @param adder `LibraryTracksAdder` instance
+         * @param allTracksUserMediaArt Map of album ids to user media art file paths
+         */
+        void addOldTrack(OldTrack& track, LibraryTracksAdder& adder, std::unordered_map<int, QString>& allTracksUserMediaArt)
+        {
+            auto& info = track.info;
+
+            sortAndRemoveDuplicates(info.artists);
+            sortAndRemoveDuplicates(info.albumArtists);
+
+            /*
+             * The problem here is that old library code was assigning
+             * artists to album artists if track didn't have album artist tag.
+             * This means that if they are the same we don't know whether it
+             * is because track actually has same artist and album artist tags
+             * or it is because it doesn't have album artist tag.
+             * We really don't want to extract track's tags here,
+             * so just assume it doesn't have album artist tag, since it is more likely (probably)
+             */
+            if (info.artists == info.albumArtists) {
+                info.albumArtists.clear();
+            }
+
+            info.albums.removeDuplicates();
+            info.genres.removeDuplicates();
+
+            adder.addTrackToDatabase(info.filePath, track.modificationTime, info, track.directoryMediaArt, track.embeddedMediaArt);
+            track.embeddedMediaArt.clear();
+
+            if (!track.userMediaArt.empty()) {
+                QVector<int> albumArtists;
+                albumArtists.reserve(info.albumArtists.size());
+                for (const QString& albumArtist : info.albumArtists) {
+                    const int artistId = adder.getAddedArtistId(albumArtist);
+                    if (artistId != 0) {
+                        albumArtists.push_back(artistId);
+                    } else {
+                        qWarning() << "No artist id for" << albumArtist;
+                    }
+                }
+
+                for (auto& i : track.userMediaArt) {
+                    const int albumId = adder.getAddedAlbumId(i.first, albumArtists);
+                    if (albumId != 0) {
+                        allTracksUserMediaArt.emplace(albumId, std::move(i.second));
+                    } else {
+                        qWarning() << "No album id for" << i.first;
+                    }
+                }
+
+                track.userMediaArt.clear();
+            }
+
+            info = {};
+        }
     }
 
     bool LibraryMigrator::migrateOldTracks(std::unordered_map<int, QString>& userMediaArtHash)
@@ -231,78 +311,29 @@ namespace unplayer
             return false;
         }
 
-        std::unordered_map<QString, QString> trackUserMediaArtHash;
         const QRegularExpression embeddedMediaArtRegex(QLatin1String("^.*\\/\\w+-embedded\\.\\w+$"));
         embeddedMediaArtRegex.optimize();
 
         LibraryTracksAdder adder(mDb);
 
-        int id = -1;
-        long long modificationTime = 0;
-        tagutils::Info info{};
-        QString directoryMediaArt;
-        QString embeddedMediaArt;
-
-        const auto insert = [&] {
-            std::sort(info.artists.begin(), info.artists.end());
-            auto newEnd = std::unique(info.artists.begin(), info.artists.end());
-            info.artists.erase(newEnd, info.artists.end());
-
-            std::sort(info.albumArtists.begin(), info.albumArtists.end());
-            info.albumArtists.erase(std::unique(info.albumArtists.begin(), info.albumArtists.end()), info.albumArtists.end());
-
-            if (info.artists.size() > 1 && info.artists == info.albums) {
-                info.albumArtists.erase(info.albumArtists.begin() + 1, info.albumArtists.end());
-            }
-
-            info.albums.removeDuplicates();
-            info.genres.removeDuplicates();
-
-            adder.addTrackToDatabase(info.filePath, modificationTime, info, directoryMediaArt, embeddedMediaArt);         
-            embeddedMediaArt.clear();
-
-            if (!trackUserMediaArtHash.empty()) {
-                QVector<int> albumArtists;
-                albumArtists.reserve(info.albumArtists.size());
-                for (const QString& albumArtist : info.albumArtists) {
-                    const int artistId = adder.getAddedArtistId(albumArtist);
-                    if (artistId != 0) {
-                        albumArtists.push_back(artistId);
-                    } else {
-                        qWarning() << "No artist id for" << albumArtist;
-                    }
-                }
-
-                for (auto& i : trackUserMediaArtHash) {
-                    const int albumId = adder.getAddedAlbumId(i.first, albumArtists);
-                    if (albumId != 0) {
-                        userMediaArtHash.emplace(albumId, std::move(i.second));
-                    } else {
-                        qWarning() << "No album id for" << i.first;
-                    }
-                }
-
-                trackUserMediaArtHash.clear();
-            }
-
-            info = {};
-        };
+        OldTrack oldTrack{};
+        auto& info = oldTrack.info;
 
         while (mQuery.next()) {
             const int newId = mQuery.value(IdField).toInt();
-            if (newId != id) {
-                if (id != -1) {
-                    insert();
+            if (newId != oldTrack.id) {
+                if (oldTrack.id != -1) {
+                    addOldTrack(oldTrack, adder, userMediaArtHash);
                 }
-                id = newId;
-                modificationTime = mQuery.value(ModificationTimeField).toLongLong();
+                oldTrack.id = newId;
+                oldTrack.modificationTime = mQuery.value(ModificationTimeField).toLongLong();
                 info.filePath = mQuery.value(FilePathField).toString();
                 info.title = mQuery.value(TitleField).toString();
                 info.year = mQuery.value(YearField).toInt();
                 info.trackNumber = mQuery.value(TrackNumberField).toInt();
                 info.discNumber = mQuery.value(DiscNumberField).toString();
                 info.duration = mQuery.value(DurationField).toInt();
-                directoryMediaArt = mQuery.value(DirectoryMediaArtField).toString();
+                oldTrack.directoryMediaArt = mQuery.value(DirectoryMediaArtField).toString();
             }
 
             addIfNotEmpty(info.artists, mQuery.value(ArtistField).toString());
@@ -313,13 +344,13 @@ namespace unplayer
             QString newEmbeddedMediaArt(mQuery.value(EmbeddedMediaArtField).toString());
             if (!newEmbeddedMediaArt.isEmpty()) {
                 if (embeddedMediaArtRegex.match(newEmbeddedMediaArt).hasMatch()) {
-                    if (embeddedMediaArt.isEmpty()) {
-                        embeddedMediaArt = std::move(newEmbeddedMediaArt);
+                    if (oldTrack.embeddedMediaArt.isEmpty()) {
+                        oldTrack.embeddedMediaArt = std::move(newEmbeddedMediaArt);
                     }
                 } else {
                     // User media art
                     if (addedAlbum) {
-                        trackUserMediaArtHash.emplace(info.albums.back(), std::move(newEmbeddedMediaArt));
+                        oldTrack.userMediaArt.emplace(info.albums.back(), std::move(newEmbeddedMediaArt));
                     } else {
                         qWarning() << "Record has user media art but album is empty:";
                         qWarning() << mQuery.record();
@@ -328,8 +359,8 @@ namespace unplayer
             }
         }
 
-        if (id != -1) {
-            insert();
+        if (oldTrack.id != -1) {
+            addOldTrack(oldTrack, adder, userMediaArtHash);
         }
 
         if (!mQuery.exec(QLatin1String("DROP TABLE tracks_old"))) {
