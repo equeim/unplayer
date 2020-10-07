@@ -35,6 +35,7 @@
 #include <mpegfile.h>
 #include <oggflacfile.h>
 #include <opusfile.h>
+#include <speexfile.h>
 #include <tpropertymap.h>
 #include <vorbisfile.h>
 #include <wavfile.h>
@@ -246,6 +247,13 @@ namespace unplayer
                 }
 
                 void processFile(TagLib::Ogg::Opus::File&& file, fileutils::AudioCodec audioCodec) const
+                {
+                    if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
+                        setMediaArtFromFlacPictures(file.tag()->pictureList());
+                    }
+                }
+
+                void processFile(TagLib::Ogg::Speex::File&& file, fileutils::AudioCodec audioCodec) const
                 {
                     if (processFile(static_cast<TagLib::File&&>(file), audioCodec)) {
                         setMediaArtFromFlacPictures(file.tag()->pictureList());
@@ -538,8 +546,8 @@ namespace unplayer
             const QLatin1String oggMimeType("application/ogg");
             const QLatin1String oggVorbisMimeType("audio/x-vorbis+ogg");
             const QLatin1String oggOpusMimeType("audio/x-opus+ogg");
+            const QLatin1String oggSpeexMimeType("audio/x-speex+ogg");
             const QLatin1String oggFlacMimeType("audio/x-flac+ogg");
-            const QLatin1String matroskaMimeType("application/x-matroska");
 
             template<class Processor>
             void processFile(const QString& filePath, fileutils::Extension extension, Processor& processor)
@@ -582,6 +590,8 @@ namespace unplayer
                         processor.processFile(TagLib::Ogg::Vorbis::File(filePath.toUtf8()), AudioCodec::Vorbis);
                     } else if (mimeTypeName == oggOpusMimeType) {
                         processor.processFile(TagLib::Ogg::Opus::File(filePath.toUtf8()), AudioCodec::Opus);
+                    } else if (mimeTypeName == oggSpeexMimeType) {
+                        processor.processFile(TagLib::Ogg::Speex::File(filePath.toUtf8()), AudioCodec::Speex);
                     } else if (mimeTypeName == oggFlacMimeType) {
                         processor.processFile(TagLib::Ogg::FLAC::File(filePath.toUtf8()), AudioCodec::FLAC);
                     } else if (mimeType.inherits(oggMimeType)) {
@@ -593,6 +603,9 @@ namespace unplayer
                 }
                 case Extension::OPUS:
                     processor.processFile(TagLib::Ogg::Opus::File(filePath.toUtf8()), AudioCodec::Opus);
+                    break;
+                case Extension::SPX:
+                    processor.processFile(TagLib::Ogg::Speex::File(filePath.toUtf8()), AudioCodec::Speex);
                     break;
                 case Extension::APE:
                     processor.processFile(TagLib::APE::File(filePath.toUtf8()), AudioCodec::APE);

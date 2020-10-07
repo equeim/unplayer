@@ -36,6 +36,7 @@ namespace unplayer
 
             OGG,
             OPUS,
+            SPX,
 
             APE,
 
@@ -52,6 +53,7 @@ namespace unplayer
             MP3,
             Vorbis,
             Opus,
+            Speex,
             APE,
             LPCM,
 

@@ -45,6 +45,7 @@ namespace unplayer
             const QLatin1String ogaSuffix("oga");
             const QLatin1String oggSuffix("ogg");
             const QLatin1String opusSuffix("opus");
+            const QLatin1String spxSuffix("spx");
 
             const QLatin1String apeSuffix("ape");
 
@@ -76,6 +77,7 @@ namespace unplayer
                 {ogaSuffix, Extension::OGG},
                 {oggSuffix, Extension::OGG},
                 {opusSuffix, Extension::OPUS},
+                {spxSuffix, Extension::SPX},
 
                 {apeSuffix, Extension::APE},
 
@@ -146,6 +148,8 @@ namespace unplayer
                 return QLatin1String("Vorbis");
             case AudioCodec::Opus:
                 return QLatin1String("Opus");
+            case AudioCodec::Speex:
+                return QLatin1String("Speex");
             case AudioCodec::APE:
                 return QLatin1String("APE");
             case AudioCodec::LPCM:
