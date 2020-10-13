@@ -31,7 +31,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>新建播放列表</translation>
+        <translation>新播放列表...</translation>
     </message>
     <message>
         <source>Search</source>
@@ -393,7 +393,7 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>添加目录</translation>
+        <translation>添加目录...</translation>
     </message>
     <message>
         <source>Select directory</source>
@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation>正在更新</translation>
+        <translation>正在更新...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -543,7 +543,7 @@
     </message>
     <message>
         <source>Removing files...</source>
-        <translation>正在移除文件</translation>
+        <translation>正在移除文件...</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
