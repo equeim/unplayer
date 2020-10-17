@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- Displaying information about audio codec, bit depth, sample rate and channel count
+- "Replace queue" action when selecting multiple albums, artists, genres or tracks
+- Support of Ogg Speex files
+- Support of AIFF (uncompressed) files
+
+### Changed
+- Implemented new database structure for library
+- Albums are now formed based on "Album Artist" tag, if it is available
+  Tracks with same "Album" tag but different "Album Artist" tags are
+  considered belonging to different albums.
+
+### Removed
+- MKA files and M4A files with ALAC codec are now handled as unsupported
+- Option to use "Album Artist" tag instead of "Artist"
+
 ## [2.0.4] - 2020-04-06
 ### Changed
 - Tracks are now added to the end of playlist rather than beginning
