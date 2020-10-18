@@ -7,8 +7,7 @@ License:    GPLv3
 URL:        https://github.com/equeim/unplayer
 
 Source0:    https://github.com/equeim/unplayer/archive/%{version}.tar.gz
-Patch0:     qtdbusextended.patch
-Patch1:     qtmpris.patch
+Patch0:     qtmpris.patch
 
 Requires:      sailfishsilica-qt5
 BuildRequires: pkgconfig(Qt5Concurrent)
@@ -34,9 +33,6 @@ BuildRequires: boost-devel
 
 %global build_directory %{_builddir}/build-%{_target}-%(version | awk '{print $3}')
 
-%global qtdbusextended_source_directory %{_builddir}/3rdparty/qtdbusextended
-%global qtdbusextended_build_directory %{build_directory}/3rdparty/qtdbusextended
-
 %global qtmpris_source_directory %{_builddir}/3rdparty/qtmpris
 %global qtmpris_build_directory %{build_directory}/3rdparty/qtmpris
 
@@ -56,9 +52,6 @@ BuildRequires: boost-devel
 if ! patch -p0 -R --dry-run -f -i %{P:0}; then
 %patch0
 fi
-if ! patch -p0 -R --dry-run -f -i %{P:1}; then
-%patch1
-fi
 
 
 %build
@@ -70,14 +63,6 @@ export PKG_CONFIG_PATH=%{thirdparty_install_directory}/lib/pkgconfig
     export CFLAGS="${CFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
     export CXXFLAGS="${CXXFLAGS:-%optflags} -O0 -Wp,-U_FORTIFY_SOURCE"
 %endif
-
-mkdir -p %{qtdbusextended_build_directory}
-cd %{qtdbusextended_build_directory}
-%qmake5 %{qtdbusextended_source_directory} CONFIG+=staticlib PREFIX=%{thirdparty_install_directory}
-%make_build
-# not make_install, because we do not want INSTALL_ROOT here
-make install
-cd -
 
 mkdir -p %{qtmpris_build_directory}
 cd %{qtmpris_build_directory}
