@@ -93,6 +93,8 @@ CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib_source_directo
     -DLIB_INSTALL_DIR=%{thirdparty_install_directory}/lib \
     -DINCLUDE_INSTALL_DIR=%{thirdparty_install_directory}/include \
     -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_CXX_STANDARD=11 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
     -DWITH_MP4=ON
 %make_build
 # not make_install, because we do not want DESTDIR here
