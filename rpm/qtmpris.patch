@@ -1,5 +1,23 @@
+--- 3rdparty/qtmpris/qtdbusextended/qtdbusextended.pro
++++ 3rdparty/qtmpris/qtdbusextended/qtdbusextended.pro
+@@ -15,3 +15,6 @@ HEADERS += \
+     dbusextended.h \
+     dbusextendedabstractinterface.h \
+     dbusextendedpendingcallwatcher_p.h
++
++target.path = $$PREFIX/lib
++INSTALLS += target
 --- 3rdparty/qtmpris/src/src.pro
 +++ 3rdparty/qtmpris/src/src.pro
+@@ -13,7 +13,7 @@ DEFINES += MPRIS_QT_LIBRARY
+
+ DEPENDPATH += ../qtdbusextended
+ INCLUDEPATH += ../qtdbusextended
+-LIBS += -L../qtdbusextended -ldbusextended-qt5
++LIBS += -ldbusextended-qt5
+
+ # Generate pkg-config support by default
+ # Note that we HAVE TO also create prl config as QMake implementation
 @@ -54,15 +54,15 @@ INSTALL_HEADERS = \
  OTHER_FILES += org.mpris.MediaPlayer2.xml \
      org.mpris.MediaPlayer2.Player.xml
