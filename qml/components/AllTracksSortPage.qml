@@ -76,15 +76,15 @@ Page {
 
             SortModeListItem {
                 current: tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumTitle
-                text: tracksModel.allArtists ? qsTranslate("unplayer", "Artist - Album title")
-                                             : qsTranslate("unplayer", "Album title")
+                text: tracksModel.mode === Unplayer.TracksModel.AllTracksMode ? qsTranslate("unplayer", "Artist - Album title")
+                                                                              : qsTranslate("unplayer", "Album title")
                 onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.ArtistAlbumTitle
             }
 
             SortModeListItem {
                 current: tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumYear
-                text: tracksModel.allArtists ? qsTranslate("unplayer", "Artist - Album year")
-                                             : qsTranslate("unplayer", "Album year")
+                text: tracksModel.mode === Unplayer.TracksModel.AllTracksMode ? qsTranslate("unplayer", "Artist - Album year")
+                                                                              : qsTranslate("unplayer", "Album year")
                 onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.ArtistAlbumYear
             }
 
