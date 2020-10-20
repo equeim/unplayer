@@ -176,7 +176,6 @@ namespace unplayer
             QStringList mBlacklistedDirectories;
             DatabaseConnectionGuard mDatabaseGuard{QLatin1String("unplayer_update")};
             QSqlDatabase& mDb{mDatabaseGuard.db};
-            QSqlQuery mQuery{mDb};
             QMimeDatabase mMimeDb;
             QElapsedTimer mStageTimer;
 
@@ -342,29 +341,30 @@ namespace unplayer
                 EmbeddedMediaArtField
             };
 
-            if (!mQuery.exec(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"))) {
-                qWarning() << "failed to get files from database" << mQuery.lastError();
+            QSqlQuery query(mDb);
+            if (!query.exec(QLatin1String("SELECT id, filePath, modificationTime, directoryMediaArt, embeddedMediaArt FROM tracks ORDER BY id"))) {
+                qWarning() << "failed to get files from database" << query.lastError();
                 mCancel = true;
                 return {};
             }
 
-            reserveFromQuery(tracksInDb, mQuery);
+            reserveFromQuery(tracksInDb, query);
 
-            while (mQuery.next()) {
+            while (query.next()) {
                 if (mCancel) {
                     return {};
                 }
 
-                const int id(mQuery.value(IdField).toInt());
-                QString filePath(mQuery.value(FilePathField).toString());
+                const int id(query.value(IdField).toInt());
+                QString filePath(query.value(FilePathField).toString());
 
-                mediaArtDirectoriesInDbHash.insert({QFileInfo(filePath).path(), mQuery.value(DirectoryMediaArtField).toString()});
+                mediaArtDirectoriesInDbHash.insert({QFileInfo(filePath).path(), query.value(DirectoryMediaArtField).toString()});
 
                 tracksInDb.emplace(std::move(filePath), TrackInDb{id,
-                                                                  !checkExistanceOfEmbeddedMediaArt(mQuery.value(EmbeddedMediaArtField).toString()),
+                                                                  !checkExistanceOfEmbeddedMediaArt(query.value(EmbeddedMediaArtField).toString()),
                                                                   true,
                                                                   false,
-                                                                  mQuery.value(ModificationTimeField).toLongLong()});
+                                                                  query.value(ModificationTimeField).toLongLong()});
             }
 
             return result;
@@ -466,11 +466,12 @@ namespace unplayer
                                 const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
                                                                                                    embeddedMediaArtFiles,
                                                                                                    mMimeDb));
-                                mQuery.prepare(QStringLiteral("UPDATE tracks SET embeddedMediaArt = ? WHERE id = ?"));
-                                mQuery.addBindValue(nullIfEmpty(embeddedMediaArt));
-                                mQuery.addBindValue(file.id);
-                                if (!mQuery.exec()) {
-                                    qWarning() << mQuery.lastError();
+                                QSqlQuery query(mDb);
+                                query.prepare(QStringLiteral("UPDATE tracks SET embeddedMediaArt = ? WHERE id = ?"));
+                                query.addBindValue(nullIfEmpty(embeddedMediaArt));
+                                query.addBindValue(file.id);
+                                if (!query.exec()) {
+                                    qWarning() << query.lastError();
                                 }
                             }
 
@@ -567,12 +568,13 @@ namespace unplayer
         {
             if (!changedDirectoriesMediaArt.empty()) {
                 qInfo("Update changed media art");
+                QSqlQuery query(mDb);
                 for (const auto& i : changedDirectoriesMediaArt) {
                     batchedCount(i.second.trackIds.size(), LibraryUtils::maxDbVariableCount, [&](size_t first, size_t count) {
-                        mQuery.prepare(QLatin1String("UPDATE tracks SET directoryMediaArt = ? WHERE id IN (") % makeInStringFromIds(i.second.trackIds, first, count));
-                        mQuery.addBindValue(nullIfEmpty(i.second.newDirectoryMediaArt));
-                        if (!mQuery.exec()) {
-                            qWarning() << mQuery.lastError();
+                        query.prepare(QLatin1String("UPDATE tracks SET directoryMediaArt = ? WHERE id IN (") % makeInStringFromIds(i.second.trackIds, first, count));
+                        query.addBindValue(nullIfEmpty(i.second.newDirectoryMediaArt));
+                        if (!query.exec()) {
+                            qWarning() << query.lastError();
                         }
                     });
                 }
