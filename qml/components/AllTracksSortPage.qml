@@ -75,17 +75,17 @@ Page {
             }
 
             SortModeListItem {
-                current: tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumTitle
-                text: tracksModel.mode === Unplayer.TracksModel.AllTracksMode ? qsTranslate("unplayer", "Artist - Album title")
-                                                                              : qsTranslate("unplayer", "Album title")
-                onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.ArtistAlbumTitle
+                current: tracksModel.sortMode === Unplayer.TracksModelSortMode.Artist_AlbumTitle
+                text: tracksModel.queryMode === Unplayer.TracksModel.QueryAllTracks ? qsTranslate("unplayer", "Artist - Album title")
+                                                                                    : qsTranslate("unplayer", "Album title")
+                onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.Artist_AlbumTitle
             }
 
             SortModeListItem {
-                current: tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumYear
-                text: tracksModel.mode === Unplayer.TracksModel.AllTracksMode ? qsTranslate("unplayer", "Artist - Album year")
-                                                                              : qsTranslate("unplayer", "Album year")
-                onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.ArtistAlbumYear
+                current: tracksModel.sortMode === Unplayer.TracksModelSortMode.Artist_AlbumYear
+                text: tracksModel.queryMode === Unplayer.TracksModel.QueryAllTracks ? qsTranslate("unplayer", "Artist - Album year")
+                                                                                    : qsTranslate("unplayer", "Album year")
+                onClicked: tracksModel.sortMode = Unplayer.TracksModelSortMode.Artist_AlbumYear
             }
 
             SectionHeader {
@@ -95,8 +95,8 @@ Page {
             SortModeListItem {
                 enabled: {
                     switch (tracksModel.sortMode) {
-                    case Unplayer.TracksModelSortMode.ArtistAlbumTitle:
-                    case Unplayer.TracksModelSortMode.ArtistAlbumYear:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumTitle:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumYear:
                         return true
                     default:
                         return false
@@ -110,31 +110,31 @@ Page {
             SortModeListItem {
                 enabled: {
                     switch (tracksModel.sortMode) {
-                    case Unplayer.TracksModelSortMode.ArtistAlbumTitle:
-                    case Unplayer.TracksModelSortMode.ArtistAlbumYear:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumTitle:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumYear:
                         return true
                     default:
                         return false
                     }
                 }
-                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_Title
                 text: qsTranslate("unplayer", "Disc number - Title")
-                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_Title
             }
 
             SortModeListItem {
                 enabled: {
                     switch (tracksModel.sortMode) {
-                    case Unplayer.TracksModelSortMode.ArtistAlbumTitle:
-                    case Unplayer.TracksModelSortMode.ArtistAlbumYear:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumTitle:
+                    case Unplayer.TracksModelSortMode.Artist_AlbumYear:
                         return true
                     default:
                         return false
                     }
                 }
-                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_TrackNumber
                 text: qsTranslate("unplayer", "Disc number - Track number")
-                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_TrackNumber
             }
         }
 

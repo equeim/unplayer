@@ -152,7 +152,7 @@ Page {
                 id: tracksPageComponent
                 TracksPage {
                     pageTitle: model.genre
-                    mode: Unplayer.TracksModel.GenreMode
+                    queryMode: Unplayer.TracksModel.QueryGenreTracks
                     genreId: model.genreId
                 }
             }

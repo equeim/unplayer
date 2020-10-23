@@ -126,9 +126,9 @@ namespace unplayer
         const Artist& artist = mArtists[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(TracksModel::ArtistMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(TracksModel::QueryArtistTracks,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     artist.id,
                                                     0,
@@ -167,9 +167,9 @@ namespace unplayer
         const Artist& artist = mArtists[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(TracksModel::ArtistMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(TracksModel::QueryArtistTracks,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     artist.id,
                                                     0,

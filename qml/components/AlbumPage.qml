@@ -108,7 +108,7 @@ Page {
             sourceModel: Unplayer.TracksModel {
                 id: tracksModel
 
-                mode: allArtists ? Unplayer.TracksModel.AlbumAllArtistsMode : Unplayer.TracksModel.AlbumSingleArtistMode
+                queryMode: allArtists ? Unplayer.TracksModel.QueryAlbumTracksForAllArtists : Unplayer.TracksModel.QueryAlbumTracksForSingleArtist
                 albumId: albumPage.albumId
                 artistId: singleArtistId
             }

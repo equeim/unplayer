@@ -89,7 +89,7 @@ Page {
                     id: tracksPageComponent
                     TracksPage {
                         pageTitle: qsTranslate("unplayer", "Tracks")
-                        mode: Unplayer.TracksModel.AllTracksMode
+                        queryMode: Unplayer.TracksModel.QueryAllTracks
                     }
                 }
             }

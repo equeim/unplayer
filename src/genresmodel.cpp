@@ -128,9 +128,9 @@ namespace unplayer
         const Genre& genre = mGenres[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(TracksModel::GenreMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(TracksModel::QueryGenreTracks,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     0,
                                                     0,
@@ -169,9 +169,9 @@ namespace unplayer
         const Genre& genre = mGenres[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(TracksModel::GenreMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(TracksModel::QueryGenreTracks,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     0,
                                                     0,

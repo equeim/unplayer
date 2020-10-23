@@ -151,7 +151,7 @@ Page {
                     id: tracksPageComponent
                     TracksPage {
                         pageTitle: displayedArtist
-                        mode: Unplayer.TracksModel.ArtistMode
+                        queryMode: Unplayer.TracksModel.QueryArtistTracks
                         artistId: artistPage.artistId
                     }
                 }

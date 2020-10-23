@@ -214,9 +214,9 @@ namespace unplayer
         const Album& album = mAlbums[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::AlbumAllArtistsMode : TracksModel::AlbumSingleArtistMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::QueryAlbumTracksForAllArtists : TracksModel::QueryAlbumTracksForSingleArtist,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     mArtistId,
                                                     album.id,
@@ -253,9 +253,9 @@ namespace unplayer
         const Album& album = mAlbums[static_cast<size_t>(index)];
         bool groupTracks = false;
         QSqlQuery query;
-        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::AlbumAllArtistsMode : TracksModel::AlbumSingleArtistMode,
-                                                    TracksModel::SortMode::ArtistAlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumberTrackNumber,
+        if (query.exec(TracksModel::makeQueryString(mAllArtists ? TracksModel::QueryAlbumTracksForAllArtists : TracksModel::QueryAlbumTracksForSingleArtist,
+                                                    TracksModel::SortMode::Artist_AlbumYear,
+                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
                                                     false,
                                                     mArtistId,
                                                     album.id,

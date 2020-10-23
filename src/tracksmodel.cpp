@@ -31,15 +31,15 @@ namespace unplayer
 {
     TracksModel::~TracksModel()
     {
-        switch (mMode) {
-        case AllTracksMode:
+        switch (mQueryMode) {
+        case QueryAllTracks:
             Settings::instance()->setAllTracksSortSettings(mSortDescending, mSortMode, mInsideAlbumSortMode);
             break;
-        case ArtistMode:
+        case QueryArtistTracks:
             Settings::instance()->setArtistTracksSortSettings(mSortDescending, mSortMode, mInsideAlbumSortMode);
             break;
-        case AlbumAllArtistsMode:
-        case AlbumSingleArtistMode:
+        case QueryAlbumTracksForAllArtists:
+        case QueryAlbumTracksForSingleArtist:
             Settings::instance()->setAlbumTracksSortSettings(mSortDescending, mInsideAlbumSortMode);
             break;
         default:
@@ -54,24 +54,27 @@ namespace unplayer
 
     void TracksModel::componentComplete()
     {
-        switch (mMode) {
-        case AllTracksMode:
+        switch (mQueryMode) {
+        case QueryAllTracks:
             mSortDescending = Settings::instance()->allTracksSortDescending();
-            mSortMode = static_cast<SortMode>(Settings::instance()->allTracksSortMode(SortMode::ArtistAlbumYear));
-            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->allTracksInsideAlbumSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
+            mSortMode = TracksModelSortMode::fromSettingsForAllTracks();
+            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForAllTracks();
             break;
-        case ArtistMode:
+        case QueryArtistTracks:
             mSortDescending = Settings::instance()->artistTracksSortDescending();
-            mSortMode = static_cast<SortMode>(Settings::instance()->artistTracksSortMode(SortMode::ArtistAlbumYear));
-            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->artistTracksInsideAlbumSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
+            mSortMode = TracksModelSortMode::fromSettingsForArtist();
+            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForArtist();
             break;
-        case AlbumAllArtistsMode:
-        case AlbumSingleArtistMode:
+        case QueryAlbumTracksForAllArtists:
+        case QueryAlbumTracksForSingleArtist:
             mSortDescending = Settings::instance()->albumTracksSortDescending();
-            mSortMode = SortMode::ArtistAlbumTitle;
-            mInsideAlbumSortMode = static_cast<InsideAlbumSortMode>(Settings::instance()->albumTracksSortMode(InsideAlbumSortMode::DiscNumberTrackNumber));
+            mSortMode = {}; // ignored
+            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForAlbum();
             break;
-        default:
+        case QueryGenreTracks:
+            mSortDescending = false;
+            mSortMode = SortMode::Artist_AlbumYear;
+            mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumber_TrackNumber;
             break;
         }
 
@@ -101,14 +104,14 @@ namespace unplayer
         }
     }
 
-    TracksModel::Mode TracksModel::mode() const
+    TracksModel::QueryMode TracksModel::queryMode() const
     {
-        return mMode;
+        return mQueryMode;
     }
 
-    void TracksModel::setMode(TracksModel::Mode mode)
+    void TracksModel::setQueryMode(TracksModel::QueryMode mode)
     {
-        mMode = mode;
+        mQueryMode = mode;
     }
 
     int TracksModel::artistId() const
@@ -232,7 +235,162 @@ namespace unplayer
         });
     }
 
-    QString TracksModel::makeQueryString(Mode mode,
+        namespace
+    {
+    namespace query
+    {
+        QString select()
+        {
+            return QLatin1String("SELECT tracks.id, filePath, tracks.title, duration, %1 "
+                                 "FROM tracks ");
+        }
+
+        void join(QString& queryString, TracksModel::QueryMode queryMode)
+        {
+            queryString += QLatin1String("LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
+                                         "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
+                                         "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                         "LEFT JOIN albums ON albums.id = tracks_albums.albumId ");
+            if (queryMode == TracksModel::QueryGenreTracks) {
+                queryString += QLatin1String("JOIN tracks_genres ON tracks_genres.trackId = tracks.id "
+                                             "JOIN genres ON genres.id = tracks_genres.genreId ");
+            }
+        }
+
+        void where(QString& queryString,
+                   TracksModel::QueryMode queryMode,
+                   int artistId,
+                   int albumId,
+                   int genreId)
+        {
+            switch (queryMode) {
+            case TracksModel::QueryAllTracks:
+                break;
+            case TracksModel::QueryArtistTracks:
+                if (artistId == 0) {
+                    queryString += QLatin1String("WHERE artists.id IS NULL ");
+                } else {
+                    queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artistId);
+                }
+                break;
+            case TracksModel::QueryAlbumTracksForAllArtists:
+                if (albumId == 0) {
+                    queryString += QLatin1String("WHERE albums.id IS NULL ");
+                } else {
+                    queryString += QString::fromLatin1("WHERE albums.id = %1 ").arg(albumId);
+                }
+                break;
+            case TracksModel::QueryAlbumTracksForSingleArtist:
+                if (artistId == 0) {
+                    queryString += QLatin1String("WHERE artists.id IS NULL ");
+                } else {
+                    queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artistId);
+                }
+                if (albumId == 0) {
+                    queryString += QLatin1String("AND albums.id IS NULL ");
+                } else {
+                    queryString += QString::fromLatin1("AND albums.id = %1 ").arg(albumId);
+                }
+                break;
+            case TracksModel::QueryGenreTracks:
+                queryString += QString::fromLatin1("WHERE genres.id = %1 ").arg(genreId);
+                break;
+            }
+        }
+
+        void group(QString& queryString,
+                   TracksModel::QueryMode queryMode,
+                   TracksModel::SortMode sortMode,
+                   bool& groupTracks) {
+            groupTracks = true;
+            switch (queryMode) {
+            case TracksModel::QueryAlbumTracksForAllArtists:
+                break;
+            case TracksModel::QueryAlbumTracksForSingleArtist:
+                groupTracks = false;
+                break;
+            default:
+                switch (sortMode) {
+                case TracksModel::SortMode::Artist_AlbumTitle:
+                case TracksModel::SortMode::Artist_AlbumYear:
+                    groupTracks = false;
+                    break;
+                default:
+                    break;
+                }
+                break;
+            }
+            if (groupTracks) {
+                // For some reason this hack (concatenating by newline and then splitting, removing duplicates and concatenating by ', ')
+                // is faster than group_concat(DISTINCT ' ' || artists.title) that produces the same output (after you remove leading space)
+                // It will probably be slower for tracks with large number or artists/albums, but this is unlikely
+                queryString = queryString.arg(QLatin1String("group_concat(artists.title, '\n'), group_concat(albums.title, '\n')"));
+                queryString += QLatin1String("GROUP BY tracks.id ");
+            } else {
+                queryString = queryString.arg(QLatin1String("artists.title, albums.title"));
+            }
+        }
+
+        void sort(QString& queryString,
+                  TracksModel::QueryMode queryMode,
+                  TracksModel::SortMode sortMode,
+                  TracksModel::InsideAlbumSortMode insideAlbumSortMode,
+                  bool sortDescending)
+        {
+            QString sortString;
+
+            bool sortInsideAlbum = false;
+
+            switch (queryMode) {
+            case TracksModel::QueryAlbumTracksForAllArtists:
+            case TracksModel::QueryAlbumTracksForSingleArtist:
+                sortString = QLatin1String("ORDER BY ");
+                sortInsideAlbum = true;
+                break;
+            default:
+                switch (sortMode) {
+                case TracksModel::SortMode::Title:
+                    sortString = QLatin1String("ORDER BY tracks.title %1");
+                    break;
+                case TracksModel::SortMode::AddedDate:
+                    sortString = QLatin1String("ORDER BY tracks.id %1");
+                    break;
+                case TracksModel::SortMode::Artist_AlbumTitle:
+                case TracksModel::SortMode::Artist_AlbumYear:
+                {
+                    sortString = QLatin1String("ORDER BY artists.title IS NULL %1, artists.title %1, albums.title IS NULL %1, ");
+                    if (sortMode == TracksModel::SortMode::Artist_AlbumTitle) {
+                        sortString += QLatin1String("albums.title %1, ");
+                    } else {
+                        sortString += QLatin1String("year %1, albums.title %1, ");
+                    }
+                    sortInsideAlbum = true;
+                    break;
+                }
+                }
+                break;
+            }
+
+            if (sortInsideAlbum) {
+                switch (insideAlbumSortMode) {
+                case TracksModel::InsideAlbumSortMode::Title:
+                    sortString += QLatin1String("tracks.title %1");
+                    break;
+                case TracksModel::InsideAlbumSortMode::DiscNumber_Title:
+                    sortString += QLatin1String("discNumber IS NULL %1, discNumber %1, tracks.title %1");
+                    break;
+                case TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber:
+                    sortString += QLatin1String("discNumber IS NULL %1, discNumber %1, trackNumber %1, tracks.title %1");
+                    break;
+                }
+            }
+
+            queryString += sortString.arg(sortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
+        }
+        }
+    }
+
+    QString TracksModel::makeQueryString(QueryMode queryMode,
                                          SortMode sortMode,
                                          InsideAlbumSortMode insideAlbumSortMode,
                                          bool sortDescending,
@@ -241,110 +399,18 @@ namespace unplayer
                                          int genreId,
                                          bool& groupTracks)
     {
-        QString queryString(QLatin1String("SELECT tracks.id, filePath, tracks.title, duration, %1 "
-                                          "FROM tracks "
-                                          "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
-                                          "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
-                                          "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
-                                          "LEFT JOIN albums ON albums.id = tracks_albums.albumId "));
-
-        bool albumMode = false;
-        groupTracks = true;
-
-        switch (mode) {
-        case AllTracksMode:
-            break;
-        case ArtistMode:
-            if (artistId == 0) {
-                queryString += QLatin1String("WHERE artists.id IS NULL ");
-            } else {
-                queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artistId);
-            }
-            break;
-        case AlbumAllArtistsMode:
-            albumMode = true;
-            if (albumId == 0) {
-                queryString += QLatin1String("WHERE albums.id IS NULL ");
-            } else {
-                queryString += QString::fromLatin1("WHERE albums.id = %1 ").arg(albumId);
-            }
-            break;
-        case AlbumSingleArtistMode:
-            albumMode = true;
-            groupTracks = false; // no need
-            if (artistId == 0) {
-                queryString += QLatin1String("WHERE artists.id IS NULL ");
-            } else {
-                queryString += QString::fromLatin1("WHERE artists.id = %1 ").arg(artistId);
-            }
-            if (albumId == 0) {
-                queryString += QLatin1String("AND albums.id IS NULL ");
-            } else {
-                queryString += QString::fromLatin1("AND albums.id = %1 ").arg(albumId);
-            }
-            break;
-        case GenreMode:
-            queryString += QString::fromLatin1("JOIN tracks_genres ON tracks_genres.trackId = tracks.id "
-                                               "JOIN genres ON genres.id = tracks_genres.genreId "
-                                               "WHERE genres.id = %1 ").arg(genreId);
-        }
-
-        QString sortString;
-        bool sortInsideAlbum = false;
-
-        if (albumMode) {
-            sortString = QLatin1String("ORDER BY ");
-            sortInsideAlbum = true;
-        } else {
-            switch (sortMode) {
-            case SortMode::Title:
-                sortString = QLatin1String("ORDER BY tracks.title %1");
-                break;
-            case SortMode::AddedDate:
-                sortString = QLatin1String("ORDER BY tracks.id %1");
-                break;
-            case SortMode::ArtistAlbumTitle:
-            case SortMode::ArtistAlbumYear:
-            {
-                sortString = QLatin1String("ORDER BY artists.title IS NULL %1, artists.title %1, albums.title IS NULL %1, ");
-                if (sortMode == SortMode::ArtistAlbumTitle) {
-                    sortString += QLatin1String("albums.title %1, ");
-                } else {
-                    sortString += QLatin1String("year %1, albums.title %1, ");
-                }
-                groupTracks = false;
-                sortInsideAlbum = true;
-                break;
-            }
-            }
-        }
-
-        if (groupTracks) {
-            // For some reason this hack (concatenating by newline and then splitting, removing duplicates and concatenating by ', ')
-            // is faster than group_concat(DISTINCT ' ' || artists.title) that produces the same output (after you remove leading space)
-            // It will probably be slower for tracks with large number or artists/albums, but this is unlikely
-            queryString = queryString.arg(QLatin1String("group_concat(artists.title, '\n'), group_concat(albums.title, '\n')"));
-            queryString += QLatin1String("GROUP BY tracks.id ");
-        } else {
-            queryString = queryString.arg(QLatin1String("artists.title, albums.title"));
-        }
-
-        if (sortInsideAlbum) {
-            switch (insideAlbumSortMode) {
-            case InsideAlbumSortMode::Title:
-                sortString += QLatin1String("tracks.title %1");
-                break;
-            case InsideAlbumSortMode::DiscNumberTitle:
-                sortString += QLatin1String("discNumber IS NULL %1, discNumber %1, tracks.title %1");
-                break;
-            case InsideAlbumSortMode::DiscNumberTrackNumber:
-                sortString += QLatin1String("discNumber IS NULL %1, discNumber %1, trackNumber %1, tracks.title %1");
-                break;
-            }
-        }
-
-        queryString += sortString.arg(sortDescending ? QLatin1String("DESC") : QLatin1String("ASC"));
-
+        qInfo().nospace() << "queryMode = " << queryMode
+                        << ", sortMode = " << sortMode
+                        << ", insideAlbumSortMode = " << insideAlbumSortMode
+                        << ", sortDescending = " << sortDescending
+                        << ", artistId = " << artistId
+                        << ", albumId = " << albumId
+                        << ", genreId = " << genreId;
+        QString queryString(query::select());
+        query::join(queryString, queryMode);
+        query::where(queryString, queryMode, artistId, albumId, genreId);
+        query::group(queryString, queryMode, sortMode, groupTracks);
+        query::sort(queryString, queryMode, sortMode, insideAlbumSortMode, sortDescending);
         return queryString;
     }
 
@@ -389,7 +455,7 @@ namespace unplayer
 
     QString TracksModel::makeQueryString()
     {
-        return makeQueryString(mMode,
+        return makeQueryString(mQueryMode,
                                mSortMode,
                                mInsideAlbumSortMode,
                                mSortDescending,
@@ -408,4 +474,55 @@ namespace unplayer
     {
         return TracksModel::trackFromQuery(query, groupTracks);
     }
+
+    TracksModelSortMode::Mode TracksModelSortMode::fromInt(int value)
+    {
+        switch (value) {
+        case Title:
+        case AddedDate:
+        case Artist_AlbumTitle:
+        case Artist_AlbumYear:
+            return static_cast<Mode>(value);
+        default:
+            return Title;
+        }
+    }
+
+    TracksModelSortMode::Mode TracksModelSortMode::fromSettingsForAllTracks()
+    {
+        return fromInt(Settings::instance()->allTracksSortMode(Title));
+    }
+
+    TracksModelSortMode::Mode TracksModelSortMode::fromSettingsForArtist()
+    {
+        return fromInt(Settings::instance()->artistTracksSortMode(Title));
+    }
+
+    TracksModelInsideAlbumSortMode::Mode TracksModelInsideAlbumSortMode::fromInt(int value)
+    {
+        switch (value) {
+        case Title:
+        case DiscNumber_Title:
+        case DiscNumber_TrackNumber:
+            return static_cast<Mode>(value);
+        default:
+            return DiscNumber_TrackNumber;
+        }
+    }
+
+    TracksModelInsideAlbumSortMode::Mode TracksModelInsideAlbumSortMode::fromSettingsForAllTracks()
+    {
+        return fromInt(Settings::instance()->allTracksInsideAlbumSortMode(DiscNumber_TrackNumber));
+    }
+
+    TracksModelInsideAlbumSortMode::Mode TracksModelInsideAlbumSortMode::fromSettingsForArtist()
+    {
+        return fromInt(Settings::instance()->artistTracksInsideAlbumSortMode(DiscNumber_TrackNumber));
+    }
+
+    TracksModelInsideAlbumSortMode::Mode TracksModelInsideAlbumSortMode::fromSettingsForAlbum()
+    {
+        return fromInt(Settings::instance()->albumTracksSortMode(DiscNumber_TrackNumber));
+    }
+
 }

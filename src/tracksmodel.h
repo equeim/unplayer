@@ -30,27 +30,38 @@ namespace unplayer
     {
         Q_GADGET
     public:
+        // Not used when QueryMode is QueryAlbumTracksForAllArtists or QueryAlbumTracksForSingleArtist
         enum Mode
         {
             Title,
             AddedDate,
-            ArtistAlbumTitle,
-            ArtistAlbumYear
+            Artist_AlbumTitle,
+            Artist_AlbumYear
         };
         Q_ENUM(Mode)
+        static Mode fromInt(int value);
+        static Mode fromSettingsForAllTracks();
+        static Mode fromSettingsForArtist();
     };
 
     struct TracksModelInsideAlbumSortMode
     {
         Q_GADGET
     public:
+        // Only used when TracksModelSortMode is ArtistAlbumTitle or ArtistAlbumYear
+        // or QueryMode is QueryAlbumTracksForAllArtists or QueryAlbumTracksForSingleArtist
         enum Mode
         {
             Title,
-            DiscNumberTitle,
-            DiscNumberTrackNumber
+            DiscNumber_Title,
+            DiscNumber_TrackNumber
         };
         Q_ENUM(Mode)
+
+        static Mode fromInt(int value);
+        static Mode fromSettingsForAllTracks();
+        static Mode fromSettingsForArtist();
+        static Mode fromSettingsForAlbum();
     };
 
     class TracksModel : public AbstractLibraryModel<LibraryTrack>, public QQmlParserStatus
@@ -59,7 +70,7 @@ namespace unplayer
 
         Q_INTERFACES(QQmlParserStatus)
 
-        Q_PROPERTY(Mode mode READ mode WRITE setMode)
+        Q_PROPERTY(QueryMode queryMode READ queryMode WRITE setQueryMode)
         Q_PROPERTY(int artistId READ artistId WRITE setArtistId)
         Q_PROPERTY(int albumId READ albumId WRITE setAlbumId)
         Q_PROPERTY(int genreId READ genreId WRITE setGenreId)
@@ -78,15 +89,15 @@ namespace unplayer
         };
         Q_ENUM(Role)
 
-        enum Mode
+        enum QueryMode
         {
-            AllTracksMode,
-            ArtistMode,
-            AlbumAllArtistsMode,
-            AlbumSingleArtistMode,
-            GenreMode
+            QueryAllTracks,
+            QueryArtistTracks,
+            QueryAlbumTracksForAllArtists,
+            QueryAlbumTracksForSingleArtist,
+            QueryGenreTracks
         };
-        Q_ENUM(Mode)
+        Q_ENUM(QueryMode)
 
         enum QueryField
         {
@@ -107,15 +118,21 @@ namespace unplayer
 
         QVariant data(const QModelIndex& index, int role) const override;
 
-        Mode mode() const;
-        void setMode(Mode mode);
+        QueryMode queryMode() const;
+        void setQueryMode(QueryMode mode);
 
+        // Artist id for QuerySingleArtistTracks and QueryAlbumTracksForSingleArtist query modes
+        // Zero means query for unknown artist
         int artistId() const;
         void setArtistId(int id);
 
+        // Album id for QueryAlbumTracksForAllArtists and QueryAlbumTracksForSingleArtist query modes
+        // Zero means query for unknown album
         int albumId() const;
         void setAlbumId(int id);
 
+        // Genre id for QueryGenreTracks query mode
+        // Can't be zero
         int genreId() const;
         void setGenreId(int id);
 
@@ -137,7 +154,7 @@ namespace unplayer
         Q_INVOKABLE void removeTrack(int index, bool deleteFile);
         Q_INVOKABLE void removeTracks(const std::vector<int>& indexes, bool deleteFiles);
 
-        static QString makeQueryString(Mode mode,
+        static QString makeQueryString(QueryMode queryMode,
                                        SortMode sortMode,
                                        InsideAlbumSortMode insideAlbumSortMode,
                                        bool sortDescending,
@@ -164,14 +181,14 @@ namespace unplayer
     private:
         std::vector<LibraryTrack>& mTracks = mItems;
 
-        Mode mMode = AllTracksMode;
+        QueryMode mQueryMode = QueryAllTracks;
         int mArtistId = 0;
         int mAlbumId = 0;
         int mGenreId = 0;
 
         bool mSortDescending = false;
-        SortMode mSortMode = SortMode::ArtistAlbumYear;
-        InsideAlbumSortMode mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumberTrackNumber;
+        SortMode mSortMode{};
+        InsideAlbumSortMode mInsideAlbumSortMode{};
 
         bool mGroupTracks;
 

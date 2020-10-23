@@ -26,14 +26,14 @@ Page {
 
     property string pageTitle
 
-    property alias mode: tracksModel.mode
+    property alias queryMode: tracksModel.queryMode
     property alias artistId: tracksModel.artistId
     property alias genreId: tracksModel.genreId
 
     readonly property bool singleArtist: {
-        switch (mode) {
-        case Unplayer.TracksModel.ArtistMode:
-        case Unplayer.TracksModel.AlbumSingleArtistMode:
+        switch (queryMode) {
+        case Unplayer.TracksModel.QueryArtistTracks:
+        case Unplayer.TracksModel.QueryAlbumTracksForSingleArtist:
             return true
         default:
             return false;
@@ -146,8 +146,8 @@ Page {
         }
         section {
             property: {
-                if (tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumTitle ||
-                        tracksModel.sortMode === Unplayer.TracksModelSortMode.ArtistAlbumYear) {
+                if (tracksModel.sortMode === Unplayer.TracksModelSortMode.Artist_AlbumTitle ||
+                        tracksModel.sortMode === Unplayer.TracksModelSortMode.Artist_AlbumYear) {
                     if (singleArtist) {
                         return "album"
                     }

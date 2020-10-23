@@ -123,7 +123,7 @@ Page {
                     MenuItem {
                         text: qsTranslate("unplayer", "All tracks")
                         onClicked: pageStack.push("TracksPage.qml", {pageTitle: model.displayedArtist,
-                                                                     mode: Unplayer.TracksModel.ArtistMode,
+                                                                     queryMode: Unplayer.TracksModel.QueryArtistTracks,
                                                                      artistId: model.artistId})
                     }
 

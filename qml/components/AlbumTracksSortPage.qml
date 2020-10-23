@@ -69,15 +69,15 @@ Page {
             }
 
             SortModeListItem {
-                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_Title
                 text: qsTranslate("unplayer", "Disc number - Title")
-                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTitle
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_Title
             }
 
             SortModeListItem {
-                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
+                current: tracksModel.insideAlbumSortMode === Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_TrackNumber
                 text: qsTranslate("unplayer", "Disc number - Track number")
-                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumberTrackNumber
+                onClicked: tracksModel.insideAlbumSortMode = Unplayer.TracksModelInsideAlbumSortMode.DiscNumber_TrackNumber
             }
         }
 
