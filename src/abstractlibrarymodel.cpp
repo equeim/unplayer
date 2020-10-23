@@ -74,6 +74,7 @@ namespace unplayer
             QSqlQuery query(databaseGuard.db);
             if (!query.prepare(queryString)) {
                 qWarning() << "Prepare failed:" << query.lastError();
+                qWarning() << "Query:" << queryString;
                 return items;
             }
 
@@ -85,6 +86,7 @@ namespace unplayer
                 }
             } else {
                 qWarning() << "Exec failed: " << query.lastError();
+                qWarning() << "Query:" << queryString;
             }
 
             return items;
