@@ -70,7 +70,7 @@ namespace unplayer
 
         Q_INTERFACES(QQmlParserStatus)
 
-        Q_PROPERTY(QueryMode queryMode READ queryMode WRITE setQueryMode)
+        Q_PROPERTY(QueryMode queryMode READ queryMode WRITE setQueryMode NOTIFY queryModeChanged)
         Q_PROPERTY(int artistId READ artistId WRITE setArtistId)
         Q_PROPERTY(int albumId READ albumId WRITE setAlbumId)
         Q_PROPERTY(int genreId READ genreId WRITE setGenreId)
@@ -193,6 +193,7 @@ namespace unplayer
         bool mGroupTracks;
 
     signals:
+        void queryModeChanged(QueryMode queryMode);
         void sortModeChanged();
         void insideAlbumSortModeChanged();
     };

@@ -56,30 +56,27 @@ namespace unplayer
     {
         switch (mQueryMode) {
         case QueryAllTracks:
-            mSortDescending = Settings::instance()->allTracksSortDescending();
-            mSortMode = TracksModelSortMode::fromSettingsForAllTracks();
-            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForAllTracks();
+            setSortDescending(Settings::instance()->allTracksSortDescending());
+            setSortMode(TracksModelSortMode::fromSettingsForAllTracks());
+            setInsideAlbumSortMode(TracksModelInsideAlbumSortMode::fromSettingsForAllTracks());
             break;
         case QueryArtistTracks:
-            mSortDescending = Settings::instance()->artistTracksSortDescending();
-            mSortMode = TracksModelSortMode::fromSettingsForArtist();
-            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForArtist();
+            setSortDescending(Settings::instance()->artistTracksSortDescending());
+            setSortMode(TracksModelSortMode::fromSettingsForArtist());
+            setInsideAlbumSortMode(TracksModelInsideAlbumSortMode::fromSettingsForArtist());
             break;
         case QueryAlbumTracksForAllArtists:
         case QueryAlbumTracksForSingleArtist:
-            mSortDescending = Settings::instance()->albumTracksSortDescending();
-            mSortMode = {}; // ignored
-            mInsideAlbumSortMode = TracksModelInsideAlbumSortMode::fromSettingsForAlbum();
+            setSortDescending(Settings::instance()->albumTracksSortDescending());
+            setSortMode({}); // ignored
+            setInsideAlbumSortMode(TracksModelInsideAlbumSortMode::fromSettingsForAlbum());
             break;
         case QueryGenreTracks:
-            mSortDescending = false;
-            mSortMode = SortMode::Artist_AlbumYear;
-            mInsideAlbumSortMode = InsideAlbumSortMode::DiscNumber_TrackNumber;
+            setSortDescending(false);
+            setSortMode(SortMode::Artist_AlbumYear);
+            setInsideAlbumSortMode(InsideAlbumSortMode::DiscNumber_TrackNumber);
             break;
         }
-
-        emit sortModeChanged();
-        emit insideAlbumSortModeChanged();
 
         execQuery();
     }
@@ -111,7 +108,10 @@ namespace unplayer
 
     void TracksModel::setQueryMode(TracksModel::QueryMode mode)
     {
-        mQueryMode = mode;
+        if (mode != mQueryMode) {
+            mQueryMode = mode;
+            emit queryModeChanged(mode);
+        }
     }
 
     int TracksModel::artistId() const
