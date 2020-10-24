@@ -437,7 +437,7 @@
     </message>
     <message>
         <source>Updating library...</source>
-        <translation>Actualizando libreria</translation>
+        <translation type="vanished">Actualizando libreria</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="vanished">Etiquetar «Artista del álbum» en vez de «Artista»</translation>
+        <translation>Etiquetar «Artista del álbum» en vez de «Artista»</translation>
     </message>
     <message>
         <source>Save</source>

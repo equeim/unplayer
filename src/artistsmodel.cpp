@@ -238,15 +238,23 @@ namespace unplayer
 
     QString ArtistsModel::makeQueryString()
     {
-        return QString::fromLatin1("SELECT artists.id, artists.title, COUNT(DISTINCT CASE WHEN albums.id IS NULL THEN 0 ELSE albums.id END), COUNT(tracks.id), SUM(duration) "
-                                   "FROM tracks "
-                                   "LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
-                                   "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
-                                   "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
-                                   "LEFT JOIN albums ON albums.id = tracks_albums.albumId "
-                                   "GROUP BY artists.id "
-                                   "ORDER BY artists.id IS NULL %1, artists.title %1").arg(mSortDescending ? QLatin1String("DESC")
-                                                                                                           : QLatin1String("ASC"));
+        QString queryString(QLatin1String("SELECT artists.id, artists.title, COUNT(DISTINCT CASE WHEN albums.id IS NULL THEN 0 ELSE albums.id END), COUNT(tracks.id), SUM(duration) "
+                                          "FROM tracks "));
+        if (Settings::instance()->useAlbumArtist()) {
+            queryString += QLatin1String("LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                         "LEFT JOIN albums ON albums.id = tracks_albums.albumId "
+                                         "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id "
+                                         "LEFT JOIN artists ON artists.id = albums_artists.artistId ");
+        } else {
+            queryString += QLatin1String("LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
+                                         "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
+                                         "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                         "LEFT JOIN albums ON albums.id = tracks_albums.albumId ");
+        }
+        queryString += QString::fromLatin1("GROUP BY artists.id "
+                                           "ORDER BY artists.id IS NULL %1, artists.title %1").arg(mSortDescending ? QLatin1String("DESC")
+                                                                                                                   : QLatin1String("ASC"));
+        return queryString;
     }
 
     ArtistsModel::AbstractItemFactory* ArtistsModel::createItemFactory()

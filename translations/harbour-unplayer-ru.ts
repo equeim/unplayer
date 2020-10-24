@@ -200,15 +200,15 @@
         <translation>Нет треков</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="389"/>
-        <location filename="../src/tracksmodel.cpp" line="375"/>
+        <location filename="../src/albumsmodel.cpp" line="402"/>
+        <location filename="../src/tracksmodel.cpp" line="461"/>
         <source>Unknown album</source>
         <translation>Неизвестный альбом</translation>
     </message>
     <message>
-        <location filename="../src/albumsmodel.cpp" line="387"/>
-        <location filename="../src/artistsmodel.cpp" line="262"/>
-        <location filename="../src/tracksmodel.cpp" line="374"/>
+        <location filename="../src/albumsmodel.cpp" line="400"/>
+        <location filename="../src/artistsmodel.cpp" line="270"/>
+        <location filename="../src/tracksmodel.cpp" line="460"/>
         <source>Unknown artist</source>
         <translation>Неизвестный исполнитель</translation>
     </message>
@@ -326,7 +326,7 @@
         <translation>Сортировать по возрастанию</translation>
     </message>
     <message>
-        <location filename="../qml/components/ArtistsPage.qml" line="207"/>
+        <location filename="../qml/components/ArtistsPage.qml" line="222"/>
         <source>Select artists</source>
         <translation>Выбрать исполнителей</translation>
     </message>
@@ -637,8 +637,8 @@
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="108"/>
-        <location filename="../qml/components/SettingsPage.qml" line="116"/>
+        <location filename="../qml/components/SettingsPage.qml" line="114"/>
+        <location filename="../qml/components/SettingsPage.qml" line="122"/>
         <source>Library Directories</source>
         <translation>Каталоги библиотеки</translation>
     </message>
@@ -728,6 +728,7 @@
         <translation>Номер диска - Номер трека</translation>
     </message>
     <message>
+        <location filename="../qml/components/ArtistsPage.qml" line="215"/>
         <location filename="../qml/components/TagEditDialog.qml" line="178"/>
         <location filename="../qml/components/TrackInfoPage.qml" line="60"/>
         <source>Artist</source>
@@ -783,6 +784,7 @@
         <translation>Исполнители альбома</translation>
     </message>
     <message>
+        <location filename="../qml/components/ArtistsPage.qml" line="216"/>
         <location filename="../qml/components/TagEditDialog.qml" line="185"/>
         <location filename="../qml/components/TrackInfoPage.qml" line="66"/>
         <source>Album artist</source>
@@ -987,12 +989,13 @@
         <translation>Открывать библиотеку при запуске</translation>
     </message>
     <message>
+        <location filename="../qml/components/SettingsPage.qml" line="96"/>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="vanished">Использовать тег &quot;Исполнитель альбома&quot; вместо &quot;Исполнитель&quot;, если он установлен</translation>
+        <translation>Использовать тег &quot;Исполнитель альбома&quot; вместо &quot;Исполнитель&quot;, если он установлен</translation>
     </message>
     <message>
-        <location filename="../qml/components/SettingsPage.qml" line="138"/>
-        <location filename="../qml/components/SettingsPage.qml" line="146"/>
+        <location filename="../qml/components/SettingsPage.qml" line="144"/>
+        <location filename="../qml/components/SettingsPage.qml" line="152"/>
         <source>Blacklisted Directories</source>
         <translation>Черный список каталогов</translation>
     </message>

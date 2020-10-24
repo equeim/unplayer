@@ -41,6 +41,7 @@
 #include "librarytracksadder.h"
 #include "libraryupdaterunnable.h"
 #include "mediaartutils.h"
+#include "settings.h"
 #include "sqlutils.h"
 #include "stdutils.h"
 #include "tagutils.h"
@@ -613,8 +614,14 @@ namespace unplayer
     int LibraryUtils::artistsCount() const
     {
         if (mDatabaseInitialized) {
+            QLatin1String queryString;
+            if (Settings::instance()->useAlbumArtist()) {
+                queryString = QLatin1String("SELECT COUNT(DISTINCT artistId) FROM albums JOIN albums_artists ON albums_artists.albumId = albums.id");
+            } else {
+                queryString = QLatin1String("SELECT COUNT(*) FROM artists");
+            }
             QSqlQuery query;
-            if (query.exec(QLatin1String("SELECT COUNT(*) FROM artists"))) {
+            if (query.exec(queryString)) {
                 if (query.next()) {
                     return query.value(0).toInt();
                 }

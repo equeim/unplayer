@@ -879,5 +879,9 @@
         <source>%1 Hz</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

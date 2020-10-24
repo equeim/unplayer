@@ -725,7 +725,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="vanished">Koristi oznaku „Izvođač albuma” umjesto „Izvođač”, ako postoji</translation>
+        <translation>Koristi oznaku „Izvođač albuma” umjesto „Izvođač”, ako postoji</translation>
     </message>
     <message>
         <source>Save</source>

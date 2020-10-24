@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation type="vanished">Verwenden Sie den Tag „Album-Interpret“ anstelle von „Künstler“, wenn er verfügbar ist</translation>
+        <translation>Verwenden Sie den Tag „Album-Interpret“ anstelle von „Künstler“, wenn er verfügbar ist</translation>
     </message>
     <message>
         <source>Save</source>

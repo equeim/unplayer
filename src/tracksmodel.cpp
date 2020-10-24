@@ -245,12 +245,19 @@ namespace unplayer
                                  "FROM tracks ");
         }
 
-        void join(QString& queryString, TracksModel::QueryMode queryMode)
+        void join(QString& queryString, TracksModel::QueryMode queryMode, bool useAlbumArtist)
         {
-            queryString += QLatin1String("LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
-                                         "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
-                                         "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
-                                         "LEFT JOIN albums ON albums.id = tracks_albums.albumId ");
+            if (useAlbumArtist) {
+                queryString += QLatin1String("LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                             "LEFT JOIN albums ON albums.id = tracks_albums.albumId "
+                                             "LEFT JOIN albums_artists ON albums_artists.albumId = albums.id "
+                                             "LEFT JOIN artists ON artists.id = albums_artists.artistId ");
+            } else {
+                queryString += QLatin1String("LEFT JOIN tracks_artists ON tracks_artists.trackId = tracks.id "
+                                             "LEFT JOIN artists ON artists.id = tracks_artists.artistId "
+                                             "LEFT JOIN tracks_albums ON tracks_albums.trackId = tracks.id "
+                                             "LEFT JOIN albums ON albums.id = tracks_albums.albumId ");
+            }
             if (queryMode == TracksModel::QueryGenreTracks) {
                 queryString += QLatin1String("JOIN tracks_genres ON tracks_genres.trackId = tracks.id "
                                              "JOIN genres ON genres.id = tracks_genres.genreId ");
@@ -301,6 +308,7 @@ namespace unplayer
         void group(QString& queryString,
                    TracksModel::QueryMode queryMode,
                    TracksModel::SortMode sortMode,
+                   bool useAlbumArtist,
                    bool& groupTracks) {
             groupTracks = true;
             switch (queryMode) {
@@ -313,7 +321,9 @@ namespace unplayer
                 switch (sortMode) {
                 case TracksModel::SortMode::Artist_AlbumTitle:
                 case TracksModel::SortMode::Artist_AlbumYear:
-                    groupTracks = false;
+                    if (!useAlbumArtist) {
+                        groupTracks = false;
+                    }
                     break;
                 default:
                     break;
@@ -405,11 +415,12 @@ namespace unplayer
                         << ", sortDescending = " << sortDescending
                         << ", artistId = " << artistId
                         << ", albumId = " << albumId
-                        << ", genreId = " << genreId;
+                        << ", genreId = " << genreId
+                        << ", useAlbumArtist = " << Settings::instance()->useAlbumArtist();
         QString queryString(query::select());
-        query::join(queryString, queryMode);
+        query::join(queryString, queryMode, Settings::instance()->useAlbumArtist());
         query::where(queryString, queryMode, artistId, albumId, genreId);
-        query::group(queryString, queryMode, sortMode, groupTracks);
+        query::group(queryString, queryMode, sortMode, Settings::instance()->useAlbumArtist(), groupTracks);
         query::sort(queryString, queryMode, sortMode, insideAlbumSortMode, sortDescending);
         return queryString;
     }

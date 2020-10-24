@@ -15,7 +15,6 @@
 
 ### Removed
 - MKA files and M4A files with ALAC codec are now handled as unsupported
-- Option to use "Album Artist" tag instead of "Artist"
 
 ## [2.0.4] - 2020-04-06
 ### Changed
