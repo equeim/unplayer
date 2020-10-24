@@ -443,11 +443,20 @@ namespace unplayer
 
     void Queue::setRepeatMode(int mode)
     {
-        const auto newMode = static_cast<RepeatMode>(mode);
-        if (newMode != mRepeatMode) {
-            mRepeatMode = newMode;
-            emit repeatModeChanged();
+        switch (mode) {
+        case NoRepeat:
+        case RepeatAll:
+        case RepeatOne:
+        {
+            const auto newMode = static_cast<RepeatMode>(mode);
+            if (newMode != mRepeatMode) {
+                mRepeatMode = newMode;
+                emit repeatModeChanged();
+            }
+            return;
         }
+        }
+        qWarning("Failed to convert value %d to RepeatMode", mode);
     }
 
     bool Queue::isAddingTracks() const

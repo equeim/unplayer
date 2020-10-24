@@ -50,6 +50,19 @@ namespace unplayer
         };
     }
 
+    AlbumsModel::SortMode AlbumsModel::sortModeFromInt(int value)
+    {
+        switch (value) {
+        case SortAlbum:
+        case SortYear:
+        case SortArtistAlbum:
+        case SortArtistYear:
+            return static_cast<SortMode>(value);
+        }
+        qWarning("Failed to convert value %d to SortMode", value);
+        return {};
+    }
+
     AlbumsModel::AlbumsModel()
     {
         const auto setMediaArt = [this](int albumId, const QString& mediaArt) {
@@ -106,10 +119,10 @@ namespace unplayer
     {
         if (mAllArtists) {
             mSortDescending = Settings::instance()->allAlbumsSortDescending();
-            mSortMode = static_cast<SortMode>(Settings::instance()->allAlbumsSortMode(SortArtistYear));
+            mSortMode = sortModeFromInt(Settings::instance()->allAlbumsSortMode(SortArtistYear));
         } else {
             mSortDescending = Settings::instance()->albumsSortDescending();
-            mSortMode = static_cast<SortMode>(Settings::instance()->albumsSortMode(SortYear));
+            mSortMode = sortModeFromInt(Settings::instance()->albumsSortMode(SortYear));
         }
 
         emit sortModeChanged();

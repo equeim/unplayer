@@ -483,9 +483,9 @@ namespace unplayer
         case Artist_AlbumTitle:
         case Artist_AlbumYear:
             return static_cast<Mode>(value);
-        default:
-            return Title;
         }
+        qWarning("Failed to convert value %d to SortMode", value);
+        return {};
     }
 
     TracksModelSortMode::Mode TracksModelSortMode::fromSettingsForAllTracks()
@@ -505,9 +505,9 @@ namespace unplayer
         case DiscNumber_Title:
         case DiscNumber_TrackNumber:
             return static_cast<Mode>(value);
-        default:
-            return DiscNumber_TrackNumber;
         }
+        qWarning("Failed to convert value %d to InsideAlbumSortMode", value);
+        return {};
     }
 
     TracksModelInsideAlbumSortMode::Mode TracksModelInsideAlbumSortMode::fromSettingsForAllTracks()

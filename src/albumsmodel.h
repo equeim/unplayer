@@ -76,6 +76,7 @@ namespace unplayer
             SortArtistYear
         };
         Q_ENUM(SortMode)
+        static SortMode sortModeFromInt(int value);
 
         AlbumsModel();
         ~AlbumsModel() override;
