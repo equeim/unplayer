@@ -78,6 +78,8 @@ namespace unplayer
             break;
         }
 
+        mComponentCompleted = true;
+
         execQuery();
     }
 
@@ -153,7 +155,9 @@ namespace unplayer
     {
         if (descending != mSortDescending) {
             mSortDescending = descending;
-            execQuery();
+            if (mComponentCompleted) {
+                execQuery();
+            }
         }
     }
 
@@ -167,7 +171,9 @@ namespace unplayer
         if (mode != mSortMode) {
             mSortMode = mode;
             emit sortModeChanged();
-            execQuery();
+            if (mComponentCompleted) {
+                execQuery();
+            }
         }
     }
 
@@ -181,7 +187,9 @@ namespace unplayer
         if (mode != mInsideAlbumSortMode) {
             mInsideAlbumSortMode = mode;
             emit insideAlbumSortModeChanged();
-            execQuery();
+            if (mComponentCompleted) {
+                execQuery();
+            }
         }
     }
 

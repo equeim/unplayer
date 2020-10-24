@@ -181,6 +181,8 @@ namespace unplayer
     private:
         std::vector<LibraryTrack>& mTracks = mItems;
 
+        bool mComponentCompleted = false;
+
         QueryMode mQueryMode = QueryAllTracks;
         int mArtistId = 0;
         int mAlbumId = 0;
