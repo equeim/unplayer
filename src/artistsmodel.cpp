@@ -127,9 +127,9 @@ namespace unplayer
         bool groupTracks = false;
         QSqlQuery query;
         if (query.exec(TracksModel::makeQueryString(TracksModel::QueryArtistTracks,
-                                                    TracksModel::SortMode::Artist_AlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
-                                                    false,
+                                                    TracksModelSortMode::fromSettingsForArtist(),
+                                                    TracksModelInsideAlbumSortMode::fromSettingsForArtist(),
+                                                    Settings::instance()->artistTracksSortDescending(),
                                                     artist.id,
                                                     0,
                                                     0,
@@ -168,9 +168,9 @@ namespace unplayer
         bool groupTracks = false;
         QSqlQuery query;
         if (query.exec(TracksModel::makeQueryString(TracksModel::QueryArtistTracks,
-                                                    TracksModel::SortMode::Artist_AlbumYear,
-                                                    TracksModel::InsideAlbumSortMode::DiscNumber_TrackNumber,
-                                                    false,
+                                                    TracksModelSortMode::fromSettingsForArtist(),
+                                                    TracksModelInsideAlbumSortMode::fromSettingsForArtist(),
+                                                    Settings::instance()->artistTracksSortDescending(),
                                                     artist.id,
                                                     0,
                                                     0,
