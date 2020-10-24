@@ -35,6 +35,7 @@ namespace unplayer
         const QLatin1String useDirectoryMediaArtKey("useDirectoryMediaArt");
         const QLatin1String restorePlayerStateKey("restorePlayerState");
         const QLatin1String showVideoFilesKey("showVideoFiles");
+        const QLatin1String useAlbumArtistKey("useAlbumArtist");
         const QLatin1String showNowPlayingCodecInfoKey("showNowPlayingCodecInfo");
 
         const QLatin1String artistsSortDescendingKey("artistsSortDescending");
@@ -96,6 +97,16 @@ namespace unplayer
     void Settings::setOpenLibraryOnStartup(bool open)
     {
         mSettings->setValue(openLibraryOnStartupKey, open);
+    }
+
+    bool Settings::useAlbumArtist() const
+    {
+        return mSettings->value(useAlbumArtistKey, false).toBool();
+    }
+
+    void Settings::setUseAlbumArtist(bool use)
+    {
+        mSettings->setValue(useAlbumArtistKey, use);
     }
 
     QStringList Settings::blacklistedDirectories() const
