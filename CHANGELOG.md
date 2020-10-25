@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [2.1.0] - 2020-10-25
 ### Added
 - Displaying information about audio codec, bit depth, sample rate and channel count
 - "Replace queue" action when selecting multiple albums, artists, genres or tracks
@@ -14,7 +14,7 @@
   considered belonging to different albums.
 
 ### Removed
-- MKA files and M4A files with ALAC codec are now handled as unsupported
+- M4A files with ALAC codec and MKA files are now handled as unsupported
 
 ## [2.0.4] - 2020-04-06
 ### Changed

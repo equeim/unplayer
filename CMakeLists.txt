@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 cmake_policy(VERSION ${CMAKE_MINIMUM_REQUIRED_VERSION}..3.17)
 
-project(harbour-unplayer VERSION 2.0.4 LANGUAGES CXX)
+project(harbour-unplayer VERSION 2.1.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
