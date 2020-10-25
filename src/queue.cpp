@@ -546,15 +546,6 @@ namespace unplayer
 
             for (const LibraryTrack& libraryTrack : libraryTracks) {
                 const QString& filePath = libraryTrack.filePath;
-                const QFileInfo info(filePath);
-                if (!info.isFile()) {
-                    qWarning() << "File does not exist or is not a file:" << filePath;
-                    continue;
-                }
-                if (!info.isReadable()) {
-                    qWarning() << "File is not readable:" << filePath;
-                    continue;
-                }
                 newTracks.push_back(std::make_shared<QueueTrack>(QUrl::fromLocalFile(filePath),
                                                                  libraryTrack.title,
                                                                  libraryTrack.duration,
