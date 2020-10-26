@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation>一个旗鱼系统简易播放器</translation>
+        <translation>旗鱼系统简易音乐播放器</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -26,12 +26,12 @@
     <message numerus="yes">
         <source>%n track(s)</source>
         <translation>
-            <numerusform>%n 条音轨</numerusform>
+            <numerusform>%n 首音乐</numerusform>
         </translation>
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>新播放列表...</translation>
+        <translation>新建播放列表...</translation>
     </message>
     <message>
         <source>Search</source>
@@ -51,12 +51,12 @@
     </message>
     <message>
         <source>No tracks</source>
-        <translation>无音乐</translation>
+        <translation>尚无音乐</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
         <translation>
-            <numerusform>已选择％n条曲目</numerusform>
+            <numerusform>已选择 %n 首音乐</numerusform>
         </translation>
     </message>
     <message>
@@ -82,7 +82,7 @@
     <message numerus="yes">
         <source>%n album(s) selected</source>
         <translation>
-            <numerusform>%n张专辑</numerusform>
+            <numerusform>已选择 %n 张专辑</numerusform>
         </translation>
     </message>
     <message>
@@ -92,7 +92,7 @@
     <message numerus="yes">
         <source>%n album(s)</source>
         <translation>
-            <numerusform>%n个专辑</numerusform>
+            <numerusform>%n 张专辑</numerusform>
         </translation>
     </message>
     <message>
@@ -101,16 +101,16 @@
     </message>
     <message>
         <source>No artists</source>
-        <translation>无艺人</translation>
+        <translation>尚无艺人</translation>
     </message>
     <message>
         <source>All tracks</source>
-        <translation>全部歌曲</translation>
+        <translation>全部音乐</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
         <translation>
-            <numerusform>已选择 ％n 位艺术家</numerusform>
+            <numerusform>已选择 %n 位艺人</numerusform>
         </translation>
     </message>
     <message>
@@ -123,7 +123,7 @@
     </message>
     <message>
         <source>Track information</source>
-        <translation>歌曲信息</translation>
+        <translation>音乐信息</translation>
     </message>
     <message>
         <source>SD card</source>
@@ -135,12 +135,12 @@
     </message>
     <message>
         <source>No files</source>
-        <translation>无文件</translation>
+        <translation>暂无文件</translation>
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>已选择 %n 个曲风</numerusform>
         </translation>
     </message>
     <message>
@@ -149,8 +149,8 @@
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 首音乐, %1</numerusform>
         </translation>
     </message>
     <message>
@@ -163,35 +163,35 @@
     </message>
     <message>
         <source>License</source>
-        <translation>许可协议</translation>
+        <translation>许可证</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
         <translation>
-            <numerusform>%n个艺人</numerusform>
+            <numerusform>%n 位艺人</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
         <translation>
-            <numerusform>%n个专辑</numerusform>
+            <numerusform>%n 张专辑</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 首音乐</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n 个播放列表</numerusform>
         </translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation>歌曲</translation>
+        <translation>音乐</translation>
     </message>
     <message>
         <source>Playlists</source>
@@ -207,11 +207,11 @@
     </message>
     <message>
         <source>Remove from playlist</source>
-        <translation>从播放列表移除</translation>
+        <translation>移出播放列表</translation>
     </message>
     <message>
         <source>Removing</source>
-        <translation>正在移除</translation>
+        <translation>移除</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -219,12 +219,12 @@
     </message>
     <message>
         <source>Removing playlist</source>
-        <translation>正在移除播放列表</translation>
+        <translation>移除播放列表</translation>
     </message>
     <message numerus="yes">
         <source>Removing %n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>移除 %n 首音乐</numerusform>
         </translation>
     </message>
     <message>
@@ -233,14 +233,14 @@
     </message>
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>已选择 %n 个播放列表</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>移除 %n 个播放列表</numerusform>
         </translation>
     </message>
     <message>
@@ -257,7 +257,7 @@
     </message>
     <message>
         <source>All</source>
-        <translation>所有</translation>
+        <translation>全部</translation>
     </message>
     <message>
         <source>None</source>
@@ -277,7 +277,7 @@
     </message>
     <message>
         <source>Track number</source>
-        <translation>歌曲数量</translation>
+        <translation>音乐编号</translation>
     </message>
     <message>
         <source>Genre</source>
@@ -361,8 +361,8 @@
     </message>
     <message numerus="yes">
         <source>%n file(s) selected</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>已选择 %n 个文件</numerusform>
         </translation>
     </message>
     <message>
@@ -441,7 +441,7 @@
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation>清除队列</translation>
+        <translation>清空队列</translation>
     </message>
     <message>
         <source>Open library on startup</source>
@@ -461,7 +461,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>偏好将封面艺术作为单独的文件放在音乐文件目录中，而不是从音乐文件中提取</translation>
+        <translation>倾向于将艺术封面作为单独的文件放置于音乐文件目录中，而不是从音乐文件中提取</translation>
     </message>
     <message>
         <source>Player</source>
@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Album title</source>
-        <translation>封面标题</translation>
+        <translation>专辑标题</translation>
     </message>
     <message>
         <source>Album year</source>
@@ -534,7 +534,7 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
         <translation>
-            <numerusform>你是否想要删除 %n 个选择的专辑?</numerusform>
+            <numerusform>是否想要删除 %n 张已选专辑?</numerusform>
         </translation>
     </message>
     <message>
@@ -548,7 +548,7 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
         <translation>
-            <numerusform>你是否想要移除 %n 位选择的艺人?</numerusform>
+            <numerusform>是否想要移除 %n 位已选艺人?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -560,7 +560,7 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
         <translation>
-            <numerusform>你是否想移除 %n 个选择的曲风?</numerusform>
+            <numerusform>是否想移除 %n 个已选曲风?</numerusform>
         </translation>
     </message>
     <message>
@@ -590,7 +590,7 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
         <translation>
-            <numerusform>你是否想删除 %n 个选择的歌曲?</numerusform>
+            <numerusform>是否想删除 %n 首已选音乐?</numerusform>
         </translation>
     </message>
     <message>
@@ -603,11 +603,11 @@
     </message>
     <message>
         <source>Disc number - Title</source>
-        <translation>唱片号码--标题</translation>
+        <translation>唱片编号 --标题</translation>
     </message>
     <message>
         <source>Disc number - Track number</source>
-        <translation>唱片号码--歌曲编码</translation>
+        <translation>唱片编号--音乐编码</translation>
     </message>
     <message>
         <source>Open URL</source>
@@ -623,11 +623,11 @@
     </message>
     <message>
         <source>Disc number</source>
-        <translation>唱片号码</translation>
+        <translation>唱片编号</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>拷贝</translation>
+        <translation>复制</translation>
     </message>
     <message>
         <source>Edit tags</source>
@@ -635,47 +635,47 @@
     </message>
     <message>
         <source>Preparing</source>
-        <translation>准备中</translation>
+        <translation>准备</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation>正在扫描文件系统</translation>
+        <translation>扫描文件系统</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation>正在抽取元数据</translation>
+        <translation>抽取元数据</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation>完成中</translation>
+        <translation>即将完成</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
         <translation>
-            <numerusform>找到 %n 首新歌</numerusform>
+            <numerusform>找到 %n 首新音乐</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
         <translation>
-            <numerusform>已处理 %1 of n 首歌曲</numerusform>
+            <numerusform>已处理 %1 of %n 首音乐</numerusform>
         </translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation>放完歌曲后停住播放: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</translation>
+        <translation>播完音乐后停止: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation>放完歌曲后停止播放: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
+        <translation>播完音乐后停止: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Adding tracks...</source>
-        <translation>正在添加歌曲……</translation>
+        <translation>正在添加音乐…</translation>
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>正在保存标签……</translation>
+        <translation>正在保存标签…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation>递增每个文件的歌曲编号</translation>
+        <translation>递增每个文件的音乐编号</translation>
     </message>
     <message>
         <source>Add</source>
@@ -725,55 +725,55 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>替换队列</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>在“正在播放”页面显示音频编解码器</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>音频编解码器</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>比特深度</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>采样率</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>频道</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>文件格式不受支持</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>播放文件错误</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bits</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
