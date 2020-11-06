@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Tags werden gespeichert&#xa0;…</translation>
+        <translation>Tags werden gespeichert …</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -749,55 +749,55 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Warteschlange ersetzen</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodec-Informationen auf dem Abspielbildschirm anzeigen</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodec</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Samplingtiefe</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Samplerate</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanäle</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateiformat wird nicht unterstützt</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler beim Abspielen der Datei</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bits</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
