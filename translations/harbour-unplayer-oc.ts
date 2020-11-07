@@ -5,19 +5,19 @@
     <name>unplayer</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>A prepaus</translation>
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Un simple lector de musica per SailfishOS</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Traduccions</translation>
     </message>
     <message>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Traductors</translation>
     </message>
     <message>
         <source>Add to playlist</source>
