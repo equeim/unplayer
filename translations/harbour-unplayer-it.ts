@@ -226,7 +226,7 @@
     </message>
     <message>
         <source>Remove playlist</source>
-        <translation>Rimuovi la playlist</translation>
+        <translation>Rimuovi la scaletta</translation>
     </message>
     <message>
         <source>Removing playlist</source>
@@ -545,18 +545,18 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation>Sei sicuro di voler rimuovere questo album?</translation>
+        <translation>Sei sicuro/a di voler rimuovere questo album?</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
         <translation>
-            <numerusform>Sei sicuro di voler rimuovere %n album selezionato?</numerusform>
-            <numerusform>Sei sicuro di voler rimuovere %n album selezionati?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n album selezionato?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n album selezionati?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation>Sei sicuro di voler rimuovere questo artista?</translation>
+        <translation>Sei sicuro/a di voler rimuovere questo artista?</translation>
     </message>
     <message>
         <source>Removing files...</source>
@@ -565,8 +565,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
         <translation>
-            <numerusform>Sei sicuro di voler rimuovere %n artista selezionato?</numerusform>
-            <numerusform>Sei sicuro di voler rimuovere %n artisti selezionati?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n artista selezionato?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n artisti selezionati?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -579,17 +579,17 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
         <translation>
-            <numerusform>Sei sicuro di voler rimuovere %n genere selezionato?</numerusform>
-            <numerusform>Sei sicuro di voler rimuovere %n generi selezionati?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n genere selezionato?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere %n generi selezionati?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation>Sei sicuro di voler rimuovere questo genere?</translation>
+        <translation>Sei sicuro/a di voler rimuovere questo genere?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation>Sei sicuro di voler rimuovere questo brano?</translation>
+        <translation>Sei sicuro/a di voler rimuovere questo brano?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
@@ -606,8 +606,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
         <translation>
-            <numerusform>Sei sicuro di voler rimuovere i %n brano selezionato?</numerusform>
-            <numerusform>Sei sicuro di voler rimuovere i %n brani selezionati?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere i %n brano selezionato?</numerusform>
+            <numerusform>Sei sicuro/a di voler rimuovere i %n brani selezionati?</numerusform>
         </translation>
     </message>
     <message>
@@ -648,7 +648,7 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Modifica i tag</translation>
+        <translation>Modifica le etichette</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -675,9 +675,9 @@
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 traccia di %n elaborata</numerusform>
+            <numerusform>%1 tracce di %n elaborate</numerusform>
         </translation>
     </message>
     <message>
@@ -686,7 +686,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Salvando i tag…</translation>
+        <translation>Salvando le etichette…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Usa il tag «Artista dell&apos;album» invece di «Artista», se disponibile</translation>
+        <translation>Usa l&apos;etichetta «Artista dell&apos;album» invece di «Artista», se disponibile</translation>
     </message>
     <message>
         <source>Save</source>
@@ -703,17 +703,17 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>I tag selezionati verranno applicati a %n file</numerusform>
-            <numerusform>I tag selezionati verranno applicati ai %n file</numerusform>
+            <numerusform>Le etichette selezionate verranno applicate a %n file</numerusform>
+            <numerusform>Le etichette selezionate verranno applicate ai %n file</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation>Verranno applicati solo i tag selezionati</translation>
+        <translation>Verranno applicate solo le etichette selezionate</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation>Impossibile leggere i tag da questo file</translation>
+        <translation>Impossibile leggere le etichette da questo file</translation>
     </message>
     <message>
         <source>Album artists</source>
@@ -741,55 +741,55 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Sostituisci la coda</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra le informazioni sul codec audio nella schermata In riproduzione</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec audio</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Profondità bit</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Frequenza di campionamento</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Canali</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Il formato del file non è supportato</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante la riproduzione del file</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bit</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
