@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Lista nueva</translation>
+        <translation>Lista nueva…</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Añadir directorio</translation>
+        <translation>Añadir directorio…</translation>
     </message>
     <message>
         <source>Select directory</source>
@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Guardando etiquetas</translation>
+        <translation>Guardando etiquetas…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -761,7 +761,7 @@
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation>Muestra la información  de audio en pantalla de Reproducción</translation>
+        <translation>Muestra la información de audio en pantalla de Reproducción</translation>
     </message>
     <message>
         <source>Audio codec</source>
@@ -789,11 +789,11 @@
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation>%1 kbit/s</translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation>%1 bits</translation>
+        <translation>%1 bits</translation>
     </message>
     <message>
         <source>%1 Hz</source>
