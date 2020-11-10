@@ -333,11 +333,11 @@
     </message>
     <message>
         <source>%1 ZiB</source>
-        <translation>%1 ZiB</translation>
+        <translation>%1 ZiB</translation>
     </message>
     <message>
         <source>%1 YiB</source>
-        <translation>%1 YiB</translation>
+        <translation>%1 YiB</translation>
     </message>
     <message>
         <source>Source Code</source>
@@ -729,11 +729,11 @@
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation>%1 kHz · %L2 kbit/s · %3</translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
@@ -765,11 +765,11 @@
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation>%1 kbit/s</translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation>%1 bits</translation>
+        <translation>%1 bit</translation>
     </message>
     <message>
         <source>%1 Hz</source>
