@@ -541,18 +541,18 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer cet album ?</translation>
+        <translation>Êtes-vous sûr·e de vouloir supprimer cet album ?</translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
         <translation>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n album sélectionné ?</numerusform>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n albums sélectionnés ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n album sélectionné ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n albums sélectionnés ?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer cet artiste ?</translation>
+        <translation>Êtes-vous sûr·e de vouloir supprimer cet artiste ?</translation>
     </message>
     <message>
         <source>Removing files...</source>
@@ -561,8 +561,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
         <translation>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n artiste sélectionné ?</numerusform>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n artistes sélectionnés ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n artiste sélectionné ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n artistes sélectionnés ?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -581,11 +581,11 @@
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer ce genre ?</translation>
+        <translation>Êtes-vous sûr·e de vouloir supprimer ce genre ?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation>Êtes-vous sûr de vouloir supprimer cette piste ?</translation>
+        <translation>Êtes-vous sûr·e de vouloir supprimer cette piste ?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
@@ -602,8 +602,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
         <translation>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n piste sélectionnée ?</numerusform>
-            <numerusform>Êtes-vous sûr de vouloir supprimer %n piste sélectionnées ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n piste sélectionnée ?</numerusform>
+            <numerusform>Êtes-vous sûr·e de vouloir supprimer %n piste sélectionnées ?</numerusform>
         </translation>
     </message>
     <message>
@@ -644,7 +644,7 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Modifier les tags</translation>
+        <translation>Modifier les étiquettes</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -682,7 +682,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Enregistrement des tags…</translation>
+        <translation>Enregistrement des étiquettes…</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -690,7 +690,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Utiliser le tag « Artiste de l&apos;album » au lieu de « Artiste » si disponible</translation>
+        <translation>Utiliser l&apos;étiquette « Artiste de l&apos;album » au lieu de « Artiste » si disponible</translation>
     </message>
     <message>
         <source>Save</source>
@@ -699,17 +699,17 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>Les tags sélectionnés vont être appliqués à %n fichier</numerusform>
-            <numerusform>Les tags sélectionnés vont être appliqués à %n fichiers</numerusform>
+            <numerusform>Les étiquettes sélectionnées seront appliquées à %n fichier</numerusform>
+            <numerusform>Les étiquettes sélectionnées seront appliquées à %n fichiers</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation>Seuls les tags sélectionnés vont être appliqués</translation>
+        <translation>Seules les étiquettes sélectionnées seront appliquées</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation>Impossible de lire les tags de ce fichier</translation>
+        <translation>Impossible de lire les étiquettes de ce fichier</translation>
     </message>
     <message>
         <source>Album artists</source>
@@ -749,7 +749,7 @@
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished">Afficher des infos sur le codec audio sur l&apos;écran En cours de lecture</translation>
+        <translation>Afficher des infos sur le codec audio sur l&apos;écran En cours de lecture</translation>
     </message>
     <message>
         <source>Audio codec</source>
@@ -757,7 +757,7 @@
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished">Profondeur de bit</translation>
+        <translation>Profondeur binaire</translation>
     </message>
     <message>
         <source>Sample rate</source>
