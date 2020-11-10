@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Neue Wiedergabeliste…</translation>
+        <translation>Neue Wiedergabeliste …</translation>
     </message>
     <message>
         <source>Search</source>
@@ -196,7 +196,7 @@
     <message numerus="yes">
         <source>%n playlist(s)</source>
         <translation>
-            <numerusform>%n Wiedergabeliste(n)</numerusform>
+            <numerusform>%n Wiedergabeliste</numerusform>
             <numerusform>%n Wiedergabelisten</numerusform>
         </translation>
     </message>
@@ -246,14 +246,14 @@
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
         <translation>
-            <numerusform>%n Wiedergabeliste(n) ausgewählt</numerusform>
+            <numerusform>%n Wiedergabeliste ausgewählt</numerusform>
             <numerusform>%n Wiedergabelisten ausgewählt</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
         <translation>
-            <numerusform>%n Wiedergabeliste(n) entfernen</numerusform>
+            <numerusform>%n Wiedergabeliste entfernen</numerusform>
             <numerusform>%n Wiedergabelisten entfernen</numerusform>
         </translation>
     </message>
@@ -656,7 +656,7 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Tags bearbeiten</translation>
+        <translation>Markierungen bearbeiten</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation>Tags werden gespeichert …</translation>
+        <translation>Markierungen werden gespeichert …</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
-        <translation>Verwenden Sie den Tag „Album-Interpret“ anstelle von „Künstler“, wenn er verfügbar ist</translation>
+        <translation>Die Markierung „Album-Interpret“ anstelle von „Künstler“ verwenden, wenn sie verfügbar ist</translation>
     </message>
     <message>
         <source>Save</source>
@@ -711,17 +711,17 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>Ausgewählte Tags werden auf die %n Datei angewendet</numerusform>
-            <numerusform>Ausgewählte Tags werden auf alle %n-Dateien angewendet</numerusform>
+            <numerusform>Ausgewählte Markierungen werden auf die %n Datei angewendet</numerusform>
+            <numerusform>Ausgewählte Markierungen werden auf alle %n-Dateien angewendet</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation>Nur ausgewählte Tags werden angewendet</translation>
+        <translation>Nur ausgewählte Markierungen werden angewendet</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation>Tags können aus dieser Datei nicht gelesen werden</translation>
+        <translation>Markierungen können aus dieser Datei nicht gelesen werden</translation>
     </message>
     <message>
         <source>Album artists</source>
@@ -789,11 +789,11 @@
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation>%1 kbit/s</translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation>%1 bits</translation>
+        <translation>%1 bit</translation>
     </message>
     <message>
         <source>%1 Hz</source>
