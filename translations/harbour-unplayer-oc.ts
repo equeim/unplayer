@@ -21,13 +21,13 @@
     </message>
     <message>
         <source>Add to playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Apondre a la lista de lecturas</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n pista</numerusform>
+            <numerusform>%n pistas</numerusform>
         </translation>
     </message>
     <message>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Cercar</translation>
     </message>
     <message>
         <source>No playlists</source>
@@ -44,15 +44,15 @@
     </message>
     <message>
         <source>Add to queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Apondre a la lista</translation>
     </message>
     <message>
         <source>Set cover image</source>
-        <translation type="unfinished"></translation>
+        <translation>Definir imatge cobèrta</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Cap de pistas</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
@@ -67,19 +67,19 @@
     </message>
     <message>
         <source>Unknown album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album desconegut</translation>
     </message>
     <message>
         <source>Unknown artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista desconegut</translation>
     </message>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Albums</translation>
     </message>
     <message>
         <source>No albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Cap d&apos;albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
@@ -101,15 +101,15 @@
     </message>
     <message>
         <source>Artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Artistas</translation>
     </message>
     <message>
         <source>No artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Cap d&apos;artistas</translation>
     </message>
     <message>
         <source>All tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Totas las pistas</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s) selected</source>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Repertòris</translation>
     </message>
     <message>
         <source>Track information</source>
@@ -132,15 +132,15 @@
     </message>
     <message>
         <source>SD card</source>
-        <translation type="unfinished"></translation>
+        <translation>Carta DS</translation>
     </message>
     <message>
         <source>Home directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Repertòri personal</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas cap de fichièrs</translation>
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
@@ -151,7 +151,7 @@
     </message>
     <message>
         <source>Genres</source>
-        <translation type="unfinished"></translation>
+        <translation>Genres</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s), %1</source>
@@ -170,13 +170,13 @@
     </message>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Licéncia</translation>
     </message>
     <message numerus="yes">
         <source>%n artist(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n artista</numerusform>
+            <numerusform>%n artistas</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -202,11 +202,11 @@
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Pistas</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Listas de lectura</translation>
     </message>
     <message>
         <source>Add playlist</source>
@@ -214,7 +214,7 @@
     </message>
     <message>
         <source>Playlist name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom de la lista de lectura</translation>
     </message>
     <message>
         <source>Remove from playlist</source>
@@ -222,7 +222,7 @@
     </message>
     <message>
         <source>Removing</source>
-        <translation type="unfinished"></translation>
+        <translation>Supression en cors</translation>
     </message>
     <message>
         <source>Remove playlist</source>
@@ -263,39 +263,39 @@
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Botar dins la coa</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Escafar</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Totes / Totas</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Cap</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Títol</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Artista</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Track number</source>
-        <translation type="unfinished"></translation>
+        <translation>Numèro de pista</translation>
     </message>
     <message>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Genre</translation>
     </message>
     <message>
         <source>File path</source>
@@ -303,19 +303,19 @@
     </message>
     <message>
         <source>File size</source>
-        <translation type="unfinished"></translation>
+        <translation>Talha del fichièr</translation>
     </message>
     <message>
         <source>MIME type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipe MIME</translation>
     </message>
     <message>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Durada</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Debit</translation>
     </message>
     <message>
         <source>%1 s</source>
@@ -323,23 +323,23 @@
     </message>
     <message>
         <source>%1 B</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 o</translation>
     </message>
     <message>
         <source>%1 KiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Kio</translation>
     </message>
     <message>
         <source>%1 MiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Mio</translation>
     </message>
     <message>
         <source>%1 GiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Gio</translation>
     </message>
     <message>
         <source>%1 TiB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Tio</translation>
     </message>
     <message>
         <source>%1 PiB</source>
@@ -363,15 +363,15 @@
     </message>
     <message>
         <source>Authors</source>
-        <translation type="unfinished"></translation>
+        <translation>Autors</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Causissètz un imatge</translation>
     </message>
     <message>
         <source>Maintainer</source>
-        <translation type="unfinished"></translation>
+        <translation>Desvolopaire</translation>
     </message>
     <message>
         <source>%1 - %2</source>
@@ -409,19 +409,19 @@
     </message>
     <message>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Causir</translation>
     </message>
     <message>
         <source>Add directory...</source>
-        <translation type="unfinished"></translation>
+        <translation>Apondre un diccionari…</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Causir un dorsièr</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Cap de diccionaris</translation>
     </message>
     <message>
         <source>Reset Library</source>
@@ -433,7 +433,7 @@
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Bibliotèca</translation>
     </message>
     <message>
         <source>%1, %2</source>
@@ -445,7 +445,7 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configuracion</translation>
     </message>
     <message>
         <source>Error initializing database</source>
@@ -457,11 +457,11 @@
     </message>
     <message>
         <source>Updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Mesa a jorn...</translation>
     </message>
     <message>
         <source>Clear Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Escafar la lista d&apos;espèra</translation>
     </message>
     <message>
         <source>Open library on startup</source>
@@ -485,7 +485,7 @@
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Jogaire</translation>
     </message>
     <message>
         <source>Restore player state on startup</source>
@@ -493,7 +493,7 @@
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Tria</translation>
     </message>
     <message>
         <source>Order</source>
@@ -501,19 +501,19 @@
     </message>
     <message>
         <source>Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Creissent</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Descreissent</translation>
     </message>
     <message>
         <source>Album title</source>
-        <translation type="unfinished"></translation>
+        <translation>Títol de l&apos;album</translation>
     </message>
     <message>
         <source>Album year</source>
-        <translation type="unfinished"></translation>
+        <translation>Annada de l’album</translation>
     </message>
     <message>
         <source>Artist - Album title</source>
@@ -525,7 +525,7 @@
     </message>
     <message>
         <source>Added date</source>
-        <translation type="unfinished"></translation>
+        <translation>Data d&apos;apondon</translation>
     </message>
     <message>
         <source>Inside Album</source>
@@ -533,15 +533,15 @@
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar de manièra descendenta</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar de manièra ascendenta</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Annada</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
@@ -620,11 +620,11 @@
     </message>
     <message>
         <source>Donate</source>
-        <translation type="unfinished"></translation>
+        <translation>Far un don</translation>
     </message>
     <message>
         <source>Contributor</source>
-        <translation type="unfinished"></translation>
+        <translation>Contributor</translation>
     </message>
     <message>
         <source>Disc number - Title</source>
@@ -636,7 +636,7 @@
     </message>
     <message>
         <source>Open URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Dobrir una URL</translation>
     </message>
     <message>
         <source>Open</source>
@@ -644,15 +644,15 @@
     </message>
     <message>
         <source>URL</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <source>Disc number</source>
-        <translation type="unfinished"></translation>
+        <translation>Numèro de disc</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Edit tags</source>
@@ -660,7 +660,7 @@
     </message>
     <message>
         <source>Preparing</source>
-        <translation type="unfinished"></translation>
+        <translation>Preparacion</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
@@ -672,7 +672,7 @@
     </message>
     <message>
         <source>Finishing</source>
-        <translation type="unfinished"></translation>
+        <translation>Finicion</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
@@ -694,11 +694,11 @@
     </message>
     <message>
         <source>Saving tags...</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrament de las etiquetas…</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Anullar</translation>
     </message>
     <message>
         <source>Use tag &quot;Album artist&quot; instead of &quot;Artist&quot; if it is available</source>
@@ -706,7 +706,7 @@
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvagardar</translation>
     </message>
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
@@ -737,7 +737,7 @@
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustar</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
@@ -765,7 +765,7 @@
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codecs àudio</translation>
     </message>
     <message>
         <source>Bit depth</source>
@@ -773,11 +773,11 @@
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Frequéncia d&apos;escandalhatge</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Canals</translation>
     </message>
     <message>
         <source>File format is not supported</source>
