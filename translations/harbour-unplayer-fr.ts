@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Nouvelle liste de lecture...</translation>
+        <translation>Nouvelle liste de lecture…</translation>
     </message>
     <message>
         <source>Search</source>
