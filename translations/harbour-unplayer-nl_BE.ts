@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Simple music player for Sailfish OS</source>
-        <translation>Eenvoudige muziekspeler voor Sailfish OS</translation>
+        <translation>Eênvoudige muziekspeler voôr Sailfish OS</translation>
     </message>
     <message>
         <source>Translations</source>
@@ -26,13 +26,13 @@
     <message numerus="yes">
         <source>%n track(s)</source>
         <translation>
-            <numerusform>%n nummer</numerusform>
+            <numerusform>Eê nummer</numerusform>
             <numerusform>%n nummers</numerusform>
         </translation>
     </message>
     <message>
         <source>New playlist...</source>
-        <translation>Nieuwe speellijst…</translation>
+        <translation>Nieve speellijst…</translation>
     </message>
     <message>
         <source>Search</source>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>No playlists</source>
-        <translation>Geen speellijsten</translation>
+        <translation>Geên speellijsten</translation>
     </message>
     <message>
         <source>Add to queue</source>
@@ -52,12 +52,12 @@
     </message>
     <message>
         <source>No tracks</source>
-        <translation>Geen nummers</translation>
+        <translation>Geên nummers</translation>
     </message>
     <message numerus="yes">
         <source>%n track(s) selected</source>
         <translation>
-            <numerusform>%n nummer geselecteerd</numerusform>
+            <numerusform>Eê nummer geselecteerd</numerusform>
             <numerusform>%n nummers geselecteerd</numerusform>
         </translation>
     </message>
@@ -79,12 +79,12 @@
     </message>
     <message>
         <source>No albums</source>
-        <translation>Geen albums</translation>
+        <translation>Geên albums</translation>
     </message>
     <message numerus="yes">
         <source>%n album(s) selected</source>
         <translation>
-            <numerusform>%n album geselecteerd</numerusform>
+            <numerusform>Eên album geselecteerd</numerusform>
             <numerusform>%n albums geselecteerd</numerusform>
         </translation>
     </message>
@@ -95,7 +95,7 @@
     <message numerus="yes">
         <source>%n album(s)</source>
         <translation>
-            <numerusform>%n album</numerusform>
+            <numerusform>Eên album</numerusform>
             <numerusform>%n albums</numerusform>
         </translation>
     </message>
@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>No artists</source>
-        <translation>Geen artiesten</translation>
+        <translation>Geên artiesten</translation>
     </message>
     <message>
         <source>All tracks</source>
@@ -114,7 +114,7 @@
     <message numerus="yes">
         <source>%n artist(s) selected</source>
         <translation>
-            <numerusform>%n artiest geselecteerd</numerusform>
+            <numerusform>Ênen artiest geselecteerd</numerusform>
             <numerusform>%n artiesten geselecteerd</numerusform>
         </translation>
     </message>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>Directories</source>
-        <translation>Mappen</translation>
+        <translation>Fardes</translation>
     </message>
     <message>
         <source>Track information</source>
@@ -136,16 +136,16 @@
     </message>
     <message>
         <source>Home directory</source>
-        <translation>Thuismap</translation>
+        <translation>Thuisfarde</translation>
     </message>
     <message>
         <source>No files</source>
-        <translation>Geen bestanden</translation>
+        <translation>Geên bestanden</translation>
     </message>
     <message numerus="yes">
         <source>%n genre(s) selected</source>
         <translation>
-            <numerusform>%n genre geselecteerd</numerusform>
+            <numerusform>Eê genre geselecteerd</numerusform>
             <numerusform>%n genres geselecteerd</numerusform>
         </translation>
     </message>
@@ -156,7 +156,7 @@
     <message numerus="yes">
         <source>%n track(s), %1</source>
         <translation>
-            <numerusform>%n nummer, %1</numerusform>
+            <numerusform>Eê nummer, %1</numerusform>
             <numerusform>%n nummers, %1</numerusform>
         </translation>
     </message>
@@ -166,7 +166,7 @@
     </message>
     <message>
         <source>No genres</source>
-        <translation>Geen genres</translation>
+        <translation>Geên genres</translation>
     </message>
     <message>
         <source>License</source>
@@ -175,28 +175,28 @@
     <message numerus="yes">
         <source>%n artist(s)</source>
         <translation>
-            <numerusform>%n artiest</numerusform>
+            <numerusform>Ênen artiest</numerusform>
             <numerusform>%n artiesten</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n albums(s)</source>
         <translation>
-            <numerusform>%n album</numerusform>
+            <numerusform>Eên album</numerusform>
             <numerusform>%n albums</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n tracks(s)</source>
         <translation>
-            <numerusform>%n nummer</numerusform>
+            <numerusform>Eê nummer</numerusform>
             <numerusform>%n nummers</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n playlist(s)</source>
         <translation>
-            <numerusform>%n speellijst</numerusform>
+            <numerusform>Êne speellijst</numerusform>
             <numerusform>%n speellijsten</numerusform>
         </translation>
     </message>
@@ -235,8 +235,8 @@
     <message numerus="yes">
         <source>Removing %n track(s)</source>
         <translation>
-            <numerusform>%n nummer verwijderen</numerusform>
-            <numerusform>%n nummers verwijderen</numerusform>
+            <numerusform>Eê nummer wordt verwijderd</numerusform>
+            <numerusform>%n nummers worden verwijderd</numerusform>
         </translation>
     </message>
     <message>
@@ -246,14 +246,14 @@
     <message numerus="yes">
         <source>%n playlist(s) selected</source>
         <translation>
-            <numerusform>%n speellijst geselecteerd</numerusform>
+            <numerusform>Êne speellijst geselecteerd</numerusform>
             <numerusform>%n speellijsten geselecteerd</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n playlist(s)</source>
         <translation>
-            <numerusform>%n speellijst verwijderen</numerusform>
+            <numerusform>Êne speellijst verwijderen</numerusform>
             <numerusform>%n speellijsten verwijderen</numerusform>
         </translation>
     </message>
@@ -275,7 +275,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation>Geen</translation>
+        <translation>Geên</translation>
     </message>
     <message>
         <source>Title</source>
@@ -303,7 +303,7 @@
     </message>
     <message>
         <source>File size</source>
-        <translation>Bestandsgrootte</translation>
+        <translation>Bestandsgroôtte</translation>
     </message>
     <message>
         <source>MIME type</source>
@@ -380,17 +380,17 @@
     <message numerus="yes">
         <source>%n file(s) selected</source>
         <translation>
-            <numerusform>%n bestand geselecteerd</numerusform>
+            <numerusform>Eên bestand geselecteerd</numerusform>
             <numerusform>%n bestanden geselecteerd</numerusform>
         </translation>
     </message>
     <message>
         <source>Set as default directory</source>
-        <translation>Instellen als standaardmap</translation>
+        <translation>Instellen als standaardfarde</translation>
     </message>
     <message>
         <source>Default directory</source>
-        <translation>Standaardmap</translation>
+        <translation>Standaardfarde</translation>
     </message>
     <message>
         <source>Select files</source>
@@ -399,13 +399,13 @@
     <message numerus="yes">
         <source>%n directories selected</source>
         <translation>
-            <numerusform>%n map geselecteerd</numerusform>
-            <numerusform>%n mappen geselecteerd</numerusform>
+            <numerusform>Eên farde geselecteerd</numerusform>
+            <numerusform>%n fardes geselecteerd</numerusform>
         </translation>
     </message>
     <message>
         <source>Library Directories</source>
-        <translation>Bibliotheekmappen</translation>
+        <translation>Bibliotheekfardes</translation>
     </message>
     <message>
         <source>Select</source>
@@ -413,23 +413,23 @@
     </message>
     <message>
         <source>Add directory...</source>
-        <translation>Map toevoegen…</translation>
+        <translation>Farde toevoegen…</translation>
     </message>
     <message>
         <source>Select directory</source>
-        <translation>Map toevoegen</translation>
+        <translation>Farde toevoegen</translation>
     </message>
     <message>
         <source>No directories</source>
-        <translation>Geen mappen</translation>
+        <translation>Geên fardes</translation>
     </message>
     <message>
         <source>Reset Library</source>
-        <translation>Bibliotheek opnieuw instellen</translation>
+        <translation>Bibliotheek herinstellen</translation>
     </message>
     <message>
         <source>Update Library</source>
-        <translation>Bibliotheek bijwerken</translation>
+        <translation>Bibliotheek bijwèrken</translation>
     </message>
     <message>
         <source>Library</source>
@@ -449,15 +449,15 @@
     </message>
     <message>
         <source>Error initializing database</source>
-        <translation>Database kan niet geïnitialiseerd worden</translation>
+        <translation>Den database kost ni’ geïnitialiseerd worden</translation>
     </message>
     <message>
         <source>No selected directories</source>
-        <translation>Geen mappen geselecteerd</translation>
+        <translation>Geên fardes geselecteerd</translation>
     </message>
     <message>
         <source>Updating...</source>
-        <translation>Bezig met bijwerken…</translation>
+        <translation>Bezig me bijwèrken…</translation>
     </message>
     <message>
         <source>Clear Queue</source>
@@ -465,7 +465,7 @@
     </message>
     <message>
         <source>Open library on startup</source>
-        <translation>Bibliotheek openen bij opstarten</translation>
+        <translation>Bibliotheek openen bij ’t opstarten</translation>
     </message>
     <message>
         <source>%1 h %2 m</source>
@@ -477,7 +477,7 @@
     </message>
     <message>
         <source>Prefer cover art located as separate file in music file directory instead of extracted from music file</source>
-        <translation>Verkiest albumhoezen als apart bestand in muziekmap in plek van geëxtraheerd uit muziekbestand</translation>
+        <translation>Verkiest albumhoezen als apart bestand in de muziekfarde in plaats van ze t’extraheren uit ’t muziekbestand</translation>
     </message>
     <message>
         <source>Player</source>
@@ -485,7 +485,7 @@
     </message>
     <message>
         <source>Restore player state on startup</source>
-        <translation>Afspeelstatus herstellen bij opstarten van toepassing</translation>
+        <translation>Afspeelstatus herstellen bij ’t opstarten van den app</translation>
     </message>
     <message>
         <source>Sort</source>
@@ -497,11 +497,11 @@
     </message>
     <message>
         <source>Ascending</source>
-        <translation>Oplopend</translation>
+        <translation>Oplôpend</translation>
     </message>
     <message>
         <source>Descending</source>
-        <translation>Aflopend</translation>
+        <translation>Aflôpend</translation>
     </message>
     <message>
         <source>Album title</source>
@@ -529,11 +529,11 @@
     </message>
     <message>
         <source>Sort Descending</source>
-        <translation>Aflopend sorteren</translation>
+        <translation>Aflôpend sorteren</translation>
     </message>
     <message>
         <source>Sort Ascending</source>
-        <translation>Oplopend sorteren</translation>
+        <translation>Oplôpend sorteren</translation>
     </message>
     <message>
         <source>Year</source>
@@ -541,7 +541,7 @@
     </message>
     <message>
         <source>Are you sure you want to remove this album?</source>
-        <translation>Zijt ge zeker dat ge dit album wilt verwijderen?</translation>
+        <translation>Zijde zeker da’ ge da album wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing albums...</source>
@@ -550,13 +550,13 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected albums?</source>
         <translation>
-            <numerusform>Zijt ge zeker dat ge %n geselecteerd album wilt verwijderen?</numerusform>
-            <numerusform>Zijt ge zeker dat ge de %n geselecteerde albums wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge da eê geselecteerd album wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge de %n geselecteerde albums wilt verwijderen?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this artist?</source>
-        <translation>Zijt ge zeker dat ge dezen artiest wilt verwijderen?</translation>
+        <translation>Zijde zeker da’ ge dezen artiest wilt verwijderen?</translation>
     </message>
     <message>
         <source>Removing files...</source>
@@ -565,35 +565,35 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected artists?</source>
         <translation>
-            <numerusform>Zijt ge zeker dat ge %n geselecteerden artiest wilt verwijderen?</numerusform>
-            <numerusform>Zijt ge zeker dat ge de %n geselecteerde artiesten wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge dien êne geselecteerden artiest wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge de %n geselecteerde artiesten wilt verwijderen?</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Removing %n files</source>
         <translation>
-            <numerusform>%n bestand wordt verwijderd</numerusform>
+            <numerusform>Eên bestand wordt verwijderd</numerusform>
             <numerusform>%n bestanden worden verwijderd</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected genres?</source>
         <translation>
-            <numerusform>Zijt ge zeker dat ge %n geselecteerd genre wilt verwijderen?</numerusform>
-            <numerusform>Zijt ge zeker dat ge da %n geselecteerde genres wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge da eê geselecteerd genre wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge de %n geselecteerde genres wilt verwijderen?</numerusform>
         </translation>
     </message>
     <message>
         <source>Are you sure you want to remove this genre?</source>
-        <translation>Zijt ge zeker dat ge dit genre wilt verwijderen?</translation>
+        <translation>Zijde zeker da’ ge da’ genre wilt verwijderen?</translation>
     </message>
     <message>
         <source>Are you sure you want to remove this track?</source>
-        <translation>Zijt ge zeker dat ge dit nummer wilt verwijderen?</translation>
+        <translation>Zijde zeker da’ ge da nummer wilt verwijderen?</translation>
     </message>
     <message>
         <source>Delete files from the device</source>
-        <translation>Bestanden verwijderen van apparaat</translation>
+        <translation>Bestanden verwijderen van ’t toestel</translation>
     </message>
     <message>
         <source>Show video files</source>
@@ -601,7 +601,7 @@
     </message>
     <message>
         <source>Blacklisted Directories</source>
-        <translation>Mappen op zwarte lijst</translation>
+        <translation>Fardes op zwarte lijst</translation>
     </message>
     <message>
         <source>Removing tracks...</source>
@@ -610,8 +610,8 @@
     <message numerus="yes">
         <source>Are you sure you want to remove %n selected tracks?</source>
         <translation>
-            <numerusform>Zijt ge zeker dat ge %n geselecteerd nummer wilt verwijderen?</numerusform>
-            <numerusform>Zijt ge zeker dat ge de %n geselecteerde nummers wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge da eê geselecteerd nummer wilt verwijderen?</numerusform>
+            <numerusform>Zijde zeker da’ ge de %n geselecteerde nummers wilt verwijderen?</numerusform>
         </translation>
     </message>
     <message>
@@ -652,36 +652,36 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Tags bewerken</translation>
+        <translation>Tags bewèrken</translation>
     </message>
     <message>
         <source>Preparing</source>
-        <translation>Bezig me voorbereiden</translation>
+        <translation>Bezig me’ voôrbereiden</translation>
     </message>
     <message>
         <source>Scanning filesystem</source>
-        <translation>Bestandssysteem wordt gescand</translation>
+        <translation>’t Bestandssysteem wordt gescand</translation>
     </message>
     <message>
         <source>Extracting metadata</source>
-        <translation>Metadata worden uitgepakt</translation>
+        <translation>De metadata worden uitgepakt</translation>
     </message>
     <message>
         <source>Finishing</source>
-        <translation>Bezig me voltooien</translation>
+        <translation>Bezig me’ voltoôien</translation>
     </message>
     <message numerus="yes">
         <source>%n new tracks found</source>
         <translation>
-            <numerusform>%n nieuw nummer gevonden</numerusform>
-            <numerusform>%n nieuwe nummers gevonden</numerusform>
+            <numerusform>Eê nief nummer gevonden</numerusform>
+            <numerusform>%n nieve nummers gevonden</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 of %n tracks processed</source>
         <translation>
-            <numerusform>%1 nummer verwerkt</numerusform>
-            <numerusform>%1 van %n nummers verwerkt</numerusform>
+            <numerusform>Eê nummer verwèrkt</numerusform>
+            <numerusform>%1 van %n nummers verwèrkt</numerusform>
         </translation>
     </message>
     <message>
@@ -707,17 +707,17 @@
     <message numerus="yes">
         <source>Selected tags will be applied to all %n files</source>
         <translation>
-            <numerusform>Geselecteerde tags worden toegepast op ’t bestand</numerusform>
-            <numerusform>Geselecteerde tags worden toegepast op alle %n bestanden</numerusform>
+            <numerusform>De geselecteerde tags worden toegepast op ’t bestand</numerusform>
+            <numerusform>De geselecteerde tags worden toegepast op alle %n bestanden</numerusform>
         </translation>
     </message>
     <message>
         <source>Only selected tags will be applied</source>
-        <translation>Enkel geselecteerde tags worden toegepast</translation>
+        <translation>Enkel de geselecteerde tags worden toegepast</translation>
     </message>
     <message>
         <source>Can&apos;t read tags from this file</source>
-        <translation>Kan tags van dit bestand nie lezen</translation>
+        <translation>Kan tags van da bestand ni lezen</translation>
     </message>
     <message>
         <source>Album artists</source>
@@ -729,7 +729,7 @@
     </message>
     <message>
         <source>Increment track number for each file</source>
-        <translation>Tracknummer verhogen voor ieder bestand</translation>
+        <translation>Tracknummer verhôgen voôr ieder bestand</translation>
     </message>
     <message>
         <source>Add</source>
@@ -737,63 +737,63 @@
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;yes&lt;/font&gt;</source>
-        <translation>Stoppen na afspelen van nummer: &lt;font color=&quot;%1&quot;&gt;ja&lt;/font&gt;</translation>
+        <translation>Stoppen achter afspelen van nummer: &lt;font color=&quot;%1&quot;&gt;jaat&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Stop after playing track: &lt;font color=&quot;%1&quot;&gt;no&lt;/font&gt;</source>
-        <translation>Stoppen na afspelen van nummer: &lt;font color=&quot;%1&quot;&gt;nee&lt;/font&gt;</translation>
+        <translation>Stoppen achter afspelen van nummer: &lt;font color=&quot;%1&quot;&gt;neêt&lt;/font&gt;</translation>
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachtrij vervangen</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodecinformatie tônen op ’t ‘Wordt afgespeeld’-schèrm</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodec</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitdiepte</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Samplesnelheid</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanalen</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Da bestandsformaat wordt ni ondersteund</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Fout bij ’t afspelen van ’t bestand</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bits</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
