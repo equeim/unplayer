@@ -749,55 +749,55 @@
     </message>
     <message>
         <source>Replace queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachtrij vervangen</translation>
     </message>
     <message>
         <source>%L1-bit · %2 kHz · %L3 kbit/s · %4</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1-bit · %2 kHz · %L3 kbit/s · %4</translation>
     </message>
     <message>
         <source>%1 kHz · %L2 kbit/s · %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kHz · %L2 kbit/s · %3</translation>
     </message>
     <message>
         <source>Show audio codec information on Now Playing screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodecinformatie tonen op ‘Wordt afgespeeld’-scherm</translation>
     </message>
     <message>
         <source>Audio codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiocodec</translation>
     </message>
     <message>
         <source>Bit depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitdiepte</translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Samplesnelheid</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Kanalen</translation>
     </message>
     <message>
         <source>File format is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestandsformaat wordt niet ondersteund</translation>
     </message>
     <message>
         <source>Error playing file</source>
-        <translation type="unfinished"></translation>
+        <translation>Fout bij afspelen van bestand</translation>
     </message>
     <message>
         <source>%1 kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <source>%1 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bits</translation>
     </message>
     <message>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 </TS>
