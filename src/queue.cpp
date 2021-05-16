@@ -197,8 +197,6 @@ namespace unplayer
                 QElapsedTimer timer;
                 timer.start();
 
-                QMimeDatabase mimeDb;
-
                 QString prevFilePath;
                 tagutils::Info info;
                 QString artist;
@@ -213,7 +211,7 @@ namespace unplayer
                         prevFilePath = filePath;
 
                         const QFileInfo fileInfo(filePath);
-                        info = tagutils::getTrackInfo(filePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
+                        info = tagutils::getTrackInfo(filePath, fileutils::extensionFromSuffix(fileInfo.suffix())).value_or(tagutils::Info{});
                         if (info.title.isEmpty()) {
                             info.title = fileInfo.fileName();
                         }

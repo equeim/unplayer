@@ -47,8 +47,7 @@ namespace unplayer
             mFilePath = filePath;
             const QFileInfo fileInfo(mFilePath);
             mFileName = fileInfo.fileName();
-            const QMimeDatabase mimeDb;
-            mInfo = tagutils::getTrackInfo(mFilePath, fileutils::extensionFromSuffix(fileInfo.suffix()), mimeDb);
+            mInfo = tagutils::getTrackInfo(mFilePath, fileutils::extensionFromSuffix(fileInfo.suffix())).value_or(tagutils::Info{});
             mFileSize = fileInfo.size();
             mMimeType = QMimeDatabase().mimeTypeForFile(mFilePath, QMimeDatabase::MatchContent).name();
             emit loaded();
@@ -214,9 +213,9 @@ namespace unplayer
                 const auto future(QtConcurrent::run([filePath] {
                     return tagutils::getTrackAudioCodecInfo(filePath, fileutils::extensionFromSuffix(QFileInfo(filePath).suffix()));
                 }));
-                onFutureFinished(future, this, [=](const tagutils::AudioCodecInfo& info) {
+                onFutureFinished(future, this, [=](const std::optional<tagutils::AudioCodecInfo>& info) {
                     if (mFilePath == filePath && !mLoaded) {
-                        mInfo = info;
+                        mInfo = info.value_or(tagutils::AudioCodecInfo{});
                         mLoaded = true;
                         emit loadedChanged(true);
                     }

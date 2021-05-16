@@ -1117,8 +1117,8 @@ namespace unplayer
                 info.mediaArtData.clear();
             };
 
-            std::vector<tagutils::Info> infos(incrementTrackNumber ? tagutils::saveTags<true>(files, tags, mimeDb, callback)
-                                                                   : tagutils::saveTags<false>(files, tags, mimeDb, callback));
+            std::vector<tagutils::Info> infos(incrementTrackNumber ? tagutils::saveTags<true>(files, tags, callback)
+                                                                   : tagutils::saveTags<false>(files, tags, callback));
             if (!qApp) {
                 return;
             }

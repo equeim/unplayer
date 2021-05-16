@@ -20,6 +20,7 @@
 #define UNPLAYER_TAGUTILS_H
 
 #include <functional>
+#include <optional>
 #include <vector>
 
 #include <QObject>
@@ -61,46 +62,51 @@ namespace unplayer
     {
         struct Info
         {
+            inline Info() = default;
+            inline Info(const QString& filePath, fileutils::AudioCodec audioCodec, bool canReadTags)
+                : filePath(filePath), audioCodec(audioCodec), canReadTags(canReadTags) {}
+
             QString filePath;
+            fileutils::AudioCodec audioCodec = fileutils::AudioCodec::Unknown;
+            bool canReadTags{};
+
             QString title;
             QStringList artists;
             QStringList albumArtists;
             QStringList albums;
-            int year;
-            int trackNumber;
+            int year{};
+            int trackNumber{};
             QStringList genres;
             QString discNumber;
 
-            fileutils::AudioCodec audioCodec{fileutils::AudioCodec::Unknown};
-            int duration;
-            int bitrate;
-            int bitDepth;
-            int sampleRate;
-            int channels;
+            int duration{};
+            int bitrate{};
+            int bitDepth{};
+            int sampleRate{};
+            int channels{};
 
             QByteArray mediaArtData;
-
-            bool fileTypeMatchesExtension;
-            bool canReadTags;
         };
 
         struct AudioCodecInfo
         {
-            fileutils::AudioCodec audioCodec{fileutils::AudioCodec::Unknown};
-            int bitDepth;
-            int sampleRate;
-            int bitrate;
+            inline AudioCodecInfo() = default;
+            inline explicit AudioCodecInfo(fileutils::AudioCodec audioCodec) : audioCodec(audioCodec) {}
+            fileutils::AudioCodec audioCodec = fileutils::AudioCodec::Unknown;
+            int bitDepth{};
+            int sampleRate{};
+            int bitrate{};
         };
 
-        Info getTrackInfo(const QString& filePath, fileutils::Extension extension, const QMimeDatabase& mimeDb);
-
-        AudioCodecInfo getTrackAudioCodecInfo(const QString& filePath, fileutils::Extension extension);
+        std::optional<Info> getTrackInfo(const QString& filePath, fileutils::Extension extension);
+        std::optional<QByteArray> getTackMediaArtData(const QString& filePath, fileutils::Extension extension);
+        std::optional<AudioCodecInfo> getTrackAudioCodecInfo(const QString& filePath, fileutils::Extension extension);
 
         template<bool IncrementTrackNumber>
-        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
+        std::vector<Info> saveTags(const QStringList& files, const QVariantMap& tags, const std::function<void(Info&)>& callback);
 
-        extern template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
-        extern template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const QMimeDatabase& mimeDb, const std::function<void(Info&)>& callback);
+        extern template std::vector<Info> saveTags<true>(const QStringList& files, const QVariantMap& tags, const std::function<void(Info&)>& callback);
+        extern template std::vector<Info> saveTags<false>(const QStringList& files, const QVariantMap& tags, const std::function<void(Info&)>& callback);
     }
 }
 

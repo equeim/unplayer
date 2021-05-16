@@ -93,15 +93,14 @@ namespace unplayer
             }
 
             const QFileInfo fileInfo(filePath);
-            const tagutils::Info info(tagutils::getTrackInfo(filePath,
-                                                             fileutils::extensionFromSuffix(fileInfo.suffix()),
-                                                             QMimeDatabase()));
+            const auto mediaArtData = tagutils::getTackMediaArtData(filePath,
+                                                                    fileutils::extensionFromSuffix(fileInfo.suffix())).value_or(QByteArray());
             QString directoryMediaArt;
             if (!onlyExtractEmbedded) {
                 std::unordered_map<QString, QString> mediaArtHash;
                 directoryMediaArt = MediaArtUtils::findMediaArtForDirectory(fileInfo.path(), mediaArtHash);
             }
-            emit gotMediaArtForFile(filePath, {}, directoryMediaArt, info.mediaArtData);
+            emit gotMediaArtForFile(filePath, {}, directoryMediaArt, mediaArtData);
         }
 
         Q_INVOKABLE void getRandomMediaArt(uintptr_t requestId)

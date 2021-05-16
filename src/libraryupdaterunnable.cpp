@@ -463,7 +463,7 @@ namespace unplayer
                             --result.tracksToRemoveFromDatabaseCount;
 
                             if (file.embeddedMediaArtDeleted) {
-                                const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTrackInfo(filePath, extension, mMimeDb).mediaArtData,
+                                const QString embeddedMediaArt(MediaArtUtils::saveEmbeddedMediaArt(tagutils::getTackMediaArtData(filePath, fileutils::extensionFromSuffix(fileInfo.suffix())).value_or(QByteArray()),
                                                                                                    embeddedMediaArtFiles,
                                                                                                    mMimeDb));
                                 QSqlQuery query(mDb);
@@ -592,19 +592,19 @@ namespace unplayer
                     return count;
                 }
 
-                tagutils::Info trackInfo(tagutils::getTrackInfo(track.filePath, track.extension, mMimeDb));
-                if (trackInfo.fileTypeMatchesExtension && fileutils::isAudioCodecSupported(trackInfo.audioCodec)) {
+                auto trackInfo = tagutils::getTrackInfo(track.filePath, track.extension);
+                if (trackInfo && fileutils::isAudioCodecSupported(trackInfo->audioCodec)) {
                     ++count;
 
-                    if (trackInfo.title.isEmpty()) {
-                        trackInfo.title = QFileInfo(track.filePath).fileName();
+                    if (trackInfo->title.isEmpty()) {
+                        trackInfo->title = QFileInfo(track.filePath).fileName();
                     }
 
                     adder.addTrackToDatabase(track.filePath,
                                              getLastModifiedTime(track.filePath),
-                                             trackInfo,
+                                             *trackInfo,
                                              track.directoryMediaArt,
-                                             MediaArtUtils::saveEmbeddedMediaArt(trackInfo.mediaArtData,
+                                             MediaArtUtils::saveEmbeddedMediaArt(trackInfo->mediaArtData,
                                                                                  embeddedMediaArtFiles,
                                                                                  mMimeDb));
                     if ((count % 100) == 0) {
