@@ -615,7 +615,7 @@ namespace unplayer
                 }
             };
 
-            class SaveProcessor : public ExtractProcessor
+            class SaveProcessor final : public ExtractProcessor
             {
             public:
                 SaveProcessor(const TagLib::PropertyMap& replaceProperties)
