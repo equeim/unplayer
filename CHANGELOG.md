@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- 64-bit ARM support
+
+### Changed
+- Updated TagLib to 1.12
+- Minimum Sailfish OS version is raised to 3.3.0 (3.4.0 for 64-bit ARM)
+
 ## [2.1.0] - 2020-10-25
 ### Added
 - Displaying information about audio codec, bit depth, sample rate and channel count
