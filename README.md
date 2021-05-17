@@ -6,15 +6,14 @@ Simple music player for Sailfish OS
 ```sh
 git clone https://github.com/equeim/unplayer
 cd unplayer
-git submodule init
-git submodule update
+git submodule update --init
 ```
-2. Start MerSDK virtual machine (if you installed SDK using official installer).
-3. SSH into SDK (or chroot if you have set up SDK manually), see [here](https://sailfishos.org/wiki/Tutorial_-_Building_packages_manually) for additional information.
+2. Install Sailfish SDK
+3. Rad [this](https://sailfishos.org/wiki/Tutorial_-_Building_packages_-_advanced_techniques) tutorial to learn how to use `sfdk` tool.
 4. Build package:
 ```sh
 cd /path/to/sources
-mb2 -X -t <target name, e.g. SailfishOS-3.0.2.8-armv7hl> build -p -d -j<number of jobs>
+sfdk -c no-fix-version -c target=<target name, e.g. SailfishOS-3.3.0.16-armv7hl> build -p -d -j<number of jobs>
 ```
 5. Built RPMs will be in the `RPMS` directory.
 
