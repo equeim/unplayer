@@ -7,6 +7,7 @@
 ### Changed
 - Updated TagLib to 1.12
 - Minimum Sailfish OS version is raised to 3.3.0 (3.4.0 for 64-bit ARM)
+- Updated translations
 
 ## [2.1.0] - 2020-10-25
 ### Added
