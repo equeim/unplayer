@@ -6,10 +6,12 @@ qt5_add_translation(qm_files
     harbour-unplayer-en.ts
     harbour-unplayer-es.ts
     harbour-unplayer-fr.ts
+    harbour-unplayer-hr.ts
     harbour-unplayer-it.ts
     harbour-unplayer-nb.ts
     harbour-unplayer-nl_BE.ts
     harbour-unplayer-nl.ts
+    harbour-unplayer-oc.ts
     harbour-unplayer-pl.ts
     harbour-unplayer-ru.ts
     harbour-unplayer-sv.ts
