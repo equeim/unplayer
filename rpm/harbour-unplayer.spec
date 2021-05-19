@@ -8,6 +8,7 @@ URL:        https://github.com/equeim/unplayer
 
 Source0:    https://github.com/equeim/unplayer/archive/%{version}.tar.gz
 Patch0:     qtmpris.patch
+Patch1:     taglib.patch
 
 Requires:      sailfishsilica-qt5
 BuildRequires: pkgconfig(Qt5Concurrent)
@@ -41,6 +42,17 @@ BuildRequires: boost-devel
 
 %global thirdparty_install_directory %{build_directory}/3rdparty/install
 
+%define patch_if_needed() \
+%if 0%(patch -p0 -R --dry-run --force --fuzz=2 --input=%{P:%1} > /dev/null 2>&1; echo $?) != 0 \
+%patch%1 \
+%endif
+
+%global apply_patches %{lua: \
+for i, s in ipairs(patches) do \
+    print(rpm.expand("%patch_if_needed "..(i - 1))) \
+end \
+}
+
 
 %description
 %{summary}
@@ -48,11 +60,7 @@ BuildRequires: boost-devel
 
 %prep
 %setup -q
-# patch if not patched
-if ! patch -p0 -R --dry-run -f -i %{P:0}; then
-%patch0
-fi
-
+%apply_patches
 
 %build
 export PKG_CONFIG_PATH=%{thirdparty_install_directory}/lib/pkgconfig
@@ -66,7 +74,7 @@ export PKG_CONFIG_PATH=%{thirdparty_install_directory}/lib/pkgconfig
 
 mkdir -p %{qtmpris_build_directory}
 cd %{qtmpris_build_directory}
-%qmake5 %{qtmpris_source_directory} CONFIG+=staticlib PREFIX=%{thirdparty_install_directory}
+%qmake5 %{qtmpris_source_directory} CONFIG+=staticlib QMAKE_CXXFLAGS+="-std=c++17" PREFIX=%{thirdparty_install_directory}
 %make_build
 # not make_install, because we do not want INSTALL_ROOT here
 make install
@@ -78,8 +86,6 @@ CFLAGS="$CFLAGS -fPIC" CXXFLAGS="$CXXFLAGS -fPIC" %cmake %{taglib_source_directo
     -DLIB_INSTALL_DIR=%{thirdparty_install_directory}/lib \
     -DINCLUDE_INSTALL_DIR=%{thirdparty_install_directory}/include \
     -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_CXX_STANDARD=11 \
-    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
     -DWITH_MP4=ON
 %make_build
 # not make_install, because we do not want DESTDIR here

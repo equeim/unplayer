@@ -1,0 +1,11 @@
+--- 3rdparty/taglib/taglib/CMakeLists.txt
++++ 3rdparty/taglib/taglib/CMakeLists.txt
+@@ -335,7 +335,7 @@ set(tag_LIB_SRCS
+ )
+ 
+ add_library(tag ${tag_LIB_SRCS} ${tag_HDRS})
+-set_property(TARGET tag PROPERTY CXX_STANDARD 98)
++set_property(TARGET tag PROPERTY CXX_STANDARD 17)
+ 
+ if(HAVE_ZLIB AND NOT HAVE_ZLIB_SOURCE)
+   target_link_libraries(tag ${ZLIB_LIBRARIES}) 
