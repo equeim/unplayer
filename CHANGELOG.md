@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [2.1.1] - 2021-05-20
 ### Added
 - 64-bit ARM support
 
